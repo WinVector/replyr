@@ -1,0 +1,44 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Copy issue with `sparklyr` 2.0.0.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+Below is why we re-try joins against local data without using the
+`copy=TRUE` feature.
+
+OSX 10.11.6.
+Spark installed as described at http://spark.rstudio.com
+
+```
+library('sparklyr')
+spark_install(version = "2.0.0")
+```
+
+```{r issue2.0.0, error=TRUE}
+library('dplyr')
+library('sparklyr')
+R.Version()$version.string
+packageVersion('dplyr')
+packageVersion('sparklyr')
+my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
+class(my_db)
+my_db$spark_home
+print(my_db)
+d1 <- copy_to(my_db,data.frame(x=c(1,2),y=c('a','b')),'d1')
+d2 <- data.frame(y=c('a','b'),z=c(3,4))
+d1 %>% dplyr::inner_join(d2,by='y',copy=TRUE)
+```
+

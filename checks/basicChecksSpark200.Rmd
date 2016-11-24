@@ -1,0 +1,39 @@
+---
+title: "Basic Checks"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output:
+  md_document:
+    variant: markdown_github
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+Example trying most of the `replyr` on a Spark.
+
+```{r setup}
+library('dplyr')
+library('sparklyr')
+source('CheckFns.R')
+```
+
+
+Spark 2.0.0. example.
+
+```{r Spark200example}
+# Can't easilly override Spark version once it is up.
+my_db <- sparklyr::spark_connect(version='2.0.0', 
+   master = "local")
+class(my_db)
+my_db$spark_home
+runExample(remoteCopy(my_db))
+my_db <- NULL; gc() # disconnect
+```
+
+

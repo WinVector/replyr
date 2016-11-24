@@ -1,0 +1,32 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Factor with R data.frame.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+Some issues with `summarize_each` and factors.
+
+
+```{r factorissue, error=TRUE}
+library('dplyr')
+R.Version()$version.string
+packageVersion('dplyr')
+d1 <- data.frame(y=c('a','b'),stringsAsFactors = FALSE)
+d1 %>% dplyr::summarise_each(dplyr::funs(lexmin = min,lexmax = max))
+d2 <- data.frame(y=c('a','b'),stringsAsFactors = TRUE)
+d2 %>% dplyr::summarise_each(dplyr::funs(lexmin = min,lexmax = max))
+```
+

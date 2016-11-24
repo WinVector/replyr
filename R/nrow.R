@@ -1,0 +1,36 @@
+
+# Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
+# Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
+
+#' @importFrom magrittr %>%
+#' @importFrom dplyr ungroup summarize transmute
+NULL
+
+#' Compute number of rows of a tbl.
+#'
+#' @param x tbl or item that can be coerced into such.
+#' @return number of rows
+#'
+#' @examples
+#'
+#' d <- data.frame(x=c(1,2))
+#' replyr_nrow(d)
+#'
+#' @export
+replyr_nrow <- function(x) {
+  # not trusting n().
+  # Commmented code doesn't work on example
+  # x %>% dplyr::ungroup()  %>% dplyr::summarize(count=sum(1)) %>%
+  #   as.data.frame() -> tmp
+  # Code below does.
+  tmp <- NULL
+  suppressWarnings(
+    x %>% dplyr::ungroup() %>%
+      dplyr::transmute(constant=1) %>% dplyr::summarize(count=sum(constant)) %>%
+      as.data.frame() -> tmp)
+  if(is.null(nrow(tmp))||(nrow(tmp)<1)||(ncol(tmp)<1)) {
+    return(0)
+  }
+  as.numeric(tmp[1,1,drop=TRUE])
+}
+

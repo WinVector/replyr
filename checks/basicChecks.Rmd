@@ -1,0 +1,88 @@
+---
+title: "Basic Checks"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output:
+  md_document:
+    variant: markdown_github
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+Example trying most of the `replyr` functions on a few data sources.
+
+```{r setup}
+library('dplyr')
+library('sparklyr')
+source('CheckFns.R')
+```
+
+
+Check `replyr` basic opearations against a few data service providers.
+-------------
+
+
+Local `data.frame` example.
+
+```{r localexample}
+noopCopy <- function(df,name) {
+  df
+}
+
+runExample(noopCopy)
+```
+
+Local `tbl` example.
+
+```{r localtblexample}
+tblCopy <- function(df,name) {
+  as.tbl(df)
+}
+
+runExample(tblCopy)
+```
+
+`SQLite` example.
+
+```{r SQLiteexample}
+my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+class(my_db)
+runExample(remoteCopy(my_db))
+my_db <- NULL; gc() # disconnect
+```
+
+MySQL example.
+
+```{r MySQLexample}
+my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
+class(my_db)
+runExample(remoteCopy(my_db))
+my_db <- NULL; gc() # disconnect
+```
+
+PostgreSQL example.
+
+```{r PostgreSQLexample}
+my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
+class(my_db)
+runExample(remoteCopy(my_db))
+my_db <- NULL; gc() # disconnect
+```
+
+Spark 1.6.2 example.
+
+```{r Spark162example}
+# Can't easilly override Spark version once it is up.
+my_db <- sparklyr::spark_connect(version='1.6.2', 
+   master = "local")
+class(my_db)
+my_db$spark_home
+runExample(remoteCopy(my_db))
+my_db <- NULL; gc() # disconnect
+```

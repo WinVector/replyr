@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*~
+.DS_Store
+inst/doc
+vignettes/replyr_sqliteEx.sqlite3
+replyr_sqliteEx.sqlite3
+*.log
+*.log.*
+*.sqlite3*

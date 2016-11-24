@@ -1,0 +1,96 @@
+
+# Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
+# Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
+
+#' @importFrom magrittr %>%
+#' @importFrom dplyr select_ rename_ mutate arrange
+NULL
+
+# binary search adapted for number of rows queries
+qsearch <- function(f,fLeft,fRight,ui) {
+  left <- fLeft
+  right <- fRight
+  while(TRUE) {
+    if(left$count>=ui) {
+      return(left$v)
+    }
+    if(right$count<=ui) {
+      return(right$v)
+    }
+    if(left$rv>=right$lv) {
+      return(right$lv)
+    }
+    probe <- (left$rv+right$lv)/2
+    fx <- f(probe)
+    if(fx$count==ui) {
+      return(fx$lv)
+    }
+    if(fx$count>=ui) {
+      right = fx
+    } else {
+      left = fx
+    }
+  }
+}
+
+#' Compute quantiles on remote column (NA's filtered out).
+#'
+#' NA's filtered out and does not break ties the same as stats::quantile.
+#'
+#' @param x tbl or item that can be coerced into such.
+#' @param cname column name to compute over.
+#' @param probs	numeric vector of probabilities with values in [0,1].
+#'
+#' @examples
+#'
+#' d <- data.frame(xvals=rev(1:1000))
+#' replyr_quantile(d,'xvals')
+#'
+#' @export
+replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
+  if((!is.character(cname))||(length(cname)!=1)||(cname[[1]]=='n')) {
+    stop('replyr_quantile cname must be a single string not equal to "n"')
+  }
+  x %>% dplyr::select_(cname) %>% dplyr::ungroup() -> x
+  # make the variable name "x" as dplyr is much easier if we know the variable name
+  if(cname!='x') {
+    # see: http://stackoverflow.com/questions/26619329/dplyr-rename-standard-evaluation-function-not-working-as-expected
+    x %>% dplyr::rename_(.dots = setNames(cname, 'x')) -> x
+  }
+  # filter out NA
+  x %>% dplyr::filter(!is.na(x)) -> x
+  # get targets
+  nrows <- replyr_nrow(x)
+  # targets <- pmin(pmax(1,round(probs*nrows)),nrows)
+  # # if we had cumsum() could finish with:
+  # # add row numbers
+  # x %>% dplyr::mutate(const=1) %>% dplyr::arrange(x) %>% dplyr::mutate(s=cumsum(const)) %>%
+  #   replyr_filter('s',targets) %>% as.data.frame() -> x
+  # x <- x[order(x$s),]
+  # x$x
+  # # But sqllite doesn't have such window functions (or row_number())
+  # # so we need one more idea.
+  # For now binary search for a given target.
+  x %>% dplyr::summarise(xmax=max(x),xmin=min(x)) %>%
+    as.data.frame() %>% as.numeric() -> lims
+  f <- function(v) {
+    v <- as.numeric(v)
+    x %>% dplyr::filter(x<=v) -> xsub
+    xsub %>% replyr_nrow() -> count
+    xsub %>% dplyr::summarise(xmax=max(x)) %>%
+      as.data.frame() %>% as.numeric() -> lv
+    x %>% dplyr::filter(x>v) -> xup
+    rv <- max(lims)
+    if(count<nrows) {
+      x %>% dplyr::filter(x>v) %>% dplyr::summarise(xmin=min(x)) %>%
+        as.data.frame() %>% as.numeric() -> rv
+    }
+    data.frame(v=v,count=count,lv=lv,rv=rv)
+  }
+  fLeft <- f(min(lims))
+  fRight <- f(max(lims))
+  qsearch(f,fLeft,fRight,0.5*nrows)
+  r <- vapply(probs*nrows,function(ti) qsearch(f,fLeft,fRight,ti),numeric(1))
+  names(r) <- probs
+  r
+}
