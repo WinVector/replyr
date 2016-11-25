@@ -32,7 +32,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
   numericCols <- cnames[replyr_testCols(x,is.numeric)]
   cclass <- replyr_colClasses(x)
   # from http://stackoverflow.com/questions/34594641/dplyr-summary-table-for-multiple-variables
-  # but the summarize each merged everything together on RMySQL, so have to work around
+  # but the values as columns are not convenient.
   # see also http://stackoverflow.com/questions/26492280/non-standard-evaluation-nse-in-dplyrs-filter-pulling-data-from-mysql
   suppressWarnings({
    numSums <- lapply(numericCols,
