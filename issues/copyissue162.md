@@ -60,33 +60,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:49353"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:49818"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
  #          description               class                mode                text              opened 
- #  "->localhost:49354"          "sockconn"                "a+"              "text"            "opened" 
+ #  "->localhost:49819"          "sockconn"                "a+"              "text"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/6t/x_r4km317f3gdmnvlcwb349w0000gn/T//RtmpCbD5WM/file29404b166195_spark.log"
+ #  [1] "/var/folders/6t/x_r4km317f3gdmnvlcwb349w0000gn/T//RtmpZ107OV/file3cf9563de116_spark.log"
  #  
  #  $spark_context
  #  <jobj[4]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@7bbe6594
+ #    org.apache.spark.SparkContext@54379b45
  #  
  #  $java_context
  #  <jobj[5]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@a285f9c
+ #    org.apache.spark.api.java.JavaSparkContext@653eb971
  #  
  #  $hive_context
  #  <jobj[6]>
  #    class org.apache.spark.sql.hive.HiveContext
- #    org.apache.spark.sql.hive.HiveContext@3dad7b52
+ #    org.apache.spark.sql.hive.HiveContext@2294bd5
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -97,3 +97,5 @@ d1 %>% dplyr::inner_join(d2,by='y')
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  Error in sql_join.spark_connection(con, from_x, from_y, type = query$type, : This dplyr operation requires a feature not supported in Spark 1.6.2 . Try Spark 2.0.0 instead or avoid using same-column names in joins.
 ```
+
+Submitted as [sparklyr issue 338](https://github.com/rstudio/sparklyr/issues/338).

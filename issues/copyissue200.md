@@ -60,33 +60,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:49383"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:49898"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
  #          description               class                mode                text              opened 
- #  "->localhost:49384"          "sockconn"                "a+"              "text"            "opened" 
+ #  "->localhost:49899"          "sockconn"                "a+"              "text"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/6t/x_r4km317f3gdmnvlcwb349w0000gn/T//RtmpcdDpxr/file2974382d1e31_spark.log"
+ #  [1] "/var/folders/6t/x_r4km317f3gdmnvlcwb349w0000gn/T//RtmpPkp01d/file3d4d53927db7_spark.log"
  #  
  #  $spark_context
  #  <jobj[4]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@4217d224
+ #    org.apache.spark.SparkContext@2e7afe99
  #  
  #  $java_context
  #  <jobj[5]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@3903e95a
+ #    org.apache.spark.api.java.JavaSparkContext@3d805371
  #  
  #  $hive_context
  #  <jobj[8]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@695089fb
+ #    org.apache.spark.sql.SparkSession@343b852
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -97,7 +97,7 @@ d1 %>% dplyr::inner_join(d2,by='y',copy=TRUE)
  #  CREATE TEMPORARY TABLE is not supported yet. Please use CREATE TEMPORARY VIEW as an alternative.(line 1, pos 0)
  #  
  #  == SQL ==
- #  CREATE TEMPORARY TABLE `btpjsnuchy` (`y` TEXT, `z` REAL)
+ #  CREATE TEMPORARY TABLE `hmltxlyxkp` (`y` TEXT, `z` REAL)
  #  ^^^
  #  
  #      at org.apache.spark.sql.execution.SparkSqlAstBuilder$$anonfun$visitCreateTable$1.apply(SparkSqlParser.scala:905)
@@ -143,3 +143,5 @@ d1 %>% dplyr::inner_join(d2,by='y',copy=TRUE)
  #      at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:137)
  #      at java.lang.Thread.run(Thread.java:745)
 ```
+
+Submitted as [sparklyr issue 339](https://github.com/rstudio/sparklyr/issues/339).

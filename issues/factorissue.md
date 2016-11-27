@@ -25,3 +25,5 @@ d2 <- data.frame(y=c('a','b'),stringsAsFactors = TRUE)
 d2 %>% dplyr::summarise_each(dplyr::funs(lexmin = min,lexmax = max))
  #  Error in eval(expr, envir, enclos): 'min' not meaningful for factors
 ```
+
+Submitted as [dplyr issue 2269](https://github.com/hadley/dplyr/issues/2269).
