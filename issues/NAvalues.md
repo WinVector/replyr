@@ -40,7 +40,9 @@ flights_mysql <- copy_to(mysql,flts,
 
     ## Error in if (n <= 65535) {: missing value where TRUE/FALSE needed
 
-`Spark` `2.0.0` with `sparklyr` `0.4.26` not faithful to `NA` values in character or factor columns of `data.frame`. As we see below they get converted to blank in a round trip between local `data.frame`s and `Spark` representations. Obviously the round trip can not be fully faithful (we fully expect factors types to become character types, and can live with numeric `NA` becoming `NaN`) due to differences in representation. But `Spark` can represent missing values in character columns (for example see [here](http://stackoverflow.com/questions/32067467/create-new-dataframe-with-empty-null-field-values).)
+`Spark` `2.0.0` with `sparklyr` `0.4.26` not faithful to `NA` values in character or factor columns of `data.frame`. As we see below they get converted to blank in a round trip between local `data.frame`s and `Spark` representations. Obviously the round trip can not be fully faithful (we fully expect factors types to become character types, and can live with numeric `NA` becoming `NaN`) due to differences in representation. But `Spark` can represent missing values in character columns (for example see [here](http://stackoverflow.com/questions/32067467/create-new-dataframe-with-empty-null-field-values)).
+
+Files as [sparklyr issue]().
 
 ``` r
 library('sparklyr')
@@ -109,3 +111,23 @@ str(d2x)
     ##  $ x: chr  "z1" "" "z3"
     ##  $ y: num  3 5 NaN
     ##  $ z: chr  "" "a" "z"
+
+``` r
+version
+```
+
+    ##                _                           
+    ## platform       x86_64-apple-darwin13.4.0   
+    ## arch           x86_64                      
+    ## os             darwin13.4.0                
+    ## system         x86_64, darwin13.4.0        
+    ## status                                     
+    ## major          3                           
+    ## minor          3.2                         
+    ## year           2016                        
+    ## month          10                          
+    ## day            31                          
+    ## svn rev        71607                       
+    ## language       R                           
+    ## version.string R version 3.3.2 (2016-10-31)
+    ## nickname       Sincere Pumpkin Patch
