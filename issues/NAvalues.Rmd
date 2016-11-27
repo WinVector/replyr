@@ -1,0 +1,45 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Be aware different `dplyr` back-ends represent `NA` much differently.  Expect numeric `NA` to be presented as `NaN` quite often, and expect database based implementations to use `NULL` (in their sense of `NULL`, *not* in R's sense) especially in character types.  Also some `dplyr` back-ends may not have a currently accessible `NULL` concept for character types (such as Spark).
+
+`dplyr` `0.5.0` with `RMySQL` `0.10.9` (both current on [Cran](https://cran.r-project.org) 11-27-2016) failing to insert `NULL` into `MySQL` (filed as [dplyr issue 2259](https://github.com/hadley/dplyr/issues/2259), status moved to duplicate of [dplyr issue 2256](https://github.com/hadley/dplyr/issues/2256)).
+
+```{r mysqlnull, error=TRUE}
+library('dplyr')
+library('nycflights13')
+packageVersion('dplyr')
+packageVersion('RMySQL')
+mysql <- src_mysql('mysql','127.0.0.1',3306,'root','passwd')
+flts <- flights
+flights_mysql <- copy_to(mysql,flts,
+  temporary = TRUE,overwrite = TRUE,
+  indexes = list(c("year", "month", "day"), "carrier", "tailnum"))
+```
+
+`Spark` `2.0.0` with `sparklyr` `0.4.26` not faithful to `NA` values in character
+or factor columns of `data.frame`.  As we see below they get converted to blank
+in a round trip between local `data.frame`s and `Spark` representations. Obviously
+the round trip can not be fully faithful (we fully expect factors types to become character types, and can live with numeric `NA` becoming `NaN`) due to differences in representation.  But `Spark` can represent missing values in character columns (for example see [here](http://stackoverflow.com/questions/32067467/create-new-dataframe-with-empty-null-field-values).)
+
+```{r sparklyr200}
+library('sparklyr')
+packageVersion('sparklyr')
+s200 <- my_db <- sparklyr::spark_connect(version='2.0.0', 
+   master = "local")
+
+d2 <- data.frame(x=factor(c('z1',NA,'z3')),y=c(3,5,NA),z=c(NA,'a','z'),
+                 stringsAsFactors = FALSE)
+print(d2)
+
+d2r <- copy_to(s200,d2,'d2',
+               temporary = FALSE,overwrite = TRUE)
+print(d2r)
+d2x <- as.data.frame(d2r)
+print(d2x)
+summary(d2x)
+str(d2x)
+```
