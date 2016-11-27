@@ -40,3 +40,8 @@ dplyr::copy_to(dest=my_db,df=d2,name='d2',overwrite=TRUE) %>%
   dplyr::summarise_each(dplyr::funs(lexmin = min,lexmax = max))
 ```
 
+
+```{r printversion}
+version
+```
+

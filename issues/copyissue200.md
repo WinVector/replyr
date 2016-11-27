@@ -24,7 +24,7 @@ R.Version()$version.string
 packageVersion('dplyr')
  #  [1] '0.5.0'
 packageVersion('sparklyr')
- #  [1] '0.4'
+ #  [1] '0.4.26'
 my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
 class(my_db)
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -47,8 +47,11 @@ print(my_db)
  #  $config$spark.sql.shuffle.partitions.local
  #  [1] 4
  #  
- #  $config$sparklyr.defaultPackages
- #  [1] "com.databricks:spark-csv_2.11:1.3.0"    "com.amazonaws:aws-java-sdk-pom:1.10.34"
+ #  $config$spark.env.SPARK_LOCAL_IP.local
+ #  [1] "127.0.0.1"
+ #  
+ #  $config$sparklyr.csv.embedded
+ #  [1] "1.*"
  #  
  #  attr(,"config")
  #  [1] "default"
@@ -60,88 +63,65 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:49898"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:65171"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
- #          description               class                mode                text              opened 
- #  "->localhost:49899"          "sockconn"                "a+"              "text"            "opened" 
- #             can read           can write 
- #                "yes"               "yes" 
+ #         description              class               mode               text             opened 
+ #  "->localhost:8880"         "sockconn"               "rb"           "binary"           "opened" 
+ #            can read          can write 
+ #               "yes"              "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/6t/x_r4km317f3gdmnvlcwb349w0000gn/T//RtmpPkp01d/file3d4d53927db7_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpZajXcZ/fileb81782bc542_spark.log"
  #  
  #  $spark_context
  #  <jobj[4]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@2e7afe99
+ #    org.apache.spark.SparkContext@174049c8
  #  
  #  $java_context
  #  <jobj[5]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@3d805371
+ #    org.apache.spark.api.java.JavaSparkContext@2ae0540d
  #  
  #  $hive_context
  #  <jobj[8]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@343b852
+ #    org.apache.spark.sql.SparkSession@19af49d4
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
 d1 <- copy_to(my_db,data.frame(x=c(1,2),y=c('a','b')),'d1')
 d2 <- data.frame(y=c('a','b'),z=c(3,4))
 d1 %>% dplyr::inner_join(d2,by='y',copy=TRUE)
- #  Error: org.apache.spark.sql.catalyst.parser.ParseException: 
- #  CREATE TEMPORARY TABLE is not supported yet. Please use CREATE TEMPORARY VIEW as an alternative.(line 1, pos 0)
+ #  Source:   query [?? x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
- #  == SQL ==
- #  CREATE TEMPORARY TABLE `hmltxlyxkp` (`y` TEXT, `z` REAL)
- #  ^^^
- #  
- #      at org.apache.spark.sql.execution.SparkSqlAstBuilder$$anonfun$visitCreateTable$1.apply(SparkSqlParser.scala:905)
- #      at org.apache.spark.sql.execution.SparkSqlAstBuilder$$anonfun$visitCreateTable$1.apply(SparkSqlParser.scala:901)
- #      at org.apache.spark.sql.catalyst.parser.ParserUtils$.withOrigin(ParserUtils.scala:96)
- #      at org.apache.spark.sql.execution.SparkSqlAstBuilder.visitCreateTable(SparkSqlParser.scala:901)
- #      at org.apache.spark.sql.execution.SparkSqlAstBuilder.visitCreateTable(SparkSqlParser.scala:53)
- #      at org.apache.spark.sql.catalyst.parser.SqlBaseParser$CreateTableContext.accept(SqlBaseParser.java:474)
- #      at org.antlr.v4.runtime.tree.AbstractParseTreeVisitor.visit(AbstractParseTreeVisitor.java:42)
- #      at org.apache.spark.sql.catalyst.parser.AstBuilder$$anonfun$visitSingleStatement$1.apply(AstBuilder.scala:64)
- #      at org.apache.spark.sql.catalyst.parser.AstBuilder$$anonfun$visitSingleStatement$1.apply(AstBuilder.scala:64)
- #      at org.apache.spark.sql.catalyst.parser.ParserUtils$.withOrigin(ParserUtils.scala:96)
- #      at org.apache.spark.sql.catalyst.parser.AstBuilder.visitSingleStatement(AstBuilder.scala:63)
- #      at org.apache.spark.sql.catalyst.parser.AbstractSqlParser$$anonfun$parsePlan$1.apply(ParseDriver.scala:54)
- #      at org.apache.spark.sql.catalyst.parser.AbstractSqlParser$$anonfun$parsePlan$1.apply(ParseDriver.scala:53)
- #      at org.apache.spark.sql.catalyst.parser.AbstractSqlParser.parse(ParseDriver.scala:82)
- #      at org.apache.spark.sql.execution.SparkSqlParser.parse(SparkSqlParser.scala:46)
- #      at org.apache.spark.sql.catalyst.parser.AbstractSqlParser.parsePlan(ParseDriver.scala:53)
- #      at org.apache.spark.sql.SparkSession.sql(SparkSession.scala:582)
- #      at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
- #      at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
- #      at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
- #      at java.lang.reflect.Method.invoke(Method.java:497)
- #      at sparklyr.Handler.handleMethodCall(handler.scala:118)
- #      at sparklyr.Handler.channelRead0(handler.scala:63)
- #      at sparklyr.Handler.channelRead0(handler.scala:15)
- #      at io.netty.channel.SimpleChannelInboundHandler.channelRead(SimpleChannelInboundHandler.java:105)
- #      at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:308)
- #      at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:294)
- #      at io.netty.handler.codec.MessageToMessageDecoder.channelRead(MessageToMessageDecoder.java:103)
- #      at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:308)
- #      at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:294)
- #      at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:244)
- #      at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:308)
- #      at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:294)
- #      at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:846)
- #      at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:131)
- #      at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:511)
- #      at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:468)
- #      at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:382)
- #      at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:354)
- #      at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:111)
- #      at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:137)
- #      at java.lang.Thread.run(Thread.java:745)
+ #        y     x     z
+ #    <chr> <dbl> <dbl>
+ #  1     a     1     3
+ #  2     b     2     4
 ```
 
 Submitted as [sparklyr issue 339](https://github.com/rstudio/sparklyr/issues/339).
+
+``` r
+version
+ #                 _                           
+ #  platform       x86_64-apple-darwin13.4.0   
+ #  arch           x86_64                      
+ #  os             darwin13.4.0                
+ #  system         x86_64, darwin13.4.0        
+ #  status                                     
+ #  major          3                           
+ #  minor          3.2                         
+ #  year           2016                        
+ #  month          10                          
+ #  day            31                          
+ #  svn rev        71607                       
+ #  language       R                           
+ #  version.string R version 3.3.2 (2016-10-31)
+ #  nickname       Sincere Pumpkin Patch
+```

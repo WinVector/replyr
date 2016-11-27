@@ -47,3 +47,22 @@ dplyr::copy_to(dest=my_db,df=d2,name='d2',overwrite=TRUE) %>%
  #     <chr>  <chr>
  #  1      a      b
 ```
+
+``` r
+version
+ #                 _                           
+ #  platform       x86_64-apple-darwin13.4.0   
+ #  arch           x86_64                      
+ #  os             darwin13.4.0                
+ #  system         x86_64, darwin13.4.0        
+ #  status                                     
+ #  major          3                           
+ #  minor          3.2                         
+ #  year           2016                        
+ #  month          10                          
+ #  day            31                          
+ #  svn rev        71607                       
+ #  language       R                           
+ #  version.string R version 3.3.2 (2016-10-31)
+ #  nickname       Sincere Pumpkin Patch
+```

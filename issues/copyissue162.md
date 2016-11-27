@@ -24,7 +24,7 @@ R.Version()$version.string
 packageVersion('dplyr')
  #  [1] '0.5.0'
 packageVersion('sparklyr')
- #  [1] '0.4'
+ #  [1] '0.4.26'
 my_db <- sparklyr::spark_connect(version='1.6.2', master = "local")
 class(my_db)
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -47,8 +47,11 @@ print(my_db)
  #  $config$spark.sql.shuffle.partitions.local
  #  [1] 4
  #  
- #  $config$sparklyr.defaultPackages
- #  [1] "com.databricks:spark-csv_2.11:1.3.0"    "com.amazonaws:aws-java-sdk-pom:1.10.34"
+ #  $config$spark.env.SPARK_LOCAL_IP.local
+ #  [1] "127.0.0.1"
+ #  
+ #  $config$sparklyr.csv.embedded
+ #  [1] "1.*"
  #  
  #  attr(,"config")
  #  [1] "default"
@@ -60,33 +63,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:49818"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:65205"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
- #          description               class                mode                text              opened 
- #  "->localhost:49819"          "sockconn"                "a+"              "text"            "opened" 
- #             can read           can write 
- #                "yes"               "yes" 
+ #         description              class               mode               text             opened 
+ #  "->localhost:8880"         "sockconn"               "rb"           "binary"           "opened" 
+ #            can read          can write 
+ #               "yes"              "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/6t/x_r4km317f3gdmnvlcwb349w0000gn/T//RtmpZ107OV/file3cf9563de116_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp9CLaR1/filebaf31ce93d7_spark.log"
  #  
  #  $spark_context
  #  <jobj[4]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@54379b45
+ #    org.apache.spark.SparkContext@3de7466a
  #  
  #  $java_context
  #  <jobj[5]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@653eb971
+ #    org.apache.spark.api.java.JavaSparkContext@f8e6ad4
  #  
  #  $hive_context
  #  <jobj[6]>
  #    class org.apache.spark.sql.hive.HiveContext
- #    org.apache.spark.sql.hive.HiveContext@2294bd5
+ #    org.apache.spark.sql.hive.HiveContext@768ed13
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -99,3 +102,22 @@ d1 %>% dplyr::inner_join(d2,by='y')
 ```
 
 Submitted as [sparklyr issue 338](https://github.com/rstudio/sparklyr/issues/338).
+
+``` r
+version
+ #                 _                           
+ #  platform       x86_64-apple-darwin13.4.0   
+ #  arch           x86_64                      
+ #  os             darwin13.4.0                
+ #  system         x86_64, darwin13.4.0        
+ #  status                                     
+ #  major          3                           
+ #  minor          3.2                         
+ #  year           2016                        
+ #  month          10                          
+ #  day            31                          
+ #  svn rev        71607                       
+ #  language       R                           
+ #  version.string R version 3.3.2 (2016-10-31)
+ #  nickname       Sincere Pumpkin Patch
+```

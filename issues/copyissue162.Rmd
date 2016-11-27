@@ -44,3 +44,8 @@ d1 %>% dplyr::inner_join(d2,by='y')
 ```
 
 Submitted as [sparklyr issue 338](https://github.com/rstudio/sparklyr/issues/338).
+
+```{r printversion}
+version
+```
+
