@@ -27,7 +27,7 @@ replyr_nrow <- function(x) {
   suppressWarnings(
     x %>% dplyr::ungroup() %>%
       dplyr::transmute(constant=1) %>% dplyr::summarize(count=sum(constant)) %>%
-      as.data.frame() -> tmp)
+      dplyr::collect() %>% as.data.frame() -> tmp)
   if(is.null(nrow(tmp))||(nrow(tmp)<1)||(ncol(tmp)<1)) {
     return(0)
   }

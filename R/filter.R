@@ -59,12 +59,7 @@ replyr_filter <- function(x,cname,values,verbose=TRUE) {
   if((!good) && ('tbl_spark' %in% class(x))) {
     cn <- x$src$con
     tmpnam <- paste('replyr_filter_tmp',sample.int(1000000000,1),sep='_')
-    # MySQL doesn't seem to always obey overwrite=TRUE
-    tryCatch(
-      dplyr::db_drop_table(cn,tmpnam),
-      error=function(x) NULL
-    )
-    tmp <- dplyr::copy_to(cn,jtab,tmpnam,overwrite=TRUE)
+    tmp <- replyr_copy_to(cn,jtab,tmpnam)
     x %>% dplyr::inner_join(tmp,by=byClause) %>%
       dplyr::compute() -> res
     dplyr::db_drop_table(cn,tmpnam)

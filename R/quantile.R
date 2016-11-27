@@ -72,18 +72,18 @@ replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
   # # so we need one more idea.
   # For now binary search for a given target.
   x %>% dplyr::summarise(xmax=max(x),xmin=min(x)) %>%
-    as.data.frame() %>% as.numeric() -> lims
+    dplyr::collect() %>% as.data.frame() %>% as.numeric() -> lims
   f <- function(v) {
     v <- as.numeric(v)
     x %>% dplyr::filter(x<=v) -> xsub
     xsub %>% replyr_nrow() -> count
     xsub %>% dplyr::summarise(xmax=max(x)) %>%
-      as.data.frame() %>% as.numeric() -> lv
+      dplyr::collect() %>% as.data.frame() %>% as.numeric() -> lv
     x %>% dplyr::filter(x>v) -> xup
     rv <- max(lims)
     if(count<nrows) {
       x %>% dplyr::filter(x>v) %>% dplyr::summarise(xmin=min(x)) %>%
-        as.data.frame() %>% as.numeric() -> rv
+        dplyr::collect() %>% as.data.frame() %>% as.numeric() -> rv
     }
     data.frame(v=v,count=count,lv=lv,rv=rv)
   }

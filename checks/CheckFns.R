@@ -3,7 +3,7 @@
 remoteCopy <- function(my_db) {
   force(my_db)
   function(df,name) {
-    dplyr::copy_to(dest=my_db,df=df,name=name,overwrite=TRUE)
+    replyr::replyr_copy_to(dest=my_db,df=df,name=name)
   }
 }
 

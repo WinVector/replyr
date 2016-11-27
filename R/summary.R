@@ -48,7 +48,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                                             max = max,
                                             mean = mean,
                                             sd = sd)) %>%
-                        as.data.frame() -> si
+                        dplyr::collect() %>% as.data.frame() -> si
                       nunique = NA
                       if(countUnique) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
@@ -82,7 +82,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                         {
                         xsub %>% dplyr::summarise_each(dplyr::funs(lexmin = min,
                                                                    lexmax = max)) %>%
-                          as.data.frame() -> si;
+                            dplyr::collect() %>% as.data.frame() -> si;
                         si <- data.frame(lexmin = as.character(si$lexmin),
                                          lexmax = as.character(si$lexmax),
                                          stringsAsFactors = FALSE)
@@ -92,7 +92,8 @@ replyr_summary <- function(x,countUnique=TRUE) {
                       )
                       if((!good)&&(localFrame(xsub))) {
                         suppressWarnings(
-                          xsublocal <- as.data.frame(xsub)
+                          xsub %>% dplyr::collect() %>%
+                            as.data.frame() -> xsublocal
                         )
                         si <- data.frame(lexmin = min(as.character(xsublocal[[ci]])),
                                          lexmax = max(as.character(xsublocal[[ci]])),

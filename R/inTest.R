@@ -31,7 +31,7 @@ replyr_inTest <- function(x,cname,values,nname,verbose=TRUE) {
     stop('replyr_inTest cname must be a single string not equal to "n"')
   }
   if((!is.character(nname))||(length(nname)!=1)||(nname[[1]]=='n')) {
-    stop('replyr_inTest cname must be a single string not equal to "n"')
+    stop('replyr_inTest nname must be a single string not equal to "n"')
   }
   vtbl <- data.frame(x=unique(values),stringsAsFactors=FALSE)
   # Spark 1.6.2 doesn't like same column names accross joins, even
@@ -65,12 +65,7 @@ replyr_inTest <- function(x,cname,values,nname,verbose=TRUE) {
   if((!good) && ('tbl_spark' %in% class(x))) {
     cn <- x$src$con
     tmpnam <- paste('replyr_intest_tmp',sample.int(1000000000,1),sep='_')
-    # MySQL doesn't seem to always obey overwrite=TRUE
-    tryCatch(
-      dplyr::db_drop_table(cn,tmpnam),
-      error=function(x) NULL
-    )
-    tmp <- dplyr::copy_to(cn,jtab,tmpnam,overwrite=TRUE)
+    tmp <- replyr_copy_to(cn,jtab,tmpnam)
     x %>% dplyr::left_join(tmp,by=byClause) %>%
       dplyr::compute() -> res
     dplyr::db_drop_table(cn,tmpnam)
