@@ -42,7 +42,7 @@ flights_mysql <- copy_to(mysql,flts,
 
 `Spark` `2.0.0` with `sparklyr` `0.4.26` not faithful to `NA` values in character or factor columns of `data.frame`. As we see below they get converted to blank in a round trip between local `data.frame`s and `Spark` representations. Obviously the round trip can not be fully faithful (we fully expect factors types to become character types, and can live with numeric `NA` becoming `NaN`) due to differences in representation. But `Spark` can represent missing values in character columns (for example see [here](http://stackoverflow.com/questions/32067467/create-new-dataframe-with-empty-null-field-values)).
 
-Files as [sparklyr issue]().
+Filed as [sparklyr issue 340](https://github.com/rstudio/sparklyr/issues/340).
 
 ``` r
 library('sparklyr')
