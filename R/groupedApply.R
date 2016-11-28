@@ -35,6 +35,7 @@ replyr_bind_rows <- function(lst) {
 #' @param f transform function
 #' @param ocolumn ordering column (optional)
 #' @param ... force later values to be bound by name
+#' @param decreasing if TRUE sort in decreasing order by ocolumn
 #' @param maxgroups maximum number of groups to work over
 #' @return transformed frame
 #'
@@ -42,30 +43,39 @@ replyr_bind_rows <- function(lst) {
 #'
 #' library('dplyr')
 #' d <- data.frame(group=c(1,1,2,2,2),
-#'                 order=c(1,2,3,4,5),
+#'                 order=c(.1,.2,.3,.4,.5),
 #'                 values=c(10,20,2,4,8))
 #'
+#' # User supplied window functions.  They depend on known column names and
+#' # the data back-end matching function names (as cumsum).
 #' cumulative_sum <- function(dg) {
-#'   dg %>% mutate(cv=cumsum(values))
+#'   dg %>% arrange(order) %>% mutate(cv=cumsum(values))
 #' }
-#'
 #' sumgroup <- function(dg) {
 #'   dg %>% summarize(group=min(group), # pseudo aggregation, group constant
 #'                    minv=min(values),maxv=max(values))
 #' }
+#' rank_in_group <- function(dg) {
+#'   dg %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
+#' }
 #'
 #' d %>% replyr_gapply('group',cumulative_sum,'order')
 #' d %>% replyr_gapply('group',sumgroup)
+#' d %>% replyr_gapply('group',rank_in_group,'order')
+#' d %>% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
 #'
 #' # # below only works for services which have a cumsum operator
 #' # my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 #' # dR <- replyr_copy_to(my_db,d,'dR')
 #' # dR %>% replyr_gapply('group',cumulative_sum,'order')
 #' # dR %>% replyr_gapply('group',sumgroup)
+#' # dR %>% replyr_gapply('group',rank_in_group,'order')
+#' # dR %>% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
 #'
 #' @export
 replyr_gapply <- function(df,gcolumn,f,ocolumn=NULL,
                           ...,
+                          decreasing=FALSE,
                           maxgroups=1000) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
     stop('replyr_gapply gcolumn must be a single non-empty string')
@@ -84,7 +94,12 @@ replyr_gapply <- function(df,gcolumn,f,ocolumn=NULL,
                     function(gi) {
                       df %>% replyr_filter(cname=gcolumn,values=gi,verbose=FALSE) -> gsubi
                       if(!is.null(ocolumn)) {
-                        gsubi %>% arrange_(ocolumn) -> gsubi
+                        if(decreasing) {
+                          #gsubi %>% arrange_(.dots=stats::setNames(paste0('desc(',ocolumn,')'),ocolumn)) -> gsubi
+                          gsubi %>% arrange_(interp(~desc(x),x=as.name(ocolumn))) -> gsubi
+                        } else {
+                          gsubi %>% arrange_(ocolumn) -> gsubi
+                        }
                       }
                       f(gsubi)
                     })
