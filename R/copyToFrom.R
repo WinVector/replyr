@@ -48,7 +48,9 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
   tryCatch({
     cn <- dest$con
     if(!("NULL" %in% class(cn))) {
-      dplyr::db_drop_table(dest$con,name)
+      if(name %in% dplyr::db_list_tables(my_db$con)) {
+        dplyr::db_drop_table(dest$con,name)
+      }
     }},
     error=function(x) NULL,
     warning=function(x) NULL
