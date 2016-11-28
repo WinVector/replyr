@@ -1,0 +1,34 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Copy issue with `MySQL`.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+`MySQL` doesn't obey `overwrite=TRUE`, but since that is in the `...` region it is hard to say what correct behavior would be.  `replyr` already works around it, this is just to explain why we take the trouble.
+
+```{r copyissueover, error=TRUE}
+library('dplyr')
+library('RMySQL')
+packageVersion('dplyr')
+packageVersion('RMySQL')
+my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d')
+d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d')
+```
+
+
+```{r printversion}
+version
+```
