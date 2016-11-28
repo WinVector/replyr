@@ -17,18 +17,15 @@ d <- data.frame(group=c(1,1,2,2,2),
                 order=c(.1,.2,.3,.4,.5),
                 values=c(10,20,2,4,8))
 
-# User supplied window functions.  They depend on known column names and
-# the data back-end matching function names (as cumsum).
-cumulative_sum <- function(dg) {
-  dg %>% arrange(order) %>% mutate(cv=cumsum(values))
-}
-sumgroup <- function(dg) {
-  dg %>% summarize(group=min(group), # pseudo aggregation, group constant
+# User supplied window functions.  These depend on known column names and
+# the data back-end matching function names (such as cumsum).  The idea
+# the user supplies one of these to replyr_gapply, and replyr_gapply
+# organizes the calcuation (spliting on gcolumn, and optionally ordering
+# on ocolumn).
+cumulative_sum <- . %>% arrange(order) %>% mutate(cv=cumsum(values))
+sumgroup <-. %>% summarize(group=min(group), # pseudo aggregation, as group constant in groups
                    minv=min(values),maxv=max(values))
-}
-rank_in_group <- function(dg) {
-  dg %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
-}
+rank_in_group <- . %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
 
 d %>% replyr_gapply('group',cumulative_sum,'order')
  #    group order values cv
@@ -106,8 +103,8 @@ dR %>% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
  #  5     2   0.3      2     3
 my_db <- NULL; gc();
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 476940 25.5     940480 50.3   750400 40.1
- #  Vcells 698622  5.4    1308461 10.0  1093046  8.4
+ #  Ncells 476852 25.5     940480 50.3   750400 40.1
+ #  Vcells 696814  5.4    1308461 10.0  1090706  8.4
 ```
 
 `Spark` example.
@@ -163,8 +160,8 @@ dR %>% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
  #  4     2   0.4      4     2
  #  5     2   0.3      2     3
 my_db <- NULL; gc();
- #  Auto-disconnecting postgres connection (10770, 0)
+ #  Auto-disconnecting postgres connection (12172, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 544751 29.1     940480 50.3   940480 50.3
- #  Vcells 758985  5.8    1308461 10.0  1280058  9.8
+ #  Ncells 544663 29.1     940480 50.3   940480 50.3
+ #  Vcells 757177  5.8    1308461 10.0  1278505  9.8
 ```

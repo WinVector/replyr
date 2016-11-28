@@ -26,18 +26,15 @@ d <- data.frame(group=c(1,1,2,2,2),
                 order=c(.1,.2,.3,.4,.5),
                 values=c(10,20,2,4,8))
 
-# User supplied window functions.  They depend on known column names and
-# the data back-end matching function names (as cumsum).
-cumulative_sum <- function(dg) {
-  dg %>% arrange(order) %>% mutate(cv=cumsum(values))
-}
-sumgroup <- function(dg) {
-  dg %>% summarize(group=min(group), # pseudo aggregation, group constant
+# User supplied window functions.  These depend on known column names and
+# the data back-end matching function names (such as cumsum).  The idea
+# the user supplies one of these to replyr_gapply, and replyr_gapply
+# organizes the calcuation (spliting on gcolumn, and optionally ordering
+# on ocolumn).
+cumulative_sum <- . %>% arrange(order) %>% mutate(cv=cumsum(values))
+sumgroup <-. %>% summarize(group=min(group), # pseudo aggregation, as group constant in groups
                    minv=min(values),maxv=max(values))
-}
-rank_in_group <- function(dg) {
-  dg %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
-}
+rank_in_group <- . %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
 
 d %>% replyr_gapply('group',cumulative_sum,'order')
 d %>% replyr_gapply('group',sumgroup)
