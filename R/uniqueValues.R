@@ -11,7 +11,7 @@ NULL
 #' Compute number of rows of a tbl.
 #'
 #' @param x tbl or item that can be coerced into such.
-#' @param cname name of columns to examine, assume not equal to 'n'.
+#' @param cname name of columns to examine, must not be equal to 'n'.
 #' @return unique values for the column.
 #'
 #' @examples
