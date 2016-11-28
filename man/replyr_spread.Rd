@@ -2,7 +2,7 @@
 % Please edit documentation in R/gather_spread.R
 \name{replyr_spread}
 \alias{replyr_spread}
-\title{Spread values found in rowControlColumn row groups as new columns. NOT WORKING ON REMOTE SERVICES YET}
+\title{Spread values found in rowControlColumn row groups as new columns.}
 \usage{
 replyr_spread(df, rowControlColumn, measurementNameColumn,
   measurementValueColumn, maxcols = 100, useTidyr = FALSE)
@@ -28,6 +28,7 @@ Spread values found in rowControlColumn row groups as new columns.
 Values types (new column names) are identified in measurementNameColumn and valeus are taken
 from measurementValueColumn.
 This is essentially a tidyr::spread, dplyr::dcast, or pivot.
+Does not work on PostgreSQL yet.
 }
 \examples{
 

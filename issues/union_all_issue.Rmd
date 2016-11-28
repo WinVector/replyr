@@ -1,0 +1,35 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+`union_all` issue with `SQLite`.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+```{r unionx, error=TRUE}
+library('dplyr')
+packageVersion('dplyr')
+my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+dr <- dplyr::copy_to(my_db,
+                     data.frame(x=c(1,2),y=c('a','b'),stringsAsFactors = FALSE),'dr',
+                     overwrite=TRUE)
+dr <- head(dr,1)
+# dr <- compute(dr)
+print(dr)
+print(dplyr::union_all(dr,dr))
+```
+
+
+```{r printversion}
+version
+```

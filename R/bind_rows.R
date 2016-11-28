@@ -13,13 +13,16 @@ r_replyr_bind_rows <- function(lst) {
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- replyr_bind_rows(lst[leftSeq])
-  right <- replyr_bind_rows(lst[rightSeq])
-  dplyr::union_all(left,right) # https://github.com/rstudio/sparklyr/issues/76
+  left <- r_replyr_bind_rows(lst[leftSeq])
+  right <- r_replyr_bind_rows(lst[rightSeq])
+  # would like to use union_all, but seems to have problems
+  res <- dplyr::union(left,right) # https://github.com/rstudio/sparklyr/issues/76
+  res <- dplyr::compute(res)
+  res
 }
 
 
-#' bind a list of items by rows
+#' bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine)
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @return single data item

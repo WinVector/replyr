@@ -125,12 +125,25 @@ runExample(noopCopy)
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
  #    index info meastype meas
- #  1     1    a    meas1 m1_1
- #  2     2    b    meas1 m1_2
- #  3     3    c    meas1 m1_3
- #  4     1    a    meas2 m2_1
- #  5     2    b    meas2 m2_2
- #  6     3    c    meas2 m2_3
+ #  1     3    c    meas2 m2_3
+ #  2     2    b    meas2 m2_2
+ #  3     1    a    meas2 m2_1
+ #  4     3    c    meas1 m1_3
+ #  5     2    b    meas1 m1_2
+ #  6     1    a    meas1 m1_1
+ #    index meastype meas
+ #  1     1    meas1 m1_1
+ #  2     2    meas1 m1_2
+ #  3     3    meas1 m1_3
+ #  4     1    meas2 m2_1
+ #  5     2    meas2 m2_2
+ #  6     3    meas2 m2_3
+ #  
+ #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #    index meas1 meas2
+ #  1     2  m1_2  m2_2
+ #  2     3  m1_3  m2_3
+ #  3     1  m1_1  m2_1
 ```
 
 Local `tbl` example.
@@ -259,12 +272,29 @@ runExample(tblCopy)
  #  # A tibble: 6 × 4
  #    index  info meastype  meas
  #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     2     b    meas1  m1_2
- #  3     3     c    meas1  m1_3
- #  4     1     a    meas2  m2_1
- #  5     2     b    meas2  m2_2
- #  6     3     c    meas2  m2_3
+ #  1     3     c    meas2  m2_3
+ #  2     2     b    meas2  m2_2
+ #  3     1     a    meas2  m2_1
+ #  4     3     c    meas1  m1_3
+ #  5     2     b    meas1  m1_2
+ #  6     1     a    meas1  m1_1
+ #  # A tibble: 6 × 3
+ #    index meastype  meas
+ #    <dbl>    <chr> <chr>
+ #  1     1    meas1  m1_1
+ #  2     2    meas1  m1_2
+ #  3     3    meas1  m1_3
+ #  4     1    meas2  m2_1
+ #  5     2    meas2  m2_2
+ #  6     3    meas2  m2_3
+ #  
+ #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #  # A tibble: 3 × 3
+ #    index meas1 meas2
+ #    <dbl> <chr> <chr>
+ #  1     2  m1_2  m2_2
+ #  2     3  m1_3  m2_3
+ #  3     1  m1_1  m2_1
 ```
 
 `SQLite` example.
@@ -413,15 +443,36 @@ runExample(remoteCopy(my_db))
  #    index  info meastype  meas
  #    <dbl> <chr>    <chr> <chr>
  #  1     1     a    meas1  m1_1
- #  2     2     b    meas1  m1_2
- #  3     3     c    meas1  m1_3
- #  4     1     a    meas2  m2_1
- #  5     2     b    meas2  m2_2
+ #  2     1     a    meas2  m2_1
+ #  3     2     b    meas1  m1_2
+ #  4     2     b    meas2  m2_2
+ #  5     3     c    meas1  m1_3
  #  6     3     c    meas2  m2_3
+ #  Source:   query [?? x 3]
+ #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
+ #  
+ #    index meastype  meas
+ #    <dbl>    <chr> <chr>
+ #  1     1    meas1  m1_1
+ #  2     2    meas1  m1_2
+ #  3     3    meas1  m1_3
+ #  4     1    meas2  m2_1
+ #  5     2    meas2  m2_2
+ #  6     3    meas2  m2_3
+ #  
+ #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #  Source:   query [?? x 3]
+ #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
+ #  
+ #    index meas1 meas2
+ #    <dbl> <chr> <chr>
+ #  1     1  m1_1  m2_1
+ #  2     2  m1_2  m2_2
+ #  3     3  m1_3  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 514878 27.5     940480 50.3   940480 50.3
- #  Vcells 740107  5.7    1308461 10.0  1308461 10.0
+ #  Ncells 517432 27.7     940480 50.3   940480 50.3
+ #  Vcells 742911  5.7    1308461 10.0  1308461 10.0
 ```
 
 MySQL example.
@@ -575,11 +626,35 @@ runExample(remoteCopy(my_db))
  #  4     1     a    meas2  m2_1
  #  5     2     b    meas2  m2_2
  #  6     3     c    meas2  m2_3
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #    index meastype  meas
+ #    <dbl>    <chr> <chr>
+ #  1     1    meas1  m1_1
+ #  2     2    meas1  m1_2
+ #  3     3    meas1  m1_3
+ #  4     1    meas2  m2_1
+ #  5     2    meas2  m2_2
+ #  6     3    meas2  m2_3
+ #  
+ #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #    index meas1 meas2
+ #    <dbl> <chr> <chr>
+ #  1     1  m1_1  m2_1
+ #  2     2  m1_2  m2_2
+ #  3     3  m1_3  m2_3
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 549964 29.4     940480 50.3   940480 50.3
- #  Vcells 767577  5.9    1650153 12.6  1308461 10.0
+ #  Ncells 552554 29.6     940480 50.3   940480 50.3
+ #  Vcells 770462  5.9    1650153 12.6  1650051 12.6
 ```
 
 PostgreSQL example.
@@ -722,22 +797,64 @@ runExample(remoteCopy(my_db))
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 4]
+ #  Warning in postgresqlQuickSQL(conn, statement, ...): Could not create executeCREATE TEMPORARY TABLE "rgewgknmfr" AS SELECT "index" AS "index", "info" AS "info", "meastype" AS "meastype", "meas" AS "meas"
+ #  FROM (SELECT "index" AS "index", "info" AS "info", "meastype" AS "meastype", "meas" AS "meas"
+ #  FROM (SELECT "index", "info", "meas1", "meastype", "meas1" AS "meas"
+ #  FROM (SELECT "index", "info", "meas1", 'meas1' AS "meastype"
+ #  FROM (SELECT "index" AS "index", "info" AS "info", "meas1" AS "meas1"
+ #  FROM (SELECT *
+ #  FROM "dg") "lislwarneb") "saxlqtrlor") "brpkyczxrk") "bocmrlijcj"
+ #  UNION
+ #  SELECT "index" AS "index", "info" AS "info", "meastype" AS "meastype", "meas" AS "meas"
+ #  FROM (SELECT "index", "info", "meas2", "meastype", "meas2" AS "meas"
+ #  FROM (SELECT "index", "info", "meas2", 'meas2' AS "meastype"
+ #  FROM (SELECT "index" AS "index", "info" AS "info", "meas2" AS "meas2"
+ #  FROM (SELECT *
+ #  FROM "dg") "cnyupoxsgh") "lavrdfapey") "bsvsdzhzir") "kqonfmohgn") "wsvgmaazur"
+ #  <simpleError in postgresqlExecStatement(conn, statement, ...): RS-DBI driver: (could not Retrieve the result : ERROR:  relation "rgewgknmfr" does not exist
+ #  LINE 1: SELECT * FROM "rgewgknmfr" AS "zzz108" WHERE 0=1
+ #                        ^
+ #  )>
+ #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     2     b    meas1  m1_2
- #  3     3     c    meas1  m1_3
- #  4     1     a    meas2  m2_1
- #  5     2     b    meas2  m2_2
- #  6     3     c    meas2  m2_3
+ #    index meastype  meas
+ #    <dbl>    <chr> <chr>
+ #  1     1    meas1  m1_1
+ #  2     2    meas1  m1_2
+ #  3     3    meas1  m1_3
+ #  4     1    meas2  m2_1
+ #  5     2    meas2  m2_2
+ #  6     3    meas2  m2_3
+ #  
+ #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
+ #  PostgreSQL field type unknown (id:705) in column 1)
+ #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
+ #  PostgreSQL field type unknown (id:705) in column 2)
+ #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
+ #  PostgreSQL field type unknown (id:705) in column 1)
+ #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
+ #  PostgreSQL field type unknown (id:705) in column 2)
+ #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
+ #  PostgreSQL field type unknown (id:705) in column 1)
+ #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
+ #  PostgreSQL field type unknown (id:705) in column 2)
+ #  Warning in postgresqlQuickSQL(conn, statement, ...): Could not create executeCREATE TEMPORARY TABLE "bnqqnoaphp" AS SELECT "index" AS "index", "meas1" AS "meas1", "meas2" AS "meas2"
+ #  FROM (SELECT *
+ #  FROM "jcrbgbiivc"
+ #  UNION
+ #  SELECT *
+ #  FROM "iihqfnizph") "mymogqaybw"
+ #  <simpleError in postgresqlExecStatement(conn, statement, ...): RS-DBI driver: (could not Retrieve the result : ERROR:  relation "bnqqnoaphp" does not exist
+ #  LINE 1: SELECT * FROM "bnqqnoaphp" AS "zzz143" WHERE 0=1
+ #                        ^
+ #  )>
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (15770, 0)
+ #  Auto-disconnecting postgres connection (18504, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 583713 31.2     940480 50.3   940480 50.3
- #  Vcells 793935  6.1    1650153 12.6  1591369 12.2
+ #  Ncells 586629 31.4     940480 50.3   940480 50.3
+ #  Vcells 797679  6.1    1650153 12.6  1650051 12.6
 ```
 
 Spark 1.6.2 example.
@@ -889,14 +1006,35 @@ runExample(remoteCopy(my_db))
  #  
  #    index  info meastype  meas
  #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     2     b    meas1  m1_2
- #  3     3     c    meas1  m1_3
- #  4     1     a    meas2  m2_1
- #  5     2     b    meas2  m2_2
- #  6     3     c    meas2  m2_3
+ #  1     2     b    meas1  m1_2
+ #  2     1     a    meas2  m2_1
+ #  3     3     c    meas2  m2_3
+ #  4     1     a    meas1  m1_1
+ #  5     3     c    meas1  m1_3
+ #  6     2     b    meas2  m2_2
+ #  Source:   query [?? x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    index meastype  meas
+ #    <dbl>    <chr> <chr>
+ #  1     1    meas1  m1_1
+ #  2     2    meas1  m1_2
+ #  3     3    meas1  m1_3
+ #  4     1    meas2  m2_1
+ #  5     2    meas2  m2_2
+ #  6     3    meas2  m2_3
+ #  
+ #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #  Source:   query [?? x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    index meas2 meas1
+ #    <dbl> <chr> <chr>
+ #  1     1  m2_1  m1_1
+ #  2     3  m2_3  m1_3
+ #  3     2  m2_2  m1_2
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 618959 33.1    1168576 62.5   940480 50.3
- #  Vcells 825364  6.3    1650153 12.6  1591369 12.2
+ #  Ncells 623228 33.3    1168576 62.5   940480 50.3
+ #  Vcells 829845  6.4    1650153 12.6  1650051 12.6
 ```

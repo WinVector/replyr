@@ -11,6 +11,7 @@ NULL
 #'
 #' Collect values found in gatherColumns as tuples naming which column the value came from (placed in measurementNameColumn)
 #' and value found (placed in measurementValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
+#' Does not work on PostgreSQL yet.
 #'
 #' @param df data item
 #' @param gatherColumns set of columns to collect measurements from
@@ -79,12 +80,13 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 
 
 
-#' Spread values found in rowControlColumn row groups as new columns. NOT WORKING ON REMOTE SERVICES YET
+#' Spread values found in rowControlColumn row groups as new columns.
 #'
 #' Spread values found in rowControlColumn row groups as new columns.
 #' Values types (new column names) are identified in measurementNameColumn and valeus are taken
 #' from measurementValueColumn.
 #' This is essentially a tidyr::spread, dplyr::dcast, or pivot.
+#' Does not work on PostgreSQL yet.
 #'
 #' @param df data item
 #' @param rowControlColumn column to determine which sets of rows are considered a group.
@@ -152,13 +154,18 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
   mcols <- c(measurementNameColumn,measurementValueColumn)
   copyCols <- setdiff(cnames,mcols)
   f <- function(di) {
-    di %>% head(n=1) %>% dplyr::select(dplyr::one_of(copyCols)) -> d1
-    di %>% dplyr::select(dplyr::one_of(mcols)) %>% replyr_copy_from() -> di
+    di %>% head(n=1) %>% dplyr::select(dplyr::one_of(copyCols)) %>%
+      dplyr::compute() -> d1
+    di %>% dplyr::select(dplyr::one_of(ucols)) %>%
+      dplyr::compute() -> di
     for(ni in newCols) {
+      di %>% replyr_filter(measurementNameColumn,ni,verbose=FALSE) %>%
+        dplyr::compute() -> din
       vi <- NA
-      idx <- match(ni,di[[measurementNameColumn]])
-      if(!is.na(idx)) {
-        vi <- di[idx,measurementValueColumn,drop=TRUE]
+      if(replyr_nrow(din)>0) {
+        din %>% head(n=1) %>% replyr::replyr_copy_from() %>%
+          as.data.frame() -> din1
+        vi <- din1[1,measurementValueColumn,drop=TRUE]
       }
       # see http://stackoverflow.com/questions/26003574/r-dplyr-mutate-use-dynamic-variable-names
       varval <- lazyeval::interp(~vi,vi=vi)

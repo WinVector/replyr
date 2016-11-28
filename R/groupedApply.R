@@ -83,7 +83,7 @@ replyr_gapply <- function(df,gcolumn,f,ocolumn=NULL,
                           gsubi %>% arrange_(ocolumn) -> gsubi
                         }
                       }
-                      f(gsubi)
+                      dplyr::compute(f(gsubi))
                     })
   replyr_bind_rows(reslist)
 }

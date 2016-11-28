@@ -24,6 +24,7 @@ data item
 \description{
 Collect values found in gatherColumns as tuples naming which column the value came from (placed in measurementNameColumn)
 and value found (placed in measurementValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
+Does not work on PostgreSQL yet.
 }
 \examples{
 
