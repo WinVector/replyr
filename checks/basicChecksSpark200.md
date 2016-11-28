@@ -148,8 +148,29 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     3     2
  #  3     2     1
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    index  info meas1 meas2
+ #    <dbl> <chr> <chr> <chr>
+ #  1     1     a  m1_1  m2_1
+ #  2     2     b  m1_2  m2_2
+ #  3     3     c  m1_3  m2_3
+ #  
+ #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     2     b    meas1  m1_2
+ #  3     3     c    meas1  m1_3
+ #  4     1     a    meas2  m2_1
+ #  5     2     b    meas2  m2_2
+ #  6     3     c    meas2  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 515999 27.6     940480 50.3   750400 40.1
- #  Vcells 735347  5.7    1308461 10.0   898021  6.9
+ #  Ncells 517680 27.7     940480 50.3   750400 40.1
+ #  Vcells 747860  5.8    1308461 10.0   910164  7.0
 ```

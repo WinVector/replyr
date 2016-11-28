@@ -1,5 +1,7 @@
 
 
+
+
 remoteCopy <- function(my_db) {
   force(my_db)
   function(df,name) {
@@ -69,4 +71,24 @@ runExample <- function(copyToRemote) {
 
   cat('\nd4 %>% replyr::replyr_uniqueValues("x") \n')
   print(d4 %>% replyr::replyr_uniqueValues("x"))
+
+  # gather/spread examples
+  dg <- copyToRemote(data.frame(
+    index = c(1, 2, 3),
+    info = c('a', 'b', 'c'),
+    meas1 = c('m1_1', 'm1_2', 'm1_3'),
+    meas2 = c('m2_1', 'm2_2', 'm2_3'),
+    stringsAsFactors = FALSE),'dg')
+  print(dg)
+  cat("\n dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')\n")
+  dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+
+  # ds <-  copyToRemote(data.frame(
+  #   index = c(1, 2, 3, 1, 2, 3),
+  #   meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
+  #   meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
+  #   stringsAsFactors = FALSE),'ds')
+  # print(ds)
+  # cat("\n ds %>% replyr::replyr_spread('index','meastype','meas')\n")
+  # ds %>% replyr::replyr_spread('index','meastype','meas')
 }

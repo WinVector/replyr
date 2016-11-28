@@ -118,6 +118,19 @@ runExample(noopCopy)
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #    index info meas1 meas2
+ #  1     1    a  m1_1  m2_1
+ #  2     2    b  m1_2  m2_2
+ #  3     3    c  m1_3  m2_3
+ #  
+ #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #    index info meastype meas
+ #  1     1    a    meas1 m1_1
+ #  2     2    b    meas1 m1_2
+ #  3     3    c    meas1 m1_3
+ #  4     1    a    meas2 m2_1
+ #  5     2    b    meas2 m2_2
+ #  6     3    c    meas2 m2_3
 ```
 
 Local `tbl` example.
@@ -235,6 +248,23 @@ runExample(tblCopy)
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  # A tibble: 3 × 4
+ #    index  info meas1 meas2
+ #    <dbl> <chr> <chr> <chr>
+ #  1     1     a  m1_1  m2_1
+ #  2     2     b  m1_2  m2_2
+ #  3     3     c  m1_3  m2_3
+ #  
+ #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #  # A tibble: 6 × 4
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     2     b    meas1  m1_2
+ #  3     3     c    meas1  m1_3
+ #  4     1     a    meas2  m2_1
+ #  5     2     b    meas2  m2_2
+ #  6     3     c    meas2  m2_3
 ```
 
 `SQLite` example.
@@ -367,10 +397,31 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  Source:   query [?? x 4]
+ #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
+ #  
+ #    index  info meas1 meas2
+ #    <dbl> <chr> <chr> <chr>
+ #  1     1     a  m1_1  m2_1
+ #  2     2     b  m1_2  m2_2
+ #  3     3     c  m1_3  m2_3
+ #  
+ #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #  Source:   query [?? x 4]
+ #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
+ #  
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     2     b    meas1  m1_2
+ #  3     3     c    meas1  m1_3
+ #  4     1     a    meas2  m2_1
+ #  5     2     b    meas2  m2_2
+ #  6     3     c    meas2  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 512696 27.4     940480 50.3   940480 50.3
- #  Vcells 728014  5.6    1650153 12.6  1297349  9.9
+ #  Ncells 514878 27.5     940480 50.3   940480 50.3
+ #  Vcells 740107  5.7    1308461 10.0  1308461 10.0
 ```
 
 MySQL example.
@@ -503,11 +554,32 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  Source:   query [?? x 4]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #    index  info meas1 meas2
+ #    <dbl> <chr> <chr> <chr>
+ #  1     1     a  m1_1  m2_1
+ #  2     2     b  m1_2  m2_2
+ #  3     3     c  m1_3  m2_3
+ #  
+ #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #  Source:   query [?? x 4]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     2     b    meas1  m1_2
+ #  3     3     c    meas1  m1_3
+ #  4     1     a    meas2  m2_1
+ #  5     2     b    meas2  m2_2
+ #  6     3     c    meas2  m2_3
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 547826 29.3     940480 50.3   940480 50.3
- #  Vcells 755395  5.8    1650153 12.6  1570004 12.0
+ #  Ncells 549964 29.4     940480 50.3   940480 50.3
+ #  Vcells 767577  5.9    1650153 12.6  1308461 10.0
 ```
 
 PostgreSQL example.
@@ -640,11 +712,32 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     3     2
  #  3     2     1
+ #  Source:   query [?? x 4]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #    index  info meas1 meas2
+ #    <dbl> <chr> <chr> <chr>
+ #  1     1     a  m1_1  m2_1
+ #  2     2     b  m1_2  m2_2
+ #  3     3     c  m1_3  m2_3
+ #  
+ #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #  Source:   query [?? x 4]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     2     b    meas1  m1_2
+ #  3     3     c    meas1  m1_3
+ #  4     1     a    meas2  m2_1
+ #  5     2     b    meas2  m2_2
+ #  6     3     c    meas2  m2_3
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (8490, 0)
+ #  Auto-disconnecting postgres connection (15770, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 581560 31.1     940480 50.3   940480 50.3
- #  Vcells 781644  6.0    1650153 12.6  1648927 12.6
+ #  Ncells 583713 31.2     940480 50.3   940480 50.3
+ #  Vcells 793935  6.1    1650153 12.6  1591369 12.2
 ```
 
 Spark 1.6.2 example.
@@ -781,8 +874,29 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    index  info meas1 meas2
+ #    <dbl> <chr> <chr> <chr>
+ #  1     1     a  m1_1  m2_1
+ #  2     2     b  m1_2  m2_2
+ #  3     3     c  m1_3  m2_3
+ #  
+ #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     2     b    meas1  m1_2
+ #  3     3     c    meas1  m1_3
+ #  4     1     a    meas2  m2_1
+ #  5     2     b    meas2  m2_2
+ #  6     3     c    meas2  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 616476 33.0    1168576 62.5   940480 50.3
- #  Vcells 811624  6.2    1650153 12.6  1648927 12.6
+ #  Ncells 618959 33.1    1168576 62.5   940480 50.3
+ #  Vcells 825364  6.3    1650153 12.6  1591369 12.2
 ```
