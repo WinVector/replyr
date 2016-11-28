@@ -1,4 +1,4 @@
-`union_all` issue with `SQLite`.
+`union_all` issue with `SQLite`. Submitted as [dplyr issue 2270](https://github.com/hadley/dplyr/issues/2270).
 
 <!-- Generated from .Rmd. Please edit that file -->
 ``` r
