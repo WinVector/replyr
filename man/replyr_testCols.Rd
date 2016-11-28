@@ -15,7 +15,8 @@ replyr_testCols(x, f)
 array results.
 }
 \description{
-Run test on columns.
+Applies user function to head of each column.  Good for determing things
+such as column class.
 }
 \examples{
 

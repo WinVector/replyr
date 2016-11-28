@@ -21,6 +21,9 @@ replyr_colClasses <- function(x) {
 
 #' Run test on columns.
 #'
+#' Applies user function to head of each column.  Good for determing things
+#' such as column class.
+#'
 #' @param x tbl or item that can be coerced into such.
 #' @param f test function (returning logical, not depending on data length).
 #' @return array results.
