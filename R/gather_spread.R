@@ -2,7 +2,6 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom tidyr gather_ spread_
 #' @importFrom dplyr select mutate_ one_of
 NULL
 
@@ -34,6 +33,9 @@ NULL
 #' @export
 replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValueColumn,
                           useTidyr=FALSE) {
+  if("src_postgres" %in% class(df$src)) {
+    stop("replyr_spread not yet implemented for src_postgres")
+  }
   if((!is.character(gatherColumns))||(length(gatherColumns)<1)) {
     stop('replyr_gather gatherColumns must be a character vector')
   }
@@ -72,7 +74,7 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
     df %>% dplyr::select(dplyr::one_of(targetsA)) %>%
       dplyr::mutate_(.dots=stats::setNames(paste0('"',di,'"'), measurementNameColumn)) %>%
       dplyr::mutate_(.dots=stats::setNames(di, measurementValueColumn)) %>%
-      dplyr::select(dplyr::one_of(targetsB))
+      dplyr::select(dplyr::one_of(targetsB)) %>% dplyr::compute()
   })
   replyr_bind_rows(rlist)
 }
@@ -110,6 +112,9 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementValueColumn,
                           maxcols=100,
                           useTidyr=FALSE) {
+  if("src_postgres" %in% class(df$src)) {
+    stop("replyr_spread not yet implemented for src_postgres")
+  }
   if((!is.character(rowControlColumn))||(length(rowControlColumn)!=1)||
      (nchar(rowControlColumn)<1)) {
     stop('replyr_spread rowControlColumn must be a single non-empty string')
@@ -171,7 +176,7 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
       varval <- lazyeval::interp(~vi,vi=vi)
       d1 %>% dplyr::mutate_(.dots=stats::setNames(list(varval), ni)) -> d1
     }
-    d1
+    dplyr::compute(d1)
   }
   replyr_gapply(df,rowControlColumn,f,maxgroups=NULL)
 }

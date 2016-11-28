@@ -269,6 +269,7 @@ runExample(tblCopy)
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
+ #  Warning: Unknown column 'src'
  #  # A tibble: 6 × 4
  #    index  info meastype  meas
  #    <dbl> <chr>    <chr> <chr>
@@ -289,6 +290,7 @@ runExample(tblCopy)
  #  6     3    meas2  m2_3
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #  Warning: Unknown column 'src'
  #  # A tibble: 3 × 3
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
@@ -471,8 +473,8 @@ runExample(remoteCopy(my_db))
  #  3     3  m1_3  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 517432 27.7     940480 50.3   940480 50.3
- #  Vcells 742911  5.7    1308461 10.0  1308461 10.0
+ #  Ncells 518168 27.7     940480 50.3   940480 50.3
+ #  Vcells 744018  5.7    1308461 10.0  1308461 10.0
 ```
 
 MySQL example.
@@ -653,8 +655,8 @@ runExample(remoteCopy(my_db))
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 552554 29.6     940480 50.3   940480 50.3
- #  Vcells 770462  5.9    1650153 12.6  1650051 12.6
+ #  Ncells 553176 29.6     940480 50.3   940480 50.3
+ #  Vcells 771403  5.9    1650153 12.6  1563293 12.0
 ```
 
 PostgreSQL example.
@@ -797,24 +799,7 @@ runExample(remoteCopy(my_db))
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Warning in postgresqlQuickSQL(conn, statement, ...): Could not create executeCREATE TEMPORARY TABLE "rgewgknmfr" AS SELECT "index" AS "index", "info" AS "info", "meastype" AS "meastype", "meas" AS "meas"
- #  FROM (SELECT "index" AS "index", "info" AS "info", "meastype" AS "meastype", "meas" AS "meas"
- #  FROM (SELECT "index", "info", "meas1", "meastype", "meas1" AS "meas"
- #  FROM (SELECT "index", "info", "meas1", 'meas1' AS "meastype"
- #  FROM (SELECT "index" AS "index", "info" AS "info", "meas1" AS "meas1"
- #  FROM (SELECT *
- #  FROM "dg") "lislwarneb") "saxlqtrlor") "brpkyczxrk") "bocmrlijcj"
- #  UNION
- #  SELECT "index" AS "index", "info" AS "info", "meastype" AS "meastype", "meas" AS "meas"
- #  FROM (SELECT "index", "info", "meas2", "meastype", "meas2" AS "meas"
- #  FROM (SELECT "index", "info", "meas2", 'meas2' AS "meastype"
- #  FROM (SELECT "index" AS "index", "info" AS "info", "meas2" AS "meas2"
- #  FROM (SELECT *
- #  FROM "dg") "cnyupoxsgh") "lavrdfapey") "bsvsdzhzir") "kqonfmohgn") "wsvgmaazur"
- #  <simpleError in postgresqlExecStatement(conn, statement, ...): RS-DBI driver: (could not Retrieve the result : ERROR:  relation "rgewgknmfr" does not exist
- #  LINE 1: SELECT * FROM "rgewgknmfr" AS "zzz108" WHERE 0=1
- #                        ^
- #  )>
+ #  <simpleError in replyr::replyr_gather(., c("meas1", "meas2"), "meastype", "meas"): replyr_spread not yet implemented for src_postgres>
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -828,33 +813,12 @@ runExample(remoteCopy(my_db))
  #  6     3    meas2  m2_3
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
- #  PostgreSQL field type unknown (id:705) in column 1)
- #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
- #  PostgreSQL field type unknown (id:705) in column 2)
- #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
- #  PostgreSQL field type unknown (id:705) in column 1)
- #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
- #  PostgreSQL field type unknown (id:705) in column 2)
- #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
- #  PostgreSQL field type unknown (id:705) in column 1)
- #  Warning in postgresqlExecStatement(conn, statement, ...): RS-DBI driver warning: (unrecognized
- #  PostgreSQL field type unknown (id:705) in column 2)
- #  Warning in postgresqlQuickSQL(conn, statement, ...): Could not create executeCREATE TEMPORARY TABLE "bnqqnoaphp" AS SELECT "index" AS "index", "meas1" AS "meas1", "meas2" AS "meas2"
- #  FROM (SELECT *
- #  FROM "jcrbgbiivc"
- #  UNION
- #  SELECT *
- #  FROM "iihqfnizph") "mymogqaybw"
- #  <simpleError in postgresqlExecStatement(conn, statement, ...): RS-DBI driver: (could not Retrieve the result : ERROR:  relation "bnqqnoaphp" does not exist
- #  LINE 1: SELECT * FROM "bnqqnoaphp" AS "zzz143" WHERE 0=1
- #                        ^
- #  )>
+ #  <simpleError in replyr::replyr_spread(., "index", "meastype", "meas"): replyr_spread not yet implemented for src_postgres>
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (18504, 0)
+ #  Auto-disconnecting postgres connection (19048, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 586629 31.4     940480 50.3   940480 50.3
- #  Vcells 797679  6.1    1650153 12.6  1650051 12.6
+ #  Ncells 586701 31.4     940480 50.3   940480 50.3
+ #  Vcells 797953  6.1    1650153 12.6  1606225 12.3
 ```
 
 Spark 1.6.2 example.
@@ -1035,6 +999,6 @@ runExample(remoteCopy(my_db))
  #  3     2  m2_2  m1_2
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 623228 33.3    1168576 62.5   940480 50.3
- #  Vcells 829845  6.4    1650153 12.6  1650051 12.6
+ #  Ncells 623467 33.3    1168576 62.5   940480 50.3
+ #  Vcells 830491  6.4    1650153 12.6  1606225 12.3
 ```

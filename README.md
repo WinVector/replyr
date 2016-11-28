@@ -108,6 +108,6 @@ Some primitives of interest include:
 -   Random row sampling (like `dplyr::sample_n`, but working with more service providers).
 -   Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.
 -   Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `replyr_gapply`.
--   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
+-   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting), which is the purpose of `replyr_gather` and `replyr_spread` (still under development).
 
 Note we are deliberately using prefixed names `replyr_` and not using common `S3` method names to avoid the possibility of `replyr` functions interfering with basic `dplyr` functionality.

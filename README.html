@@ -77,6 +77,6 @@ devtools::<span class="kw">install_github</span>(<span class="st">&#39;WinVector
 <li>Random row sampling (like <code>dplyr::sample_n</code>, but working with more service providers).</li>
 <li>Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.</li>
 <li>Emulating <a href="https://www.jstatsoft.org/article/view/v040i01">The Split-Apply-Combine Strategy</a>, which is the purpose <code>replyr_gapply</code>.</li>
-<li>Emulating <code>tidyr</code> gather/spread (or pivoting and anti-pivoting).</li>
+<li>Emulating <code>tidyr</code> gather/spread (or pivoting and anti-pivoting), which is the purpose of <code>replyr_gather</code> and <code>replyr_spread</code> (still under development).</li>
 </ul>
 <p>Note we are deliberately using prefixed names <code>replyr_</code> and not using common <code>S3</code> method names to avoid the possibility of <code>replyr</code> functions interfering with basic <code>dplyr</code> functionality.</p>
