@@ -124,13 +124,6 @@ runExample(noopCopy)
  #  3     3    c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #    index info meastype meas
- #  1     3    c    meas2 m2_3
- #  2     2    b    meas2 m2_2
- #  3     1    a    meas2 m2_1
- #  4     3    c    meas1 m1_3
- #  5     2    b    meas1 m1_2
- #  6     1    a    meas1 m1_1
  #    index meastype meas
  #  1     1    meas1 m1_1
  #  2     2    meas1 m1_2
@@ -141,9 +134,9 @@ runExample(noopCopy)
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
  #    index meas1 meas2
- #  1     2  m1_2  m2_2
- #  2     3  m1_3  m2_3
- #  3     1  m1_1  m2_1
+ #  1     1  m1_1  m2_1
+ #  2     2  m1_2  m2_2
+ #  3     3  m1_3  m2_3
 ```
 
 Local `tbl` example.
@@ -270,15 +263,8 @@ runExample(tblCopy)
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
  #  Warning: Unknown column 'src'
- #  # A tibble: 6 × 4
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     3     c    meas2  m2_3
- #  2     2     b    meas2  m2_2
- #  3     1     a    meas2  m2_1
- #  4     3     c    meas1  m1_3
- #  5     2     b    meas1  m1_2
- #  6     1     a    meas1  m1_1
+
+ #  Warning: Unknown column 'src'
  #  # A tibble: 6 × 3
  #    index meastype  meas
  #    <dbl>    <chr> <chr>
@@ -291,12 +277,16 @@ runExample(tblCopy)
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
  #  Warning: Unknown column 'src'
+
+ #  Warning: Unknown column 'src'
+
+ #  Warning: Unknown column 'src'
  #  # A tibble: 3 × 3
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
- #  1     2  m1_2  m2_2
- #  2     3  m1_3  m2_3
- #  3     1  m1_1  m2_1
+ #  1     1  m1_1  m2_1
+ #  2     2  m1_2  m2_2
+ #  3     3  m1_3  m2_3
 ```
 
 `SQLite` example.
@@ -439,17 +429,6 @@ runExample(remoteCopy(my_db))
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 4]
- #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
- #  
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     1     a    meas2  m2_1
- #  3     2     b    meas1  m1_2
- #  4     2     b    meas2  m2_2
- #  5     3     c    meas1  m1_3
- #  6     3     c    meas2  m2_3
  #  Source:   query [?? x 3]
  #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
  #  
@@ -473,8 +452,8 @@ runExample(remoteCopy(my_db))
  #  3     3  m1_3  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 518168 27.7     940480 50.3   940480 50.3
- #  Vcells 744018  5.7    1308461 10.0  1308461 10.0
+ #  Ncells 517355 27.7     940480 50.3   940480 50.3
+ #  Vcells 744613  5.7    1308461 10.0  1308461 10.0
 ```
 
 MySQL example.
@@ -617,17 +596,6 @@ runExample(remoteCopy(my_db))
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 4]
- #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
- #  
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     2     b    meas1  m1_2
- #  3     3     c    meas1  m1_3
- #  4     1     a    meas2  m2_1
- #  5     2     b    meas2  m2_2
- #  6     3     c    meas2  m2_3
  #  Source:   query [?? x 3]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
@@ -655,8 +623,8 @@ runExample(remoteCopy(my_db))
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 553176 29.6     940480 50.3   940480 50.3
- #  Vcells 771403  5.9    1650153 12.6  1563293 12.0
+ #  Ncells 552370 29.5     940480 50.3   940480 50.3
+ #  Vcells 771963  5.9    1650153 12.6  1553839 11.9
 ```
 
 PostgreSQL example.
@@ -799,7 +767,6 @@ runExample(remoteCopy(my_db))
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  <simpleError in replyr::replyr_gather(., c("meas1", "meas2"), "meastype", "meas"): replyr_spread not yet implemented for src_postgres>
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -813,12 +780,19 @@ runExample(remoteCopy(my_db))
  #  6     3    meas2  m2_3
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  <simpleError in replyr::replyr_spread(., "index", "meastype", "meas"): replyr_spread not yet implemented for src_postgres>
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #    index meas1 meas2
+ #    <dbl> <chr> <chr>
+ #  1     1  m1_1  m2_1
+ #  2     3  m1_3  m2_3
+ #  3     2  m1_2  m2_2
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (19048, 0)
+ #  Auto-disconnecting postgres connection (24475, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 586701 31.4     940480 50.3   940480 50.3
- #  Vcells 797953  6.1    1650153 12.6  1606225 12.3
+ #  Ncells 585789 31.3     940480 50.3   940480 50.3
+ #  Vcells 798303  6.1    1650153 12.6  1609469 12.3
 ```
 
 Spark 1.6.2 example.
@@ -965,17 +939,6 @@ runExample(remoteCopy(my_db))
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     2     b    meas1  m1_2
- #  2     1     a    meas2  m2_1
- #  3     3     c    meas2  m2_3
- #  4     1     a    meas1  m1_1
- #  5     3     c    meas1  m1_3
- #  6     2     b    meas2  m2_2
  #  Source:   query [?? x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -999,6 +962,6 @@ runExample(remoteCopy(my_db))
  #  3     2  m2_2  m1_2
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 623467 33.3    1168576 62.5   940480 50.3
- #  Vcells 830491  6.4    1650153 12.6  1606225 12.3
+ #  Ncells 622563 33.3    1168576 62.5   940480 50.3
+ #  Vcells 830318  6.4    1650153 12.6  1609469 12.3
 ```

@@ -14,7 +14,7 @@ replyr_gather(df, gatherColumns, measurementNameColumn, measurementValueColumn,
 
 \item{measurementNameColumn}{new column to write measurement names to (original gatherColumns)}
 
-\item{measurementValueColumn}{new column to write measurment values to}
+\item{measurementValueColumn}{new column to write measurement values to}
 
 \item{useTidyr}{if TRUE use tidyr instead of calculating on own (only works on local data types)}
 }
@@ -24,7 +24,6 @@ data item
 \description{
 Collect values found in gatherColumns as tuples naming which column the value came from (placed in measurementNameColumn)
 and value found (placed in measurementValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
-Does not work on PostgreSQL yet.
 }
 \examples{
 

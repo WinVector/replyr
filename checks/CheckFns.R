@@ -81,10 +81,7 @@ runExample <- function(copyToRemote) {
     stringsAsFactors = FALSE),'dg')
   print(dg)
   cat("\n dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')\n")
-  tryCatch(
-    print(dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')),
-    error=function(x) {print(x)})
-
+  dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
 
   ds <-  copyToRemote(data.frame(
     index = c(1, 2, 3, 1, 2, 3),
@@ -93,7 +90,5 @@ runExample <- function(copyToRemote) {
     stringsAsFactors = FALSE),'ds')
   print(ds)
   cat("\n ds %>% replyr::replyr_spread('index','meastype','meas')\n")
-  tryCatch(
-    print(ds %>% replyr::replyr_spread('index','meastype','meas')),
-    error=function(x) {print(x)})
+  ds %>% replyr::replyr_spread('index','meastype','meas')
 }

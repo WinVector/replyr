@@ -2,7 +2,7 @@
 % Please edit documentation in R/gather_spread.R
 \name{replyr_spread}
 \alias{replyr_spread}
-\title{Spread values found in rowControlColumn row groups as new columns.}
+\title{Spread values found in rowControlColumn row groups as new columns. A concept demonstration, not a function for production.}
 \usage{
 replyr_spread(df, rowControlColumn, measurementNameColumn,
   measurementValueColumn, maxcols = 100, useTidyr = FALSE)
@@ -14,7 +14,7 @@ replyr_spread(df, rowControlColumn, measurementNameColumn,
 
 \item{measurementNameColumn}{column to take measurement names from (values become new columns)}
 
-\item{measurementValueColumn}{column to take measurment values from}
+\item{measurementValueColumn}{column to take measurement values from}
 
 \item{maxcols}{maximum number of values to expand to columns}
 
@@ -25,10 +25,11 @@ data item
 }
 \description{
 Spread values found in rowControlColumn row groups as new columns.
-Values types (new column names) are identified in measurementNameColumn and valeus are taken
+Values types (new column names) are identified in measurementNameColumn and values are taken
 from measurementValueColumn.
-This is essentially a tidyr::spread, dplyr::dcast, or pivot.
-Does not work on PostgreSQL yet.
+This is denormalizing operation, or essentially a tidyr::spread, dplyr::dcast, or pivot.
+This implementation moves
+so much data it is essentially working locally and also very inefficient.
 }
 \examples{
 

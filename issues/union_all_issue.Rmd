@@ -29,6 +29,12 @@ print(dr)
 print(dplyr::union_all(dr,dr))
 ```
 
+```{r cleanup}
+rm(list=ls())
+gc()
+```
+
+
 
 ```{r printversion}
 version

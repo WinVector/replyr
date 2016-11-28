@@ -33,6 +33,14 @@ print(dplyr::union_all(dr,dr))
 ```
 
 ``` r
+rm(list=ls())
+gc()
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 455991 24.4     750400 40.1   592000 31.7
+ #  Vcells 647782  5.0    1308461 10.0   883021  6.8
+```
+
+``` r
 version
  #                 _                           
  #  platform       x86_64-apple-darwin13.4.0   

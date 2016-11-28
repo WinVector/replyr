@@ -15,8 +15,14 @@ r_replyr_bind_rows <- function(lst) {
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
   left <- r_replyr_bind_rows(lst[leftSeq])
   right <- r_replyr_bind_rows(lst[rightSeq])
-  # would like to use union_all, but seems to have problems
-  res <- dplyr::union(left,right) # https://github.com/rstudio/sparklyr/issues/76
+  # ideas from https://github.com/rstudio/sparklyr/issues/76
+  # would like to use union_all, but seems to have problems with Spark 2.0.0
+  # (spread example from basicChecksSpark200.Rmd)
+  if(length(intersect("src_spark",class(left$src)))>0) {
+    res <- dplyr::union(left,right)
+  } else {
+    res <- dplyr::union_all(left,right)
+  }
   res <- dplyr::compute(res)
   res
 }

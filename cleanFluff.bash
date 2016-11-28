@@ -2,4 +2,4 @@
 
 # get rid of side effect files from practice runs
 
-find . \( -name \*\.log -or -name \*.log\.\* -or -name \*.sqlite3\* \) -exec rm {} \;
+find . \( -name \*~ -or -name \*\.log -or -name \*.log\.\* -or -name \*.sqlite3\* \) -exec rm {} \;

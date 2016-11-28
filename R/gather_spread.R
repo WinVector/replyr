@@ -10,12 +10,11 @@ NULL
 #'
 #' Collect values found in gatherColumns as tuples naming which column the value came from (placed in measurementNameColumn)
 #' and value found (placed in measurementValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
-#' Does not work on PostgreSQL yet.
 #'
 #' @param df data item
 #' @param gatherColumns set of columns to collect measurements from
 #' @param measurementNameColumn new column to write measurement names to (original gatherColumns)
-#' @param measurementValueColumn new column to write measurment values to
+#' @param measurementValueColumn new column to write measurement values to
 #' @param useTidyr if TRUE use tidyr instead of calculating on own (only works on local data types)
 #' @return data item
 #'
@@ -33,9 +32,9 @@ NULL
 #' @export
 replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValueColumn,
                           useTidyr=FALSE) {
-  if("src_postgres" %in% class(df$src)) {
-    stop("replyr_spread not yet implemented for src_postgres")
-  }
+  #if("src_postgres" %in% class(df$src)) {
+  #  stop("replyr_spread not yet implemented for src_postgres")
+  #}
   if((!is.character(gatherColumns))||(length(gatherColumns)<1)) {
     stop('replyr_gather gatherColumns must be a character vector')
   }
@@ -67,12 +66,25 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
                           gather_cols=gatherColumns)
     return(res)
   }
+  useAsChar <- TRUE
+  if(length(intersect(c("src_mysql"),class(df$src)))>0) {
+    useAsChar <- FALSE
+  }
   dcols <- setdiff(cnames,gatherColumns)
   rlist <- lapply(gatherColumns, function(di) {
     targetsA <- c(dcols,di)
     targetsB <- c(dcols,measurementNameColumn,measurementValueColumn)
-    df %>% dplyr::select(dplyr::one_of(targetsA)) %>%
-      dplyr::mutate_(.dots=stats::setNames(paste0('"',di,'"'), measurementNameColumn)) %>%
+    # PostgreSQL needs to know types on character types with the lazyeval form.
+    # MySQL does not like such annotation.
+    df %>% dplyr::select(dplyr::one_of(targetsA)) -> dtmp
+    if(useAsChar) {
+      dtmp %>%
+        dplyr::mutate_(.dots=stats::setNames(paste0('as.character("',di,'")'), measurementNameColumn)) -> dtmp
+    } else {
+      dtmp %>%
+        dplyr::mutate_(.dots=stats::setNames(paste0('"',di,'"'), measurementNameColumn)) -> dtmp
+    }
+    dtmp %>%
       dplyr::mutate_(.dots=stats::setNames(di, measurementValueColumn)) %>%
       dplyr::select(dplyr::one_of(targetsB)) %>% dplyr::compute()
   })
@@ -82,18 +94,19 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 
 
 
-#' Spread values found in rowControlColumn row groups as new columns.
+#' Spread values found in rowControlColumn row groups as new columns. A concept demonstration, not a function for production.
 #'
 #' Spread values found in rowControlColumn row groups as new columns.
-#' Values types (new column names) are identified in measurementNameColumn and valeus are taken
+#' Values types (new column names) are identified in measurementNameColumn and values are taken
 #' from measurementValueColumn.
-#' This is essentially a tidyr::spread, dplyr::dcast, or pivot.
-#' Does not work on PostgreSQL yet.
+#' This is denormalizing operation, or essentially a tidyr::spread, dplyr::dcast, or pivot.
+#' This implementation moves
+#' so much data it is essentially working locally and also very inefficient.
 #'
 #' @param df data item
 #' @param rowControlColumn column to determine which sets of rows are considered a group.
 #' @param measurementNameColumn column to take measurement names from (values become new columns)
-#' @param measurementValueColumn column to take measurment values from
+#' @param measurementValueColumn column to take measurement values from
 #' @param maxcols maximum number of values to expand to columns
 #' @param useTidyr if TRUE use tidyr instead of calculating on own (only works on local data types)
 #' @return data item
@@ -112,9 +125,9 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementValueColumn,
                           maxcols=100,
                           useTidyr=FALSE) {
-  if("src_postgres" %in% class(df$src)) {
-    stop("replyr_spread not yet implemented for src_postgres")
-  }
+  #if("src_postgres" %in% class(df$src)) {
+  #  stop("replyr_spread not yet implemented for src_postgres")
+  #}
   if((!is.character(rowControlColumn))||(length(rowControlColumn)!=1)||
      (nchar(rowControlColumn)<1)) {
     stop('replyr_spread rowControlColumn must be a single non-empty string')
@@ -150,6 +163,10 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
                           value_col=measurementValueColumn)
     return(res)
   }
+  useAsChar <- TRUE
+  if(length(intersect(c("src_mysql"),class(df$src)))>0) {
+    useAsChar <- FALSE
+  }
   df %>% replyr_uniqueValues(measurementNameColumn) %>%
     replyr_copy_from(maxrow=maxcols) -> colStats
   newCols <- colStats[[measurementNameColumn]]
@@ -173,7 +190,13 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
         vi <- din1[1,measurementValueColumn,drop=TRUE]
       }
       # see http://stackoverflow.com/questions/26003574/r-dplyr-mutate-use-dynamic-variable-names
-      varval <- lazyeval::interp(~vi,vi=vi)
+      # PostgreSQL needs to know types on character types with the lazyeval form.
+      # MySQL does not like such annotation.
+      if(useAsChar && is.character(vi)) {
+        varval <- lazyeval::interp(~as.character(vi),vi=vi)
+      } else {
+        varval <- lazyeval::interp(~vi,vi=vi)
+      }
       d1 %>% dplyr::mutate_(.dots=stats::setNames(list(varval), ni)) -> d1
     }
     dplyr::compute(d1)
