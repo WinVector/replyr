@@ -4,7 +4,8 @@
 \alias{replyr_gapply}
 \title{grouped apply}
 \usage{
-replyr_gapply(df, gcolumn, f, ocolumn = NULL, ..., maxgroups = 1000)
+replyr_gapply(df, gcolumn, f, ocolumn = NULL, ..., decreasing = FALSE,
+  maxgroups = 1000)
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -16,6 +17,8 @@ replyr_gapply(df, gcolumn, f, ocolumn = NULL, ..., maxgroups = 1000)
 \item{ocolumn}{ordering column (optional)}
 
 \item{...}{force later values to be bound by name}
+
+\item{decreasing}{if TRUE sort in decreasing order by ocolumn}
 
 \item{maxgroups}{maximum number of groups to work over}
 }
@@ -32,26 +35,34 @@ https://www.jstatsoft.org/article/view/v040i01
 
 library('dplyr')
 d <- data.frame(group=c(1,1,2,2,2),
-                order=c(1,2,3,4,5),
+                order=c(.1,.2,.3,.4,.5),
                 values=c(10,20,2,4,8))
 
+# User supplied window functions.  They depend on known column names and
+# the data back-end matching function names (as cumsum).
 cumulative_sum <- function(dg) {
-  dg \%>\% mutate(cv=cumsum(values))
+  dg \%>\% arrange(order) \%>\% mutate(cv=cumsum(values))
 }
-
 sumgroup <- function(dg) {
   dg \%>\% summarize(group=min(group), # pseudo aggregation, group constant
                    minv=min(values),maxv=max(values))
 }
+rank_in_group <- function(dg) {
+  dg \%>\% mutate(constcol=1) \%>\% mutate(rank=cumsum(constcol)) \%>\% select(-constcol)
+}
 
 d \%>\% replyr_gapply('group',cumulative_sum,'order')
 d \%>\% replyr_gapply('group',sumgroup)
+d \%>\% replyr_gapply('group',rank_in_group,'order')
+d \%>\% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
 
 # # below only works for services which have a cumsum operator
 # my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 # dR <- replyr_copy_to(my_db,d,'dR')
 # dR \%>\% replyr_gapply('group',cumulative_sum,'order')
 # dR \%>\% replyr_gapply('group',sumgroup)
+# dR \%>\% replyr_gapply('group',rank_in_group,'order')
+# dR \%>\% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
 
 }
 

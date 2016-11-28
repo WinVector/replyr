@@ -107,7 +107,7 @@ Some primitives of interest include:
 -   `cumsum` or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
 -   Random row sampling (like `dplyr::sample_n`, but working with more service providers).
 -   Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.
--   Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01).
+-   Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `replyr_gapply`.
 -   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
 
 Note we are deliberately using prefixed names `replyr_` and not using common `S3` method names to avoid the possibility of `replyr` functions interfering with basic `dplyr` functionality.

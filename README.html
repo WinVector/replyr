@@ -76,7 +76,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&#39;WinVector
 <li><code>cumsum</code> or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, <code>lag</code> is enough to generate next pointers, which can be boosted to row-numberings).</li>
 <li>Random row sampling (like <code>dplyr::sample_n</code>, but working with more service providers).</li>
 <li>Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.</li>
-<li>Emulating <a href="https://www.jstatsoft.org/article/view/v040i01">The Split-Apply-Combine Strategy</a>.</li>
+<li>Emulating <a href="https://www.jstatsoft.org/article/view/v040i01">The Split-Apply-Combine Strategy</a>, which is the purpose <code>replyr_gapply</code>.</li>
 <li>Emulating <code>tidyr</code> gather/spread (or pivoting and anti-pivoting).</li>
 </ul>
 <p>Note we are deliberately using prefixed names <code>replyr_</code> and not using common <code>S3</code> method names to avoid the possibility of <code>replyr</code> functions interfering with basic <code>dplyr</code> functionality.</p>
