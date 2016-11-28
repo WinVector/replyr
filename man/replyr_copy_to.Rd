@@ -4,7 +4,8 @@
 \alias{replyr_copy_to}
 \title{Copy data to remote service.}
 \usage{
-replyr_copy_to(dest, df, name = deparse(substitute(df)))
+replyr_copy_to(dest, df, name = deparse(substitute(df)), ...,
+  rowNumberColumn = NULL)
 }
 \arguments{
 \item{dest}{remote data source}
@@ -12,6 +13,10 @@ replyr_copy_to(dest, df, name = deparse(substitute(df)))
 \item{df}{local data frame}
 
 \item{name}{name for new remote table}
+
+\item{...}{force later values to be bound by name}
+
+\item{rowNumberColumn}{if not null name to add row numbers to}
 }
 \value{
 remote handle

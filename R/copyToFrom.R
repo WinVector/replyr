@@ -11,7 +11,9 @@ NULL
 #'
 #' @param dest	remote data source
 #' @param df	local data frame
-#' @param name	name for new remote table
+#' @param name name for new remote table
+#' @param ... force later values to be bound by name
+#' @param rowNumberColumn if not null name to add row numbers to
 #' @return remote handle
 #'
 #' @examples
@@ -21,8 +23,13 @@ NULL
 #' print(d)
 #'
 #' @export
-replyr_copy_to <- function(dest, df, name = deparse(substitute(df))) {
+replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
+                           ...,
+                           rowNumberColumn=NULL) {
   # try to force any errors early, and try to fail prior to side-effects
+  if(length(list(...))>0) {
+    stop('replyr_copy_to unexpected arguments')
+  }
   force(dest)
   if("NULL" %in% class(dest)) {
     # special "no destination" case
@@ -46,6 +53,9 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df))) {
     error=function(x) NULL,
     warning=function(x) NULL
   )
+  if(!is.null(rowNumberColumn)) {
+    df[[rowNumberColumn]] <- seq_len(nrow(df))
+  }
   dplyr::copy_to(dest, df, name,
                  temporary=FALSE,
                  overwrite=TRUE)
