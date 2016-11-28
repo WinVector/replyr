@@ -42,11 +42,11 @@ d <- data.frame(group=c(1,1,2,2,2),
 
 # User supplied window functions.  They depend on known column names and
 # the data back-end matching function names (as cumsum).
-cumulative_sum <-. \%>\% arrange(order) \%>\% mutate(cv=cumsum(values))
+cumulative_sum <- . \%>\% arrange(order) \%>\% mutate(cv=cumsum(values))
 sumgroup <- . \%>\% summarize(group=min(group),
                    minv=min(values),maxv=max(values))
 # group=min(group) is a "pseudo aggregation" as group constant in groups.
-rank_in_group <-. \%>\% mutate(constcol=1) \%>\%
+rank_in_group <- . \%>\% mutate(constcol=1) \%>\%
           mutate(rank=cumsum(constcol)) \%>\% select(-constcol)
 
 d \%>\% replyr_gapply('group',cumulative_sum,'order')

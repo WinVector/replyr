@@ -32,7 +32,7 @@ d <- data.frame(group=c(1,1,2,2,2),
 # organizes the calcuation (spliting on gcolumn, and optionally ordering
 # on ocolumn).
 cumulative_sum <- . %>% arrange(order) %>% mutate(cv=cumsum(values))
-sumgroup <-. %>% summarize(group=min(group), # pseudo aggregation, as group constant in groups
+sumgroup <- . %>% summarize(group=min(group), # pseudo aggregation, as group constant in groups
                    minv=min(values),maxv=max(values))
 rank_in_group <- . %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
 
