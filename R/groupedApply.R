@@ -5,22 +5,6 @@
 #' @importFrom dplyr collect copy_to
 NULL
 
-# rbind a bunch of items together
-replyr_bind_rows <- function(lst) {
-  n <- length(lst)
-  if(n<=0) {
-    return(NULL)
-  }
-  if(n<=1) {
-    return(lst[[1]])
-  }
-  mid <- floor(n/2)
-  leftSeq <- 1:mid      # n>=2 so mid>=1
-  rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- replyr_bind_rows(lst[leftSeq])
-  right <- replyr_bind_rows(lst[rightSeq])
-  dplyr::union_all(left,right) # https://github.com/rstudio/sparklyr/issues/76
-}
 
 #' grouped apply
 #'
@@ -101,6 +85,5 @@ replyr_gapply <- function(df,gcolumn,f,ocolumn=NULL,
                       }
                       f(gsubi)
                     })
-  reslist <- Filter(function(ri) { replyr_nrow(ri)>0 },reslist)
   replyr_bind_rows(reslist)
 }

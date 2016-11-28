@@ -103,8 +103,8 @@ dR %>% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
  #  5     2   0.3      2     3
 my_db <- NULL; gc();
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 476852 25.5     940480 50.3   750400 40.1
- #  Vcells 696814  5.4    1308461 10.0  1090706  8.4
+ #  Ncells 476964 25.5     940480 50.3   750400 40.1
+ #  Vcells 697466  5.4    1334026 10.2  1196866  9.2
 ```
 
 `Spark` example.
@@ -160,8 +160,8 @@ dR %>% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
  #  4     2   0.4      4     2
  #  5     2   0.3      2     3
 my_db <- NULL; gc();
- #  Auto-disconnecting postgres connection (12172, 0)
+ #  Auto-disconnecting postgres connection (12920, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 544663 29.1     940480 50.3   940480 50.3
- #  Vcells 757177  5.8    1308461 10.0  1278505  9.8
+ #  Ncells 544951 29.2     940480 50.3   940480 50.3
+ #  Vcells 758517  5.8    1334026 10.2  1278900  9.8
 ```
