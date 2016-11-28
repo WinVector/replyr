@@ -25,7 +25,9 @@ replyr_bind_rows <- function(lst) {
 #' grouped apply
 #'
 #' Partitions from by values in grouping column, applies a generic transform
-#' to each group and then binds the groups back together.  This is powerfull
+#' to each group and then binds the groups back together.  Only advised for a
+#' moderate number of groups and better if grouping column is an index.
+#' This is powerfull
 #' enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 #' https://www.jstatsoft.org/article/view/v040i01
 #'
@@ -76,7 +78,7 @@ replyr_bind_rows <- function(lst) {
 replyr_gapply <- function(df,gcolumn,f,ocolumn=NULL,
                           ...,
                           decreasing=FALSE,
-                          maxgroups=1000) {
+                          maxgroups=100) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
     stop('replyr_gapply gcolumn must be a single non-empty string')
   }

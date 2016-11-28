@@ -5,7 +5,7 @@
 \title{grouped apply}
 \usage{
 replyr_gapply(df, gcolumn, f, ocolumn = NULL, ..., decreasing = FALSE,
-  maxgroups = 1000)
+  maxgroups = 100)
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -27,7 +27,9 @@ transformed frame
 }
 \description{
 Partitions from by values in grouping column, applies a generic transform
-to each group and then binds the groups back together.  This is powerfull
+to each group and then binds the groups back together.  Only advised for a
+moderate number of groups and better if grouping column is an index.
+This is powerfull
 enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 https://www.jstatsoft.org/article/view/v040i01
 }
