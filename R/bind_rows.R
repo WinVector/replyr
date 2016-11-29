@@ -40,14 +40,14 @@ r_replyr_bind_rows <- function(lst) {
 #'
 #' @export
 replyr_bind_rows <- function(lst) {
-  if("NULL" %in% class(lst)) {
+  if(("NULL" %in% class(lst))||(length(lst)<=0)) {
     return(NULL)
   }
   # remove any nulls or trivial data items.
   lst <- Filter(function(ri) { replyr_nrow(ri)>0 }, lst)
-  n <- length(lst)
-  if(n<=0) {
+  if(length(lst)<=0) {
     return(NULL)
   }
+  names(list) <- NULL
   r_replyr_bind_rows(lst)
 }

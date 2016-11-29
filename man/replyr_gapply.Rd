@@ -4,8 +4,8 @@
 \alias{replyr_gapply}
 \title{grouped apply}
 \usage{
-replyr_gapply(df, gcolumn, f, ocolumn = NULL, ..., decreasing = FALSE,
-  maxgroups = 100)
+replyr_gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
+  bindrows = TRUE, maxgroups = 100)
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -14,11 +14,13 @@ replyr_gapply(df, gcolumn, f, ocolumn = NULL, ..., decreasing = FALSE,
 
 \item{f}{transform function}
 
-\item{ocolumn}{ordering column (optional)}
-
 \item{...}{force later values to be bound by name}
 
+\item{ocolumn}{ordering column (optional)}
+
 \item{decreasing}{if TRUE sort in decreasing order by ocolumn}
+
+\item{bindrows}{if TRUE bind the rows back into a data item, else return split list}
 
 \item{maxgroups}{maximum number of groups to work over}
 }
@@ -49,18 +51,18 @@ sumgroup <- . \%>\% summarize(group=min(group),
 rank_in_group <- . \%>\% mutate(constcol=1) \%>\%
           mutate(rank=cumsum(constcol)) \%>\% select(-constcol)
 
-d \%>\% replyr_gapply('group',cumulative_sum,'order')
+d \%>\% replyr_gapply('group',cumulative_sum,ocolumn='order')
 d \%>\% replyr_gapply('group',sumgroup)
-d \%>\% replyr_gapply('group',rank_in_group,'order')
-d \%>\% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
+d \%>\% replyr_gapply('group',rank_in_group,ocolumn='order')
+d \%>\% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 
 # # below only works for services which have a cumsum operator
 # my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 # dR <- replyr_copy_to(my_db,d,'dR')
-# dR \%>\% replyr_gapply('group',cumulative_sum,'order')
+# dR \%>\% replyr_gapply('group',cumulative_sum,ocolumn='order')
 # dR \%>\% replyr_gapply('group',sumgroup)
-# dR \%>\% replyr_gapply('group',rank_in_group,'order')
-# dR \%>\% replyr_gapply('group',rank_in_group,'order',decreasing=TRUE)
+# dR \%>\% replyr_gapply('group',rank_in_group,ocolumn='order')
+# dR \%>\% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 
 }
 
