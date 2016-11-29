@@ -1,7 +1,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <p>It is a bit of a shock when <a href="https://cran.r-project.org">R</a> <code>dplyr</code> users switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. <code>replyr</code> attempts to provide a few helpful work-arounds.</p>
 <p><a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a></p>
-<p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (SQL databases, Spark) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions.</p>
+<p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (<code>SQL</code> databases, <code>Spark</code>) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions.</p>
 <p>Example: the following should work across more than one <code>dplyr</code> back-end (such as <code>RMySQL</code> or <code>RPostgreSQL</code>).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;replyr&#39;</span>)
 d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),<span class="dt">z=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">&#39;a&#39;</span>,<span class="st">&#39;b&#39;</span>),
@@ -42,7 +42,7 @@ dRemote &lt;-<span class="st"> </span>dplyr::<span class="kw">copy_to</span>(my_
 <li><code>SQLite</code></li>
 <li><code>sparklyr</code></li>
 </ul>
-<p>The main useful functions we supply are <code>replyr::replyr_filter</code> and <code>replyr::replyr_inTest</code> which are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:</p>
+<p>The type of functions <code>replyr</code> supplies is illustrated through <code>replyr::replyr_filter</code> and <code>replyr::replyr_inTest</code>. These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dplyr&#39;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</span>(<span class="st">&#39;x&#39;</span>,values)
@@ -57,7 +57,7 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&#39;devtools&#39;)</span>
 devtools::<span class="kw">install_github</span>(<span class="st">&#39;WinVector/replyr&#39;</span>)</code></pre></div>
 <p>The project URL is: <a href="https://github.com/WinVector/replyr" class="uri">https://github.com/WinVector/replyr</a></p>
-<p>I would like this to become a bit of a <a href="https://en.wikipedia.org/wiki/Stone_Soup">&quot;stone soup&quot;</a> project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to Win-Vector LLC (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.</p>
+<p>I would like this to become a bit of a <a href="https://en.wikipedia.org/wiki/Stone_Soup">&quot;stone soup&quot;</a> project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to <a href="http://www.win-vector.com&#39;">Win-Vector LLC</a> (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.</p>
 <p>There are a few (somewhat incompatible) goals for <code>replyr</code>:</p>
 <ul class="incremental">
 <li>Providing missing convenience functions that work well over all common <code>dplyr</code> service providers. Examples include <code>replyr_summary</code>, <code>replyr_filter</code>, and <code>replyr_nrow</code>.</li>
@@ -71,12 +71,19 @@ devtools::<span class="kw">install_github</span>(<span class="st">&#39;WinVector
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">replyr_quantile</span>(dRemote,<span class="st">&#39;x&#39;</span>)
  <span class="co">#     0 0.25  0.5 0.75    1 </span>
  <span class="co">#     1    1    2    2    2</span></code></pre></div>
-<p>Some primitives of interest include:</p>
+<p><code>replyr</code> services include:</p>
+<ul class="incremental">
+<li>Moving data into or out of the remote data store (including adding optional row numbers), <code>replyr_copy_to</code> and <code>replyr_copy_from</code>.</li>
+<li>Basic summary info: <code>replyr_nrow</code>, <code>replyr_dim</code>, and <code>replyr_summary</code>.</li>
+<li>Random row sampling (like <code>dplyr::sample_n</code>, but working with more service providers). Some of this functionality is provided by <code>replyr_filter</code> and <code>replyr_inTest</code>.</li>
+<li>Emulating <a href="https://www.jstatsoft.org/article/view/v040i01">The Split-Apply-Combine Strategy</a>, which is the purpose <code>replyr_gapply</code>, <code>replyr_split</code>, and <code>replyr_bind_rows</code>.</li>
+<li>Emulating <code>tidyr</code> gather/spread (or pivoting and anti-pivoting), which is the purpose of <code>replyr_gather</code> and <code>replyr_spread</code> (still under development).</li>
+<li>Patching around differences in <code>dplyr</code> services providers (and documenting the reasons for the patches).</li>
+<li>Making use of &quot;parameterized names&quot; much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).</li>
+</ul>
+<p>Additional desired capabilities of interest include:</p>
 <ul class="incremental">
 <li><code>cumsum</code> or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, <code>lag</code> is enough to generate next pointers, which can be boosted to row-numberings).</li>
-<li>Random row sampling (like <code>dplyr::sample_n</code>, but working with more service providers).</li>
 <li>Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.</li>
-<li>Emulating <a href="https://www.jstatsoft.org/article/view/v040i01">The Split-Apply-Combine Strategy</a>, which is the purpose <code>replyr_gapply</code>.</li>
-<li>Emulating <code>tidyr</code> gather/spread (or pivoting and anti-pivoting), which is the purpose of <code>replyr_gather</code> and <code>replyr_spread</code> (still under development).</li>
 </ul>
 <p>Note we are deliberately using prefixed names <code>replyr_</code> and not using common <code>S3</code> method names to avoid the possibility of <code>replyr</code> functions interfering with basic <code>dplyr</code> functionality.</p>

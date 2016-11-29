@@ -130,6 +130,9 @@ replyr_split <- function(df,gcolumn,
                           ocolumn=NULL,
                           decreasing=FALSE,
                           maxgroups=100) {
+  if(length(list(...))>0) {
+    stop('replyr_split unexpected arguments')
+  }
   replyr_gapply(df,gcolumn,f=NULL,ocolumn=ocolumn,
                 decreasing=decreasing,bindrows=FALSE,maxgroups=maxgroups)
 }

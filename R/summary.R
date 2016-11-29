@@ -92,8 +92,8 @@ replyr_summary <- function(x,countUnique=TRUE) {
                       )
                       if((!good)&&(localFrame(xsub))) {
                         suppressWarnings(
-                          xsub %>% dplyr::collect() %>%
-                            as.data.frame() -> xsublocal
+                          xsub %>%
+                            dplyr::collect() %>% as.data.frame() -> xsublocal
                         )
                         si <- data.frame(lexmin = min(as.character(xsublocal[[ci]])),
                                          lexmax = max(as.character(xsublocal[[ci]])),

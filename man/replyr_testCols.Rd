@@ -4,15 +4,17 @@
 \alias{replyr_testCols}
 \title{Run test on columns.}
 \usage{
-replyr_testCols(x, f)
+replyr_testCols(x, f, n = 6L)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
 
 \item{f}{test function (returning logical, not depending on data length).}
+
+\item{n}{number of rows to use in calculation.}
 }
 \value{
-array results.
+logical vector of results.
 }
 \description{
 Applies user function to head of each column.  Good for determing things

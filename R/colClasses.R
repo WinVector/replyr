@@ -14,8 +14,9 @@
 #'
 #' @export
 replyr_colClasses <- function(x) {
-  classes <- lapply(as.data.frame(head(x)),class)
-  names(classes) <- colnames(x)
+  x %>% dplyr::collect() %>% as.data.frame() -> topx
+  classes <- lapply(topx,class)
+  names(classes) <- colnames(topx)
   classes
 }
 
@@ -26,7 +27,8 @@ replyr_colClasses <- function(x) {
 #'
 #' @param x tbl or item that can be coerced into such.
 #' @param f test function (returning logical, not depending on data length).
-#' @return array results.
+#' @param n number of rows to use in calculation.
+#' @return logical vector of results.
 #'
 #' @examples
 #'
@@ -34,6 +36,7 @@ replyr_colClasses <- function(x) {
 #' replyr_testCols(d,is.numeric)
 #'
 #' @export
-replyr_testCols <- function(x,f) {
-  vapply(as.data.frame(head(x)),f,logical(1))
+replyr_testCols <- function(x,f,n = 6L) {
+  x %>% dplyr::collect() %>% as.data.frame() -> topx
+  vapply(topx,f,logical(1))
 }

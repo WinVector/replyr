@@ -22,7 +22,7 @@ It is a bit of a shock when [R](https://cran.r-project.org) `dplyr` users switch
 <a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg">
 </a>
 
-`replyr` supplies methods to get a grip on working with remote `tbl` sources (SQL databases, Spark) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
+`replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
 
 Example: the following should work across more than one `dplyr` back-end (such as `RMySQL` or `RPostgreSQL`).
@@ -58,7 +58,7 @@ We will probably only ever cover:
  * `SQLite`
  * `sparklyr`
  
-The main useful functions we supply are `replyr::replyr_filter` and `replyr::replyr_inTest` which are designed to subset data based on a columns values being in a given set.  These allow selection of rows by testing membership in a set (very useful for partitioning data).  Example below:
+The type of functions `replyr` supplies is illustrated through `replyr::replyr_filter` and `replyr::replyr_inTest`.  These are designed to subset data based on a columns values being in a given set.  These allow selection of rows by testing membership in a set (very useful for partitioning data).  Example below:
 
 ```{r lib, message=FALSE,results='hide',warning=FALSE}
 library('dplyr')
@@ -77,7 +77,7 @@ devtools::install_github('WinVector/replyr')
 
 The project URL is: [https://github.com/WinVector/replyr](https://github.com/WinVector/replyr)
 
-I would like this to become a bit of a ["stone soup"](https://en.wikipedia.org/wiki/Stone_Soup) project.  If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to Win-Vector LLC (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.
+I would like this to become a bit of a ["stone soup"](https://en.wikipedia.org/wiki/Stone_Soup) project.  If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to [Win-Vector LLC](http://www.win-vector.com') (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.
 
 There are a few (somewhat incompatible) goals for `replyr`:
 
@@ -96,13 +96,21 @@ replyr_quantile(dRemote,'x')
 ```
 
 
-Some primitives of interest include:
+`replyr` services include:
+
+ * Moving data into or out of the remote data store (including adding optional row numbers), `replyr_copy_to` and `replyr_copy_from`.
+ * Basic summary info: `replyr_nrow`, `replyr_dim`, and `replyr_summary`.
+ * Random row sampling (like `dplyr::sample_n`, but working with more service providers). Some of this functionality is provided by `replyr_filter` and `replyr_inTest`.
+ * Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `replyr_gapply`, `replyr_split`, and `replyr_bind_rows`.
+ * Emulating `tidyr` gather/spread (or pivoting and anti-pivoting), which is the purpose of `replyr_gather` and `replyr_spread` (still under development).
+ * Patching around differences in `dplyr` services providers (and documenting the reasons for the patches).
+ * Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).
+ 
+Additional desired capabilities of interest include:
 
  * `cumsum` or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
- * Random row sampling (like `dplyr::sample_n`, but working with more service providers).
  * Inserting random values (or even better random unique values) in a remote column.  Most service providers have a pseudo-random source you can use.
- * Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `replyr_gapply`.
- * Emulating `tidyr` gather/spread (or pivoting and anti-pivoting), which is the purpose of `replyr_gather` and `replyr_spread` (still under development).
+
 
 Note we are deliberately using prefixed names `replyr_` and not using common `S3` method names to avoid the possibility of `replyr` functions interfering with basic `dplyr` functionality.
 
