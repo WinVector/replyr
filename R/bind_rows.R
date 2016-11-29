@@ -8,7 +8,7 @@ NULL
 r_replyr_bind_rows <- function(lst) {
   n <- length(lst)
   if(n<=1) {
-    return(lst[[1]])
+    return(dplyr::compute(lst[[1]]))
   }
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
