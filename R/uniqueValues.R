@@ -25,7 +25,7 @@ replyr_uniqueValues <- function(x,cname) {
     stop('replyr_uniqueValues cname must be a single string not equal to "n"')
   }
   x %>% dplyr::ungroup() %>%
-    dplyr::select_(cname) %>% dplyr::mutate(n=1) %>%
+    dplyr::select_(cname) %>% dplyr::mutate(n=1.0) %>%
     dplyr::group_by_(cname) %>% dplyr::summarize(n=sum(n)) -> res
   res
 }

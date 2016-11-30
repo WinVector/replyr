@@ -18,7 +18,7 @@ r_replyr_bind_rows <- function(lst) {
   # ideas from https://github.com/rstudio/sparklyr/issues/76
   # would like to use union_all, but seems to have problems with Spark 2.0.0
   # (spread example from basicChecksSpark200.Rmd)
-  if(length(intersect("src_spark",class(left$src)))>0) {
+  if(length(intersect(c('spark_connection','src_spark'),replyr_dataServiceName(left)))>0) {
     res <- dplyr::union(left,right)
   } else {
     res <- dplyr::union_all(left,right)

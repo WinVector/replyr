@@ -25,6 +25,8 @@ class(my_db)
 my_db$spark_home
  #  [1] "/Users/johnmount/Library/Caches/spark/spark-2.0.0-bin-hadoop2.7"
 runExample(remoteCopy(my_db))
+ #  [1] "tbl_spark" "tbl_sql"   "tbl_lazy"  "tbl"      
+ #  [1] "src_spark"
  #  Source:   query [?? x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -181,6 +183,6 @@ runExample(remoteCopy(my_db))
  #  3     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 521103 27.9     940480 50.3   940480 50.3
- #  Vcells 753184  5.8    1308461 10.0   925264  7.1
+ #  Ncells 521474 27.9     940480 50.3   940480 50.3
+ #  Vcells 756392  5.8    1308461 10.0   931096  7.2
 ```

@@ -12,6 +12,8 @@ remoteCopy <- function(my_db) {
 runExample <- function(copyToRemote) {
   force(copyToRemote)
   d1 <- copyToRemote(data.frame(x=c(1,2),y=c('a','b')),'d1')
+  print(class(d1))
+  print(replyr::replyr_dataServiceName(d1))
   print(d1)
 
   cat('\nd1 %>% replyr::replyr_colClasses() \n')

@@ -25,6 +25,8 @@ noopCopy <- function(df,name) {
 }
 
 runExample(noopCopy)
+ #  [1] "data.frame"
+ #  [1] "data.frame"
  #    x y
  #  1 1 a
  #  2 2 b
@@ -147,6 +149,8 @@ tblCopy <- function(df,name) {
 }
 
 runExample(tblCopy)
+ #  [1] "tbl_df"     "tbl"        "data.frame"
+ #  [1] "tbl"
  #  # A tibble: 2 × 2
  #        x      y
  #    <dbl> <fctr>
@@ -262,9 +266,6 @@ runExample(tblCopy)
  #  3     3     c  m1_3  m2_3
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Warning: Unknown column 'src'
-
- #  Warning: Unknown column 'src'
  #  # A tibble: 6 × 3
  #    index meastype  meas
  #    <dbl>    <chr> <chr>
@@ -276,11 +277,6 @@ runExample(tblCopy)
  #  6     3    meas2  m2_3
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  Warning: Unknown column 'src'
-
- #  Warning: Unknown column 'src'
-
- #  Warning: Unknown column 'src'
  #  # A tibble: 3 × 3
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
@@ -296,6 +292,8 @@ my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
 class(my_db)
  #  [1] "src_sqlite" "src_sql"    "src"
 runExample(remoteCopy(my_db))
+ #  [1] "tbl_sqlite" "tbl_sql"    "tbl_lazy"   "tbl"       
+ #  [1] "src_sqlite"
  #  Source:   query [?? x 2]
  #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
  #  
@@ -452,8 +450,8 @@ runExample(remoteCopy(my_db))
  #  3     3  m1_3  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 517496 27.7     940480 50.3   940480 50.3
- #  Vcells 746277  5.7    1650153 12.6  1650152 12.6
+ #  Ncells 517214 27.7     940480 50.3   940480 50.3
+ #  Vcells 747773  5.8    1650153 12.6  1649942 12.6
 ```
 
 MySQL example.
@@ -463,6 +461,8 @@ my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
 class(my_db)
  #  [1] "src_mysql" "src_sql"   "src"
 runExample(remoteCopy(my_db))
+ #  [1] "tbl_mysql" "tbl_sql"   "tbl_lazy"  "tbl"      
+ #  [1] "src_mysql"
  #  Source:   query [?? x 2]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
@@ -623,8 +623,8 @@ runExample(remoteCopy(my_db))
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 552547 29.6     940480 50.3   940480 50.3
- #  Vcells 773642  6.0    1650153 12.6  1650153 12.6
+ #  Ncells 552319 29.5     940480 50.3   940480 50.3
+ #  Vcells 775304  6.0    1650153 12.6  1650153 12.6
 ```
 
 PostgreSQL example.
@@ -634,6 +634,8 @@ my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',pa
 class(my_db)
  #  [1] "src_postgres" "src_sql"      "src"
 runExample(remoteCopy(my_db))
+ #  [1] "tbl_postgres" "tbl_sql"      "tbl_lazy"     "tbl"         
+ #  [1] "src_postgres"
  #  Source:   query [?? x 2]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -789,10 +791,10 @@ runExample(remoteCopy(my_db))
  #  2     3  m1_3  m2_3
  #  3     2  m1_2  m2_2
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (33874, 0)
+ #  Auto-disconnecting postgres connection (43830, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 585960 31.3     940480 50.3   940480 50.3
- #  Vcells 799972  6.2    1650153 12.6  1650153 12.6
+ #  Ncells 586076 31.3     940480 50.3   940480 50.3
+ #  Vcells 801734  6.2    1650153 12.6  1650153 12.6
 ```
 
 Spark 1.6.2 example.
@@ -806,6 +808,8 @@ class(my_db)
 my_db$spark_home
  #  [1] "/Users/johnmount/Library/Caches/spark/spark-1.6.2-bin-hadoop2.6"
 runExample(remoteCopy(my_db))
+ #  [1] "tbl_spark" "tbl_sql"   "tbl_lazy"  "tbl"      
+ #  [1] "src_spark"
  #  Source:   query [?? x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -962,6 +966,6 @@ runExample(remoteCopy(my_db))
  #  3     2  m2_2  m1_2
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 622753 33.3    1168576 62.5   940480 50.3
- #  Vcells 832708  6.4    1650153 12.6  1650153 12.6
+ #  Ncells 622820 33.3    1168576 62.5   940480 50.3
+ #  Vcells 834249  6.4    1650153 12.6  1650153 12.6
 ```

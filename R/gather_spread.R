@@ -32,9 +32,6 @@ NULL
 #' @export
 replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValueColumn,
                           useTidyr=FALSE) {
-  #if("src_postgres" %in% class(df$src)) {
-  #  stop("replyr_spread not yet implemented for src_postgres")
-  #}
   if((!is.character(gatherColumns))||(length(gatherColumns)<1)) {
     stop('replyr_gather gatherColumns must be a character vector')
   }
@@ -67,7 +64,7 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
     return(res)
   }
   useAsChar <- TRUE
-  if(length(intersect(c("src_mysql"),class(df$src)))>0) {
+  if(length(intersect(c("src_mysql"),replyr_dataServiceName(df)))>0) {
     useAsChar <- FALSE
   }
   dcols <- setdiff(cnames,gatherColumns)
@@ -125,9 +122,6 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementValueColumn,
                           maxcols=100,
                           useTidyr=FALSE) {
-  #if("src_postgres" %in% class(df$src)) {
-  #  stop("replyr_spread not yet implemented for src_postgres")
-  #}
   if((!is.character(rowControlColumn))||(length(rowControlColumn)!=1)||
      (nchar(rowControlColumn)<1)) {
     stop('replyr_spread rowControlColumn must be a single non-empty string')
@@ -164,7 +158,7 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
     return(res)
   }
   useAsChar <- TRUE
-  if(length(intersect(c("src_mysql"),class(df$src)))>0) {
+  if(length(intersect(c("src_mysql"),replyr_dataServiceName(df)))>0) {
     useAsChar <- FALSE
   }
   df %>% replyr_uniqueValues(measurementNameColumn) %>%
