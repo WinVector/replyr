@@ -1,0 +1,40 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Issues with `dplyr::mutate` and `RMySQL`.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+Can not prevent the warning.
+
+```{r}
+library('dplyr')
+packageVersion('dplyr')
+packageVersion('RMySQL')
+
+my_db <- src_mysql('mysql','127.0.0.1',3306,'root','passwd')
+d4 <- copy_to(my_db,data.frame(x=c(1.1,2,3,3)),'d4')
+suppressWarnings(
+  d4 %>% mutate(z=1) %>% compute() -> d4
+)
+print(d4)
+```
+
+Submitted as [RMySQL 176](https://github.com/rstats-db/RMySQL/issues/176).
+
+```{r printversion}
+version
+```
+
+

@@ -91,7 +91,7 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 
 
 
-#' Spread values found in rowControlColumn row groups as new columns. A concept demonstration, not a function for production.
+#' Spread values found in rowControlColumn row groups as new columns. A concept demonstration, not a usable function.
 #'
 #' Spread values found in rowControlColumn row groups as new columns.
 #' Values types (new column names) are identified in measurementNameColumn and values are taken
@@ -179,9 +179,12 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
         dplyr::compute() -> din
       vi <- NA
       if(replyr_nrow(din)>0) {
-        din %>% head(n=1) %>% replyr::replyr_copy_from() %>%
-          as.data.frame() -> din1
-        vi <- din1[1,measurementValueColumn,drop=TRUE]
+        suppressWarnings({
+          # MySQL:  In .local(conn, statement, ...) : Decimal MySQL column 1 imported as numeric
+          din %>% head(n=1) %>% replyr::replyr_copy_from() %>%
+            as.data.frame() -> din1
+          vi <- din1[1,measurementValueColumn,drop=TRUE]
+        })
       }
       # see http://stackoverflow.com/questions/26003574/r-dplyr-mutate-use-dynamic-variable-names
       # PostgreSQL needs to know types on character types with the lazyeval form.

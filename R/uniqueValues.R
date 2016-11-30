@@ -27,5 +27,13 @@ replyr_uniqueValues <- function(x,cname) {
   x %>% dplyr::ungroup() %>%
     dplyr::select_(cname) %>% dplyr::mutate(n=1.0) %>%
     dplyr::group_by_(cname) %>% dplyr::summarize(n=sum(n)) -> res
+  # # Can't get rid of the warning on MySQL, even the following doesn't shut it up
+  # suppressWarnings(
+  #   # on mutate step in MySQL:  In .local(conn, statement, ...) : Decimal MySQL column 1 imported as numeric
+  #   x %>% dplyr::ungroup() %>%
+  #     dplyr::select_(cname) %>% dplyr::mutate(n=1.0) %>%
+  #     dplyr::group_by_(cname) %>% dplyr::summarize(n=sum(n)) %>%
+  #     dplyr::compute() -> res
+  # )
   res
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gather_spread.R
 \name{replyr_spread}
 \alias{replyr_spread}
-\title{Spread values found in rowControlColumn row groups as new columns. A concept demonstration, not a function for production.}
+\title{Spread values found in rowControlColumn row groups as new columns. A concept demonstration, not a usable function.}
 \usage{
 replyr_spread(df, rowControlColumn, measurementNameColumn,
   measurementValueColumn, maxcols = 100, useTidyr = FALSE)

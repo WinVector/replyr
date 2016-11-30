@@ -8,9 +8,9 @@ replyr_dataServiceName(df, expectedNames = c("src_sqlite", "spark_connection",
   "src_spark", "src_mysql", "src_postgres"))
 }
 \arguments{
-\item{expectedNames}{some names to canonicalize to.}
+\item{df}{data object}
 
-\item{data}{object}
+\item{expectedNames}{some names to canonicalize to.}
 }
 \value{
 cannonical service name (lenght 1 character array)
@@ -20,8 +20,8 @@ return a cannonical name of the data service hosting a given data object
 }
 \examples{
 
-dataServiceName(data.frame(x=1))
-dataServiceName(dplyr::as.tbl(data.frame(x=1)))
+replyr_dataServiceName(data.frame(x=1))
+replyr_dataServiceName(dplyr::as.tbl(data.frame(x=1)))
 
 }
 

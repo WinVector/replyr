@@ -4,14 +4,14 @@
 
 #' return a cannonical name of the data service hosting a given data object
 #'
-#' @param data object
+#' @param df data object
 #' @param expectedNames some names to canonicalize to.
 #' @return cannonical service name (lenght 1 character array)
 #'
 #' @examples
 #'
-#' dataServiceName(data.frame(x=1))
-#' dataServiceName(dplyr::as.tbl(data.frame(x=1)))
+#' replyr_dataServiceName(data.frame(x=1))
+#' replyr_dataServiceName(dplyr::as.tbl(data.frame(x=1)))
 #'
 #' @export
 replyr_dataServiceName <- function(df,
