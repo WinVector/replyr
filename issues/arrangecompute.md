@@ -101,6 +101,8 @@ warnings()
  #  NULL
 ```
 
+Submitted as [dplyr issue 2281](https://github.com/hadley/dplyr/issues/2281).
+
 ``` r
 version
  #                 _                           

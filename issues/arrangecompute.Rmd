@@ -52,6 +52,8 @@ print(dz3)
 warnings()
 ```
 
+Submitted as [dplyr issue 2281](https://github.com/hadley/dplyr/issues/2281).
+
 
 ```{r printversion}
 version
