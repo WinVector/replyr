@@ -24,8 +24,8 @@ library('RMySQL')
 packageVersion('dplyr')
 packageVersion('RMySQL')
 my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
-d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d')
-d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d')
+d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d',overwrite=TRUE)
+d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d',overwrite=TRUE)
 ```
 
 

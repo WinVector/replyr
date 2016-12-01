@@ -20,8 +20,8 @@ packageVersion('dplyr')
 packageVersion('RMySQL')
  #  [1] '0.10.9'
 my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
-d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d')
-d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d')
+d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d',overwrite=TRUE)
+d <- dplyr::copy_to(my_db,data.frame(x=c(1,2)),'d',overwrite=TRUE)
  #  Error: Table d already exists.
 ```
 
