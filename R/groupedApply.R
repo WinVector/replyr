@@ -89,7 +89,7 @@ replyr_gapply <- function(df,gcolumn,f,
                       if(!is.null(f)) {
                         gsubi <- f(gsubi)
                       }
-                      dplyr::compute(gsubi)
+                      dplyr::compute(gsubi) # this may lose ordering, see issues/arrangecompute.Rmd
                     })
   names(res) <- as.character(groups[[gcolumn]])
   if(bindrows) {

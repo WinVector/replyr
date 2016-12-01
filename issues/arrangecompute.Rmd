@@ -1,0 +1,58 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Check durability of `dplyr::arrange` through `dplyr::compute`.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+```{r ready}
+library('dplyr')
+library('RPostgreSQL')
+packageVersion('dplyr')
+packageVersion('RPostgreSQL')
+my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
+class(my_db)
+set.seed(32525)
+dz <- dplyr::copy_to(my_db,data.frame(x=runif(1000)),'dz99',overwrite=TRUE)
+```
+
+Notice below: no warnings in frame or runtime.
+
+```{r direct}
+dz %>% arrange(x) %>% mutate(ccol=1) %>% mutate(rank=cumsum(ccol))  -> dz1
+print(dz1)
+warnings()
+```
+
+Notice below: warning "Warning: Windowed expression 'sum("ccol")' does not have explicit order.".  Result may appear the same, but we do not seem to be able to depend on that.
+
+```{r compute}
+dz %>% arrange(x) %>% compute() %>% mutate(ccol=1) %>% mutate(rank=cumsum(ccol))  -> dz2
+print(dz2)
+warnings()
+```
+
+Notice below: warning "Warning: Windowed expression 'sum("ccol")' does not have explicit order.".  Result may appear the same, but we do not seem to be able to depend on that.
+
+```{r collapse}
+dz %>% arrange(x) %>% collapse() %>% mutate(ccol=1) %>% mutate(rank=cumsum(ccol))  -> dz3
+print(dz3)
+warnings()
+```
+
+
+```{r printversion}
+version
+```
