@@ -5,7 +5,8 @@
 \title{grouped apply}
 \usage{
 replyr_gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
-  bindrows = TRUE, maxgroups = 100)
+  usegroups = FALSE, bindrows = TRUE, maxgroups = 100,
+  eagerCompute = TRUE)
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -20,9 +21,13 @@ replyr_gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{decreasing}{if TRUE sort in decreasing order by ocolumn}
 
+\item{usegroups}{if TRUE do not split, use groups instead}
+
 \item{bindrows}{if TRUE bind the rows back into a data item, else return split list}
 
 \item{maxgroups}{maximum number of groups to work over}
+
+\item{eagerCompute}{if TRUE call compute on split results}
 }
 \value{
 transformed frame

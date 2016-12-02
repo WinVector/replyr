@@ -22,8 +22,10 @@ NULL
 #' @param ... force later values to be bound by name
 #' @param ocolumn ordering column (optional)
 #' @param decreasing if TRUE sort in decreasing order by ocolumn
+#' @param usegroups if TRUE do not split, use groups instead
 #' @param bindrows if TRUE bind the rows back into a data item, else return split list
 #' @param maxgroups maximum number of groups to work over
+#' @param eagerCompute if TRUE call compute on split results
 #' @return transformed frame
 #'
 #' @examples
@@ -60,8 +62,10 @@ replyr_gapply <- function(df,gcolumn,f,
                           ...,
                           ocolumn=NULL,
                           decreasing=FALSE,
+                          usegroups=FALSE,
                           bindrows=TRUE,
-                          maxgroups=100) {
+                          maxgroups=100,
+                          eagerCompute=TRUE) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
     stop('replyr_gapply gcolumn must be a single non-empty string')
   }
@@ -72,6 +76,20 @@ replyr_gapply <- function(df,gcolumn,f,
   }
   if(length(list(...))>0) {
     stop('replyr_gapply unexpected arguments')
+  }
+  df %>% dplyr::ungroup() -> df  # make sure some other grouping isn't interfering.
+  if(usegroups) {
+    df %>% dplyr::group_by_(gcolumn) -> df
+    if(!is.null(ocolumn)) {
+      if(decreasing) {
+        #df %>% dplyr::arrange_(.dots=stats::setNames(paste0('desc(',ocolumn,')'),ocolumn)) -> df
+        df %>% dplyr::arrange_(interp(~desc(x),x=as.name(ocolumn))) -> gsubi
+      } else {
+        df %>% dplyr::arrange_(ocolumn) -> df
+      }
+    }
+    df %>% f %>% dplyr::ungroup() -> res
+    return(res)
   }
   df %>% replyr_uniqueValues(gcolumn) %>%
     replyr_copy_from(maxrow=maxgroups) -> groups
@@ -89,7 +107,10 @@ replyr_gapply <- function(df,gcolumn,f,
                       if(!is.null(f)) {
                         gsubi <- f(gsubi)
                       }
-                      dplyr::compute(gsubi) # this may lose ordering, see issues/arrangecompute.Rmd
+                      if(eagerCompute) {
+                        gsubi <- dplyr::compute(gsubi) # this may lose ordering, see issues/arrangecompute.Rmd
+                      }
+                      gsubi
                     })
   names(res) <- as.character(groups[[gcolumn]])
   if(bindrows) {
