@@ -31,7 +31,8 @@ replyr_renameRestrictCols <- function(x,nmap) {
     }
   }
   # limit down to only names we are mapping
-  do.call(dplyr::select_,c(list(x),as.list(names(nmap)))) -> x
+  #do.call(dplyr::select_,c(list(x),as.list(names(nmap)))) -> x
+  x %>% dplyr::select(dplyr::one_of(names(nmap))) -> x
   # re-map names
   for(ni in names(nmap)) {
     ti <- nmap[[ni]]
