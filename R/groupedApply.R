@@ -83,7 +83,7 @@ replyr_gapply <- function(df,gcolumn,f,
     if(!is.null(ocolumn)) {
       if(decreasing) {
         #df %>% dplyr::arrange_(.dots=stats::setNames(paste0('desc(',ocolumn,')'),ocolumn)) -> df
-        df %>% dplyr::arrange_(interp(~desc(x),x=as.name(ocolumn))) -> gsubi
+        df %>% dplyr::arrange_(interp(~desc(x),x=as.name(ocolumn))) -> df
       } else {
         df %>% dplyr::arrange_(ocolumn) -> df
       }
