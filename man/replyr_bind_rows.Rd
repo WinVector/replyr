@@ -4,10 +4,12 @@
 \alias{replyr_bind_rows}
 \title{bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine)}
 \usage{
-replyr_bind_rows(lst)
+replyr_bind_rows(lst, eagerCompute = FALSE)
 }
 \arguments{
 \item{lst}{list of items to combine, must be all in same dplyr data service}
+
+\item{eagerCompute}{if TRUE call compute on intermediate results}
 }
 \value{
 single data item

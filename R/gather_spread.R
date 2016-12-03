@@ -16,6 +16,7 @@ NULL
 #' @param measurementNameColumn new column to write measurement names to (original gatherColumns)
 #' @param measurementValueColumn new column to write measurement values to
 #' @param useTidyr if TRUE use tidyr instead of calculating on own (only works on local data types)
+#' @param eagerCompute if TRUE call compute on intermediate results
 #' @return data item
 #'
 #' @examples
@@ -31,7 +32,7 @@ NULL
 #'
 #' @export
 replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValueColumn,
-                          useTidyr=FALSE) {
+                          useTidyr=FALSE,eagerCompute=FALSE) {
   if((!is.character(gatherColumns))||(length(gatherColumns)<1)) {
     stop('replyr_gather gatherColumns must be a character vector')
   }
@@ -83,7 +84,11 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
     }
     dtmp %>%
       dplyr::mutate_(.dots=stats::setNames(di, measurementValueColumn)) %>%
-      dplyr::select(dplyr::one_of(targetsB)) %>% dplyr::compute()
+      dplyr::select(dplyr::one_of(targetsB)) -> dtmp
+    if(eagerCompute) {
+      dtmp %>% dplyr::compute() -> dtmp
+    }
+    dtmp
   })
   replyr_bind_rows(rlist)
 }
@@ -106,6 +111,7 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 #' @param measurementValueColumn column to take measurement values from
 #' @param maxcols maximum number of values to expand to columns
 #' @param useTidyr if TRUE use tidyr instead of calculating on own (only works on local data types)
+#' @param eagerCompute if TRUE call compute on intermediate results
 #' @return data item
 #'
 #' @examples
@@ -121,7 +127,8 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
 #' @export
 replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementValueColumn,
                           maxcols=100,
-                          useTidyr=FALSE) {
+                          useTidyr=FALSE,
+                          eagerCompute=FALSE) {
   if((!is.character(rowControlColumn))||(length(rowControlColumn)!=1)||
      (nchar(rowControlColumn)<1)) {
     stop('replyr_spread rowControlColumn must be a single non-empty string')
@@ -170,13 +177,10 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
   mcols <- c(measurementNameColumn,measurementValueColumn)
   copyCols <- setdiff(cnames,mcols)
   f <- function(di) {
-    di %>% head(n=1) %>% dplyr::select(dplyr::one_of(copyCols)) %>%
-      dplyr::compute() -> d1
-    di %>% dplyr::select(dplyr::one_of(ucols)) %>%
-      dplyr::compute() -> di
+    di %>% head(n=1) %>% dplyr::select(dplyr::one_of(copyCols)) -> d1
+    di %>% dplyr::select(dplyr::one_of(ucols)) -> di
     for(ni in newCols) {
-      di %>% replyr_filter(measurementNameColumn,ni,verbose=FALSE) %>%
-        dplyr::compute() -> din
+      di %>% replyr_filter(measurementNameColumn,ni,verbose=FALSE) -> din
       vi <- NA
       if(replyr_nrow(din)>0) {
         suppressWarnings({
@@ -196,7 +200,10 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
       }
       d1 %>% dplyr::mutate_(.dots=stats::setNames(list(varval), ni)) -> d1
     }
-    dplyr::compute(d1)
+    if(eagerCompute) {
+      dplyr::compute(d1) -> d1
+    }
+    d1
   }
   replyr_gapply(df,rowControlColumn,f,maxgroups=NULL)
 }

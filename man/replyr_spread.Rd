@@ -5,7 +5,8 @@
 \title{Spread values found in rowControlColumn row groups as new columns. A concept demonstration, not a usable function.}
 \usage{
 replyr_spread(df, rowControlColumn, measurementNameColumn,
-  measurementValueColumn, maxcols = 100, useTidyr = FALSE)
+  measurementValueColumn, maxcols = 100, useTidyr = FALSE,
+  eagerCompute = FALSE)
 }
 \arguments{
 \item{df}{data item}
@@ -19,6 +20,8 @@ replyr_spread(df, rowControlColumn, measurementNameColumn,
 \item{maxcols}{maximum number of values to expand to columns}
 
 \item{useTidyr}{if TRUE use tidyr instead of calculating on own (only works on local data types)}
+
+\item{eagerCompute}{if TRUE call compute on intermediate results}
 }
 \value{
 data item

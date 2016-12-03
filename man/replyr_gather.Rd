@@ -5,7 +5,7 @@
 \title{Collect values found in gatherColumns as tuples}
 \usage{
 replyr_gather(df, gatherColumns, measurementNameColumn, measurementValueColumn,
-  useTidyr = FALSE)
+  useTidyr = FALSE, eagerCompute = FALSE)
 }
 \arguments{
 \item{df}{data item}
@@ -17,6 +17,8 @@ replyr_gather(df, gatherColumns, measurementNameColumn, measurementValueColumn,
 \item{measurementValueColumn}{new column to write measurement values to}
 
 \item{useTidyr}{if TRUE use tidyr instead of calculating on own (only works on local data types)}
+
+\item{eagerCompute}{if TRUE call compute on intermediate results}
 }
 \value{
 data item

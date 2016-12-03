@@ -5,16 +5,20 @@
 NULL
 
 # list length>=1 no null entries
-r_replyr_bind_rows <- function(lst) {
+r_replyr_bind_rows <- function(lst,eagerCompute) {
   n <- length(lst)
   if(n<=1) {
-    return(dplyr::compute(lst[[1]]))
+    res <- lst[[1]]
+    if(eagerCompute) {
+      res <- dplyr::compute(res)
+    }
+    return(res)
   }
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- r_replyr_bind_rows(lst[leftSeq])
-  right <- r_replyr_bind_rows(lst[rightSeq])
+  left <- r_replyr_bind_rows(lst[leftSeq],eagerCompute)
+  right <- r_replyr_bind_rows(lst[rightSeq],eagerCompute)
   # ideas from https://github.com/rstudio/sparklyr/issues/76
   # would like to use union_all, but seems to have problems with Spark 2.0.0
   # (spread example from basicChecksSpark200.Rmd)
@@ -23,7 +27,9 @@ r_replyr_bind_rows <- function(lst) {
   } else {
     res <- dplyr::union_all(left,right)
   }
-  res <- dplyr::compute(res)
+  if(eagerCompute) {
+    res <- dplyr::compute(res)
+  }
   res
 }
 
@@ -31,6 +37,7 @@ r_replyr_bind_rows <- function(lst) {
 #' bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine)
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
+#' @param eagerCompute if TRUE call compute on intermediate results
 #' @return single data item
 #'
 #' @examples
@@ -39,7 +46,7 @@ r_replyr_bind_rows <- function(lst) {
 #' replyr_bind_rows(list(d,d,d))
 #'
 #' @export
-replyr_bind_rows <- function(lst) {
+replyr_bind_rows <- function(lst,eagerCompute=FALSE) {
   if(("NULL" %in% class(lst))||(length(lst)<=0)) {
     return(NULL)
   }
@@ -49,5 +56,5 @@ replyr_bind_rows <- function(lst) {
     return(NULL)
   }
   names(list) <- NULL
-  r_replyr_bind_rows(lst)
+  r_replyr_bind_rows(lst,eagerCompute)
 }

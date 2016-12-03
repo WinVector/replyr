@@ -22,7 +22,7 @@ NULL
 #' @param ... force later values to be bound by name
 #' @param ocolumn ordering column (optional)
 #' @param decreasing if TRUE sort in decreasing order by ocolumn
-#' @param usegroups if TRUE do not split, use groups instead
+#' @param usegroups if TRUE do not split, use group_by instead
 #' @param bindrows if TRUE bind the rows back into a data item, else return split list
 #' @param maxgroups maximum number of groups to work over
 #' @param eagerCompute if TRUE call compute on split results
@@ -45,7 +45,7 @@ NULL
 #'           mutate(rank=cumsum(constcol)) %>% select(-constcol)
 #'
 #' d %>% replyr_gapply('group',cumulative_sum,ocolumn='order')
-#' d %>% replyr_gapply('group',sumgroup)
+#' d %>% replyr_gapply('group',sumgroup,usegroups=FALSE)
 #' d %>% replyr_gapply('group',rank_in_group,ocolumn='order')
 #' d %>% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 #'
@@ -53,7 +53,7 @@ NULL
 #' # my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 #' # dR <- replyr_copy_to(my_db,d,'dR')
 #' # dR %>% replyr_gapply('group',cumulative_sum,ocolumn='order')
-#' # dR %>% replyr_gapply('group',sumgroup)
+#' # dR %>% replyr_gapply('group',sumgroup,usegroups=FALSE)
 #' # dR %>% replyr_gapply('group',rank_in_group,ocolumn='order')
 #' # dR %>% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 #'
@@ -62,10 +62,10 @@ replyr_gapply <- function(df,gcolumn,f,
                           ...,
                           ocolumn=NULL,
                           decreasing=FALSE,
-                          usegroups=FALSE,
+                          usegroups=TRUE,
                           bindrows=TRUE,
                           maxgroups=100,
-                          eagerCompute=TRUE) {
+                          eagerCompute=FALSE) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
     stop('replyr_gapply gcolumn must be a single non-empty string')
   }
@@ -135,6 +135,7 @@ replyr_gapply <- function(df,gcolumn,f,
 #' @param ocolumn ordering column (optional)
 #' @param decreasing if TRUE sort in decreasing order by ocolumn
 #' @param maxgroups maximum number of groups to work over
+#' @param eagerCompute if TRUE call compute on split results
 #' @return list of data items
 #'
 #' @examples
@@ -147,13 +148,15 @@ replyr_gapply <- function(df,gcolumn,f,
 #'
 #' @export
 replyr_split <- function(df,gcolumn,
-                          ...,
-                          ocolumn=NULL,
-                          decreasing=FALSE,
-                          maxgroups=100) {
+                         ...,
+                         ocolumn=NULL,
+                         decreasing=FALSE,
+                         maxgroups=100,
+                         eagerCompute=FALSE) {
   if(length(list(...))>0) {
     stop('replyr_split unexpected arguments')
   }
   replyr_gapply(df,gcolumn,f=NULL,ocolumn=ocolumn,
-                decreasing=decreasing,bindrows=FALSE,maxgroups=maxgroups)
+                decreasing=decreasing,bindrows=FALSE,usegroups=FALSE,
+                maxgroups=maxgroups,eagerCompute=eagerCompute)
 }

@@ -5,8 +5,8 @@
 \title{grouped apply}
 \usage{
 replyr_gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
-  usegroups = FALSE, bindrows = TRUE, maxgroups = 100,
-  eagerCompute = TRUE)
+  usegroups = TRUE, bindrows = TRUE, maxgroups = 100,
+  eagerCompute = FALSE)
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -21,7 +21,7 @@ replyr_gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{decreasing}{if TRUE sort in decreasing order by ocolumn}
 
-\item{usegroups}{if TRUE do not split, use groups instead}
+\item{usegroups}{if TRUE do not split, use group_by instead}
 
 \item{bindrows}{if TRUE bind the rows back into a data item, else return split list}
 
@@ -57,7 +57,7 @@ rank_in_group <- . \%>\% mutate(constcol=1) \%>\%
           mutate(rank=cumsum(constcol)) \%>\% select(-constcol)
 
 d \%>\% replyr_gapply('group',cumulative_sum,ocolumn='order')
-d \%>\% replyr_gapply('group',sumgroup)
+d \%>\% replyr_gapply('group',sumgroup,usegroups=FALSE)
 d \%>\% replyr_gapply('group',rank_in_group,ocolumn='order')
 d \%>\% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 
@@ -65,7 +65,7 @@ d \%>\% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 # my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 # dR <- replyr_copy_to(my_db,d,'dR')
 # dR \%>\% replyr_gapply('group',cumulative_sum,ocolumn='order')
-# dR \%>\% replyr_gapply('group',sumgroup)
+# dR \%>\% replyr_gapply('group',sumgroup,usegroups=FALSE)
 # dR \%>\% replyr_gapply('group',rank_in_group,ocolumn='order')
 # dR \%>\% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 

@@ -72,7 +72,6 @@ replyr_inTest <- function(x,cname,values,nname,verbose=TRUE) {
   }
   # replace NA with false
   # from: http://stackoverflow.com/questions/26003574/r-dplyr-mutate-use-dynamic-variable-names
-  res %>% dplyr::mutate_(.dots=stats::setNames(paste0('!is.na(',nname,')'), nname)) %>%
-    dplyr::compute()-> res
+  res %>% dplyr::mutate_(.dots=stats::setNames(paste0('!is.na(',nname,')'), nname)) -> res
   res
 }

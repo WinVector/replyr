@@ -5,7 +5,7 @@
 \title{split a data item by values in a column.}
 \usage{
 replyr_split(df, gcolumn, ..., ocolumn = NULL, decreasing = FALSE,
-  maxgroups = 100)
+  maxgroups = 100, eagerCompute = FALSE)
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -19,6 +19,8 @@ replyr_split(df, gcolumn, ..., ocolumn = NULL, decreasing = FALSE,
 \item{decreasing}{if TRUE sort in decreasing order by ocolumn}
 
 \item{maxgroups}{maximum number of groups to work over}
+
+\item{eagerCompute}{if TRUE call compute on split results}
 }
 \value{
 list of data items

@@ -135,10 +135,10 @@ runExample(noopCopy)
  #  6     3    meas2 m2_3
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
+ #  # A tibble: 1 × 3
  #    index meas1 meas2
+ #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
- #  2     2  m1_2  m2_2
- #  3     3  m1_3  m2_3
 ```
 
 Local `tbl` example.
@@ -277,12 +277,10 @@ runExample(tblCopy)
  #  6     3    meas2  m2_3
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  # A tibble: 3 × 3
+ #  # A tibble: 1 × 3
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
- #  2     2  m1_2  m2_2
- #  3     3  m1_3  m2_3
 ```
 
 `SQLite` example.
@@ -446,12 +444,10 @@ runExample(remoteCopy(my_db))
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
- #  2     2  m1_2  m2_2
- #  3     3  m1_3  m2_3
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 517221 27.7     940480 50.3   940480 50.3
- #  Vcells 748074  5.8    1650153 12.6  1650153 12.6
+ #  Ncells 517679 27.7     940480 50.3   940480 50.3
+ #  Vcells 750164  5.8    1650153 12.6  1650153 12.6
 ```
 
 MySQL example.
@@ -610,21 +606,17 @@ runExample(remoteCopy(my_db))
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
-
- #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  Source:   query [?? x 3]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
- #  2     2  m1_2  m2_2
- #  3     3  m1_3  m2_3
+ #  1     1  m1_3  m2_1
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 552356 29.5     940480 50.3   940480 50.3
- #  Vcells 775610  6.0    1650153 12.6  1650153 12.6
+ #  Ncells 552803 29.6     940480 50.3   940480 50.3
+ #  Vcells 777680  6.0    1650153 12.6  1650153 12.6
 ```
 
 PostgreSQL example.
@@ -788,13 +780,11 @@ runExample(remoteCopy(my_db))
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
- #  2     3  m1_3  m2_3
- #  3     2  m1_2  m2_2
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (45755, 0)
+ #  Auto-disconnecting postgres connection (61156, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 586113 31.4     940480 50.3   940480 50.3
- #  Vcells 802040  6.2    1650153 12.6  1650153 12.6
+ #  Ncells 586538 31.4     940480 50.3   940480 50.3
+ #  Vcells 804068  6.2    1650153 12.6  1650153 12.6
 ```
 
 Spark 1.6.2 example.
@@ -962,10 +952,8 @@ runExample(remoteCopy(my_db))
  #    index meas2 meas1
  #    <dbl> <chr> <chr>
  #  1     1  m2_1  m1_1
- #  2     3  m2_3  m1_3
- #  3     2  m2_2  m1_2
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 622915 33.3    1168576 62.5   940480 50.3
- #  Vcells 834970  6.4    1650153 12.6  1650153 12.6
+ #  Ncells 622239 33.3    1168576 62.5   940480 50.3
+ #  Vcells 835996  6.4    1650153 12.6  1650153 12.6
 ```
