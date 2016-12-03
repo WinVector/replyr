@@ -8,6 +8,8 @@ NULL
 
 #' Compute number of rows of a tbl.
 #'
+#' Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
+#'
 #' @param x tbl or item that can be coerced into such.
 #' @return number of rows
 #'
@@ -27,6 +29,12 @@ replyr_nrow <- function(x) {
     return(0)
   }
   tmp <- NULL
+  # get empty corner case correct (counting returned NA on PostgreSQL for this)
+  suppressWarnings(
+    x %>% dplyr::ungroup() %>% head(n=1) %>% dplyr::collect() %>% as.data.frame() -> tmp)
+  if(is.null(nrow(tmp))||(nrow(tmp)<1)||(ncol(tmp)<1)) {
+    return(0)
+  }
   suppressWarnings(
     x %>% dplyr::ungroup() %>%
       dplyr::transmute(constant=1) %>% dplyr::summarize(count=sum(constant)) %>%

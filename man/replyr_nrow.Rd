@@ -13,7 +13,7 @@ replyr_nrow(x)
 number of rows
 }
 \description{
-Compute number of rows of a tbl.
+Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
 }
 \examples{
 
