@@ -190,7 +190,7 @@ for(usegroups in c(FALSE,TRUE)) {
 my_db <- NULL; gc();
  #           used (Mb) gc trigger (Mb) max used (Mb)
  #  Ncells 478344 25.6     940480 50.3   750400 40.1
- #  Vcells 726759  5.6    1380305 10.6  1305984 10.0
+ #  Vcells 726759  5.6    1380305 10.6  1305948 10.0
 ```
 
 `Spark` example.
@@ -291,8 +291,8 @@ for(usegroups in c(FALSE,TRUE)) {
  #  5     2   0.3      2     3
 
 my_db <- NULL; gc();
- #  Auto-disconnecting postgres connection (82947, 0)
+ #  Auto-disconnecting postgres connection (84673, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 546452 29.2     940480 50.3   940480 50.3
- #  Vcells 788137  6.1    1380305 10.6  1305984 10.0
+ #  Ncells 546400 29.2     940480 50.3   940480 50.3
+ #  Vcells 787802  6.1    1380305 10.6  1315949 10.1
 ```

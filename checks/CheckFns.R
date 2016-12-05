@@ -74,7 +74,22 @@ runExample <- function(copyToRemote) {
   cat('\nd4 %>% replyr::replyr_uniqueValues("x") \n')
   print(d4 %>% replyr::replyr_uniqueValues("x"))
 
+  # let example
+  print("let example")
+  dlet <- copyToRemote(data.frame(Sepal_Length=c(5.8,5.7),
+                  Sepal_Width=c(4.0,4.4),
+                  Species='setosa',
+                  rank=c(1,2)),'dlet')
+  mapping = list(RankColumn='rank')
+  replyr::let(
+    alias=mapping,
+    expr={
+      dlet %>% mutate(RankColumn=RankColumn-1) -> dletres
+    })()
+  print(dletres)
+
   # gather/spread examples
+  print('gather/spread examples')
   dg <- copyToRemote(data.frame(
     index = c(1, 2, 3),
     info = c('a', 'b', 'c'),

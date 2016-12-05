@@ -150,6 +150,15 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     3     2
  #  3     2     1
+ #  [1] "let example"
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>   <chr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "gather/spread examples"
  #  Source:   query [?? x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -181,6 +190,6 @@ runExample(remoteCopy(my_db))
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 521340 27.9     940480 50.3   940480 50.3
- #  Vcells 765133  5.9    1650153 12.6   963628  7.4
+ #  Ncells 521884 27.9     940480 50.3   940480 50.3
+ #  Vcells 768149  5.9    1650153 12.6   974674  7.5
 ```

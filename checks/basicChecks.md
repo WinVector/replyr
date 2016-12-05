@@ -120,6 +120,11 @@ runExample(noopCopy)
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  [1] "let example"
+ #    Sepal_Length Sepal_Width Species rank
+ #  1          5.8         4.0  setosa    0
+ #  2          5.7         4.4  setosa    1
+ #  [1] "gather/spread examples"
  #    index info meas1 meas2
  #  1     1    a  m1_1  m2_1
  #  2     2    b  m1_2  m2_2
@@ -258,6 +263,13 @@ runExample(tblCopy)
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  [1] "let example"
+ #  # A tibble: 2 × 4
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>  <fctr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "gather/spread examples"
  #  # A tibble: 3 × 4
  #    index  info meas1 meas2
  #    <dbl> <chr> <chr> <chr>
@@ -415,6 +427,15 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  [1] "let example"
+ #  Source:   query [?? x 4]
+ #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
+ #  
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>   <chr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "gather/spread examples"
  #  Source:   query [?? x 4]
  #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
  #  
@@ -446,8 +467,8 @@ runExample(remoteCopy(my_db))
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 517950 27.7     940480 50.3   940480 50.3
- #  Vcells 757106  5.8    1650153 12.6  1650152 12.6
+ #  Ncells 518461 27.7     940480 50.3   940480 50.3
+ #  Vcells 760956  5.9    1650153 12.6  1650114 12.6
 ```
 
 MySQL example.
@@ -582,6 +603,15 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  [1] "let example"
+ #  Source:   query [?? x 4]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>   <chr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "gather/spread examples"
  #  Source:   query [?? x 4]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
@@ -611,12 +641,12 @@ runExample(remoteCopy(my_db))
  #  
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
+ #  1     1  m1_3  m2_1
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 553044 29.6     940480 50.3   940480 50.3
- #  Vcells 784617  6.0    1650153 12.6  1650153 12.6
+ #  Ncells 553585 29.6     940480 50.3   940480 50.3
+ #  Vcells 788511  6.1    1650153 12.6  1650153 12.6
 ```
 
 PostgreSQL example.
@@ -751,6 +781,15 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     3     2
  #  3     2     1
+ #  [1] "let example"
+ #  Source:   query [?? x 4]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>   <chr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "gather/spread examples"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -781,10 +820,10 @@ runExample(remoteCopy(my_db))
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (69503, 0)
+ #  Auto-disconnecting postgres connection (84762, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 586782 31.4     940480 50.3   940480 50.3
- #  Vcells 811010  6.2    1650153 12.6  1650153 12.6
+ #  Ncells 587320 31.4     940480 50.3   940480 50.3
+ #  Vcells 814941  6.3    1650153 12.6  1650153 12.6
 ```
 
 Spark 1.6.2 example.
@@ -923,6 +962,15 @@ runExample(remoteCopy(my_db))
  #  1     1     1
  #  2     2     1
  #  3     3     2
+ #  [1] "let example"
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>   <chr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "gather/spread examples"
  #  Source:   query [?? x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -954,6 +1002,6 @@ runExample(remoteCopy(my_db))
  #  1     1  m2_1  m1_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 622694 33.3    1168576 62.5  1168576 62.5
- #  Vcells 842799  6.5    1650153 12.6  1650153 12.6
+ #  Ncells 623375 33.3    1168576 62.5   940480 50.3
+ #  Vcells 846245  6.5    1650153 12.6  1650153 12.6
 ```
