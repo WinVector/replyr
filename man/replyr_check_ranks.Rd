@@ -22,7 +22,7 @@ replyr_check_ranks(x, GroupColumnName, ValueColumnName, RankColumnName,
 summary of quality of ranking.
 }
 \description{
-Does not work with Spark 1.6.2 due to sparklyr join issue.  Does work with Spark 2.0.0.
+confirm data has good ranked groups
 }
 \examples{
 

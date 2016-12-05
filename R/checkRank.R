@@ -3,6 +3,9 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 # confirm x is a good ranked sub-group
+# x <- data.frame(Sepal_Length=c(5.8,5.7),Sepal_Width=c(4.0,4.4),
+#                 Species='setosa',rank=c(1,2))
+# replyr_ranksummaries(x,'Species','Sepal_Length','rank',TRUE)
 replyr_ranksummaries <- function(x,
                                  GroupColumnName,ValueColumnName,RankColumnName,
                                  decreasing=FALSE) {
@@ -12,12 +15,11 @@ replyr_ranksummaries <- function(x,
   # x <- replyr_renameRestrictCols(x,nmap)
 
   # let strategy
-  nmap <-  c(GroupColumnName,ValueColumnName,
-             paste(ValueColumnName,'x',sep='_'),paste(ValueColumnName,'y',sep='_'),
-             RankColumnName)
-  names(nmap) <- c('GroupColumn','ValueColumn',
-                   'ValueColumn_x','ValueColumn_y',
-                   'RankColumn')
+  x <- dplyr::select(x,dplyr::one_of(c(GroupColumnName,ValueColumnName,RankColumnName)))
+  nmap <-  c(GroupColumnName,ValueColumnName,RankColumnName,
+             paste(ValueColumnName,'n',sep='_'),paste(RankColumnName,'n',sep='_'))
+  names(nmap) <- c('GroupColumn','ValueColumn','RankColumn',
+                   'ValueColumn_n','RankColumn_n')
   let(
     alias=nmap,
     expr={
@@ -32,14 +34,21 @@ replyr_ranksummaries <- function(x,
       groupID <- tmp$GroupColumn[[1]]
       x %>% replyr::replyr_uniqueValues('GroupColumn') %>%
         replyr::replyr_nrow() -> nGroups
-      x %>% mutate(RankColumn=RankColumn+1) -> xNext
+      # work around sparklyr Spark 1.6.2 join issue by minimizing and renaming columns
+      # https://github.com/rstudio/sparklyr/issues/338
+      x %>% dplyr::select(-GroupColumn) -> x
+      x %>% dplyr::mutate(RankColumn=RankColumn+1) %>%
+        dplyr::rename(RankColumn_n=RankColumn,ValueColumn_n=ValueColumn) -> xNext
+      # "by" notation from http://stackoverflow.com/questions/21888910/how-to-specify-names-of-columns-for-x-and-y-when-joining-in-dplyr
+      byClause <- paste(RankColumnName,'n',sep='_')
+      names(byClause) <-RankColumnName
       # this join does not work with Spark 1.6.2 due to "duplicate columns"
-      dplyr::inner_join(x,xNext,'RankColumn',suffix = c("_x", "_y")) -> xJ
+      dplyr::inner_join(x,xNext,byClause) -> xJ
       if(decreasing) {
-        xJ %>% dplyr::filter(ValueColumn_y<ValueColumn_x) %>%
+        xJ %>% dplyr::filter(ValueColumn_n<ValueColumn) %>%
           replyr::replyr_nrow() -> nBadOrders
       } else {
-        xJ %>% dplyr::filter(ValueColumn_y>ValueColumn_x) %>%
+        xJ %>% dplyr::filter(ValueColumn_n>ValueColumn) %>%
           replyr::replyr_nrow() -> nBadOrders
       }
       goodRankedGroup <- (nUniqueRanks==n)&&(nUniqueRanks==n)&&
@@ -57,8 +66,6 @@ replyr_ranksummaries <- function(x,
 }
 
 #' confirm data has good ranked groups
-#'
-#' Does not work with Spark 1.6.2 due to sparklyr join issue.  Does work with Spark 2.0.0.
 #'
 #' @param x data item to work with
 #' @param GroupColumnName column to group by
