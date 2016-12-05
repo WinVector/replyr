@@ -205,6 +205,6 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
     }
     d1
   }
-  replyr_gapply(df,rowControlColumn,f,maxgroups=NULL)
+  gapply(df,rowControlColumn,f,maxgroups=NULL)
 }
 

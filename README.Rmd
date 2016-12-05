@@ -118,7 +118,7 @@ replyr_quantile(dRemote,'x')
  * Moving data into or out of the remote data store (including adding optional row numbers), `replyr_copy_to` and `replyr_copy_from`.
  * Basic summary info: `replyr_nrow`, `replyr_dim`, and `replyr_summary`.
  * Random row sampling (like `dplyr::sample_n`, but working with more service providers). Some of this functionality is provided by `replyr_filter` and `replyr_inTest`.
- * Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `replyr_gapply`, `replyr_split`, and `replyr_bind_rows`.
+ * Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `gapply`, `replyr_split`, and `replyr_bind_rows`.
  * Emulating `tidyr` gather/spread (or pivoting and anti-pivoting), which is the purpose of `replyr_gather` and `replyr_spread` (still under development).
  * Patching around differences in `dplyr` services providers (and documenting the reasons for the patches).
  * Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).

@@ -44,21 +44,21 @@ NULL
 #' rank_in_group <- . %>% mutate(constcol=1) %>%
 #'           mutate(rank=cumsum(constcol)) %>% select(-constcol)
 #'
-#' d %>% replyr_gapply('group',cumulative_sum,ocolumn='order')
-#' d %>% replyr_gapply('group',sumgroup,usegroups=FALSE)
-#' d %>% replyr_gapply('group',rank_in_group,ocolumn='order')
-#' d %>% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
+#' d %>% gapply('group',cumulative_sum,ocolumn='order')
+#' d %>% gapply('group',sumgroup,usegroups=FALSE)
+#' d %>% gapply('group',rank_in_group,ocolumn='order')
+#' d %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 #'
 #' # # below only works for services which have a cumsum operator
 #' # my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 #' # dR <- replyr_copy_to(my_db,d,'dR')
-#' # dR %>% replyr_gapply('group',cumulative_sum,ocolumn='order')
-#' # dR %>% replyr_gapply('group',sumgroup,usegroups=FALSE)
-#' # dR %>% replyr_gapply('group',rank_in_group,ocolumn='order')
-#' # dR %>% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
+#' # dR %>% gapply('group',cumulative_sum,ocolumn='order')
+#' # dR %>% gapply('group',sumgroup,usegroups=FALSE)
+#' # dR %>% gapply('group',rank_in_group,ocolumn='order')
+#' # dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
 #'
 #' @export
-replyr_gapply <- function(df,gcolumn,f,
+gapply <- function(df,gcolumn,f,
                           ...,
                           ocolumn=NULL,
                           decreasing=FALSE,
@@ -67,15 +67,15 @@ replyr_gapply <- function(df,gcolumn,f,
                           maxgroups=100,
                           eagerCompute=FALSE) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
-    stop('replyr_gapply gcolumn must be a single non-empty string')
+    stop('gapply gcolumn must be a single non-empty string')
   }
   if(!is.null(ocolumn)) {
     if((!is.character(ocolumn))||(length(ocolumn)!=1)||(nchar(ocolumn)<1)) {
-      stop('replyr_gapply ocolumn must be a single non-empty string or NULL')
+      stop('gapply ocolumn must be a single non-empty string or NULL')
     }
   }
   if(length(list(...))>0) {
-    stop('replyr_gapply unexpected arguments')
+    stop('gapply unexpected arguments')
   }
   df %>% dplyr::ungroup() -> df  # make sure some other grouping isn't interfering.
   if(usegroups) {
@@ -156,7 +156,7 @@ replyr_split <- function(df,gcolumn,
   if(length(list(...))>0) {
     stop('replyr_split unexpected arguments')
   }
-  replyr_gapply(df,gcolumn,f=NULL,ocolumn=ocolumn,
+  gapply(df,gcolumn,f=NULL,ocolumn=ocolumn,
                 decreasing=decreasing,bindrows=FALSE,usegroups=FALSE,
                 maxgroups=maxgroups,eagerCompute=eagerCompute)
 }

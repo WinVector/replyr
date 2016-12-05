@@ -1,4 +1,4 @@
-`replyr::replyr_gapply` gives you the ability to apply a custom pipeline once per group of a data item with a user specified in-group order.
+`replyr::gapply` gives you the ability to apply a custom pipeline once per group of a data item with a user specified in-group order.
 
 `data.frame` example.
 
@@ -19,7 +19,7 @@ d <- data.frame(group=c(1,1,2,2,2),
 
 # User supplied window functions.  These depend on known column names and
 # the data back-end matching function names (such as cumsum).  The idea
-# the user supplies one of these to replyr_gapply, and replyr_gapply
+# the user supplies one of these to gapply, and gapply
 # organizes the calcuation (spliting on gcolumn, and optionally ordering
 # on ocolumn).
 cumulative_sum <- . %>% arrange(order) %>% mutate(cv=cumsum(values))
@@ -34,13 +34,13 @@ sumgroup <- list('TRUE'=sumgroupG,'FALSE'=sumgroupS)
 rank_in_group <- . %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
 
 for(usegroups in c(FALSE,TRUE)) {
-  print(d %>% replyr_gapply('group',cumulative_sum,ocolumn='order',
+  print(d %>% gapply('group',cumulative_sum,ocolumn='order',
                             usegroups=usegroups))
-  print(d %>% replyr_gapply('group',sumgroup[[as.character(usegroups)]],
+  print(d %>% gapply('group',sumgroup[[as.character(usegroups)]],
                             usegroups=usegroups))
-  print(d %>% replyr_gapply('group',rank_in_group,ocolumn='order',
+  print(d %>% gapply('group',rank_in_group,ocolumn='order',
                             usegroups=usegroups))
-  print(d %>% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
+  print(d %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
                             usegroups=usegroups))
 }
  #    group order values cv
@@ -88,11 +88,11 @@ for(usegroups in c(FALSE,TRUE)) {
  #  # A tibble: 5 × 4
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
- #  1     1   0.1     10     1
- #  2     1   0.2     20     2
- #  3     2   0.3      2     1
- #  4     2   0.4      4     2
- #  5     2   0.5      8     3
+ #  1     2   0.5      8     1
+ #  2     2   0.4      4     2
+ #  3     2   0.3      2     3
+ #  4     1   0.2     20     1
+ #  5     1   0.1     10     2
 ```
 
 `PostgreSQL` example.
@@ -103,13 +103,13 @@ my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',pa
 dR <- replyr_copy_to(my_db,d,'dR')
 
 for(usegroups in c(FALSE,TRUE)) {
-  print(dR %>% replyr_gapply('group',cumulative_sum,ocolumn='order',
+  print(dR %>% gapply('group',cumulative_sum,ocolumn='order',
                       usegroups=usegroups))
-  print(dR %>% replyr_gapply('group',sumgroup[[as.character(usegroups)]],
+  print(dR %>% gapply('group',sumgroup[[as.character(usegroups)]],
                       usegroups=usegroups))
-  print(dR %>% replyr_gapply('group',rank_in_group,ocolumn='order',
+  print(dR %>% gapply('group',rank_in_group,ocolumn='order',
                       usegroups=usegroups))
-  print(dR %>% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
+  print(dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
                       usegroups=usegroups))
 }
  #  Source:   query [?? x 4]
@@ -178,20 +178,19 @@ for(usegroups in c(FALSE,TRUE)) {
  #  5     2   0.5      8     3
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  Warning: Windowed expression 'sum("constcol")' does not have explicit order.
- #  Please use arrange() to make determinstic.
+ #  
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
- #  1     1   0.1     10     1
- #  2     1   0.2     20     2
- #  3     2   0.3      2     1
+ #  1     1   0.2     20     1
+ #  2     1   0.1     10     2
+ #  3     2   0.5      8     1
  #  4     2   0.4      4     2
- #  5     2   0.5      8     3
+ #  5     2   0.3      2     3
 
 my_db <- NULL; gc();
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 478276 25.6     940480 50.3   750400 40.1
- #  Vcells 716965  5.5    1308461 10.0  1088648  8.4
+ #  Ncells 478344 25.6     940480 50.3   750400 40.1
+ #  Vcells 726759  5.6    1380305 10.6  1305984 10.0
 ```
 
 `Spark` example.
@@ -207,13 +206,13 @@ my_db$spark_home
 dR <- replyr_copy_to(my_db,d,'dR')
 
 for(usegroups in c(FALSE,TRUE)) {
-  print(dR %>% replyr_gapply('group',cumulative_sum,ocolumn='order',
+  print(dR %>% gapply('group',cumulative_sum,ocolumn='order',
                       usegroups=usegroups))
-  print(dR %>% replyr_gapply('group',sumgroup[[as.character(usegroups)]],
+  print(dR %>% gapply('group',sumgroup[[as.character(usegroups)]],
                       usegroups=usegroups))
-  print(dR %>% replyr_gapply('group',rank_in_group,ocolumn='order',
+  print(dR %>% gapply('group',rank_in_group,ocolumn='order',
                       usegroups=usegroups))
-  print(dR %>% replyr_gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
+  print(dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
                       usegroups=usegroups))
 }
  #  Source:   query [?? x 4]
@@ -282,19 +281,18 @@ for(usegroups in c(FALSE,TRUE)) {
  #  5     2   0.5      8     3
  #  Source:   query [?? x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  Warning: Windowed expression 'sum(`constcol`)' does not have explicit order.
- #  Please use arrange() to make determinstic.
+ #  
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
- #  1     1   0.1     10     1
- #  2     1   0.2     20     2
- #  3     2   0.3      2     1
+ #  1     1   0.2     20     1
+ #  2     1   0.1     10     2
+ #  3     2   0.5      8     1
  #  4     2   0.4      4     2
- #  5     2   0.5      8     3
+ #  5     2   0.3      2     3
 
 my_db <- NULL; gc();
- #  Auto-disconnecting postgres connection (61069, 0)
+ #  Auto-disconnecting postgres connection (82947, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 546250 29.2     940480 50.3   940480 50.3
- #  Vcells 777969  6.0    1650153 12.6  1306249 10.0
+ #  Ncells 546452 29.2     940480 50.3   940480 50.3
+ #  Vcells 788137  6.1    1380305 10.6  1305984 10.0
 ```

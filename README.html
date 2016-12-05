@@ -100,7 +100,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">&#39;WinVector
 <li>Moving data into or out of the remote data store (including adding optional row numbers), <code>replyr_copy_to</code> and <code>replyr_copy_from</code>.</li>
 <li>Basic summary info: <code>replyr_nrow</code>, <code>replyr_dim</code>, and <code>replyr_summary</code>.</li>
 <li>Random row sampling (like <code>dplyr::sample_n</code>, but working with more service providers). Some of this functionality is provided by <code>replyr_filter</code> and <code>replyr_inTest</code>.</li>
-<li>Emulating <a href="https://www.jstatsoft.org/article/view/v040i01">The Split-Apply-Combine Strategy</a>, which is the purpose <code>replyr_gapply</code>, <code>replyr_split</code>, and <code>replyr_bind_rows</code>.</li>
+<li>Emulating <a href="https://www.jstatsoft.org/article/view/v040i01">The Split-Apply-Combine Strategy</a>, which is the purpose <code>gapply</code>, <code>replyr_split</code>, and <code>replyr_bind_rows</code>.</li>
 <li>Emulating <code>tidyr</code> gather/spread (or pivoting and anti-pivoting), which is the purpose of <code>replyr_gather</code> and <code>replyr_spread</code> (still under development).</li>
 <li>Patching around differences in <code>dplyr</code> services providers (and documenting the reasons for the patches).</li>
 <li>Making use of &quot;parameterized names&quot; much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).</li>

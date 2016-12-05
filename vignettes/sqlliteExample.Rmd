@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
-Example trying most of the `replyr` functions on a sqlite data source.
+Example trying `replyr` functions on a sqlite data source.
 
 ```{r setup}
 library('dplyr')
