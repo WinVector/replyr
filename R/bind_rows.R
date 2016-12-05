@@ -34,7 +34,7 @@ r_replyr_bind_rows <- function(lst,eagerCompute) {
 }
 
 
-#' bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine)
+#' bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources)
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @param eagerCompute if TRUE call compute on intermediate results
