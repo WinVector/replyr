@@ -1,6 +1,6 @@
 Package: replyr
 Type: Package
-Title: Convenience functions for working with tbl and dplyr
+Title: An R package for fluid use of dplyr
 Version: 0.1.0
 Author: John Mount
 Maintainer: John Mount <jmount@win-vector.com>

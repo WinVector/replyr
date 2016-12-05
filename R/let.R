@@ -4,11 +4,12 @@
 
 #' Prepare expr for execution with name substitions specified in alias.
 #'
-#' Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license). Pleaes see here for some discussion of let and crossing function call boundaries: \url{https://github.com/WinVector/replyr}.
+#' Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
+#' Pleaes see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
 #'
 #' @param alias mapping from free names in expr to target names to use.
 #' @param expr block to prepare for execution
-#' @return item ready to evaluate, need to apply with "()" to get the evaluation in own environemnt.
+#' @return item ready to evaluate, need to apply with "()" to perform the evaluation in own environemnt.
 #'
 #' @examples
 #'

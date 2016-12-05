@@ -39,9 +39,9 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<
  <span class="co">#  4 4 6 0.6666667</span>
  <span class="co">#  5 5 7 0.7142857</span></code></pre></div>
 <p><code>replyr::let</code> makes construction of abstract functions over <code>dplyr</code> controlled data much easier. It is designed for the case where the &quot;<code>expr</code>&quot; block is large sequence of statements and pipelines.</p>
-<p>Note <code>replyr::let</code> only controls name bindings in the the score of the <code>expr={}</code> block, and not inside functions called in the block. To be clear <code>replyr::let</code> is re-writing function arguments (which is how we use <code>dplyr::mutate</code> in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not paramaterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or use if <code>dplyr</code> implemented something like the view stack proposal found <a href="http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/">here</a> (both are adaptions of the data).</p>
+<p>Note <code>replyr::let</code> only controls name bindings in the the score of the <code>expr={}</code> block, and not inside functions called in the block. To be clear <code>replyr::let</code> is re-writing function arguments (which is how we use <code>dplyr::mutate</code> in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not paramaterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or if <code>dplyr</code> itself (or a data dapapter) implemented something like the view stack proposal found <a href="http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/">here</a>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># original function we do not have control of</span>
-ComputeRatioOfColumnsNoParametric &lt;-<span class="st"> </span>function(d) {
+ComputeRatioOfColumnsHardCoded &lt;-<span class="st"> </span>function(d) {
   d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ResultColumn=</span>NumeratorColumn/DenominatorColumn)
 }
 
@@ -49,7 +49,7 @@ ComputeRatioOfColumnsNoParametric &lt;-<span class="st"> </span>function(d) {
 ComputeRatioOfColumnsWrapped &lt;-<span class="st"> </span>function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
   d %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_renameRestrictCols</span>(<span class="kw">list</span>(<span class="dt">a=</span><span class="st">&#39;NumeratorColumn&#39;</span>,
                                                <span class="dt">b=</span><span class="st">&#39;DenominatorColumn&#39;</span>)) %&gt;%
-<span class="st">    </span><span class="kw">ComputeRatioOfColumnsNoParametric</span>() %&gt;%
+<span class="st">    </span><span class="kw">ComputeRatioOfColumnsHardCoded</span>() %&gt;%
 <span class="st">    </span>replyr::<span class="kw">replyr_renameRestrictCols</span>(<span class="kw">list</span>(<span class="dt">NumeratorColumn=</span><span class="st">&#39;a&#39;</span>,
                                            <span class="dt">DenominatorColumn=</span><span class="st">&#39;b&#39;</span>,
                                            <span class="dt">ResultColumn=</span><span class="st">&#39;c&#39;</span>))

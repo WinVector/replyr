@@ -12,10 +12,11 @@ let(alias, expr)
 \item{expr}{block to prepare for execution}
 }
 \value{
-item ready to evaluate, need to apply with "()" to get the evaluation in own environemnt.
+item ready to evaluate, need to apply with "()" to perform the evaluation in own environemnt.
 }
 \description{
-Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license). Pleaes see here for some discussion of let and crossing function call boundaries: \url{https://github.com/WinVector/replyr}.
+Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
+Pleaes see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
 }
 \examples{
 
