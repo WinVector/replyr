@@ -5,7 +5,7 @@
 \title{grouped ordered apply}
 \usage{
 gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
-  usegroups = TRUE, bindrows = TRUE, maxgroups = 100,
+  partitionMethod = "group_by", bindrows = TRUE, maxgroups = 100,
   eagerCompute = FALSE)
 }
 \arguments{
@@ -13,7 +13,7 @@ gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{gcolumn}{grouping column}
 
-\item{f}{transform function}
+\item{f}{transform function or pipleline}
 
 \item{...}{force later values to be bound by name}
 
@@ -21,11 +21,11 @@ gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{decreasing}{if TRUE sort in decreasing order by ocolumn}
 
-\item{usegroups}{if TRUE do not split, use group_by instead}
+\item{partitionMethod}{method to partition the data, one of 'group_by' (depends on f being dplyr compatible), 'split' (only works over local data frames), or 'extract'}
 
 \item{bindrows}{if TRUE bind the rows back into a data item, else return split list}
 
-\item{maxgroups}{maximum number of groups to work over}
+\item{maxgroups}{maximum number of groups to work over (intentionally not enforced if partitionMethod=='group_by')}
 
 \item{eagerCompute}{if TRUE call compute on split results}
 }
@@ -50,24 +50,21 @@ d <- data.frame(group=c(1,1,2,2,2),
 # User supplied window functions.  They depend on known column names and
 # the data back-end matching function names (as cumsum).
 cumulative_sum <- . \%>\% arrange(order) \%>\% mutate(cv=cumsum(values))
-sumgroup <- . \%>\% summarize(group=min(group),
-                   minv=min(values),maxv=max(values))
-# group=min(group) is a "pseudo aggregation" as group constant in groups.
 rank_in_group <- . \%>\% mutate(constcol=1) \%>\%
           mutate(rank=cumsum(constcol)) \%>\% select(-constcol)
 
-d \%>\% gapply('group',cumulative_sum,ocolumn='order')
-d \%>\% gapply('group',sumgroup,usegroups=FALSE)
-d \%>\% gapply('group',rank_in_group,ocolumn='order')
-d \%>\% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
-
-# # below only works for services which have a cumsum operator
-# my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
-# dR <- replyr_copy_to(my_db,d,'dR')
-# dR \%>\% gapply('group',cumulative_sum,ocolumn='order')
-# dR \%>\% gapply('group',sumgroup,usegroups=FALSE)
-# dR \%>\% gapply('group',rank_in_group,ocolumn='order')
-# dR \%>\% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
+for(partitionMethod in c('group_by','split','extract')) {
+  print(partitionMethod)
+  print('cumulative sum example')
+  print(d \%>\% gapply('group',cumulative_sum,ocolumn='order',
+                     partitionMethod=partitionMethod))
+  print('ranking example')
+  print(d \%>\% gapply('group',rank_in_group,ocolumn='order',
+                     partitionMethod=partitionMethod))
+  print('ranking example (decreasing)')
+  print(d \%>\% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
+                     partitionMethod=partitionMethod))
+}
 
 }
 

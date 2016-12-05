@@ -18,13 +18,13 @@ NULL
 #'
 #' @param df remote dplyr data item
 #' @param gcolumn grouping column
-#' @param f transform function
+#' @param f transform function or pipleline
 #' @param ... force later values to be bound by name
 #' @param ocolumn ordering column (optional)
 #' @param decreasing if TRUE sort in decreasing order by ocolumn
-#' @param usegroups if TRUE do not split, use group_by instead
+#' @param partitionMethod method to partition the data, one of 'group_by' (depends on f being dplyr compatible), 'split' (only works over local data frames), or 'extract'
 #' @param bindrows if TRUE bind the rows back into a data item, else return split list
-#' @param maxgroups maximum number of groups to work over
+#' @param maxgroups maximum number of groups to work over (intentionally not enforced if partitionMethod=='group_by')
 #' @param eagerCompute if TRUE call compute on split results
 #' @return transformed frame
 #'
@@ -38,47 +38,48 @@ NULL
 #' # User supplied window functions.  They depend on known column names and
 #' # the data back-end matching function names (as cumsum).
 #' cumulative_sum <- . %>% arrange(order) %>% mutate(cv=cumsum(values))
-#' sumgroup <- . %>% summarize(group=min(group),
-#'                    minv=min(values),maxv=max(values))
-#' # group=min(group) is a "pseudo aggregation" as group constant in groups.
 #' rank_in_group <- . %>% mutate(constcol=1) %>%
 #'           mutate(rank=cumsum(constcol)) %>% select(-constcol)
 #'
-#' d %>% gapply('group',cumulative_sum,ocolumn='order')
-#' d %>% gapply('group',sumgroup,usegroups=FALSE)
-#' d %>% gapply('group',rank_in_group,ocolumn='order')
-#' d %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
-#'
-#' # # below only works for services which have a cumsum operator
-#' # my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
-#' # dR <- replyr_copy_to(my_db,d,'dR')
-#' # dR %>% gapply('group',cumulative_sum,ocolumn='order')
-#' # dR %>% gapply('group',sumgroup,usegroups=FALSE)
-#' # dR %>% gapply('group',rank_in_group,ocolumn='order')
-#' # dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
+#' for(partitionMethod in c('group_by','split','extract')) {
+#'   print(partitionMethod)
+#'   print('cumulative sum example')
+#'   print(d %>% gapply('group',cumulative_sum,ocolumn='order',
+#'                      partitionMethod=partitionMethod))
+#'   print('ranking example')
+#'   print(d %>% gapply('group',rank_in_group,ocolumn='order',
+#'                      partitionMethod=partitionMethod))
+#'   print('ranking example (decreasing)')
+#'   print(d %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
+#'                      partitionMethod=partitionMethod))
+#' }
 #'
 #' @export
 gapply <- function(df,gcolumn,f,
-                          ...,
-                          ocolumn=NULL,
-                          decreasing=FALSE,
-                          usegroups=TRUE,
-                          bindrows=TRUE,
-                          maxgroups=100,
-                          eagerCompute=FALSE) {
+                   ...,
+                   ocolumn=NULL,
+                   decreasing=FALSE,
+                   partitionMethod='group_by',
+                   bindrows=TRUE,
+                   maxgroups=100,
+                   eagerCompute=FALSE) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
-    stop('gapply gcolumn must be a single non-empty string')
+    stop('replyr::gapply gcolumn must be a single non-empty string')
   }
   if(!is.null(ocolumn)) {
     if((!is.character(ocolumn))||(length(ocolumn)!=1)||(nchar(ocolumn)<1)) {
-      stop('gapply ocolumn must be a single non-empty string or NULL')
+      stop('replyr::gapply ocolumn must be a single non-empty string or NULL')
     }
   }
   if(length(list(...))>0) {
-    stop('gapply unexpected arguments')
+    stop('replyr::gapply unexpected arguments')
   }
   df %>% dplyr::ungroup() -> df  # make sure some other grouping isn't interfering.
-  if(usegroups) {
+  if(partitionMethod=='group_by') {
+    if(!bindrows) {
+      stop("replyr::gapply needs bindRows=TRUE")
+    }
+    # don't enforce maxgroups in this case, as large numbers of groups should not be a problem
     df %>% dplyr::group_by_(gcolumn) -> df
     if(!is.null(ocolumn)) {
       if(decreasing) {
@@ -88,35 +89,70 @@ gapply <- function(df,gcolumn,f,
         df %>% dplyr::arrange_(ocolumn) -> df
       }
     }
-    df %>% f %>% dplyr::ungroup() -> res
+    if(!is.null(f)) {
+      df %>% f -> df
+    }
+    df %>% dplyr::ungroup() -> df
+    return(df)
+  }
+  if(partitionMethod=='split') {
+    # only works on local data frames
+    if(!is.null(maxgroups)) {
+      df %>% replyr_uniqueValues(gcolumn) %>% replyr_nrow() -> ngroups
+      if(ngroups>maxgroups) {
+        stop("replyr::gapply maxgroups exceeded")
+      }
+    }
+    df %>% base::split(df[[gcolumn]]) -> res
+    if(!is.null(ocolumn)) {
+      if(decreasing) {
+        orderer <- function(di) {
+          dplyr::arrange_(di,interp(~desc(x),x=as.name(ocolumn)))
+        }
+      } else {
+        orderer <- function(di) {
+          dplyr::arrange_(di,ocolumn)
+        }
+      }
+      res <- lapply(res,orderer)
+    }
+    if(!is.null(f)) {
+      res <- lapply(res,f)
+    }
+    if(bindrows) {
+      res <- replyr_bind_rows(res)
+    }
     return(res)
   }
-  df %>% replyr_uniqueValues(gcolumn) %>%
-    replyr_copy_from(maxrow=maxgroups) -> groups
-  res <- lapply(groups[[gcolumn]],
-                    function(gi) {
-                      df %>% replyr_filter(cname=gcolumn,values=gi,verbose=FALSE) -> gsubi
-                      if(!is.null(ocolumn)) {
-                        if(decreasing) {
-                          #gsubi %>% dplyr::arrange_(.dots=stats::setNames(paste0('desc(',ocolumn,')'),ocolumn)) -> gsubi
-                          gsubi %>% dplyr::arrange_(interp(~desc(x),x=as.name(ocolumn))) -> gsubi
-                        } else {
-                          gsubi %>% dplyr::arrange_(ocolumn) -> gsubi
-                        }
+  if(partitionMethod=='extract') {
+    df %>% replyr_uniqueValues(gcolumn) %>%
+      replyr_copy_from(maxrow=maxgroups) -> groups
+    res <- lapply(groups[[gcolumn]],
+                  function(gi) {
+                    df %>% replyr_filter(cname=gcolumn,values=gi,verbose=FALSE) -> gsubi
+                    if(!is.null(ocolumn)) {
+                      if(decreasing) {
+                        #gsubi %>% dplyr::arrange_(.dots=stats::setNames(paste0('desc(',ocolumn,')'),ocolumn)) -> gsubi
+                        gsubi %>% dplyr::arrange_(interp(~desc(x),x=as.name(ocolumn))) -> gsubi
+                      } else {
+                        gsubi %>% dplyr::arrange_(ocolumn) -> gsubi
                       }
-                      if(!is.null(f)) {
-                        gsubi <- f(gsubi)
-                      }
-                      if(eagerCompute) {
-                        gsubi <- dplyr::compute(gsubi) # this may lose ordering, see issues/arrangecompute.Rmd
-                      }
-                      gsubi
-                    })
-  names(res) <- as.character(groups[[gcolumn]])
-  if(bindrows) {
-    res <- replyr_bind_rows(res)
+                    }
+                    if(!is.null(f)) {
+                      gsubi <- f(gsubi)
+                    }
+                    if(eagerCompute) {
+                      gsubi <- dplyr::compute(gsubi) # this may lose ordering, see issues/arrangecompute.Rmd
+                    }
+                    gsubi
+                  })
+    names(res) <- as.character(groups[[gcolumn]])
+    if(bindrows) {
+      res <- replyr_bind_rows(res)
+    }
+    return(res)
   }
-  res
+  stop(paste("replyr::gapply unknown partitionMethod argument:",partitionMethod))
 }
 
 
@@ -134,6 +170,7 @@ gapply <- function(df,gcolumn,f,
 #' @param ... force later values to be bound by name
 #' @param ocolumn ordering column (optional)
 #' @param decreasing if TRUE sort in decreasing order by ocolumn
+#' @param partitionMethod method to partition the data, one of 'split' (only works over local data frames), or 'extract'
 #' @param maxgroups maximum number of groups to work over
 #' @param eagerCompute if TRUE call compute on split results
 #' @return list of data items
@@ -151,12 +188,17 @@ replyr_split <- function(df,gcolumn,
                          ...,
                          ocolumn=NULL,
                          decreasing=FALSE,
+                         partitionMethod='extract',
                          maxgroups=100,
                          eagerCompute=FALSE) {
+  if(!(partitionMethod %in% c('split','extract'))) {
+    stop('replyr::replyr_split partitionMethod must be split or extract')
+  }
   if(length(list(...))>0) {
-    stop('replyr_split unexpected arguments')
+    stop('replyr::replyr_split unexpected arguments')
   }
   gapply(df,gcolumn,f=NULL,ocolumn=ocolumn,
-                decreasing=decreasing,bindrows=FALSE,usegroups=FALSE,
-                maxgroups=maxgroups,eagerCompute=eagerCompute)
+         decreasing=decreasing,bindrows=FALSE,
+         partitionMethod=partitionMethod,
+         maxgroups=maxgroups,eagerCompute=eagerCompute)
 }

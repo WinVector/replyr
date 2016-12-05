@@ -5,7 +5,7 @@
 \title{split a data item by values in a column.}
 \usage{
 replyr_split(df, gcolumn, ..., ocolumn = NULL, decreasing = FALSE,
-  maxgroups = 100, eagerCompute = FALSE)
+  partitionMethod = "extract", maxgroups = 100, eagerCompute = FALSE)
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -17,6 +17,8 @@ replyr_split(df, gcolumn, ..., ocolumn = NULL, decreasing = FALSE,
 \item{ocolumn}{ordering column (optional)}
 
 \item{decreasing}{if TRUE sort in decreasing order by ocolumn}
+
+\item{partitionMethod}{method to partition the data, one of 'split' (only works over local data frames), or 'extract'}
 
 \item{maxgroups}{maximum number of groups to work over}
 

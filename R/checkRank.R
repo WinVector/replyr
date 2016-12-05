@@ -89,6 +89,6 @@ replyr_check_ranks <- function(x,
                                             ValueColumnName=ValueColumnName,
                                             RankColumnName=RankColumnName,
                                             decreasing=decreasing) }
-  gapply(x,GroupColumnName,f,usegroups=FALSE,maxgroups=NULL)
+  gapply(x,GroupColumnName,f,partitionMethod='extract',maxgroups=NULL)
 }
 

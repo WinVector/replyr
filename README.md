@@ -74,7 +74,7 @@ d %>% replyr::gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
  #  5     1   0.1     2
 ```
 
-The user supplies a function or pipleline that is meant to be applied per-group and the `replyr::gapply` wrapper orchestrates the calculation. In this example `rank_in_group` was assumed to know the column names in our data, so we directly used them instead of abstracting through `replyr::let`. `replyr::gapply` defaults to using `dplyr::group_by` as its splitting or partitioning control, but can also perform actual splits if run using the argument `usegroups=FALSE` (semantics are slightly different in the two cases given how `dplyr` treats grouping columns, the issue is illustrated in the difference between the definitions of `sumgroupS` and `sumgroupG` in [this example](https://github.com/WinVector/replyr/blob/master/checks/gapply.md)).
+The user supplies a function or pipleline that is meant to be applied per-group and the `replyr::gapply` wrapper orchestrates the calculation. In this example `rank_in_group` was assumed to know the column names in our data, so we directly used them instead of abstracting through `replyr::let`. `replyr::gapply` defaults to using `dplyr::group_by` as its splitting or partitioning control, but can also perform actual splits using 'split' ('base::split') or 'extract' (sequential extraction). Semantics are slightly different between cases given how `dplyr` treats grouping columns, the issue is illustrated in the difference between the definitions of `sumgroupS` and `sumgroupG` in [this example](https://github.com/WinVector/replyr/blob/master/checks/gapply.md)).
 
 `replyr::replyr_*`
 ------------------

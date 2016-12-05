@@ -29,41 +29,32 @@ sumgroupS <- . %>% summarize(group=min(group), # pseudo aggregation, as group co
                    minv=min(values),maxv=max(values))
 # group version of sumgroup
 sumgroupG <- . %>% summarize(minv=min(values),maxv=max(values))
+sumgroup <- list(group_by=sumgroupG,split=sumgroupS,extract=sumgroupS)
 sumgroup <- list('TRUE'=sumgroupG,'FALSE'=sumgroupS)
 
 rank_in_group <- . %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
+```
 
-for(usegroups in c(FALSE,TRUE)) {
+In memory example.
+
+``` r
+for(partitionMethod in c('group_by','split','extract')) {
+  print(partitionMethod)
+  print('cumulative sum example')
   print(d %>% gapply('group',cumulative_sum,ocolumn='order',
-                            usegroups=usegroups))
-  print(d %>% gapply('group',sumgroup[[as.character(usegroups)]],
-                            usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('summary example')
+  print(d %>% gapply('group',sumgroup[[partitionMethod]],
+                     partitionMethod=partitionMethod))
+  print('ranking example')
   print(d %>% gapply('group',rank_in_group,ocolumn='order',
-                            usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('ranking example (decreasing)')
   print(d %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
-                            usegroups=usegroups))
+                     partitionMethod=partitionMethod))
 }
- #    group order values cv
- #  1     1   0.1     10 10
- #  2     1   0.2     20 30
- #  3     2   0.3      2  2
- #  4     2   0.4      4  6
- #  5     2   0.5      8 14
- #    group minv maxv
- #  1     1   10   20
- #  2     2    2    8
- #    group order values rank
- #  1     1   0.1     10    1
- #  2     1   0.2     20    2
- #  3     2   0.3      2    1
- #  4     2   0.4      4    2
- #  5     2   0.5      8    3
- #    group order values rank
- #  1     1   0.2     20    1
- #  2     1   0.1     10    2
- #  3     2   0.5      8    1
- #  4     2   0.4      4    2
- #  5     2   0.3      2    3
+ #  [1] "group_by"
+ #  [1] "cumulative sum example"
  #  # A tibble: 5 × 4
  #    group order values    cv
  #    <dbl> <dbl>  <dbl> <dbl>
@@ -72,11 +63,16 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     2
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
- #  # A tibble: 2 × 3
- #    group  minv  maxv
- #    <dbl> <dbl> <dbl>
- #  1     1    10    20
- #  2     2     2     8
+ #  [1] "summary example"
+ #  # A tibble: 5 × 3
+ #    group order values
+ #    <dbl> <dbl>  <dbl>
+ #  1     1   0.1     10
+ #  2     1   0.2     20
+ #  3     2   0.3      2
+ #  4     2   0.4      4
+ #  5     2   0.5      8
+ #  [1] "ranking example"
  #  # A tibble: 5 × 4
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
@@ -85,6 +81,7 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     1
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
+ #  [1] "ranking example (decreasing)"
  #  # A tibble: 5 × 4
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
@@ -93,6 +90,64 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     3
  #  4     1   0.2     20     1
  #  5     1   0.1     10     2
+ #  [1] "split"
+ #  [1] "cumulative sum example"
+ #    group order values cv
+ #  1     1   0.1     10 10
+ #  2     1   0.2     20 30
+ #  3     2   0.3      2  2
+ #  4     2   0.4      4  6
+ #  5     2   0.5      8 14
+ #  [1] "summary example"
+ #    group order values
+ #  1     1   0.1     10
+ #  2     1   0.2     20
+ #  3     2   0.3      2
+ #  4     2   0.4      4
+ #  5     2   0.5      8
+ #  [1] "ranking example"
+ #    group order values rank
+ #  1     1   0.1     10    1
+ #  2     1   0.2     20    2
+ #  3     2   0.3      2    1
+ #  4     2   0.4      4    2
+ #  5     2   0.5      8    3
+ #  [1] "ranking example (decreasing)"
+ #    group order values rank
+ #  1     1   0.2     20    1
+ #  2     1   0.1     10    2
+ #  3     2   0.5      8    1
+ #  4     2   0.4      4    2
+ #  5     2   0.3      2    3
+ #  [1] "extract"
+ #  [1] "cumulative sum example"
+ #    group order values cv
+ #  1     1   0.1     10 10
+ #  2     1   0.2     20 30
+ #  3     2   0.3      2  2
+ #  4     2   0.4      4  6
+ #  5     2   0.5      8 14
+ #  [1] "summary example"
+ #    group order values
+ #  1     1   0.1     10
+ #  2     1   0.2     20
+ #  3     2   0.3      2
+ #  4     2   0.4      4
+ #  5     2   0.5      8
+ #  [1] "ranking example"
+ #    group order values rank
+ #  1     1   0.1     10    1
+ #  2     1   0.2     20    2
+ #  3     2   0.3      2    1
+ #  4     2   0.4      4    2
+ #  5     2   0.5      8    3
+ #  [1] "ranking example (decreasing)"
+ #    group order values rank
+ #  1     1   0.2     20    1
+ #  2     1   0.1     10    2
+ #  3     2   0.5      8    1
+ #  4     2   0.4      4    2
+ #  5     2   0.3      2    3
 ```
 
 `PostgreSQL` example.
@@ -102,16 +157,23 @@ for(usegroups in c(FALSE,TRUE)) {
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 dR <- replyr_copy_to(my_db,d,'dR')
 
-for(usegroups in c(FALSE,TRUE)) {
+for(partitionMethod in c('group_by','extract')) {
+  print(partitionMethod)
+  print('cumulative sum example')
   print(dR %>% gapply('group',cumulative_sum,ocolumn='order',
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',sumgroup[[as.character(usegroups)]],
-                      usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('summary example')
+  print(dR %>% gapply('group',sumgroup[[partitionMethod]],
+                     partitionMethod=partitionMethod))
+  print('ranking example')
   print(dR %>% gapply('group',rank_in_group,ocolumn='order',
-                      usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('ranking example (decreasing)')
   print(dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
-                      usegroups=usegroups))
+                     partitionMethod=partitionMethod))
 }
+ #  [1] "group_by"
+ #  [1] "cumulative sum example"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -122,13 +184,18 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     2
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
+ #  [1] "summary example"
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
- #    group  minv  maxv
- #    <dbl> <dbl> <dbl>
- #  1     1    10    20
- #  2     2     2     8
+ #    group order values
+ #    <dbl> <dbl>  <dbl>
+ #  1     1   0.1     10
+ #  2     1   0.2     20
+ #  3     2   0.3      2
+ #  4     2   0.4      4
+ #  5     2   0.5      8
+ #  [1] "ranking example"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -139,6 +206,7 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     1
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
+ #  [1] "ranking example (decreasing)"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -149,6 +217,8 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.5      8     1
  #  4     2   0.4      4     2
  #  5     2   0.3      2     3
+ #  [1] "extract"
+ #  [1] "cumulative sum example"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -159,13 +229,18 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     2
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
+ #  [1] "summary example"
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
- #    group  minv  maxv
- #    <dbl> <dbl> <dbl>
- #  1     1    10    20
- #  2     2     2     8
+ #    group order values
+ #    <dbl> <dbl>  <dbl>
+ #  1     1   0.1     10
+ #  2     1   0.2     20
+ #  3     2   0.3      2
+ #  4     2   0.4      4
+ #  5     2   0.5      8
+ #  [1] "ranking example"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -176,6 +251,7 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     1
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
+ #  [1] "ranking example (decreasing)"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -189,8 +265,8 @@ for(usegroups in c(FALSE,TRUE)) {
 
 my_db <- NULL; gc();
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 478344 25.6     940480 50.3   750400 40.1
- #  Vcells 726759  5.6    1380305 10.6  1305948 10.0
+ #  Ncells 478929 25.6     940480 50.3   750400 40.1
+ #  Vcells 730409  5.6    1308461 10.0  1308461 10.0
 ```
 
 `Spark` example.
@@ -203,55 +279,25 @@ class(my_db)
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
 my_db$spark_home
  #  [1] "/Users/johnmount/Library/Caches/spark/spark-2.0.0-bin-hadoop2.7"
-dR <- replyr_copy_to(my_db,d,'dR')
+dS <- replyr_copy_to(my_db,d,'dS')
 
-for(usegroups in c(FALSE,TRUE)) {
-  print(dR %>% gapply('group',cumulative_sum,ocolumn='order',
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',sumgroup[[as.character(usegroups)]],
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',rank_in_group,ocolumn='order',
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
-                      usegroups=usegroups))
+for(partitionMethod in c('group_by','extract')) {
+  print(partitionMethod)
+  print('cumulative sum example')
+  print(dS %>% gapply('group',cumulative_sum,ocolumn='order',
+                     partitionMethod=partitionMethod))
+  print('summary example')
+  print(dS %>% gapply('group',sumgroup[[partitionMethod]],
+                     partitionMethod=partitionMethod))
+  print('ranking example')
+  print(dS %>% gapply('group',rank_in_group,ocolumn='order',
+                     partitionMethod=partitionMethod))
+  print('ranking example (decreasing)')
+  print(dS %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
+                     partitionMethod=partitionMethod))
 }
- #  Source:   query [?? x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    group order values    cv
- #    <dbl> <dbl>  <dbl> <dbl>
- #  1     1   0.2     20    30
- #  2     1   0.1     10    10
- #  3     2   0.3      2     2
- #  4     2   0.4      4     6
- #  5     2   0.5      8    14
- #  Source:   query [?? x 3]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    group  minv  maxv
- #    <dbl> <dbl> <dbl>
- #  1     2     2     8
- #  2     1    10    20
- #  Source:   query [?? x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    group order values  rank
- #    <dbl> <dbl>  <dbl> <dbl>
- #  1     1   0.1     10     1
- #  2     2   0.4      4     2
- #  3     2   0.3      2     1
- #  4     1   0.2     20     2
- #  5     2   0.5      8     3
- #  Source:   query [?? x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    group order values  rank
- #    <dbl> <dbl>  <dbl> <dbl>
- #  1     2   0.5      8     1
- #  2     2   0.4      4     2
- #  3     1   0.2     20     1
- #  4     1   0.1     10     2
- #  5     2   0.3      2     3
+ #  [1] "group_by"
+ #  [1] "cumulative sum example"
  #  Source:   query [?? x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -262,13 +308,18 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     2
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
+ #  [1] "summary example"
  #  Source:   query [?? x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
- #    group  minv  maxv
- #    <dbl> <dbl> <dbl>
- #  1     1    10    20
- #  2     2     2     8
+ #    group order values
+ #    <dbl> <dbl>  <dbl>
+ #  1     1   0.1     10
+ #  2     1   0.2     20
+ #  3     2   0.3      2
+ #  4     2   0.4      4
+ #  5     2   0.5      8
+ #  [1] "ranking example"
  #  Source:   query [?? x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -279,6 +330,7 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.3      2     1
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
+ #  [1] "ranking example (decreasing)"
  #  Source:   query [?? x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -289,10 +341,53 @@ for(usegroups in c(FALSE,TRUE)) {
  #  3     2   0.5      8     1
  #  4     2   0.4      4     2
  #  5     2   0.3      2     3
-
+ #  [1] "extract"
+ #  [1] "cumulative sum example"
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    group order values    cv
+ #    <dbl> <dbl>  <dbl> <dbl>
+ #  1     1   0.2     20    30
+ #  2     1   0.1     10    10
+ #  3     2   0.3      2     2
+ #  4     2   0.4      4     6
+ #  5     2   0.5      8    14
+ #  [1] "summary example"
+ #  Source:   query [?? x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    group order values
+ #    <dbl> <dbl>  <dbl>
+ #  1     1   0.1     10
+ #  2     1   0.2     20
+ #  3     2   0.3      2
+ #  4     2   0.4      4
+ #  5     2   0.5      8
+ #  [1] "ranking example"
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    group order values  rank
+ #    <dbl> <dbl>  <dbl> <dbl>
+ #  1     1   0.1     10     1
+ #  2     2   0.4      4     2
+ #  3     2   0.3      2     1
+ #  4     1   0.2     20     2
+ #  5     2   0.5      8     3
+ #  [1] "ranking example (decreasing)"
+ #  Source:   query [?? x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #    group order values  rank
+ #    <dbl> <dbl>  <dbl> <dbl>
+ #  1     2   0.5      8     1
+ #  2     2   0.4      4     2
+ #  3     1   0.2     20     1
+ #  4     1   0.1     10     2
+ #  5     2   0.3      2     3
 my_db <- NULL; gc();
- #  Auto-disconnecting postgres connection (84673, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 546400 29.2     940480 50.3   940480 50.3
- #  Vcells 787802  6.1    1380305 10.6  1315949 10.1
+ #  Ncells 547054 29.3     940480 50.3   940480 50.3
+ #  Vcells 791091  6.1    1650153 12.6  1308461 10.0
 ```

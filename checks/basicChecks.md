@@ -467,8 +467,8 @@ runExample(remoteCopy(my_db))
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 518461 27.7     940480 50.3   940480 50.3
- #  Vcells 760956  5.9    1650153 12.6  1650114 12.6
+ #  Ncells 518963 27.8     940480 50.3   940480 50.3
+ #  Vcells 763884  5.9    1650153 12.6  1650119 12.6
 ```
 
 MySQL example.
@@ -641,12 +641,12 @@ runExample(remoteCopy(my_db))
  #  
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
- #  1     1  m1_3  m2_1
+ #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 553585 29.6     940480 50.3   940480 50.3
- #  Vcells 788511  6.1    1650153 12.6  1650153 12.6
+ #  Ncells 554087 29.6     940480 50.3   940480 50.3
+ #  Vcells 791439  6.1    1650153 12.6  1650153 12.6
 ```
 
 PostgreSQL example.
@@ -820,10 +820,10 @@ runExample(remoteCopy(my_db))
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (84762, 0)
+ #  Auto-disconnecting postgres connection (88137, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 587320 31.4     940480 50.3   940480 50.3
- #  Vcells 814941  6.3    1650153 12.6  1650153 12.6
+ #  Ncells 587825 31.4     940480 50.3   940480 50.3
+ #  Vcells 817874  6.3    1650153 12.6  1650153 12.6
 ```
 
 Spark 1.6.2 example.
@@ -1002,6 +1002,6 @@ runExample(remoteCopy(my_db))
  #  1     1  m2_1  m1_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 623375 33.3    1168576 62.5   940480 50.3
- #  Vcells 846245  6.5    1650153 12.6  1650153 12.6
+ #  Ncells 623903 33.4    1168576 62.5  1168576 62.5
+ #  Vcells 849851  6.5    1650153 12.6  1650153 12.6
 ```

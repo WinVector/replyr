@@ -38,19 +38,29 @@ sumgroupS <- . %>% summarize(group=min(group), # pseudo aggregation, as group co
                    minv=min(values),maxv=max(values))
 # group version of sumgroup
 sumgroupG <- . %>% summarize(minv=min(values),maxv=max(values))
+sumgroup <- list(group_by=sumgroupG,split=sumgroupS,extract=sumgroupS)
 sumgroup <- list('TRUE'=sumgroupG,'FALSE'=sumgroupS)
 
 rank_in_group <- . %>% mutate(constcol=1) %>% mutate(rank=cumsum(constcol)) %>% select(-constcol)
+```
 
-for(usegroups in c(FALSE,TRUE)) {
+In memory example.
+
+```{r inmemoryexample}
+for(partitionMethod in c('group_by','split','extract')) {
+  print(partitionMethod)
+  print('cumulative sum example')
   print(d %>% gapply('group',cumulative_sum,ocolumn='order',
-                            usegroups=usegroups))
-  print(d %>% gapply('group',sumgroup[[as.character(usegroups)]],
-                            usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('summary example')
+  print(d %>% gapply('group',sumgroup[[partitionMethod]],
+                     partitionMethod=partitionMethod))
+  print('ranking example')
   print(d %>% gapply('group',rank_in_group,ocolumn='order',
-                            usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('ranking example (decreasing)')
   print(d %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
-                            usegroups=usegroups))
+                     partitionMethod=partitionMethod))
 }
 ```
 
@@ -61,15 +71,20 @@ for(usegroups in c(FALSE,TRUE)) {
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 dR <- replyr_copy_to(my_db,d,'dR')
 
-for(usegroups in c(FALSE,TRUE)) {
+for(partitionMethod in c('group_by','extract')) {
+  print(partitionMethod)
+  print('cumulative sum example')
   print(dR %>% gapply('group',cumulative_sum,ocolumn='order',
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',sumgroup[[as.character(usegroups)]],
-                      usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('summary example')
+  print(dR %>% gapply('group',sumgroup[[partitionMethod]],
+                     partitionMethod=partitionMethod))
+  print('ranking example')
   print(dR %>% gapply('group',rank_in_group,ocolumn='order',
-                      usegroups=usegroups))
+                     partitionMethod=partitionMethod))
+  print('ranking example (decreasing)')
   print(dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
-                      usegroups=usegroups))
+                     partitionMethod=partitionMethod))
 }
 
 my_db <- NULL; gc();
@@ -83,18 +98,22 @@ my_db <- sparklyr::spark_connect(version='2.0.0',
                                  master = "local")
 class(my_db)
 my_db$spark_home
-dR <- replyr_copy_to(my_db,d,'dR')
+dS <- replyr_copy_to(my_db,d,'dS')
 
-for(usegroups in c(FALSE,TRUE)) {
-  print(dR %>% gapply('group',cumulative_sum,ocolumn='order',
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',sumgroup[[as.character(usegroups)]],
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',rank_in_group,ocolumn='order',
-                      usegroups=usegroups))
-  print(dR %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
-                      usegroups=usegroups))
+for(partitionMethod in c('group_by','extract')) {
+  print(partitionMethod)
+  print('cumulative sum example')
+  print(dS %>% gapply('group',cumulative_sum,ocolumn='order',
+                     partitionMethod=partitionMethod))
+  print('summary example')
+  print(dS %>% gapply('group',sumgroup[[partitionMethod]],
+                     partitionMethod=partitionMethod))
+  print('ranking example')
+  print(dS %>% gapply('group',rank_in_group,ocolumn='order',
+                     partitionMethod=partitionMethod))
+  print('ranking example (decreasing)')
+  print(dS %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
+                     partitionMethod=partitionMethod))
 }
-
 my_db <- NULL; gc();
 ```
