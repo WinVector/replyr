@@ -14,7 +14,8 @@ Primary `replyr` services include:
 -   `replyr::gapply`
 -   `replyr::replyr_*`
 
-\#\# `replyr::let`
+`replyr::let`
+-------------
 
 `replyr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute`). This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms" (and the direct use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms").
 

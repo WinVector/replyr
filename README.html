@@ -9,7 +9,7 @@
 <li><code>replyr::gapply</code></li>
 <li><code>replyr::replyr_*</code></li>
 </ul>
-<p>## <code>replyr::let</code></p>
+<h2 id="replyrlet"><code>replyr::let</code></h2>
 <p><code>replyr::let</code> allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with <code>base::substitute</code>). This allows the user to write arbitrary <code>dplyr</code> code in the case of <a href="http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/">&quot;parametric variable names&quot;</a> (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the <code>dplyr</code> &quot;underbar forms&quot; (and the direct use of <code>lazyeval::interp</code> and <code>.dots=stats::setNames</code> to use the <code>dplyr</code> &quot;underbar forms&quot;).</p>
 <p>Example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dplyr&#39;</span>)</code></pre></div>
