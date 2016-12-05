@@ -18,8 +18,7 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
-It is a bit of a shock when [R](https://cran.r-project.org) `dplyr` users switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service.  A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale.  It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds.  `replyr` attempts to provide a few helpful work-arounds.
-
+It comes as a bit of a shock when [R](https://cran.r-project.org) `dplyr` users switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service.  A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale.  It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds.  `replyr` attempts to provide a few helpful work-arounds.
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
@@ -34,7 +33,7 @@ summary(d)
 replyr_summary(d)
 ```
 
-`replyr` doesn't seem to add much until you use a remote data service:
+`replyr` may not seem to add much until you use a remote data service:
 
 ```{r}
 my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
@@ -47,6 +46,22 @@ Data types, capabilities, and row-orders all vary a lot as we switch remote data
 point of `replyr` is to provide at least some convenient version of typical functions such as:
 `summary`, `nrow`, unique values, and filter rows by values in a set.
 
+`replyr` is also trying to work through notation issues.  `replyr::let` removes the need for use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms" (please see [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) for explanation). `replyr::let` provides an execution block where we can re-map parametrically supplied names (that is variable or column names that are stored in variables, and not know to the programmer) to concrete names known by the programmer.  This allows code such as the following:
+
+```{r}
+library('dplyr')
+d <- data.frame(Sepal_Length=c(5.8,5.7),
+                Sepal_Width=c(4.0,4.4),
+                Species='setosa',
+                rank=c(1,2))
+mapping = list(RankColumn='rank')
+let(alias=mapping,
+    expr={
+       d %>% mutate(RankColumn=RankColumn-1) -> dres
+    })()
+print(dres)
+```
+
 This is a *very* new package with no guarantees or claims of fitness for purpose.  Some implemented operations are going to be slow and expensive (part of why they are not exposed in `dplyr` itself).
 
 We will probably only ever cover:
@@ -55,7 +70,7 @@ We will probably only ever cover:
  * `RMySQL`
  * `RPostgreSQL`
  * `SQLite`
- * `sparklyr`
+ * `sparklyr` (`Spark` 2 preferred)
  
 The type of functions `replyr` supplies is illustrated through `replyr::replyr_filter` and `replyr::replyr_inTest`.  These are designed to subset data based on a columns values being in a given set.  These allow selection of rows by testing membership in a set (very useful for partitioning data).  Example below:
 

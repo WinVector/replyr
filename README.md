@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-It is a bit of a shock when [R](https://cran.r-project.org) `dplyr` users switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. `replyr` attempts to provide a few helpful work-arounds.
+It comes as a bit of a shock when [R](https://cran.r-project.org) `dplyr` users switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. `replyr` attempts to provide a few helpful work-arounds.
 
 <a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a>
 
@@ -27,7 +27,7 @@ replyr_summary(d)
  #  3      z character     3   1       2  NA  NA       NA        NA      a      b
 ```
 
-`replyr` doesn't seem to add much until you use a remote data service:
+`replyr` may not seem to add much until you use a remote data service:
 
 ``` r
 my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
@@ -45,6 +45,33 @@ replyr_summary(dRemote)
 
 Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of `replyr` is to provide at least some convenient version of typical functions such as: `summary`, `nrow`, unique values, and filter rows by values in a set.
 
+`replyr` is also trying to work through notation issues. `replyr::let` removes the need for use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms" (please see [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) for explanation). `replyr::let` provides an execution block where we can re-map parametrically supplied names (that is variable or column names that are stored in variables, and not know to the programmer) to concrete names known by the programmer. This allows code such as the following:
+
+``` r
+library('dplyr')
+ #  
+ #  Attaching package: 'dplyr'
+ #  The following objects are masked from 'package:stats':
+ #  
+ #      filter, lag
+ #  The following objects are masked from 'package:base':
+ #  
+ #      intersect, setdiff, setequal, union
+d <- data.frame(Sepal_Length=c(5.8,5.7),
+                Sepal_Width=c(4.0,4.4),
+                Species='setosa',
+                rank=c(1,2))
+mapping = list(RankColumn='rank')
+let(alias=mapping,
+    expr={
+       d %>% mutate(RankColumn=RankColumn-1) -> dres
+    })()
+print(dres)
+ #    Sepal_Length Sepal_Width Species rank
+ #  1          5.8         4.0  setosa    0
+ #  2          5.7         4.4  setosa    1
+```
+
 This is a *very* new package with no guarantees or claims of fitness for purpose. Some implemented operations are going to be slow and expensive (part of why they are not exposed in `dplyr` itself).
 
 We will probably only ever cover:
@@ -53,7 +80,7 @@ We will probably only ever cover:
 -   `RMySQL`
 -   `RPostgreSQL`
 -   `SQLite`
--   `sparklyr`
+-   `sparklyr` (`Spark` 2 preferred)
 
 The type of functions `replyr` supplies is illustrated through `replyr::replyr_filter` and `replyr::replyr_inTest`. These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:
 

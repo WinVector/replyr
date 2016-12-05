@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<p>It is a bit of a shock when <a href="https://cran.r-project.org">R</a> <code>dplyr</code> users switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. <code>replyr</code> attempts to provide a few helpful work-arounds.</p>
+<p>It comes as a bit of a shock when <a href="https://cran.r-project.org">R</a> <code>dplyr</code> users switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. <code>replyr</code> attempts to provide a few helpful work-arounds.</p>
 <p><a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a></p>
 <p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (<code>SQL</code> databases, <code>Spark</code>) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions.</p>
 <p>Example: the following should work across more than one <code>dplyr</code> back-end (such as <code>RMySQL</code> or <code>RPostgreSQL</code>).</p>
@@ -20,7 +20,7 @@ d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
  <span class="co">#  1      x   numeric     3   0       2   1   2 1.666667 0.5773503   &lt;NA&gt;   &lt;NA&gt;</span>
  <span class="co">#  2      y   numeric     3   1       2   3   5 4.000000 1.4142136   &lt;NA&gt;   &lt;NA&gt;</span>
  <span class="co">#  3      z character     3   1       2  NA  NA       NA        NA      a      b</span></code></pre></div>
-<p><code>replyr</code> doesn't seem to add much until you use a remote data service:</p>
+<p><code>replyr</code> may not seem to add much until you use a remote data service:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_db &lt;-<span class="st"> </span>dplyr::<span class="kw">src_sqlite</span>(<span class="st">&quot;replyr_sqliteEx.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
 dRemote &lt;-<span class="st"> </span>dplyr::<span class="kw">copy_to</span>(my_db,d,<span class="st">&#39;d&#39;</span>)
 <span class="kw">summary</span>(dRemote)
@@ -33,6 +33,29 @@ dRemote &lt;-<span class="st"> </span>dplyr::<span class="kw">copy_to</span>(my_
  <span class="co">#  2      y   numeric     3   1       2   3   5 4.000000 1.4142136   &lt;NA&gt;   &lt;NA&gt;</span>
  <span class="co">#  3      z character     3   1       2  NA  NA       NA        NA      a      b</span></code></pre></div>
 <p>Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of <code>replyr</code> is to provide at least some convenient version of typical functions such as: <code>summary</code>, <code>nrow</code>, unique values, and filter rows by values in a set.</p>
+<p><code>replyr</code> is also trying to work through notation issues. <code>replyr::let</code> removes the need for use of <code>lazyeval::interp</code> and <code>.dots=stats::setNames</code> to use the <code>dplyr</code> &quot;underbar forms&quot; (please see <a href="http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/">here</a> for explanation). <code>replyr::let</code> provides an execution block where we can re-map parametrically supplied names (that is variable or column names that are stored in variables, and not know to the programmer) to concrete names known by the programmer. This allows code such as the following:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dplyr&#39;</span>)
+ <span class="co">#  </span>
+ <span class="co">#  Attaching package: &#39;dplyr&#39;</span>
+ <span class="co">#  The following objects are masked from &#39;package:stats&#39;:</span>
+ <span class="co">#  </span>
+ <span class="co">#      filter, lag</span>
+ <span class="co">#  The following objects are masked from &#39;package:base&#39;:</span>
+ <span class="co">#  </span>
+ <span class="co">#      intersect, setdiff, setequal, union</span>
+d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Sepal_Length=</span><span class="kw">c</span>(<span class="fl">5.8</span>,<span class="fl">5.7</span>),
+                <span class="dt">Sepal_Width=</span><span class="kw">c</span>(<span class="fl">4.0</span>,<span class="fl">4.4</span>),
+                <span class="dt">Species=</span><span class="st">&#39;setosa&#39;</span>,
+                <span class="dt">rank=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+mapping =<span class="st"> </span><span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>)
+<span class="kw">let</span>(<span class="dt">alias=</span>mapping,
+    <span class="dt">expr=</span>{
+       d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>) -&gt;<span class="st"> </span>dres
+    })()
+<span class="kw">print</span>(dres)
+ <span class="co">#    Sepal_Length Sepal_Width Species rank</span>
+ <span class="co">#  1          5.8         4.0  setosa    0</span>
+ <span class="co">#  2          5.7         4.4  setosa    1</span></code></pre></div>
 <p>This is a <em>very</em> new package with no guarantees or claims of fitness for purpose. Some implemented operations are going to be slow and expensive (part of why they are not exposed in <code>dplyr</code> itself).</p>
 <p>We will probably only ever cover:</p>
 <ul class="incremental">
@@ -40,7 +63,7 @@ dRemote &lt;-<span class="st"> </span>dplyr::<span class="kw">copy_to</span>(my_
 <li><code>RMySQL</code></li>
 <li><code>RPostgreSQL</code></li>
 <li><code>SQLite</code></li>
-<li><code>sparklyr</code></li>
+<li><code>sparklyr</code> (<code>Spark</code> 2 preferred)</li>
 </ul>
 <p>The type of functions <code>replyr</code> supplies is illustrated through <code>replyr::replyr_filter</code> and <code>replyr::replyr_inTest</code>. These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dplyr&#39;</span>)</code></pre></div>
