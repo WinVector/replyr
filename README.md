@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-It comes as a bit of a shock when [R](https://cran.r-project.org) `dplyr` users switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. `replyr` attempts to provide a few helpful work-arounds.
+It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide a few helpful work-arounds.
 
 <a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a>
 
@@ -62,10 +62,11 @@ d <- data.frame(Sepal_Length=c(5.8,5.7),
                 Species='setosa',
                 rank=c(1,2))
 mapping = list(RankColumn='rank')
-let(alias=mapping,
-    expr={
-       d %>% mutate(RankColumn=RankColumn-1) -> dres
-    })()
+replyr::let(
+  alias=mapping,
+  expr={
+    d %>% mutate(RankColumn=RankColumn-1) -> dres
+  })()
 print(dres)
  #    Sepal_Length Sepal_Width Species rank
  #  1          5.8         4.0  setosa    0

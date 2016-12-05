@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<p>It comes as a bit of a shock when <a href="https://cran.r-project.org">R</a> <code>dplyr</code> users switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. <code>replyr</code> attempts to provide a few helpful work-arounds.</p>
+<p>It comes as a bit of a shock for <a href="https://cran.r-project.org">R</a> <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> users when they switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. The <a href="https://github.com/WinVector/replyr"><code>replyr</code></a> package attempts to provide a few helpful work-arounds.</p>
 <p><a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a></p>
 <p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (<code>SQL</code> databases, <code>Spark</code>) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions.</p>
 <p>Example: the following should work across more than one <code>dplyr</code> back-end (such as <code>RMySQL</code> or <code>RPostgreSQL</code>).</p>
@@ -48,10 +48,11 @@ d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
                 <span class="dt">Species=</span><span class="st">&#39;setosa&#39;</span>,
                 <span class="dt">rank=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
 mapping =<span class="st"> </span><span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>)
-<span class="kw">let</span>(<span class="dt">alias=</span>mapping,
-    <span class="dt">expr=</span>{
-       d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>) -&gt;<span class="st"> </span>dres
-    })()
+replyr::<span class="kw">let</span>(
+  <span class="dt">alias=</span>mapping,
+  <span class="dt">expr=</span>{
+    d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>) -&gt;<span class="st"> </span>dres
+  })()
 <span class="kw">print</span>(dres)
  <span class="co">#    Sepal_Length Sepal_Width Species rank</span>
  <span class="co">#  1          5.8         4.0  setosa    0</span>
