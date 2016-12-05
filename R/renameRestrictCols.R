@@ -40,8 +40,7 @@ replyr_renameRestrictCols <- function(x,nmap) {
   for(ni in names(nmap)) {
     ti <- nmap[[ni]]
     if(ti!=ni) {
-      x %>% dplyr::mutate_(.dots=stats::setNames(ni,ti)) %>%
-        dplyr::select_(paste0('-',ni)) -> x
+      x %>% dplyr::rename_(.dots=stats::setNames(ni,ti)) -> x
     }
   }
   x
