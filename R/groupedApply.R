@@ -6,7 +6,7 @@
 NULL
 
 
-#' grouped apply
+#' grouped ordered apply
 #'
 #' Partitions from by values in grouping column, applies a generic transform
 #' to each group and then binds the groups back together.  Only advised for a

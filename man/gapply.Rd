@@ -2,7 +2,7 @@
 % Please edit documentation in R/groupedApply.R
 \name{gapply}
 \alias{gapply}
-\title{grouped apply}
+\title{grouped ordered apply}
 \usage{
 gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
   usegroups = TRUE, bindrows = TRUE, maxgroups = 100,
