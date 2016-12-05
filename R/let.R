@@ -4,7 +4,7 @@
 
 #' Prepare expr for execution with name substitions specified in alias.
 #'
-#' Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
+#' Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license). Pleaes see here for some discussion of let and crossing function call boundaries: \url{https://github.com/WinVector/replyr}.
 #'
 #' @param alias mapping from free names in expr to target names to use.
 #' @param expr block to prepare for execution

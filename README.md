@@ -26,17 +26,25 @@ library('dplyr')
 ```
 
 ``` r
+# nice parametric function we write
 ComputeRatioOfColumns <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
   replyr::let(
     alias=list(NumeratorColumn=NumeratorColumnName,
                DenominatorColumn=DenominatorColumnName,
                ResultColumn=ResultColumnName),
     expr={
+      # (pretend) large block of code written with concrete column names.
+      # due to the let wrapper in this function it will behave as if it was
+      # using the specified paremetric column names.
       d %>% mutate(ResultColumn=NumeratorColumn/DenominatorColumn)
     })()
 }
+
+# example data
 d <- data.frame(a=1:5,b=3:7)
-ComputeRatioOfColumns(d,'a','b','c')
+
+# example application
+d %>% ComputeRatioOfColumns('a','b','c')
  #    a b         c
  #  1 1 3 0.3333333
  #  2 2 4 0.5000000
@@ -47,10 +55,38 @@ ComputeRatioOfColumns(d,'a','b','c')
 
 `replyr::let` makes construction of abstract functions over `dplyr` controlled data much easier. It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
 
+Note `replyr::let` only controls name bindings in the the score of the `expr={}` block, and not inside functions called in the block. To be clear `replyr::let` is re-writing function arguments (which is how we use `dplyr::mutate` in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not paramaterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or use if `dplyr` implemented something like the view stack proposal found [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (both are adaptions of the data).
+
+``` r
+# original function we do not have control of
+ComputeRatioOfColumnsNoParametric <- function(d) {
+  d %>% mutate(ResultColumn=NumeratorColumn/DenominatorColumn)
+}
+
+# wrapper to make function look parametric
+ComputeRatioOfColumnsWrapped <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
+  d %>% replyr::replyr_renameRestrictCols(list(a='NumeratorColumn',
+                                               b='DenominatorColumn')) %>%
+    ComputeRatioOfColumnsNoParametric() %>%
+    replyr::replyr_renameRestrictCols(list(NumeratorColumn='a',
+                                           DenominatorColumn='b',
+                                           ResultColumn='c'))
+}
+
+# example application
+d %>% ComputeRatioOfColumnsWrapped('a','b','c')
+ #    a b         c
+ #  1 1 3 0.3333333
+ #  2 2 4 0.5000000
+ #  3 3 5 0.6000000
+ #  4 4 6 0.6666667
+ #  5 5 7 0.7142857
+```
+
 `replyr::gapply`
 ----------------
 
-`replyr::gapply` is a "grouped ordered apply" data operation. Many calculations can be written in terms of this primitive, including per-group rank calculation (assuming your data services supports window functions), per-group summaries, and per-group selections. It is meant to be a specialization of ("The Split-Apply-Combine")\[<https://www.jstatsoft.org/article/view/v040i01>\] strategy with all three steps wrapped into a single operator.
+`replyr::gapply` is a "grouped ordered apply" data operation. Many calculations can be written in terms of this primitive, including per-group rank calculation (assuming your data services supports window functions), per-group summaries, and per-group selections. It is meant to be a specialization of ["The Split-Apply-Combine"](https://www.jstatsoft.org/article/view/v040i01) strategy with all three steps wrapped into a single operator.
 
 Example:
 

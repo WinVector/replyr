@@ -15,7 +15,7 @@ let(alias, expr)
 item ready to evaluate, need to apply with "()" to get the evaluation in own environemnt.
 }
 \description{
-Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
+Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license). Pleaes see here for some discussion of let and crossing function call boundaries: \url{https://github.com/WinVector/replyr}.
 }
 \examples{
 
