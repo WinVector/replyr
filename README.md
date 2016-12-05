@@ -1,42 +1,99 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide a few helpful work-arounds.
+Introduction
+------------
+
+It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
 
 <a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a>
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
-Example: the following should work across more than one `dplyr` back-end (such as `RMySQL` or `RPostgreSQL`).
+Primary `replyr` services include:
+
+-   `replyr::let`
+-   `replyr::gapply`
+-   `replyr::replyr_*`
+
+\#\# `replyr::let`
+
+`replyr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute`). This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms" (and the direct use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms").
+
+Example:
 
 ``` r
-library('replyr')
-d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
-                stringsAsFactors = FALSE)
-summary(d)
- #         x               y            z            
- #   Min.   :1.000   Min.   :3.0   Length:3          
- #   1st Qu.:1.500   1st Qu.:3.5   Class :character  
- #   Median :2.000   Median :4.0   Mode  :character  
- #   Mean   :1.667   Mean   :4.0                     
- #   3rd Qu.:2.000   3rd Qu.:4.5                     
- #   Max.   :2.000   Max.   :5.0                     
- #                   NA's   :1
-replyr_summary(d)
- #    column     class nrows nna nunique min max     mean        sd lexmin lexmax
- #  1      x   numeric     3   0       2   1   2 1.666667 0.5773503   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5 4.000000 1.4142136   <NA>   <NA>
- #  3      z character     3   1       2  NA  NA       NA        NA      a      b
+library('dplyr')
 ```
 
-`replyr` may not seem to add much until you use a remote data service:
+``` r
+ComputeRatioOfColumns <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
+  replyr::let(
+    alias=list(NumeratorColumn=NumeratorColumnName,
+               DenominatorColumn=DenominatorColumnName,
+               ResultColumn=ResultColumnName),
+    expr={
+      d %>% mutate(ResultColumn=NumeratorColumn/DenominatorColumn)
+    })()
+}
+d <- data.frame(a=1:5,b=3:7)
+ComputeRatioOfColumns(d,'a','b','c')
+ #    a b         c
+ #  1 1 3 0.3333333
+ #  2 2 4 0.5000000
+ #  3 3 5 0.6000000
+ #  4 4 6 0.6666667
+ #  5 5 7 0.7142857
+```
+
+`replyr::let` makes construction of abstract functions over `dplyr` controlled data much easier. It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
+
+`replyr::gapply`
+----------------
+
+`replyr::gapply` is a "grouped ordered apply" data operation. Many calculations can be written in terms of this primitive, including per-group rank calculation (assuming your data services supports window functions), per-group summaries, and per-group selections. It is meant to be a specialization of ("The Split-Apply-Combine")\[<https://www.jstatsoft.org/article/view/v040i01>\] strategy with all three steps wrapped into a single operator.
+
+Example:
 
 ``` r
+library('dplyr')
+```
+
+``` r
+d <- data.frame(group=c(1,1,2,2,2),
+                order=c(.1,.2,.3,.4,.5))
+rank_in_group <- . %>% mutate(constcol=1) %>%
+          mutate(rank=cumsum(constcol)) %>% select(-constcol)
+d %>% replyr::gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
+ #  # A tibble: 5 × 3
+ #    group order  rank
+ #    <dbl> <dbl> <dbl>
+ #  1     2   0.5     1
+ #  2     2   0.4     2
+ #  3     2   0.3     3
+ #  4     1   0.2     1
+ #  5     1   0.1     2
+```
+
+The user supplies a function or pipleline that is meant to be applied per-group and the `replyr::gapply` wrapper orchestrates the calculation. In this example `rank_in_group` was assumed to know the column names in our data, so we directly used them instead of abstracting through `replyr::let`. `replyr::gapply` defaults to using `dplyr::group_by` as its splitting or partitioning control, but can also perform actual splits if run using the argument `usegroups=FALSE` (semantics are slightly different in the two cases given how `dplyr` treats grouping columns, the issue is illustrated in the difference between the definitions of `sumgroupS` and `sumgroupG` in [this example](https://github.com/WinVector/replyr/blob/master/checks/gapply.md)).
+
+`replyr::replyr_*`
+------------------
+
+The `replyr::replyr_*` functions are all convenience functions supplying common functionality (such as `replyr::replyr_nrow`) that works across many data services providers. These are prefixed (instead of being `S3` or `S4` methods) so they do not interfere with common methods. Many of these functions can expensive (which is why `dplyr` does not provide them as a default), or are patching around corner cases (which is why these functions appear to duplicate `base::` and `dplyr::` capabilities). The issues `replyr::replyr_*` claim to patch around have all been filed as issues on the appropriate `R` packages and are documented [here](https://github.com/WinVector/replyr/tree/master/issues) (to confirm they are not phantoms).
+
+Example: `replyr::replyr_summary` working on a database service (when `base::summary` does not).
+
+``` r
+d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
+                stringsAsFactors = FALSE)
 my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
 dRemote <- dplyr::copy_to(my_db,d,'d')
+
 summary(dRemote)
  #      Length Class          Mode
  #  src 2      src_sqlite     list
  #  ops 3      op_base_remote list
-replyr_summary(dRemote)
+
+replyr::replyr_summary(dRemote)
  #    column     class nrows nna nunique min max     mean        sd lexmin lexmax
  #  1      x   numeric     3   0       2   1   2 1.666667 0.5773503   <NA>   <NA>
  #  2      y   numeric     3   1       2   3   5 4.000000 1.4142136   <NA>   <NA>
@@ -45,33 +102,8 @@ replyr_summary(dRemote)
 
 Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of `replyr` is to provide at least some convenient version of typical functions such as: `summary`, `nrow`, unique values, and filter rows by values in a set.
 
-`replyr` is also trying to work through notation issues. `replyr::let` removes the need for use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms" (please see [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) for explanation). `replyr::let` provides an execution block where we can re-map parametrically supplied names (that is variable or column names that are stored in variables, and not know to the programmer) to concrete names known by the programmer. This allows code such as the following:
-
-``` r
-library('dplyr')
- #  
- #  Attaching package: 'dplyr'
- #  The following objects are masked from 'package:stats':
- #  
- #      filter, lag
- #  The following objects are masked from 'package:base':
- #  
- #      intersect, setdiff, setequal, union
-d <- data.frame(Sepal_Length=c(5.8,5.7),
-                Sepal_Width=c(4.0,4.4),
-                Species='setosa',
-                rank=c(1,2))
-mapping = list(RankColumn='rank')
-replyr::let(
-  alias=mapping,
-  expr={
-    d %>% mutate(RankColumn=RankColumn-1) -> dres
-  })()
-print(dres)
- #    Sepal_Length Sepal_Width Species rank
- #  1          5.8         4.0  setosa    0
- #  2          5.7         4.4  setosa    1
-```
+`replyr` Data services
+----------------------
 
 This is a *very* new package with no guarantees or claims of fitness for purpose. Some implemented operations are going to be slow and expensive (part of why they are not exposed in `dplyr` itself).
 
@@ -83,7 +115,10 @@ We will probably only ever cover:
 -   `SQLite`
 -   `sparklyr` (`Spark` 2 preferred)
 
-The type of functions `replyr` supplies is illustrated through `replyr::replyr_filter` and `replyr::replyr_inTest`. These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:
+Additional functions
+--------------------
+
+Additional `replyr` functions include: `replyr::replyr_filter` and `replyr::replyr_inTest`. These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:
 
 ``` r
 library('dplyr')
@@ -101,6 +136,9 @@ dRemote %>% replyr::replyr_filter('x',values)
  #  2     2    NA     b
 ```
 
+Installing `replyr`
+-------------------
+
 To install `replyr`:
 
 ``` r
@@ -109,6 +147,9 @@ devtools::install_github('WinVector/replyr')
 ```
 
 The project URL is: <https://github.com/WinVector/replyr>
+
+Commentary
+----------
 
 I would like this to become a bit of a ["stone soup"](https://en.wikipedia.org/wiki/Stone_Soup) project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to [Win-Vector LLC](http://www.win-vector.com') (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.
 
@@ -120,15 +161,7 @@ There are a few (somewhat incompatible) goals for `replyr`:
 -   Working around corner case issues, and some variations in semantics.
 -   Sheer bull-headedness in emulating operations that don't quite fit into the pure `dplyr` formulation.
 
-Good code should fill one important gap and work on a variety of `dplyr` back ends (you can test `RMySQL`, and `RPostgreSQL` using docker as mentioned [here](http://www.win-vector.com/blog/2016/11/mysql-in-a-container/) and [here](http://www.win-vector.com/blog/2016/02/databases-in-containers/); `sparklyr` can be tried in local mode as described [here](http://spark.rstudio.com)). I am especially interested in clever "you wouldn't thing this was efficiently possible, but" solutions (which give us an expanded grammar of useful operators), and replacing current hacks with more efficient general solutions. Targets of interest include `sample_n` (which isn't currently implemented for `tbl_sqlite`), `cumsum`, and `quantile`.
-
-Right now we have an expensive implementation of `quantile` based on binary search.
-
-``` r
-replyr_quantile(dRemote,'x')
- #     0 0.25  0.5 0.75    1 
- #     1    1    2    2    2
-```
+Good code should fill one important gap and work on a variety of `dplyr` back ends (you can test `RMySQL`, and `RPostgreSQL` using docker as mentioned [here](http://www.win-vector.com/blog/2016/11/mysql-in-a-container/) and [here](http://www.win-vector.com/blog/2016/02/databases-in-containers/); `sparklyr` can be tried in local mode as described [here](http://spark.rstudio.com)). I am especially interested in clever "you wouldn't thing this was efficiently possible, but" solutions (which give us an expanded grammar of useful operators), and replacing current hacks with more efficient general solutions. Targets of interest include `sample_n` (which isn't currently implemented for `tbl_sqlite`), `cumsum`, and `quantile` (currently we have an expensive implementation of `quantile` based on binary search: `replyr::replyr_quantile`).
 
 `replyr` services include:
 
@@ -145,4 +178,7 @@ Additional desired capabilities of interest include:
 -   `cumsum` or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
 -   Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.
 
-Note we are deliberately using prefixed names `replyr_` and not using common `S3` method names to avoid the possibility of `replyr` functions interfering with basic `dplyr` functionality.
+Conclusion
+----------
+
+`replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as `Spark 1.6.2` versions `Spark 2.0.0`).
