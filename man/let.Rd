@@ -18,7 +18,19 @@ item ready to evaluate, need to apply with "()" to perform the evaluation in own
 Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
 Pleaes see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
 Transformation is performed by substition on the function parse tree, so be wary of name collisions or aliasing.
-This statement implements a mapping from desired names (names used as columns in the data) to names used in the expr code block, as a consequence each desired name can only be mapped once.
+}
+\details{
+This statement implements a mapping from desired names (names used directly in the expr code) to names used in the data, as a consequence each desired name can only be mapped once.
+Because of this directionality of mapping think in terms of "expr code symbols are on the left" and "external data and function argument names are on the right."
+
+Something like \code{replyr::let} is only useful to get control of a function that is parameterized
+(in the sense it take column names) but non-standard (in that it takes column names from
+non-stardard evaluation argument name capture, and not as simple variables or parameters).  So  \code{replyr:let} is not
+useful for non-parameterized functions (functions that work only over values such as \code{base::sum}),
+and not useful for functions take parameters in straightforward way (such as \code{base::merge}'s "\code{by}" argument).
+\code{dplyr::mutate} is an example where
+we need a \code{replyr::let} helper; as it is
+parameterized (in the sense it can work over user supplied columns), but column names are captured through non-standard evaluation.
 }
 \examples{
 
@@ -27,13 +39,8 @@ d <- data.frame(Sepal_Length=c(5.8,5.7),
                 Sepal_Width=c(4.0,4.4),
                 Species='setosa',
                 rank=c(1,2))
-printMyArgumentName <- function(x,...) {
-  print(paste("I think my arguments were: x=",x,
-     ", (",names(list(...)),")=(",list(...),")"))
-}
 
-mapping = list(RankColumn='rank',GroupColumn='Species',
-               Sepal_Length='x',Sepal_Width='y')
+mapping = list(RankColumn='rank',GroupColumn='Species')
 let(alias=mapping,
     expr={
        # Notice code here can be written in terms of known or concrete
@@ -43,8 +50,6 @@ let(alias=mapping,
        d \%>\% mutate(RankColumn=RankColumn-1) -> dres
        # confirm set of groups.
        unique(d$GroupColumn) -> groups
-       # look directly at names.
-       printMyArgumentName(Sepal_Length=7,Sepal_Width=5)
     })()
 print(groups)
 print(length(groups))
