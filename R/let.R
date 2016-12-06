@@ -20,7 +20,7 @@
 #' we need a \code{replyr::let} helper; as it is
 #' parameterized (in the sense it can work over user supplied columns), but column names are captured through non-standard evaluation.
 #'
-#' @seealso \code{\link{replyr_renameRestrictCols}}
+#' @seealso \code{\link{replyr_mapRestrictCols}}
 #'
 #' @param alias mapping from free names in expr to target names to use.
 #' @param expr block to prepare for execution

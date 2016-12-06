@@ -57,6 +57,6 @@ print(dres)
 
 }
 \seealso{
-\code{\link{replyr_renameRestrictCols}}
+\code{\link{replyr_mapRestrictCols}}
 }
 

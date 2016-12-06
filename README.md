@@ -55,9 +55,54 @@ d %>% ComputeRatioOfColumns('a','b','c')
 
 `replyr::let` makes construction of abstract functions over `dplyr` controlled data much easier. It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
 
+Note that `base::substitute` is not powerfull enough to remap both names and values without some helper notation (see [here](http://stackoverflow.com/questions/22005419/dplyr-without-hard-coding-the-variable-names) for an using substitute. What we mean by this is show below:
+
+``` r
+library('dplyr')
+```
+
+``` r
+d <- data.frame(Sepal_Length=c(5.8,5.7),
+                Sepal_Width=c(4.0,4.4),
+                Species='setosa',
+                rank=c(1,2))
+eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
+                list(RankColumn=quote(rank))))
+ #    Sepal_Length Sepal_Width Species rank RankColumn
+ #  1          5.8         4.0  setosa    1          0
+ #  2          5.7         4.4  setosa    2          1
+```
+
+``` r
+eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
+                list(RankColumn=as.name('rank'))))
+ #    Sepal_Length Sepal_Width Species rank RankColumn
+ #  1          5.8         4.0  setosa    1          0
+ #  2          5.7         4.4  setosa    2          1
+```
+
+Notice in both cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
+
+``` r
+replyr::let(
+  alias=list(RankColumn='rank'),
+  d %>% mutate(RankColumn=RankColumn-1)
+)()
+ #    Sepal_Length Sepal_Width Species rank
+ #  1          5.8         4.0  setosa    0
+ #  2          5.7         4.4  setosa    1
+```
+
 Note `replyr::let` only controls name bindings in the the scope of the `expr={}` block, and not inside functions called in the block. To be clear `replyr::let` is re-writing function arguments (which is how we use `dplyr::mutate` in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not paramaterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or if `dplyr` itself (or a data adapter) implemented something like the view stack proposal found [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/).
 
 ``` r
+library('dplyr')
+```
+
+``` r
+# example data
+d <- data.frame(a=1:5,b=3:7)
+
 # original function we do not have control of
 ComputeRatioOfColumnsHardCoded <- function(d) {
   d %>% mutate(ResultColumn=NumeratorColumn/DenominatorColumn)
@@ -65,12 +110,13 @@ ComputeRatioOfColumnsHardCoded <- function(d) {
 
 # wrapper to make function look parametric
 ComputeRatioOfColumnsWrapped <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
-  d %>% replyr::replyr_renameRestrictCols(list(a='NumeratorColumn',
-                                               b='DenominatorColumn')) %>%
+  d %>% replyr::replyr_mapRestrictCols(list(NumeratorColumn='a',
+                                            DenominatorColumn='b')) %>%
+    
     ComputeRatioOfColumnsHardCoded() %>%
-    replyr::replyr_renameRestrictCols(list(NumeratorColumn='a',
-                                           DenominatorColumn='b',
-                                           ResultColumn='c'))
+    replyr::replyr_mapRestrictCols(list(a='NumeratorColumn',
+                                        b='DenominatorColumn',
+                                        c='ResultColumn'))
 }
 
 # example application

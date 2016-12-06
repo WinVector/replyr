@@ -39,20 +39,49 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<
  <span class="co">#  4 4 6 0.6666667</span>
  <span class="co">#  5 5 7 0.7142857</span></code></pre></div>
 <p><code>replyr::let</code> makes construction of abstract functions over <code>dplyr</code> controlled data much easier. It is designed for the case where the &quot;<code>expr</code>&quot; block is large sequence of statements and pipelines.</p>
+<p>Note that <code>base::substitute</code> is not powerfull enough to remap both names and values without some helper notation (see <a href="http://stackoverflow.com/questions/22005419/dplyr-without-hard-coding-the-variable-names">here</a> for an using substitute. What we mean by this is show below:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dplyr&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Sepal_Length=</span><span class="kw">c</span>(<span class="fl">5.8</span>,<span class="fl">5.7</span>),
+                <span class="dt">Sepal_Width=</span><span class="kw">c</span>(<span class="fl">4.0</span>,<span class="fl">4.4</span>),
+                <span class="dt">Species=</span><span class="st">&#39;setosa&#39;</span>,
+                <span class="dt">rank=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))
+<span class="kw">eval</span>(<span class="kw">substitute</span>(d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>),
+                <span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="kw">quote</span>(rank))))
+ <span class="co">#    Sepal_Length Sepal_Width Species rank RankColumn</span>
+ <span class="co">#  1          5.8         4.0  setosa    1          0</span>
+ <span class="co">#  2          5.7         4.4  setosa    2          1</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">eval</span>(<span class="kw">substitute</span>(d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>),
+                <span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="kw">as.name</span>(<span class="st">&#39;rank&#39;</span>))))
+ <span class="co">#    Sepal_Length Sepal_Width Species rank RankColumn</span>
+ <span class="co">#  1          5.8         4.0  setosa    1          0</span>
+ <span class="co">#  2          5.7         4.4  setosa    2          1</span></code></pre></div>
+<p>Notice in both cases the <code>dplyr::mutate</code> result landed in a column named <code>RankColumn</code> and not in the desired column <code>rank</code>. The <code>replyr::let</code> form is concise and works correctly.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">replyr::<span class="kw">let</span>(
+  <span class="dt">alias=</span><span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>),
+  d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>)
+)()
+ <span class="co">#    Sepal_Length Sepal_Width Species rank</span>
+ <span class="co">#  1          5.8         4.0  setosa    0</span>
+ <span class="co">#  2          5.7         4.4  setosa    1</span></code></pre></div>
 <p>Note <code>replyr::let</code> only controls name bindings in the the scope of the <code>expr={}</code> block, and not inside functions called in the block. To be clear <code>replyr::let</code> is re-writing function arguments (which is how we use <code>dplyr::mutate</code> in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not paramaterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or if <code>dplyr</code> itself (or a data adapter) implemented something like the view stack proposal found <a href="http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/">here</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># original function we do not have control of</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dplyr&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># example data</span>
+d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">a=</span><span class="dv">1</span>:<span class="dv">5</span>,<span class="dt">b=</span><span class="dv">3</span>:<span class="dv">7</span>)
+
+<span class="co"># original function we do not have control of</span>
 ComputeRatioOfColumnsHardCoded &lt;-<span class="st"> </span>function(d) {
   d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ResultColumn=</span>NumeratorColumn/DenominatorColumn)
 }
 
 <span class="co"># wrapper to make function look parametric</span>
 ComputeRatioOfColumnsWrapped &lt;-<span class="st"> </span>function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
-  d %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_renameRestrictCols</span>(<span class="kw">list</span>(<span class="dt">a=</span><span class="st">&#39;NumeratorColumn&#39;</span>,
-                                               <span class="dt">b=</span><span class="st">&#39;DenominatorColumn&#39;</span>)) %&gt;%
+  d %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_mapRestrictCols</span>(<span class="kw">list</span>(<span class="dt">NumeratorColumn=</span><span class="st">&#39;a&#39;</span>,
+                                            <span class="dt">DenominatorColumn=</span><span class="st">&#39;b&#39;</span>)) %&gt;%
+<span class="st">    </span>
 <span class="st">    </span><span class="kw">ComputeRatioOfColumnsHardCoded</span>() %&gt;%
-<span class="st">    </span>replyr::<span class="kw">replyr_renameRestrictCols</span>(<span class="kw">list</span>(<span class="dt">NumeratorColumn=</span><span class="st">&#39;a&#39;</span>,
-                                           <span class="dt">DenominatorColumn=</span><span class="st">&#39;b&#39;</span>,
-                                           <span class="dt">ResultColumn=</span><span class="st">&#39;c&#39;</span>))
+<span class="st">    </span>replyr::<span class="kw">replyr_mapRestrictCols</span>(<span class="kw">list</span>(<span class="dt">a=</span><span class="st">&#39;NumeratorColumn&#39;</span>,
+                                        <span class="dt">b=</span><span class="st">&#39;DenominatorColumn&#39;</span>,
+                                        <span class="dt">c=</span><span class="st">&#39;ResultColumn&#39;</span>))
 }
 
 <span class="co"># example application</span>
