@@ -17,6 +17,8 @@ item ready to evaluate, need to apply with "()" to perform the evaluation in own
 \description{
 Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
 Pleaes see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
+Transformation is performed by substition on the function parse tree, so be wary of name collisions or aliasing.
+This statement implements a mapping from desired names (names used as columns in the data) to names used in the expr code block, as a consequence each desired name can only be mapped once.
 }
 \examples{
 
@@ -25,12 +27,31 @@ d <- data.frame(Sepal_Length=c(5.8,5.7),
                 Sepal_Width=c(4.0,4.4),
                 Species='setosa',
                 rank=c(1,2))
-mapping = list(RankColumn='rank')
+printMyArgumentName <- function(x,...) {
+  print(paste("I think my arguments were: x=",x,
+     ", (",names(list(...)),")=(",list(...),")"))
+}
+
+mapping = list(RankColumn='rank',GroupColumn='Species',
+               Sepal_Length='x',Sepal_Width='y')
 let(alias=mapping,
     expr={
+       # Notice code here can be written in terms of known or concrete
+       # names "RankColumn" and "GroupColumn", but executes as if we
+       # had written mapping specified columns "rank" and "Species".
+       # restart ranks at zero.
        d \%>\% mutate(RankColumn=RankColumn-1) -> dres
+       # confirm set of groups.
+       unique(d$GroupColumn) -> groups
+       # look directly at names.
+       printMyArgumentName(Sepal_Length=7,Sepal_Width=5)
     })()
+print(groups)
+print(length(groups))
 print(dres)
 
+}
+\seealso{
+\code{\link{replyr_renameRestrictCols}}
 }
 
