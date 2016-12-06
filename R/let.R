@@ -50,6 +50,22 @@
 #' print(length(groups))
 #' print(dres)
 #'
+#' # It is also possible to piple into let-blocks, but it takes some extra notation
+#' # (ntoice the extra ". %>%" at the beginning and the extra "()" at the end).
+#'
+#'d %>% let(alias=mapping,
+#'          expr={
+#'            . %>% mutate(RankColumn=RankColumn-1)
+#'          })()()
+#'
+#' # Or:
+#'
+#' f <- let(alias=mapping,
+#'          expr={
+#'            . %>% mutate(RankColumn=RankColumn-1)
+#'          })()
+#' d %>% f
+#'
 #' @export
 let <- function(alias, expr) {
   # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
@@ -97,16 +113,15 @@ let <- function(alias, expr) {
   }
   fun <- parse(text = body)
   # wrap re-mapped expr for execution
-  ff <- function() {
+  ff <- function(...) {
     eval(fun, parent.frame())
   }
   # add annotations
-  formals(ff) <- alias
   mm <- match.call()
   mm$expr <- NULL
   mm[[1]] <- as.name("let")
   attr(ff, "source") <- c(deparse(mm), strexpr)
-  # return zero-argument function for user to execute
+  # return function for user to execute
   ff
 }
 

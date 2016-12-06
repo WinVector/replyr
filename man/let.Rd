@@ -55,6 +55,22 @@ print(groups)
 print(length(groups))
 print(dres)
 
+# It is also possible to piple into let-blocks, but it takes some extra notation
+# (ntoice the extra ". \%>\%" at the beginning and the extra "()" at the end).
+
+d \%>\% let(alias=mapping,
+         expr={
+           . \%>\% mutate(RankColumn=RankColumn-1)
+         })()()
+
+# Or:
+
+f <- let(alias=mapping,
+         expr={
+           . \%>\% mutate(RankColumn=RankColumn-1)
+         })()
+d \%>\% f
+
 }
 \seealso{
 \code{\link{replyr_mapRestrictCols}}
