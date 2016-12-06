@@ -3,18 +3,18 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
 
-#' Prepare expr for execution with name substitions specified in alias.
+#' Prepare expr for execution with name substitutions specified in alias.
 #'
 #' Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
-#' Pleaes see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
-#' Transformation is performed by substition on the function parse tree, so be wary of name collisions or aliasing.
+#' Please see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
+#' Transformation is performed by substitution on the function parse tree, so be wary of name collisions or aliasing.
 #'
 #' This statement implements a mapping from desired names (names used directly in the expr code) to names used in the data, as a consequence each desired name can only be mapped once.
 #' Because of this directionality of mapping think in terms of "expr code symbols are on the left" and "external data and function argument names are on the right."
 #'
 #' Something like \code{replyr::let} is only useful to get control of a function that is parameterized
 #' (in the sense it take column names) but non-standard (in that it takes column names from
-#' non-stardard evaluation argument name capture, and not as simple variables or parameters).  So  \code{replyr:let} is not
+#' non-standard evaluation argument name capture, and not as simple variables or parameters).  So  \code{replyr:let} is not
 #' useful for non-parameterized functions (functions that work only over values such as \code{base::sum}),
 #' and not useful for functions take parameters in straightforward way (such as \code{base::merge}'s "\code{by}" argument).
 #' \code{dplyr::mutate} is an example where
@@ -25,7 +25,7 @@
 #'
 #' @param alias mapping from free names in expr to target names to use.
 #' @param expr block to prepare for execution
-#' @return item ready to evaluate, need to apply with "()" to perform the evaluation in own environemnt.
+#' @return item ready to evaluate, need to apply with "()" to perform the evaluation in own environment.
 #'
 #' @examples
 #'
@@ -50,8 +50,8 @@
 #' print(length(groups))
 #' print(dres)
 #'
-#' # It is also possible to piple into let-blocks, but it takes some extra notation
-#' # (ntoice the extra ". %>%" at the beginning and the extra "()" at the end).
+#' # It is also possible to pipe into let-blocks, but it takes some extra notation
+#' # (notice the extra ". %>%" at the beginning and the extra "()" at the end).
 #'
 #'d %>% let(alias=mapping,
 #'          expr={

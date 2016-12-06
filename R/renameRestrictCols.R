@@ -13,7 +13,7 @@
 #'
 #' @param x data item to work on
 #' @param nmap named list mapping desired column names to column names in x. Doesn't support permutations of names.
-#' @return data item with columns limitted down to those named in nmap, and re-named.
+#' @return data item with columns limited down to those named in nmap, and re-named.
 #'
 #' @examples
 #'
