@@ -1,6 +1,7 @@
 
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
+# Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
 
 #' Prepare expr for execution with name substitions specified in alias.
 #'
@@ -51,6 +52,7 @@
 #'
 #' @export
 let <- function(alias, expr) {
+  # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
   # capture expr
   strexpr <- deparse(substitute(expr))
   # make sure alias is a list (not a named vector)
@@ -60,18 +62,30 @@ let <- function(alias, expr) {
     stop('replyr::let alias keys must be unique')
   }
   for(ni in names(alias)) {
+    if(is.null(ni)) {
+      stop('replyr:let alias keys must not be null')
+    }
     if(!is.character(ni)) {
       stop('replyr:let alias keys must all be strings')
     }
     if(length(ni)!=1) {
       stop('replyr:let alias keys must all be strings')
     }
+    if(nchar(ni)<=0) {
+      stop('replyr:let alias keys must be empty string')
+    }
     vi <- alias[[ni]]
+    if(is.null(vi)) {
+      stop('replyr:let alias values must not be null')
+    }
     if(!is.character(vi)) {
       stop('replyr:let alias values must all be strings')
     }
     if(length(vi)!=1) {
       stop('replyr:let alias values must all be strings')
+    }
+    if(nchar(vi)<=0) {
+      stop('replyr:let alias values must be empty string')
     }
   }
   # re-write the parse tree and prepare for execution

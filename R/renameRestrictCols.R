@@ -56,18 +56,30 @@ replyr_mapRestrictCols <- function(x,nmap) {
     stop("replyr::replyr_mapRestrictCols duplicate source columns in replyr_mapRestrictCols")
   }
   for(ni in names(nmap)) {
+    if(is.null(ni)) {
+      stop('replyr::replyr_mapRestrictCols nmap keys must not be null')
+    }
     if(!is.character(ni)) {
       stop('replyr::replyr_mapRestrictCols nmap keys must be strings')
     }
     if(length(ni)!=1) {
       stop('replyr::replyr_mapRestrictCols nmap keys must be strings')
     }
+    if(nchar(ni)<=0) {
+      stop('replyr::replyr_mapRestrictCols nmap keys must not be empty strings')
+    }
     ti <- nmap[[ni]]
+    if(is.null(ti)) {
+      stop('replyr::replyr_mapRestrictCols nmap values must not be null')
+    }
     if(!is.character(ti)) {
       stop('replyr::replyr_mapRestrictCols nmap values must be strings')
     }
     if(length(ti)!=1) {
       stop('replyr::replyr_mapRestrictCols nmap values must be strings')
+    }
+    if(nchar(ti)<=0) {
+      stop('replyr::replyr_mapRestrictCols nmap values must not be empty strings')
     }
     if(ti!=ni) {
       if(ti %in% names(nmap)) {
