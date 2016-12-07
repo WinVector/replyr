@@ -75,7 +75,7 @@ isValidAndUnreservedName <- function(string) {
 #' d %>% f
 #'
 #' # Be wary of using any assignment to attempt side-effects in these "delayed pipelines",
-#' # as the assignment tends to happen during the let assembly and not (as one would hope)
+#' # as the assignment tends to happen during the let dereference and not (as one would hope)
 #' # during the later pipeline application.  Example:
 #'
 #' g <- let(alias=mapping,
