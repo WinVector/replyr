@@ -3,6 +3,14 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
 
+
+# checking for valid unreserved names
+# from: http://stackoverflow.com/questions/8396577/check-if-character-value-is-a-valid-r-object-name
+isValidAndUnreservedName <- function(string) {
+  make.names(string,unique = FALSE, allow_ = TRUE) == string
+}
+
+
 #' Prepare expr for execution with name substitutions specified in alias.
 #'
 #' Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
@@ -90,6 +98,9 @@ let <- function(alias, expr) {
     if(nchar(ni)<=0) {
       stop('replyr:let alias keys must be empty string')
     }
+    if(!isValidAndUnreservedName(ni)) {
+      stop(paste('replyr:let alias key not a valid name: "',ni,'"'))
+    }
     vi <- alias[[ni]]
     if(is.null(vi)) {
       stop('replyr:let alias values must not be null')
@@ -102,6 +113,9 @@ let <- function(alias, expr) {
     }
     if(nchar(vi)<=0) {
       stop('replyr:let alias values must be empty string')
+    }
+    if(!isValidAndUnreservedName(vi)) {
+      stop(paste('replyr:let alias value not a valid name: "',vi,'"'))
     }
   }
   # re-write the parse tree and prepare for execution
