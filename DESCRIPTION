@@ -2,7 +2,7 @@ Package: replyr
 Type: Package
 Title: An R package for fluid use of dplyr
 Version: 0.1.0
-Author: John Mount
+Author: John Mount, Nina Zumel
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr
 BugReports: https://github.com/WinVector/replyr/issues
@@ -20,5 +20,6 @@ RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
     rmarkdown,
-    tidyr
+    tidyr,
+    RSQLite
 VignetteBuilder: knitr

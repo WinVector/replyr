@@ -1,0 +1,103 @@
+---
+title: "let Example"
+author: "Nina Zumel"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{let Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # ",
+  fig.width = 7
+)
+options(width =100)
+```
+
+An example of using `let` to wrap `dplyr` expressions as functions.
+
+```{r setup, warning=FALSE, message=FALSE}
+library(dplyr)
+library(replyr)
+library(ggplot2)
+```
+
+The desired task: write a function that takes a data frame with a specified
+numerical column and an optional grouping column, and returns a data frame with 
+one row per group containing:
+
+* the mean value
+* the upper and lower bounds of a +/- 1 standard deviation around the mean
+* the median value
+* the upper and lower bounds of an interval +/- one-half the IQR around the median.
+
+The `dplyr` expression for such a table is easy when the column names
+are known, but complicated when they are not. We use `replyr::let` to write such a
+function without the use of `lazyeval`.
+
+```{r sumstat_intervals}
+sumstat_intervals = function(dframe, colname, groupcolname=NULL) {
+  mapping = list(col=colname)
+  if(!is.null(groupcolname)) {
+    dframe %>% group_by_(groupcolname) -> dframe
+  }
+  let(alias=mapping,
+      expr={
+        dframe %>% summarize(sdlower = mean(col)-sd(col),
+                             mean=mean(col),
+                             sdupper = mean(col) + sd(col),
+                             iqrlower = median(col)-0.5*IQR(col),
+                             median=median(col),
+                             iqrupper=median(col)+0.5*IQR(col))
+      })()
+}
+```
+
+We can test `sumstat_intervals` on `iris`:
+
+```{r iris}
+sumstat_intervals(iris, "Sepal.Length")
+sumstat_intervals(iris, "Sepal.Length", "Species")
+sumstat_intervals(iris, "Petal.Length", "Species")
+```
+
+We can also use `let` to parameterize other functions that specify their parameters via non-standard evaluation. For example, we could write a `ggplot2` function to plot the information in `sumstat_intervals` (either the mean-centered interval or the median-centered one) using `ggplot2::aes_string`. Or we could use `replyr::let`.
+
+```{r ggplot}
+plot_distributions = function(dframe, colname, groupcol,
+                              intervaltype="mean", title="") {
+  if(!(intervaltype %in% c("mean", "median")))
+    error("Intervaltype must be one of 'mean' or 'median'")
+
+  sintervals = sumstat_intervals(dframe, colname, groupcol)
+  
+  # I could do the following with aes_string, but what the heck
+  mapping = list(xval=groupcol, yval=colname, center=intervaltype)
+  if(intervaltype=="mean") {
+    mapping2 =list(lower="sdlower", upper="sdupper")
+  } else {
+    mapping2 =list(lower="iqrlower", upper="iqrupper")
+  }
+  mapping = c(mapping, mapping2)
+
+  let(alias=mapping,
+      expr = {
+        ggplot(dframe, aes(x=xval,color=xval)) +
+          geom_jitter(aes(y=yval), width=0.2, height=0, alpha=0.5) +
+          geom_crossbar(data=sintervals, aes(y=center, ymin=lower, ymax=upper)) +
+          ggtitle(title) + theme(plot.title=element_text(hjust=0.5)) +
+          scale_color_brewer(palette="Dark2")
+      })()
+}
+
+plot_distributions(iris, "Sepal.Length", "Species",
+                   title="Iris sepal length with mean +/1 one standard deviation")
+plot_distributions(iris, "Petal.Width", "Species",
+                   intervaltype="median",
+                   title="Iris petal width with median and centered IQR interval")
+
+```
