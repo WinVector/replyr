@@ -152,8 +152,12 @@ Example: `replyr::replyr_summary` working on a database service (when `base::sum
 ```{r summaryexample}
 d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
-my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
-dRemote <- dplyr::copy_to(my_db,d,'d')
+if (requireNamespace("RSQLite")) {
+  my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+  dRemote <- replyr::replyr_copy_to(my_db,d,'d')
+} else {
+  dRemote <- d # local stand in when we can't make remote
+}
 
 summary(dRemote)
 
@@ -232,5 +236,6 @@ Additional desired capabilities of interest include:
 ## Conclusion
 
 `replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`).  It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as `Spark 1.6.2` versions `Spark 2.0.0`).
+
 
 

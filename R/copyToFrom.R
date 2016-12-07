@@ -18,9 +18,12 @@ NULL
 #'
 #' @examples
 #'
-#' my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
-#' d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
-#' print(d)
+#'
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
+#'   my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+#'   d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
+#'   print(d)
+#' }
 #'
 #' @export
 replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
@@ -34,6 +37,13 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
   if("NULL" %in% class(dest)) {
     # special "no destination" case
     return(df)
+  }
+  if('tbl' %in% class(dest)) {
+    # dest was actually another data object, get its source
+    dest <- dest$src
+    if("NULL" %in% class(dest)) {
+      stop("replyr::replyr_copy_to unexpected dest")
+    }
   }
   force(df)
   force(name)

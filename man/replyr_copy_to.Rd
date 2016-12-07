@@ -26,9 +26,12 @@ Copy data to remote service.
 }
 \examples{
 
-my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
-d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
-print(d)
+
+if (requireNamespace("RSQLite", quietly = TRUE)) {
+  my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+  d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
+  print(d)
+}
 
 }
 

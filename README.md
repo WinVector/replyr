@@ -168,8 +168,13 @@ Example: `replyr::replyr_summary` working on a database service (when `base::sum
 ``` r
 d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
-my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
-dRemote <- dplyr::copy_to(my_db,d,'d')
+if (requireNamespace("RSQLite")) {
+  my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+  dRemote <- replyr::replyr_copy_to(my_db,d,'d')
+} else {
+  dRemote <- d # local stand in when we can't make remote
+}
+ #  Loading required namespace: RSQLite
 
 summary(dRemote)
  #      Length Class          Mode
@@ -177,10 +182,10 @@ summary(dRemote)
  #  ops 3      op_base_remote list
 
 replyr::replyr_summary(dRemote)
- #    column     class nrows nna nunique min max     mean        sd lexmin lexmax
- #  1      x   numeric     3   0       2   1   2 1.666667 0.5773503   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5 4.000000 1.4142136   <NA>   <NA>
- #  3      z character     3   1       2  NA  NA       NA        NA      a      b
+ #    column index     class nrows nna nunique min max     mean        sd lexmin lexmax
+ #  1      x     1   numeric     3   0       2   1   2 1.666667 0.5773503   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5 4.000000 1.4142136   <NA>   <NA>
+ #  3      z     3 character     3   1       2  NA  NA       NA        NA      a      b
 ```
 
 Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of `replyr` is to provide at least some convenient version of typical functions such as: `summary`, `nrow`, unique values, and filter rows by values in a set.
