@@ -73,10 +73,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2 %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -91,10 +91,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2b %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -190,6 +190,6 @@ runExample(remoteCopy(my_db))
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 522835   28     940480 50.3   940480 50.3
- #  Vcells 775629    6    1650153 12.6   995750  7.6
+ #  Ncells 522967   28     940480 50.3   940480 50.3
+ #  Vcells 776934    6    1650153 12.6  1000275  7.7
 ```

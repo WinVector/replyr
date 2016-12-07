@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{replyr_summary}
 \alias{replyr_summary}
-\title{Compute usable summary of numeric columns of tbl.}
+\title{Compute usable summary of columns of tbl.}
 \usage{
 replyr_summary(x, countUnique = TRUE)
 }
@@ -12,14 +12,14 @@ replyr_summary(x, countUnique = TRUE)
 \item{countUnique}{logical, if true include unique non-NA counts.}
 }
 \value{
-summary of numeric columns.
+summary of columns.
 }
 \description{
-Compute usable summary of numeric columns of tbl.
+Compute usable summary of columns of tbl.
 }
 \examples{
 
-d <- data.frame(x=c(1,2,3),y=c(3,5,NA),z=c('a',NA,'z'),
+d <- data.frame(x=c(NA,2,3),y=factor(c(3,5,NA)),z=c('a',NA,'z'),
                 stringsAsFactors=FALSE)
 replyr_summary(d)
 

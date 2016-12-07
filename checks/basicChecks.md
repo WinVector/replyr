@@ -65,10 +65,10 @@ runExample(noopCopy)
  #     1    1    2    3    3 
  #  
  #  d2 %>% replyr::replyr_summary() 
- #    column   class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z  factor     3   0       2  NA  NA   NA       NA      a      z
+ #    column index   class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1 numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2 numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3  factor     3   0       2  NA  NA   NA       NA      a      z
  #    x  y z
  #  1 1  3 a
  #  2 2  5 a
@@ -79,10 +79,10 @@ runExample(noopCopy)
  #     1    1    2    3    3 
  #  
  #  d2b %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #    x y
  #  1 a 1
  #  2 a 2
@@ -198,10 +198,10 @@ runExample(tblCopy)
  #     1    1    2    3    3 
  #  
  #  d2 %>% replyr::replyr_summary() 
- #    column   class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z  factor     3   0       2  NA  NA   NA       NA      a      z
+ #    column index   class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1 numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2 numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3  factor     3   0       2  NA  NA   NA       NA      a      z
  #  # A tibble: 3 × 3
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -214,10 +214,10 @@ runExample(tblCopy)
  #     1    1    2    3    3 
  #  
  #  d2b %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  # A tibble: 6 × 2
  #        x     y
  #    <chr> <int>
@@ -350,10 +350,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2 %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
  #  
@@ -368,10 +368,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2b %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]
  #  
@@ -467,8 +467,8 @@ runExample(remoteCopy(my_db))
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 519371 27.8     940480 50.3   940480 50.3
- #  Vcells 768119  5.9    1650153 12.6  1650153 12.6
+ #  Ncells 519498 27.8     940480 50.3   940480 50.3
+ #  Vcells 769639  5.9    1650153 12.6  1650150 12.6
 ```
 
 MySQL example.
@@ -526,10 +526,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2 %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max     mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3 2.000000 1.000000   <NA>   <NA>
- #  2      y   numeric     3   0       3   0   5 2.666667 2.516611   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA       NA       NA      a      z
+ #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3 2.000000 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   0       3   0   5 2.666667 2.516611   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA       NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
@@ -544,10 +544,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2b %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max     mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3 2.000000 1.000000   <NA>   <NA>
- #  2      y   numeric     3   0       3   0   5 2.666667 2.516611   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA       NA       NA      a      z
+ #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3 2.000000 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   0       3   0   5 2.666667 2.516611   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA       NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
@@ -645,8 +645,8 @@ runExample(remoteCopy(my_db))
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 554462 29.7     940480 50.3   940480 50.3
- #  Vcells 795664  6.1    1650153 12.6  1650153 12.6
+ #  Ncells 554619 29.7     940480 50.3   940480 50.3
+ #  Vcells 797195  6.1    1650153 12.6  1650153 12.6
 ```
 
 PostgreSQL example.
@@ -704,10 +704,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2 %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -722,10 +722,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2b %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -820,10 +820,10 @@ runExample(remoteCopy(my_db))
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (4301, 0)
+ #  Auto-disconnecting postgres connection (12527, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 588203 31.5     940480 50.3   940480 50.3
- #  Vcells 822103  6.3    1650153 12.6  1650153 12.6
+ #  Ncells 588360 31.5    1168576 62.5   940480 50.3
+ #  Vcells 823641  6.3    1650153 12.6  1650153 12.6
 ```
 
 Spark 1.6.2 example.
@@ -885,10 +885,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2 %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -903,10 +903,10 @@ runExample(remoteCopy(my_db))
  #     1    1    2    3    3 
  #  
  #  d2b %>% replyr::replyr_summary() 
- #    column     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z character     3   0       2  NA  NA   NA       NA      a      z
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -1002,6 +1002,6 @@ runExample(remoteCopy(my_db))
  #  1     1  m2_1  m1_1
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 624312 33.4    1168576 62.5   940480 50.3
- #  Vcells 854281  6.6    1650153 12.6  1650153 12.6
+ #  Ncells 624241 33.4    1168576 62.5  1168576 62.5
+ #  Vcells 854325  6.6    1650153 12.6  1650153 12.6
 ```

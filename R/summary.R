@@ -13,15 +13,15 @@ localFrame <- function(d) {
   all(class(d) %in% c("tbl_df","tbl","data.frame"))
 }
 
-#' Compute usable summary of numeric columns of tbl.
+#' Compute usable summary of columns of tbl.
 #'
 #' @param x tbl or item that can be coerced into such.
 #' @param countUnique logical, if true include unique non-NA counts.
-#' @return summary of numeric columns.
+#' @return summary of columns.
 #'
 #' @examples
 #'
-#' d <- data.frame(x=c(1,2,3),y=c(3,5,NA),z=c('a',NA,'z'),
+#' d <- data.frame(x=c(NA,2,3),y=factor(c(3,5,NA)),z=c('a',NA,'z'),
 #'                 stringsAsFactors=FALSE)
 #' replyr_summary(d)
 #'
@@ -54,6 +54,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
                       }
                       si <-  data.frame(column=ci,
+                                        index=0,
                                         class='',
                                         nrows = nrows,
                                         nna = nrows - ngood,
@@ -104,6 +105,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
                       }
                       si <- data.frame(column=ci,
+                                       index=0,
                                        class='',
                                        nrows = nrows,
                                        nna = nrows - ngood,
@@ -123,6 +125,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
   res$class <- vapply(cclass,function(vi) {
     paste(vi,collapse=', ')
   },character(1))
+  res$index <- seq_len(nrow(res))
   res
 }
 
