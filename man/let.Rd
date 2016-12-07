@@ -17,7 +17,7 @@ item ready to evaluate, need to apply with "()" to perform the evaluation in own
 \description{
 Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
 Please see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
-Transformation is performed by substitution on the function parse tree, so be wary of name collisions or aliasing.
+Transformation is performed by substitution on the expression parse tree, so be wary of name collisions or aliasing.
 }
 \details{
 This statement implements a mapping from desired names (names used directly in the expr code) to names used in the data, as a consequence each desired name can only be mapped once.
@@ -70,6 +70,23 @@ f <- let(alias=mapping,
            . \%>\% mutate(RankColumn=RankColumn-1)
          })()
 d \%>\% f
+
+# Be wary of using any assignment to attempt side-effects in these "delayed pipelines",
+# as the assignment tends to happen during the let assembly and not (as one would hope)
+# during the later pipeline application.  Example:
+
+g <- let(alias=mapping,
+         expr={
+           . \%>\% mutate(RankColumn=RankColumn-1) -> ZZZ
+         })()
+print(ZZZ)
+# Notice ZZZ has captured a copy of the sub-pipeline and not waited for application of g.
+# Applying g performs a calculation, but does not overwrite ZZZ.
+
+g(d)
+print(ZZZ)
+# Notice ZZZ is not a copy of g(d), but instead still the pipeline fragment.
+
 
 }
 \seealso{
