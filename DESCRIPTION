@@ -1,14 +1,14 @@
 Package: replyr
 Type: Package
-Title: An R package for fluid use of dplyr
+Title: Fluid Use of 'dplyr'
 Version: 0.1.0
 Author: John Mount, Nina Zumel
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr
 BugReports: https://github.com/WinVector/replyr/issues
-Description: Supplies methods to get a grip on working with remote tbl sources (SQL databases,
-    Spark) through dplyr.  The idea is to add convenience functions to make such task more like
-    working with an in-memory data.frame.  Results do depend on which dplyr service you use.
+Description: Methods to get a grip on working with remote 'tbl' sources ('SQL' databases,
+    'Spark') through 'dplyr'.  Adds convenience functions to make such tasks more like
+    working with an in-memory 'data.frame'.  Results do depend on which 'dplyr' data service you use.
 License: GPL-3
 LazyData: TRUE
 Imports:

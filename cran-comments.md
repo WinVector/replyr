@@ -10,28 +10,13 @@
 * using session charset: UTF-8
 * using option ‘--as-cran’
 
-1 NOTEs, no WARNINGs or ERRORs
-
+1 NOTE, no WARNINGs or ERRORs
 
 * checking CRAN incoming feasibility ... NOTE
 Maintainer: ‘John Mount <jmount@win-vector.com>’
 
 New submission
 
-Found the following (possibly) invalid URLs:
-  URL: http://www.win-vector.com'
-    From: inst/doc/replyr.html
-    Status: Error
-    Message: libcurl error code 6
-    	Could not resolve host: www.win-vector.com'
-  URL: http://www.win-vector.com'/
-    From: README.md
-    Status: Error
-    Message: libcurl error code 6
-    	Could not resolve host: www.win-vector.com'
-
-
-URL is in fact correct and responds host www.win-vector.com is valid.  Same URL issue in win-build check.
 
 ## Downstream dependencies
 
