@@ -251,7 +251,7 @@ The project URL is: <https://github.com/WinVector/replyr>
 Commentary
 ----------
 
-I would like this to become a bit of a ["stone soup"](https://en.wikipedia.org/wiki/Stone_Soup) project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to [Win-Vector LLC](http://www.win-vector.com') (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.
+I would like this to become a bit of a ["stone soup"](https://en.wikipedia.org/wiki/Stone_Soup) project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to [Win-Vector LLC](http://www.win-vector.com'/) (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.
 
 There are a few (somewhat incompatible) goals for `replyr`:
 
