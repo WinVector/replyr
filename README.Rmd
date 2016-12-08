@@ -70,6 +70,9 @@ Note that `base::substitute` is not powerfull enough to remap both names and val
 ```{r  message=FALSE,results='hide',warning=FALSE}
 library('dplyr')
 ```
+
+Substitute with `quote` notation.
+
 ```{r substitute}
 d <- data.frame(Sepal_Length=c(5.8,5.7),
                 Sepal_Width=c(4.0,4.4),
@@ -78,12 +81,22 @@ d <- data.frame(Sepal_Length=c(5.8,5.7),
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn=quote(rank))))
 ```
+
+Substitute with `as.name` notation.
+
 ```{r substitute2}
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn=as.name('rank'))))
 ```
 
-Notice in both cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`.  The `replyr::let` form is concise and works correctly.
+Substitute without extra notation (errors-out).
+
+```{r substitute3, error=TRUE}
+eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
+                list(RankColumn='rank')))
+```
+
+Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`.  The `replyr::let` form is concise and works correctly.
 
 ```{r subst3}
 replyr::let(

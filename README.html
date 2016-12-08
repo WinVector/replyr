@@ -41,6 +41,7 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<
 <p><code>replyr::let</code> makes construction of abstract functions over <code>dplyr</code> controlled data much easier. It is designed for the case where the &quot;<code>expr</code>&quot; block is large sequence of statements and pipelines.</p>
 <p>Note that <code>base::substitute</code> is not powerfull enough to remap both names and values without some helper notation (see <a href="http://stackoverflow.com/questions/22005419/dplyr-without-hard-coding-the-variable-names">here</a> for an using substitute. What we mean by this is show below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&#39;dplyr&#39;</span>)</code></pre></div>
+<p>Substitute with <code>quote</code> notation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Sepal_Length=</span><span class="kw">c</span>(<span class="fl">5.8</span>,<span class="fl">5.7</span>),
                 <span class="dt">Sepal_Width=</span><span class="kw">c</span>(<span class="fl">4.0</span>,<span class="fl">4.4</span>),
                 <span class="dt">Species=</span><span class="st">&#39;setosa&#39;</span>,
@@ -50,12 +51,17 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<
  <span class="co">#    Sepal_Length Sepal_Width Species rank RankColumn</span>
  <span class="co">#  1          5.8         4.0  setosa    1          0</span>
  <span class="co">#  2          5.7         4.4  setosa    2          1</span></code></pre></div>
+<p>Substitute with <code>as.name</code> notation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">eval</span>(<span class="kw">substitute</span>(d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>),
                 <span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="kw">as.name</span>(<span class="st">&#39;rank&#39;</span>))))
  <span class="co">#    Sepal_Length Sepal_Width Species rank RankColumn</span>
  <span class="co">#  1          5.8         4.0  setosa    1          0</span>
  <span class="co">#  2          5.7         4.4  setosa    2          1</span></code></pre></div>
-<p>Notice in both cases the <code>dplyr::mutate</code> result landed in a column named <code>RankColumn</code> and not in the desired column <code>rank</code>. The <code>replyr::let</code> form is concise and works correctly.</p>
+<p>Substitute without extra notation (errors-out).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">eval</span>(<span class="kw">substitute</span>(d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>),
+                <span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>)))
+ <span class="co">#  Error in eval(expr, envir, enclos): non-numeric argument to binary operator</span></code></pre></div>
+<p>Notice in both working cases the <code>dplyr::mutate</code> result landed in a column named <code>RankColumn</code> and not in the desired column <code>rank</code>. The <code>replyr::let</code> form is concise and works correctly.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">replyr::<span class="kw">let</span>(
   <span class="dt">alias=</span><span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>),
   d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>)
@@ -115,8 +121,13 @@ d %&gt;%<span class="st"> </span>replyr::<span class="kw">gapply</span>(<span cl
 <p>Example: <code>replyr::replyr_summary</code> working on a database service (when <code>base::summary</code> does not).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),<span class="dt">z=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">&#39;a&#39;</span>,<span class="st">&#39;b&#39;</span>),
                 <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-my_db &lt;-<span class="st"> </span>dplyr::<span class="kw">src_sqlite</span>(<span class="st">&quot;replyr_sqliteEx.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
-dRemote &lt;-<span class="st"> </span>dplyr::<span class="kw">copy_to</span>(my_db,d,<span class="st">&#39;d&#39;</span>)
+if (<span class="kw">requireNamespace</span>(<span class="st">&quot;RSQLite&quot;</span>)) {
+  my_db &lt;-<span class="st"> </span>dplyr::<span class="kw">src_sqlite</span>(<span class="st">&quot;replyr_sqliteEx.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+  dRemote &lt;-<span class="st"> </span>replyr::<span class="kw">replyr_copy_to</span>(my_db,d,<span class="st">&#39;d&#39;</span>)
+} else {
+  dRemote &lt;-<span class="st"> </span>d <span class="co"># local stand in when we can&#39;t make remote</span>
+}
+ <span class="co">#  Loading required namespace: RSQLite</span>
 
 <span class="kw">summary</span>(dRemote)
  <span class="co">#      Length Class          Mode</span>
@@ -124,10 +135,10 @@ dRemote &lt;-<span class="st"> </span>dplyr::<span class="kw">copy_to</span>(my_
  <span class="co">#  ops 3      op_base_remote list</span>
 
 replyr::<span class="kw">replyr_summary</span>(dRemote)
- <span class="co">#    column     class nrows nna nunique min max     mean        sd lexmin lexmax</span>
- <span class="co">#  1      x   numeric     3   0       2   1   2 1.666667 0.5773503   &lt;NA&gt;   &lt;NA&gt;</span>
- <span class="co">#  2      y   numeric     3   1       2   3   5 4.000000 1.4142136   &lt;NA&gt;   &lt;NA&gt;</span>
- <span class="co">#  3      z character     3   1       2  NA  NA       NA        NA      a      b</span></code></pre></div>
+ <span class="co">#    column index     class nrows nna nunique min max     mean        sd lexmin lexmax</span>
+ <span class="co">#  1      x     1   numeric     3   0       2   1   2 1.666667 0.5773503   &lt;NA&gt;   &lt;NA&gt;</span>
+ <span class="co">#  2      y     2   numeric     3   1       2   3   5 4.000000 1.4142136   &lt;NA&gt;   &lt;NA&gt;</span>
+ <span class="co">#  3      z     3 character     3   1       2  NA  NA       NA        NA      a      b</span></code></pre></div>
 <p>Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of <code>replyr</code> is to provide at least some convenient version of typical functions such as: <code>summary</code>, <code>nrow</code>, unique values, and filter rows by values in a set.</p>
 <h2 id="replyr-data-services"><code>replyr</code> Data services</h2>
 <p>This is a <em>very</em> new package with no guarantees or claims of fitness for purpose. Some implemented operations are going to be slow and expensive (part of why they are not exposed in <code>dplyr</code> itself).</p>

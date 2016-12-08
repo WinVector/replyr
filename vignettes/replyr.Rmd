@@ -24,6 +24,7 @@ options(width =100)
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service.  A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale.  It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds.  The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
 
 
+
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
 Primary `replyr` services include:
@@ -70,6 +71,9 @@ Note that `base::substitute` is not powerfull enough to remap both names and val
 ```{r  message=FALSE,results='hide',warning=FALSE}
 library('dplyr')
 ```
+
+Substitute with `quote` notation.
+
 ```{r substitute}
 d <- data.frame(Sepal_Length=c(5.8,5.7),
                 Sepal_Width=c(4.0,4.4),
@@ -78,12 +82,22 @@ d <- data.frame(Sepal_Length=c(5.8,5.7),
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn=quote(rank))))
 ```
+
+Substitute with `as.name` notation.
+
 ```{r substitute2}
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn=as.name('rank'))))
 ```
 
-Notice in both cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`.  The `replyr::let` form is concise and works correctly.
+Substitute without extra notation (errors-out).
+
+```{r substitute3, error=TRUE}
+eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
+                list(RankColumn='rank')))
+```
+
+Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`.  The `replyr::let` form is concise and works correctly.
 
 ```{r subst3}
 replyr::let(

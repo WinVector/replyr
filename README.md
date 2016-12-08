@@ -61,6 +61,8 @@ Note that `base::substitute` is not powerfull enough to remap both names and val
 library('dplyr')
 ```
 
+Substitute with `quote` notation.
+
 ``` r
 d <- data.frame(Sepal_Length=c(5.8,5.7),
                 Sepal_Width=c(4.0,4.4),
@@ -73,6 +75,8 @@ eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
  #  2          5.7         4.4  setosa    2          1
 ```
 
+Substitute with `as.name` notation.
+
 ``` r
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn=as.name('rank'))))
@@ -81,7 +85,15 @@ eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
  #  2          5.7         4.4  setosa    2          1
 ```
 
-Notice in both cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
+Substitute without extra notation (errors-out).
+
+``` r
+eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
+                list(RankColumn='rank')))
+ #  Error in eval(expr, envir, enclos): non-numeric argument to binary operator
+```
+
+Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
 
 ``` r
 replyr::let(
