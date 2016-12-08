@@ -20,9 +20,13 @@ NULL
 #'
 #'
 #' if (requireNamespace("RSQLite", quietly = TRUE)) {
-#'   my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+#'   fnam <- tempfile(pattern = "replyr_ex1_sqlite", tmpdir = tempdir(), fileext = "sqlite3")
+#'   my_db <- dplyr::src_sqlite(fnam, create = TRUE)
 #'   d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
 #'   print(d)
+#'   rm(list=c('my_db','d'))
+#'   gc()
+#'   file.remove(fnam)
 #' }
 #'
 #' @export
@@ -81,10 +85,17 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
 #'
 #' @examples
 #'
-#' my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
-#' d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
-#' d2 <- replyr_copy_from(d)
-#' print(d2)
+#'
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
+#'   fnam <- tempfile(pattern = "replyr_ex2_sqlite", tmpdir = tempdir(), fileext = "sqlite3")
+#'   my_db <- dplyr::src_sqlite(fnam, create = TRUE)
+#'   d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
+#'   d2 <- replyr_copy_from(d)
+#'   print(d2)
+#'   rm(list=c('my_db','d','d2'))
+#'   gc()
+#'   file.remove(fnam)
+#' }
 #'
 #' @export
 replyr_copy_from <- function(d,maxrow=1000000) {

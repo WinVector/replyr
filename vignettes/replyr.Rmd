@@ -23,7 +23,6 @@ options(width =100)
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service.  A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale.  It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds.  The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
 
-
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
 Primary `replyr` services include:
@@ -165,8 +164,10 @@ Example: `replyr::replyr_summary` working on a database service (when `base::sum
 ```{r summaryexample}
 d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
+fnam <- NULL
 if (requireNamespace("RSQLite")) {
-  my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+  fnam <- tempfile(pattern = "replyr_doc_sqlite", tmpdir = tempdir(), fileext = "sqlite3")
+  my_db <- dplyr::src_sqlite(fnam, create = TRUE)
   dRemote <- replyr::replyr_copy_to(my_db,d,'d')
 } else {
   dRemote <- d # local stand in when we can't make remote
@@ -240,5 +241,13 @@ Additional desired capabilities of interest include:
 
 `replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`).  It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as `Spark 1.6.2` versions `Spark 2.0.0`).
 
+## Clean up
+
+```{r}
+rm(list=setdiff(ls(),'fnam'))
+if(!is.null(fnam)) {
+  file.remove(fnam)
+}
+```
 
 
