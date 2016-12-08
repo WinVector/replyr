@@ -15,6 +15,11 @@ replyr_ranksummaries <- function(x,
   # x <- replyr_renameRestrictCols(x,nmap)
 
   # let strategy
+  RankColumn <- NULL # false binding for 'RankColumn' so name does not look unbound to CRAN check
+  GroupColumn <- NULL # false binding for 'GroupColumn' so name does not look unbound to CRAN check
+  ValueColumn <- NULL # false binding for 'ValueColumn' so name does not look unbound to CRAN check
+  ValueColumn_n <- NULL # false binding for 'ValueColumn_n' so name does not look unbound to CRAN check
+  # do note so bind 'RankColumn_n' as we don't intend to use tha variable, so seeing it unbound is a useful warning
   x <- dplyr::select(x,dplyr::one_of(c(GroupColumnName,ValueColumnName,RankColumnName)))
   nmap <-  c(GroupColumnName,ValueColumnName,RankColumnName,
              paste(ValueColumnName,'n',sep='_'),paste(RankColumnName,'n',sep='_'))

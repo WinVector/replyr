@@ -35,6 +35,7 @@ replyr_nrow <- function(x) {
   if(is.null(nrow(tmp))||(nrow(tmp)<1)||(ncol(tmp)<1)) {
     return(0)
   }
+  constant <- NULL # false binding for 'constant' so name does not look unbound to CRAN check
   suppressWarnings(
     x %>% dplyr::ungroup() %>%
       dplyr::transmute(constant=1) %>% dplyr::summarize(count=sum(constant)) %>%

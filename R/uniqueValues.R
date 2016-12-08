@@ -24,6 +24,7 @@ replyr_uniqueValues <- function(x,cname) {
   if((!is.character(cname))||(length(cname)!=1)||(cname[[1]]=='n')) {
     stop('replyr_uniqueValues cname must be a single string not equal to "n"')
   }
+  n <- NULL # false binding for 'n' so name does not look unbound to CRAN check
   x %>% dplyr::ungroup() %>%
     dplyr::select_(cname) %>% dplyr::mutate(n=1.0) %>%
     dplyr::group_by_(cname) %>% dplyr::summarize(n=sum(n)) -> res
