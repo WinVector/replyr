@@ -7,7 +7,7 @@
 #' Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation.
 #'
 #' Something like \code{replyr::replyr_mapRestrictCols} is only useful to get control of a function that is not parameterized
-#' (in the sense it has hard-coded column names inside its implementation that don't the column names in our data).
+#' (in the sense it has hard-coded column names inside its implementation that don't the match column names in our data).
 #'
 #' @seealso \code{\link{let}}
 #'
