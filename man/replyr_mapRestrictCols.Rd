@@ -12,7 +12,7 @@ replyr_mapRestrictCols(x, nmap)
 \item{nmap}{named list mapping desired column names to column names in x. Doesn't support permutations of names.}
 }
 \value{
-data item with columns limited down to those named in nmap, and re-named.
+data item with columns limited down to those named as nmap values, and re-named from their orignal names (nmap values) to desired names (nmap keys).
 }
 \description{
 Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation.
