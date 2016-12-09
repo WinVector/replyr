@@ -1,0 +1,141 @@
+---
+title: "NA rm"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NA rm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(width =100)
+```
+
+
+
+Removing `NA`s with `dplyr`.
+
+## Setup
+
+```{r start}
+library('dplyr')
+library('replyr')
+d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
+                stringsAsFactors = FALSE)
+print(d)
+
+fnam <- NULL
+if (requireNamespace("RSQLite")) {
+  fnam <- tempfile(pattern = "replyr_doc_narm", tmpdir = tempdir(), fileext = "sqlite3")
+  my_db <- dplyr::src_sqlite(fnam, create = TRUE)
+  class(my_db)
+  dRemote <- replyr::replyr_copy_to(my_db,d,'d',rowNumberColumn='rowNum')
+} else {
+  dRemote <- d # local stand in when we can't make remote
+}
+print(dRemote)
+```
+
+`na.omit` and `complete.cases` are the usual ways to detect and eliminate `NA`s in a local `data.frame` (Note: we don't consider removal a correct solution when building predictive models, see please [here](https://arxiv.org/abs/1611.09477) for some discussion on other data cleaning strategies.)  However, they do not work on remote `tbl` types:
+
+### complete.cases
+
+```{r completecases, error=TRUE}
+complete.cases(d)
+
+complete.cases(dRemote)
+```
+
+You can't rely on "stack overflow" solutions that look "dplyr-y" to work on remote data.
+For example: http://stackoverflow.com/questions/22353633/filter-for-complete-cases-in-data-frame-using-dplyr-case-wise-deletion
+
+```{r cc2, error=TRUE}
+d %>% filter(complete.cases(.))
+
+dRemote %>% filter(complete.cases(.))
+```
+
+
+The solution is to map `NA` managing functions into the `dplyr` controlled remote data item:
+
+We would think can compose this use "pure dplyr operations" as follows, but again we 
+end up with differences in local and remote performance.
+
+```{r completecasesE1, error=TRUE}
+d$rowNum <- seq_len(nrow(d))
+d %>% group_by(rowNum) %>% summarize_all(c("is.na")) %>%
+  mutate(nNAinRow=rowSums(.)-rowNum)
+
+dRemote %>% group_by(rowNum) %>% summarize_all(c("is.na")) %>% 
+  mutate(nNAinRow=rowSums(.)-rowNum)
+```
+
+What we see is that "what is pure `dplyr`" depends on what operators are available on the service providing back-end.
+
+At some point we admit we are going to have to work over the columns by hand (though we will try to keep them remote). 
+
+```{r countnacolumns}
+dRemote %>% mutate(nna=0) %>%
+  mutate(nna=nna+ifelse(is.na(x),1,0)) %>% 
+  mutate(nna=nna+ifelse(is.na(y),1,0)) %>% 
+  mutate(nna=nna+ifelse(is.na(z),1,0))  
+```
+
+Because remote data sources may not have the same value coercion rules as `R` we
+should get used to being more careful about types (hence the `ifelse`).
+
+This means we have to parameterize variable names to write code like the following:
+
+```{r countforloop}
+cols = setdiff(colnames(dRemote),'rowNum')
+dRemote %>% mutate(nna=0) -> dTmp
+for(ci in cols) {
+  dTmp %>% 
+    mutate_(.dots=stats::setNames(paste0('nna+ifelse(is.na(',ci,'),1,0)'),'nna')) -> 
+    dTmp
+}
+print(dTmp)
+```
+
+Or using `replyr::let`:
+
+```{r countforloopr}
+cols = setdiff(colnames(dRemote),'rowNum')
+dRemote %>% mutate(nna=0) -> dTmp
+for(ci in cols) {
+  let(list(TARGETCOL=ci),
+      dTmp %>% mutate(nna=nna+ifelse(is.na(TARGETCOL),1,0)) -> dTmp
+  )() 
+}
+print(dTmp)
+```
+
+
+What we see is that "what is pure `dplyr`" depends on what operators are available on the service providing back-end.
+
+
+### na.omit
+
+```{r naomit, error=TRUE}
+na.omit(d)
+
+no.omit(dRemote)
+```
+
+It is fairly clear how we can build `na.omit` from `complete.cases`.
+
+## Cleanup
+
+```{r cleanup}
+rm(list=setdiff(ls(),'fnam'))
+if(!is.null(fnam)) {
+  file.remove(fnam)
+}
+```
+
