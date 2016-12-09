@@ -1,13 +1,21 @@
 ---
-title: "SQLiteColumnTypes"
-author: "Win-Vector LLC"
-date: "December 9, 2016"
-output: html_document
+output:
+  md_document:
+    variant: markdown_github
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Copy issue with `sparklyr` 1.6.2.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
 ```
+
 
 ## logical to numeric clobber
 
@@ -30,14 +38,16 @@ dRemote %>% mutate(nna=0) %>%
   mutate(nna=nna+ifelse(is.na(y),1,0)) %>% 
   mutate(nna=nna+ifelse(is.na(z),1,0))  
  
-# incorroect calculation (last step seems to always clobber the previous result)
+# incorrect calculation (last step seems to always clobber the previous result)
 dRemote %>% mutate(nna=0) %>%
   mutate(nna=nna+is.na(x)) %>% 
   mutate(nna=nna+is.na(y)) %>% 
   mutate(nna=nna+is.na(z))
 
+# clean up
 rm(list=setdiff(ls(),'fnam'))
 if(!is.null(fnam)) {
   file.remove(fnam)
 }
+gc()
 ```
