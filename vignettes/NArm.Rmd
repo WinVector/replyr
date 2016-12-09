@@ -34,6 +34,7 @@ fnam <- NULL
 if (requireNamespace("RSQLite")) {
   fnam <- tempfile(pattern = "replyr_doc_narm", tmpdir = tempdir(), fileext = "sqlite3")
   my_db <- dplyr::src_sqlite(fnam, create = TRUE)
+  # my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
   class(my_db)
   dRemote <- replyr::replyr_copy_to(my_db,d,'d',rowNumberColumn='rowNum')
 } else {
@@ -62,21 +63,25 @@ dRemote %>% filter(complete.cases(.))
 ```
 
 
-The solution is to map `NA` managing functions into the `dplyr` controlled remote data item:
+The solution is to map `NA` managing functions into the `dplyr` controlled remote data item.
 
 We would think can compose this use "pure dplyr operations" as follows, but again we 
 end up with differences in local and remote performance.
 
 ```{r completecasesE1, error=TRUE}
 d$rowNum <- seq_len(nrow(d))
-d %>% group_by(rowNum) %>% summarize_all(c("is.na")) %>%
+d %>% mutate_all(funs(is.na)) %>%
   mutate(nNAinRow=rowSums(.)-rowNum)
 
-dRemote %>% group_by(rowNum) %>% summarize_all(c("is.na")) %>% 
+dRemote %>% mutate_all(funs(is.na)) %>%
   mutate(nNAinRow=rowSums(.)-rowNum)
 ```
 
-What we see is that "what is pure `dplyr`" depends on what operators are available on the service providing back-end.
+What we see is that "what is pure `dplyr`" depends on what operators are available on the service providing back-end.  For example the `mutate_if` forms (equivilent to `SQL` `UPDATE WHERE`) are currently not available for remote sources:
+
+```{r mutateif, error=TRUE}
+dRemote %>% mutate_if(TRUE,is.na) # not correct code, just to trigger "local sources" msg
+```
 
 At some point we admit we are going to have to work over the columns by hand (though we will try to keep them remote). 
 
@@ -137,5 +142,6 @@ rm(list=setdiff(ls(),'fnam'))
 if(!is.null(fnam)) {
   file.remove(fnam)
 }
+gc()
 ```
 
