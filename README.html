@@ -1,4 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<p>This document describes <code>replyr</code>, an <a href="https://cran.r-project.org">R</a> package available from CRAN <a href="https://CRAN.R-project.org/package=replyr">here</a>.</p>
 <h2 id="introduction">Introduction</h2>
 <p>It comes as a bit of a shock for <a href="https://cran.r-project.org">R</a> <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> users when they switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. The <a href="https://github.com/WinVector/replyr"><code>replyr</code></a> package attempts to provide practical data manipulation affordances.</p>
 <p><a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a></p>
@@ -121,8 +122,10 @@ d %&gt;%<span class="st"> </span>replyr::<span class="kw">gapply</span>(<span cl
 <p>Example: <code>replyr::replyr_summary</code> working on a database service (when <code>base::summary</code> does not).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),<span class="dt">z=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">&#39;a&#39;</span>,<span class="st">&#39;b&#39;</span>),
                 <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+fnam &lt;-<span class="st"> </span><span class="ot">NULL</span>
 if (<span class="kw">requireNamespace</span>(<span class="st">&quot;RSQLite&quot;</span>)) {
-  my_db &lt;-<span class="st"> </span>dplyr::<span class="kw">src_sqlite</span>(<span class="st">&quot;replyr_sqliteEx.sqlite3&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+  fnam &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="dt">pattern =</span> <span class="st">&quot;replyr_doc_sqlite&quot;</span>, <span class="dt">tmpdir =</span> <span class="kw">tempdir</span>(), <span class="dt">fileext =</span> <span class="st">&quot;sqlite3&quot;</span>)
+  my_db &lt;-<span class="st"> </span>dplyr::<span class="kw">src_sqlite</span>(fnam, <span class="dt">create =</span> <span class="ot">TRUE</span>)
   dRemote &lt;-<span class="st"> </span>replyr::<span class="kw">replyr_copy_to</span>(my_db,d,<span class="st">&#39;d&#39;</span>)
 } else {
   dRemote &lt;-<span class="st"> </span>d <span class="co"># local stand in when we can&#39;t make remote</span>
@@ -156,19 +159,14 @@ replyr::<span class="kw">replyr_summary</span>(dRemote)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</span>(<span class="st">&#39;x&#39;</span>,values)
  <span class="co">#  Source:   query [?? x 3]</span>
- <span class="co">#  Database: sqlite 3.8.6 [replyr_sqliteEx.sqlite3]</span>
+ <span class="co">#  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpUmlp7F/replyr_doc_sqlite8b1b1d411e54sqlite3]</span>
  <span class="co">#  </span>
  <span class="co">#        x     y     z</span>
  <span class="co">#    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
  <span class="co">#  1     2     5     a</span>
  <span class="co">#  2     2    NA     b</span></code></pre></div>
-<h2 id="installing-replyr">Installing <code>replyr</code></h2>
-<p>To install <code>replyr</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&#39;devtools&#39;)</span>
-devtools::<span class="kw">install_github</span>(<span class="st">&#39;WinVector/replyr&#39;</span>)</code></pre></div>
-<p>The project URL is: <a href="https://github.com/WinVector/replyr" class="uri">https://github.com/WinVector/replyr</a></p>
 <h2 id="commentary">Commentary</h2>
-<p>I would like this to become a bit of a <a href="https://en.wikipedia.org/wiki/Stone_Soup">&quot;stone soup&quot;</a> project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to <a href="http://www.win-vector.com&#39;/">Win-Vector LLC</a> (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.</p>
+<p>I would like this to become a bit of a <a href="https://en.wikipedia.org/wiki/Stone_Soup">&quot;stone soup&quot;</a> project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to <a href="http://www.win-vector.com/">Win-Vector LLC</a> (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.</p>
 <p>There are a few (somewhat incompatible) goals for <code>replyr</code>:</p>
 <ul class="incremental">
 <li>Providing missing convenience functions that work well over all common <code>dplyr</code> service providers. Examples include <code>replyr_summary</code>, <code>replyr_filter</code>, and <code>replyr_nrow</code>.</li>
@@ -195,3 +193,9 @@ devtools::<span class="kw">install_github</span>(<span class="st">&#39;WinVector
 </ul>
 <h2 id="conclusion">Conclusion</h2>
 <p><code>replyr</code> is package for speeding up reliable data manipulation using <code>dplyr</code> (especially on databases and <code>Spark</code>). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as <code>Spark 1.6.2</code> versions <code>Spark 2.0.0</code>).</p>
+<h2 id="clean-up">Clean up</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">setdiff</span>(<span class="kw">ls</span>(),<span class="st">&#39;fnam&#39;</span>))
+if(!<span class="kw">is.null</span>(fnam)) {
+  <span class="kw">file.remove</span>(fnam)
+}
+ <span class="co">#  [1] TRUE</span></code></pre></div>

@@ -1,4 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+This document describes `replyr`, an [R](https://cran.r-project.org) package available from CRAN [here](https://CRAN.R-project.org/package=replyr).
+
 Introduction
 ------------
 
@@ -230,7 +232,7 @@ library('dplyr')
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x',values)
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpSoM6tA/replyr_doc_sqlite7f19198ec763sqlite3]
+ #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpUmlp7F/replyr_doc_sqlite8b1b1d411e54sqlite3]
  #  
  #        x     y     z
  #    <dbl> <dbl> <chr>
