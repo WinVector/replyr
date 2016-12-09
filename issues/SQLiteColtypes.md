@@ -1,6 +1,6 @@
-Copy issue with `sparklyr` 1.6.2.
-
 <!-- Generated from .Rmd. Please edit that file -->
+Filed as [dplyr 2302](https://github.com/hadley/dplyr/issues/2302).
+
 logical to numeric clobber
 --------------------------
 
@@ -36,7 +36,7 @@ dRemote %>% mutate(nna=0) %>%
   mutate(nna=nna+ifelse(is.na(y),1,0)) %>% 
   mutate(nna=nna+ifelse(is.na(z),1,0))  
  #  Source:   query [?? x 5]
- #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpIEbtbD/dplyr_doc_narm9634188713ccsqlite3]
+ #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpriMQ9s/dplyr_doc_narm968e465ba628sqlite3]
  #  
  #        x     y     z rowNum   nna
  #    <dbl> <dbl> <chr>  <int> <dbl>
@@ -50,7 +50,7 @@ dRemote %>% mutate(nna=0) %>%
   mutate(nna=nna+is.na(y)) %>% 
   mutate(nna=nna+is.na(z))
  #  Source:   query [?? x 5]
- #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpIEbtbD/dplyr_doc_narm9634188713ccsqlite3]
+ #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpriMQ9s/dplyr_doc_narm968e465ba628sqlite3]
  #  
  #        x     y     z rowNum   nna
  #    <dbl> <dbl> <chr>  <int> <int>
@@ -67,5 +67,5 @@ if(!is.null(fnam)) {
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
  #  Ncells 464057 24.8     750400 40.1   592000 31.7
- #  Vcells 656572  5.1    1308461 10.0   920492  7.1
+ #  Vcells 656579  5.1    1308461 10.0   920497  7.1
 ```

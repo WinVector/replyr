@@ -4,8 +4,6 @@ output:
     variant: markdown_github
 ---
 
-Copy issue with `sparklyr` 1.6.2.
-
 <!-- Generated from .Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
@@ -16,6 +14,7 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
+Filed as [dplyr 2302](https://github.com/hadley/dplyr/issues/2302).
 
 ## logical to numeric clobber
 
