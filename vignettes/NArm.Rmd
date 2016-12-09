@@ -139,9 +139,9 @@ It is fairly clear how we can build `na.omit` from `complete.cases`.
 
 ```{r cleanup}
 rm(list=setdiff(ls(),'fnam'))
+gc()
 if(!is.null(fnam)) {
   file.remove(fnam)
 }
-gc()
 ```
 

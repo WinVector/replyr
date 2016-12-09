@@ -232,7 +232,7 @@ library('dplyr')
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x',values)
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpUmlp7F/replyr_doc_sqlite8b1b1d411e54sqlite3]
+ #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpWotUmf/replyr_doc_sqlite9fc427c47127sqlite3]
  #  
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -280,6 +280,10 @@ Clean up
 
 ``` r
 rm(list=setdiff(ls(),'fnam'))
+gc()
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 478479 25.6     940480 50.3   750400 40.1
+ #  Vcells 736817  5.7    1308461 10.0  1308461 10.0
 if(!is.null(fnam)) {
   file.remove(fnam)
 }

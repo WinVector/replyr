@@ -159,7 +159,7 @@ replyr::<span class="kw">replyr_summary</span>(dRemote)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</span>(<span class="st">&#39;x&#39;</span>,values)
  <span class="co">#  Source:   query [?? x 3]</span>
- <span class="co">#  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpUmlp7F/replyr_doc_sqlite8b1b1d411e54sqlite3]</span>
+ <span class="co">#  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpWotUmf/replyr_doc_sqlite9fc427c47127sqlite3]</span>
  <span class="co">#  </span>
  <span class="co">#        x     y     z</span>
  <span class="co">#    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -195,6 +195,10 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <p><code>replyr</code> is package for speeding up reliable data manipulation using <code>dplyr</code> (especially on databases and <code>Spark</code>). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as <code>Spark 1.6.2</code> versions <code>Spark 2.0.0</code>).</p>
 <h2 id="clean-up">Clean up</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">setdiff</span>(<span class="kw">ls</span>(),<span class="st">&#39;fnam&#39;</span>))
+<span class="kw">gc</span>()
+ <span class="co">#           used (Mb) gc trigger (Mb) max used (Mb)</span>
+ <span class="co">#  Ncells 478479 25.6     940480 50.3   750400 40.1</span>
+ <span class="co">#  Vcells 736817  5.7    1308461 10.0  1308461 10.0</span>
 if(!<span class="kw">is.null</span>(fnam)) {
   <span class="kw">file.remove</span>(fnam)
 }

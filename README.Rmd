@@ -248,6 +248,7 @@ Additional desired capabilities of interest include:
 
 ```{r}
 rm(list=setdiff(ls(),'fnam'))
+gc()
 if(!is.null(fnam)) {
   file.remove(fnam)
 }
