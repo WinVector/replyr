@@ -51,7 +51,7 @@ runExample(tblCopy)
 `SQLite` example.
 
 ```{r SQLiteexample}
-my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 class(my_db)
 runExample(remoteCopy(my_db))
 my_db <- NULL; gc() # disconnect

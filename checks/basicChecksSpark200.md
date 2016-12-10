@@ -1,4 +1,4 @@
-Example trying most of the `replyr` on a Spark.
+Example trying most of the `replyr` on a Spark 2.0.0 local instance.
 
 ``` r
 library('dplyr')
@@ -189,7 +189,7 @@ runExample(remoteCopy(my_db))
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 523050   28     940480 50.3   940480 50.3
- #  Vcells 778060    6    1650153 12.6  1003077  7.7
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  541129 28.9     940480 50.3   940480 50.3
+ #  Vcells 1214806  9.3    2091156 16.0  1675961 12.8
 ```

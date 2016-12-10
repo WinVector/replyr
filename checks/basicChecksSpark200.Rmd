@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
-Example trying most of the `replyr` on a Spark.
+Example trying most of the `replyr` on a Spark 2.0.0 local instance.
 
 ```{r setup}
 library('dplyr')
