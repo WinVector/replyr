@@ -12,9 +12,8 @@ Description: Methods to get a grip on working with remote 'tbl' sources ('SQL' d
 License: GPL-3
 LazyData: TRUE
 Imports:
-  dplyr,
-  magrittr,
-  lazyeval
+  dplyr (>= 0.5.0),
+  lazyeval (>= 0.1.10)
 RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,

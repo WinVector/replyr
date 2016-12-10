@@ -5,6 +5,7 @@
 #' @importFrom dplyr select mutate_ one_of
 NULL
 
+# dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
 #' Collect values found in gatherColumns as tuples
 #'

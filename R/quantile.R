@@ -2,8 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom magrittr %>%
-#' @importFrom dplyr select_ rename_ mutate arrange
+#' @importFrom dplyr %>% select_ rename_ mutate arrange
 NULL
 
 # binary search adapted for number of rows queries

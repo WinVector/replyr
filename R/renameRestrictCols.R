@@ -2,6 +2,10 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
+
+# dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
+
+
 #' Map names of columns to known values and drop other columns.
 #'
 #' Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation.
