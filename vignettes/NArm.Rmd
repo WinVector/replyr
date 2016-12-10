@@ -30,10 +30,8 @@ d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
 print(d)
 
-fnam <- NULL
 if (requireNamespace("RSQLite")) {
-  fnam <- tempfile(pattern = "replyr_doc_narm", tmpdir = tempdir(), fileext = "sqlite3")
-  my_db <- dplyr::src_sqlite(fnam, create = TRUE)
+  my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
   # my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
   class(my_db)
   dRemote <- replyr::replyr_copy_to(my_db,d,'d',rowNumberColumn='rowNum')
@@ -138,10 +136,7 @@ It is fairly clear how we can build `na.omit` from `complete.cases`.
 ## Cleanup
 
 ```{r cleanup}
-rm(list=setdiff(ls(),'fnam'))
+rm(list=ls())
 gc()
-if(!is.null(fnam)) {
-  file.remove(fnam)
-}
 ```
 

@@ -28,13 +28,9 @@ Copy data to remote service.
 
 
 if (requireNamespace("RSQLite", quietly = TRUE)) {
-  fnam <- tempfile(pattern = "replyr_ex1_sqlite", tmpdir = tempdir(), fileext = "sqlite3")
-  my_db <- dplyr::src_sqlite(fnam, create = TRUE)
+  my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
   d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
   print(d)
-  rm(list=c('my_db','d'))
-  gc()
-  file.remove(fnam)
 }
 
 }

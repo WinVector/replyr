@@ -61,7 +61,7 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<
 <p>Substitute without extra notation (errors-out).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">eval</span>(<span class="kw">substitute</span>(d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>),
                 <span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>)))
- <span class="co">#  Error in eval(expr, envir, enclos): non-numeric argument to binary operator</span></code></pre></div>
+ <span class="co">#  Error in mutate_impl(.data, dots): non-numeric argument to binary operator</span></code></pre></div>
 <p>Notice in both working cases the <code>dplyr::mutate</code> result landed in a column named <code>RankColumn</code> and not in the desired column <code>rank</code>. The <code>replyr::let</code> form is concise and works correctly.</p>
 <p>Similarly <code>base::with</code> can not perform the needed name remapping, none of the following variations simulate a name to name substitution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># rank &lt;- NULL # hide binding of rank to function</span>
@@ -132,10 +132,8 @@ d %&gt;%<span class="st"> </span>replyr::<span class="kw">gapply</span>(<span cl
 <p>Example: <code>replyr::replyr_summary</code> working on a database service (when <code>base::summary</code> does not).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),<span class="dt">z=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">&#39;a&#39;</span>,<span class="st">&#39;b&#39;</span>),
                 <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-fnam &lt;-<span class="st"> </span><span class="ot">NULL</span>
 if (<span class="kw">requireNamespace</span>(<span class="st">&quot;RSQLite&quot;</span>)) {
-  fnam &lt;-<span class="st"> </span><span class="kw">tempfile</span>(<span class="dt">pattern =</span> <span class="st">&quot;replyr_doc_sqlite&quot;</span>, <span class="dt">tmpdir =</span> <span class="kw">tempdir</span>(), <span class="dt">fileext =</span> <span class="st">&quot;sqlite3&quot;</span>)
-  my_db &lt;-<span class="st"> </span>dplyr::<span class="kw">src_sqlite</span>(fnam, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+  my_db &lt;-<span class="st"> </span>dplyr::<span class="kw">src_sqlite</span>(<span class="st">&quot;:memory:&quot;</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
   dRemote &lt;-<span class="st"> </span>replyr::<span class="kw">replyr_copy_to</span>(my_db,d,<span class="st">&#39;d&#39;</span>)
 } else {
   dRemote &lt;-<span class="st"> </span>d <span class="co"># local stand in when we can&#39;t make remote</span>
@@ -169,7 +167,7 @@ replyr::<span class="kw">replyr_summary</span>(dRemote)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</span>(<span class="st">&#39;x&#39;</span>,values)
  <span class="co">#  Source:   query [?? x 3]</span>
- <span class="co">#  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpn2I1ON/replyr_doc_sqliteac762c3fc6e3sqlite3]</span>
+ <span class="co">#  Database: sqlite 3.8.6 [:memory:]</span>
  <span class="co">#  </span>
  <span class="co">#        x     y     z</span>
  <span class="co">#    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -204,12 +202,8 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <h2 id="conclusion">Conclusion</h2>
 <p><code>replyr</code> is package for speeding up reliable data manipulation using <code>dplyr</code> (especially on databases and <code>Spark</code>). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as <code>Spark 1.6.2</code> versions <code>Spark 2.0.0</code>).</p>
 <h2 id="clean-up">Clean up</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">setdiff</span>(<span class="kw">ls</span>(),<span class="st">&#39;fnam&#39;</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
- <span class="co">#           used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells 478610 25.6     940480 50.3   750400 40.1</span>
- <span class="co">#  Vcells 737204  5.7    1308461 10.0  1308449 10.0</span>
-if(!<span class="kw">is.null</span>(fnam)) {
-  <span class="kw">file.remove</span>(fnam)
-}
- <span class="co">#  [1] TRUE</span></code></pre></div>
+ <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
+ <span class="co">#  Ncells  498729 26.7     940480 50.3   940480 50.3</span>
+ <span class="co">#  Vcells 1176294  9.0    2096177 16.0  2089167 16.0</span></code></pre></div>

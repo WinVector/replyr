@@ -92,7 +92,7 @@ Substitute without extra notation (errors-out).
 ``` r
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn='rank')))
- #  Error in eval(expr, envir, enclos): non-numeric argument to binary operator
+ #  Error in mutate_impl(.data, dots): non-numeric argument to binary operator
 ```
 
 Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
@@ -198,10 +198,8 @@ Example: `replyr::replyr_summary` working on a database service (when `base::sum
 ``` r
 d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
-fnam <- NULL
 if (requireNamespace("RSQLite")) {
-  fnam <- tempfile(pattern = "replyr_doc_sqlite", tmpdir = tempdir(), fileext = "sqlite3")
-  my_db <- dplyr::src_sqlite(fnam, create = TRUE)
+  my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
   dRemote <- replyr::replyr_copy_to(my_db,d,'d')
 } else {
   dRemote <- d # local stand in when we can't make remote
@@ -248,7 +246,7 @@ library('dplyr')
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x',values)
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpn2I1ON/replyr_doc_sqliteac762c3fc6e3sqlite3]
+ #  Database: sqlite 3.8.6 [:memory:]
  #  
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -295,13 +293,9 @@ Clean up
 --------
 
 ``` r
-rm(list=setdiff(ls(),'fnam'))
+rm(list=ls())
 gc()
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 478610 25.6     940480 50.3   750400 40.1
- #  Vcells 737204  5.7    1308461 10.0  1308449 10.0
-if(!is.null(fnam)) {
-  file.remove(fnam)
-}
- #  [1] TRUE
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  498723 26.7     940480 50.3   940480 50.3
+ #  Vcells 1176188  9.0    2096177 16.0  2089035 16.0
 ```

@@ -183,10 +183,8 @@ Example: `replyr::replyr_summary` working on a database service (when `base::sum
 ```{r summaryexample}
 d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
-fnam <- NULL
 if (requireNamespace("RSQLite")) {
-  fnam <- tempfile(pattern = "replyr_doc_sqlite", tmpdir = tempdir(), fileext = "sqlite3")
-  my_db <- dplyr::src_sqlite(fnam, create = TRUE)
+  my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
   dRemote <- replyr::replyr_copy_to(my_db,d,'d')
 } else {
   dRemote <- d # local stand in when we can't make remote
@@ -263,11 +261,8 @@ Additional desired capabilities of interest include:
 ## Clean up
 
 ```{r}
-rm(list=setdiff(ls(),'fnam'))
+rm(list=ls())
 gc()
-if(!is.null(fnam)) {
-  file.remove(fnam)
-}
 ```
 
 
