@@ -70,7 +70,7 @@ runExample(remoteCopy(my_db))
  #  
  #  d2 %>% replyr::replyr_quantile("x") 
  #     0 0.25  0.5 0.75    1 
- #     1    1    2    3    3 
+ #  1.00 1.00 1.75 2.75 3.00 
  #  
  #  d2 %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
@@ -88,7 +88,7 @@ runExample(remoteCopy(my_db))
  #  
  #  d2b %>% replyr::replyr_quantile("x") 
  #     0 0.25  0.5 0.75    1 
- #     1    1    2    3    3 
+ #  1.00 1.00 1.75 2.75 3.00 
  #  
  #  d2b %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
@@ -189,7 +189,7 @@ runExample(remoteCopy(my_db))
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  541129 28.9     940480 50.3   940480 50.3
- #  Vcells 1214806  9.3    2091156 16.0  1675961 12.8
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 523414   28     940480 50.3   940480 50.3
+ #  Vcells 782507    6    1650153 12.6  1010052  7.8
 ```

@@ -11,18 +11,18 @@ qsearch <- function(f,fLeft,fRight,ui) {
   right <- fRight
   while(TRUE) {
     if(left$count>=ui) {
-      return(left$v)
+      return(left)
     }
     if(right$count<=ui) {
-      return(right$v)
+      return(right)
     }
     if(left$rv>=right$lv) {
-      return(right$lv)
+      return(rbind(left,right))
     }
     probe <- (left$rv+right$lv)/2
     fx <- f(probe)
     if(fx$count==ui) {
-      return(fx$lv)
+      return(fx)
     }
     if(fx$count>=ui) {
       right = fx
@@ -37,7 +37,7 @@ qsearch <- function(f,fLeft,fRight,ui) {
 #' NA's filtered out and does not break ties the same as stats::quantile.
 #'
 #' @param x tbl or item that can be coerced into such.
-#' @param cname column name to compute over.
+#' @param cname column name to compute over
 #' @param probs	numeric vector of probabilities with values in [0,1].
 #'
 #' @examples
@@ -47,8 +47,8 @@ qsearch <- function(f,fLeft,fRight,ui) {
 #'
 #' @export
 replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
-  if((!is.character(cname))||(length(cname)!=1)||(cname[[1]]=='n')) {
-    stop('replyr_quantile cname must be a single string not equal to "n"')
+  if((!is.character(cname))||(length(cname)!=1)) {
+    stop('replyr_quantile cname must be a single string')
   }
   x %>% dplyr::select_(cname) %>% dplyr::ungroup() -> x
   # make the variable name "x" as dplyr is much easier if we know the variable name
@@ -58,7 +58,6 @@ replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
   }
   # filter out NA
   x %>% dplyr::filter(!is.na(x)) -> x
-  # get targets
   nrows <- replyr_nrow(x)
   # targets <- pmin(pmax(1,round(probs*nrows)),nrows)
   # # if we had cumsum() could finish with:
@@ -88,8 +87,73 @@ replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
   }
   fLeft <- f(min(lims))
   fRight <- f(max(lims))
-  qsearch(f,fLeft,fRight,0.5*nrows)
-  r <- vapply(probs*nrows,function(ti) qsearch(f,fLeft,fRight,ti),numeric(1))
+  # could do more precise polishin by adpating below to polishQ
+  #marks <- dplyr::bind_rows(lapply(probs*nrows,function(ti) qsearch(f,fLeft,fRight,ti)))
+  r <- vapply(probs*nrows,
+              function(ti) {
+                mean(qsearch(f,fLeft,fRight,ti)$v)
+              },numeric(1))
   names(r) <- probs
   r
+}
+
+# polish quantiles estimate from known summaries
+polishQ <- function(nrows,marks,probs) {
+  r <- vapply(probs,
+              function(pi) {
+                lv <- pmax(1,pmin(nrows,floor(pi*nrows)))
+                ls <- marks$x[marks$s==lv]
+                hv <- pmax(1,pmin(nrows,ceiling(pi*nrows)))
+                if((hv<=lv)||(pi<=lv)) {
+                  return(ls)
+                }
+                hs <- marks$x[marks$s==hv]
+                lambda <- (pi-lv)/(hv-lv)
+                return(ls*lambda + (1-lambda)*hs)
+              },numeric(1))
+  names(r) <- probs
+  r
+}
+
+#' Compute quantiles on remote column (NA's filtered out) using cumsum.
+#'
+#' NA's filtered out and does not break ties the same as stats::quantile.
+#'
+#' @param x tbl or item that can be coerced into such.
+#' @param cname column name to compute over (not 'n' or 'csum')
+#' @param probs	numeric vector of probabilities with values in [0,1].
+#'
+#' @examples
+#'
+#' d <- data.frame(xvals=rev(1:1000))
+#' replyr_quantilec(d,'xvals')
+#'
+#' @export
+replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25)) {
+  if((!is.character(cname))||(length(cname)!=1)) {
+    stop('replyr_quantilec cname must be a single string')
+  }
+  x %>% dplyr::select_(cname) %>% dplyr::ungroup() -> x
+  # make the variable name "x" as dplyr is much easier if we know the variable name
+  if(cname!='x') {
+    # see: http://stackoverflow.com/questions/26619329/dplyr-rename-standard-evaluation-function-not-working-as-expected
+    x %>% dplyr::rename_(.dots = setNames(cname, 'x')) -> x
+  }
+  # filter out NA
+  x %>% dplyr::filter(!is.na(x)) -> x
+  # get targets
+  nrows <- replyr_nrow(x)
+  targets <- sort(unique(pmax(1,pmin(nrows,c(
+    1,
+    nrows,
+    ceiling(probs*nrows),
+    floor(probs*nrows))))))
+  const <- NULL; # incicate we are using this as a name and it does not need a binding.
+  x %>% dplyr::mutate(const=1) %>%
+    dplyr::arrange(x) %>%
+    dplyr::mutate(s=cumsum(const)) %>%
+    replyr_filter('s',targets) %>%
+    dplyr::collect() %>%
+    as.data.frame() -> marks
+  polishQ(nrows,marks,probs)
 }

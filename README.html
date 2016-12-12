@@ -61,7 +61,7 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<
 <p>Substitute without extra notation (errors-out).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">eval</span>(<span class="kw">substitute</span>(d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>),
                 <span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>)))
- <span class="co">#  Error in mutate_impl(.data, dots): non-numeric argument to binary operator</span></code></pre></div>
+ <span class="co">#  Error in eval(expr, envir, enclos): non-numeric argument to binary operator</span></code></pre></div>
 <p>Notice in both working cases the <code>dplyr::mutate</code> result landed in a column named <code>RankColumn</code> and not in the desired column <code>rank</code>. The <code>replyr::let</code> form is concise and works correctly.</p>
 <p>Similarly <code>base::with</code> can not perform the needed name remapping, none of the following variations simulate a name to name substitution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># rank &lt;- NULL # hide binding of rank to function</span>
@@ -204,6 +204,6 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <h2 id="clean-up">Clean up</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
- <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  498723 26.7     940480 50.3   940480 50.3</span>
- <span class="co">#  Vcells 1176188  9.0    2096177 16.0  2089035 16.0</span></code></pre></div>
+ <span class="co">#           used (Mb) gc trigger (Mb) max used (Mb)</span>
+ <span class="co">#  Ncells 478615 25.6     940480 50.3   750400 40.1</span>
+ <span class="co">#  Vcells 740540  5.7    1322975 10.1  1317563 10.1</span></code></pre></div>

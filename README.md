@@ -92,7 +92,7 @@ Substitute without extra notation (errors-out).
 ``` r
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn='rank')))
- #  Error in mutate_impl(.data, dots): non-numeric argument to binary operator
+ #  Error in eval(expr, envir, enclos): non-numeric argument to binary operator
 ```
 
 Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
@@ -295,7 +295,7 @@ Clean up
 ``` r
 rm(list=ls())
 gc()
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  498723 26.7     940480 50.3   940480 50.3
- #  Vcells 1176188  9.0    2096177 16.0  2089035 16.0
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 478615 25.6     940480 50.3   750400 40.1
+ #  Vcells 740540  5.7    1322975 10.1  1317563 10.1
 ```
