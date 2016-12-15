@@ -91,6 +91,10 @@ isValidAndUnreservedName <- function(string) {
 #' # Notice ZZZ is not a copy of g(d), but instead still the pipeline fragment.
 #'
 #'
+#' # let works by string substitution aligning on word boundaries,
+#' # so it does (unfortunately) also re-write strings.
+#' let(list(x='y'),'x')()
+#'
 #' @export
 let <- function(alias, expr) {
   # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).

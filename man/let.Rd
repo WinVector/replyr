@@ -88,6 +88,10 @@ print(ZZZ)
 # Notice ZZZ is not a copy of g(d), but instead still the pipeline fragment.
 
 
+# let works by string substitution aligning on word boundaries,
+# so it does (unfortunately) also re-write strings.
+let(list(x='y'),'x')()
+
 }
 \seealso{
 \code{\link{replyr_mapRestrictCols}}
