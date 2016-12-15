@@ -14,7 +14,7 @@
 #'
 #' @export
 replyr_colClasses <- function(x) {
-  x %>% dplyr::collect() %>% as.data.frame() -> topx
+  x  %>% head() %>% dplyr::collect() %>% as.data.frame() -> topx
   classes <- lapply(topx,class)
   names(classes) <- colnames(topx)
   classes
@@ -37,6 +37,6 @@ replyr_colClasses <- function(x) {
 #'
 #' @export
 replyr_testCols <- function(x,f,n = 6L) {
-  x %>% dplyr::collect() %>% as.data.frame() -> topx
+  x %>% head(n=n) %>% dplyr::collect() %>% as.data.frame() -> topx
   vapply(topx,f,logical(1))
 }

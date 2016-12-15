@@ -28,8 +28,11 @@ localFrame <- function(d) {
 replyr_summary <- function(x,countUnique=TRUE) {
   nrows <- replyr_nrow(x)
   cnames <- colnames(x)
+  cmap <- seq_len(length(cnames))
+  names(cmap) <- cnames
   numericCols <- cnames[replyr_testCols(x,is.numeric)]
   cclass <- replyr_colClasses(x)
+  names(cclass) <- cnames
   # from http://stackoverflow.com/questions/34594641/dplyr-summary-table-for-multiple-variables
   # but the values as columns are not convenient.
   # see also http://stackoverflow.com/questions/26492280/non-standard-evaluation-nse-in-dplyrs-filter-pulling-data-from-mysql
@@ -120,11 +123,12 @@ replyr_summary <- function(x,countUnique=TRUE) {
                     })
   })
   res <- dplyr::bind_rows(c(numSums,oSums))
-  res <- res[order(res$column),,drop=FALSE]
-  res$class <- vapply(cclass,function(vi) {
+  res$index <- cmap[res$column]
+  classtr <- lapply(cclass,function(vi) {
     paste(vi,collapse=', ')
-  },character(1))
-  res$index <- seq_len(nrow(res))
+  })
+  res$class <- classtr[res$column]
+  res <- res[order(res$index),]
   res
 }
 
