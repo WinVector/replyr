@@ -50,8 +50,10 @@ isValidAndUnreservedName <- function(string) {
 #'        # Notice code here can be written in terms of known or concrete
 #'        # names "RankColumn" and "GroupColumn", but executes as if we
 #'        # had written mapping specified columns "rank" and "Species".
+#'
 #'        # restart ranks at zero.
 #'        d %>% mutate(RankColumn=RankColumn-1) -> dres
+#'
 #'        # confirm set of groups.
 #'        unique(d$GroupColumn) -> groups
 #'     })()
@@ -98,46 +100,47 @@ isValidAndUnreservedName <- function(string) {
 #'
 #' @export
 let <- function(alias, expr) {
-  # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
+  # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2,
+  # this portion also available GPL-2 to respect gtools license).
   # capture expr
   strexpr <- deparse(substitute(expr))
   # make sure alias is a list (not a named vector)
   alias <- as.list(alias)
   # confirm alias is mapping strings to strings
-  if(length(unique(names(alias)))!=length(names(alias))) {
+  if (length(unique(names(alias))) != length(names(alias))) {
     stop('replyr::let alias keys must be unique')
   }
-  for(ni in names(alias)) {
-    if(is.null(ni)) {
+  for (ni in names(alias)) {
+    if (is.null(ni)) {
       stop('replyr:let alias keys must not be null')
     }
-    if(!is.character(ni)) {
+    if (!is.character(ni)) {
       stop('replyr:let alias keys must all be strings')
     }
-    if(length(ni)!=1) {
+    if (length(ni) != 1) {
       stop('replyr:let alias keys must all be strings')
     }
-    if(nchar(ni)<=0) {
+    if (nchar(ni) <= 0) {
       stop('replyr:let alias keys must be empty string')
     }
-    if(!isValidAndUnreservedName(ni)) {
-      stop(paste('replyr:let alias key not a valid name: "',ni,'"'))
+    if (!isValidAndUnreservedName(ni)) {
+      stop(paste('replyr:let alias key not a valid name: "', ni, '"'))
     }
     vi <- alias[[ni]]
-    if(is.null(vi)) {
+    if (is.null(vi)) {
       stop('replyr:let alias values must not be null')
     }
-    if(!is.character(vi)) {
+    if (!is.character(vi)) {
       stop('replyr:let alias values must all be strings')
     }
-    if(length(vi)!=1) {
+    if (length(vi) != 1) {
       stop('replyr:let alias values must all be strings')
     }
-    if(nchar(vi)<=0) {
+    if (nchar(vi) <= 0) {
       stop('replyr:let alias values must be empty string')
     }
-    if(!isValidAndUnreservedName(vi)) {
-      stop(paste('replyr:let alias value not a valid name: "',vi,'"'))
+    if (!isValidAndUnreservedName(vi)) {
+      stop(paste('replyr:let alias value not a valid name: "', vi, '"'))
     }
   }
   # re-write the parse tree and prepare for execution
@@ -160,4 +163,3 @@ let <- function(alias, expr) {
   # return function for user to execute
   ff
 }
-

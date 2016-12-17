@@ -47,8 +47,10 @@ let(alias=mapping,
        # Notice code here can be written in terms of known or concrete
        # names "RankColumn" and "GroupColumn", but executes as if we
        # had written mapping specified columns "rank" and "Species".
+
        # restart ranks at zero.
        d \%>\% mutate(RankColumn=RankColumn-1) -> dres
+
        # confirm set of groups.
        unique(d$GroupColumn) -> groups
     })()
