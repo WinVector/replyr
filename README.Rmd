@@ -151,7 +151,7 @@ ComputeRatioOfColumnsWrapped <- function(d,NumeratorColumnName,DenominatorColumn
 d %>% ComputeRatioOfColumnsWrapped('a','b','c')
 ```
 
-`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes, and the need for the final `()` to execute the returned function is left in because we have left `replyr::let` as a macro constructor as like  `gtools::strmacro`.
+`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes, and the need for the final `()` to execute the returned function is left in because we have left `replyr::let` as a macro constructor as was the case with  `gtools::strmacro`.
 
 
 ## `replyr::gapply`

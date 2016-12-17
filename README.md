@@ -92,7 +92,7 @@ Substitute without extra notation (errors-out).
 ``` r
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn='rank')))
- #  Error in eval(expr, envir, enclos): non-numeric argument to binary operator
+ #  Error in mutate_impl(.data, dots): non-numeric argument to binary operator
 ```
 
 Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
@@ -157,7 +157,7 @@ d %>% ComputeRatioOfColumnsWrapped('a','b','c')
  #  5 5 7 0.7142857
 ```
 
-`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes, and the need for the final `()` to execute the returned function is left in because we have left `replyr::let` as a macro constructor as like `gtools::strmacro`.
+`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes, and the need for the final `()` to execute the returned function is left in because we have left `replyr::let` as a macro constructor as was the case with `gtools::strmacro`.
 
 `replyr::gapply`
 ----------------
@@ -295,7 +295,7 @@ Clean up
 ``` r
 rm(list=ls())
 gc()
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 483391 25.9     940480 50.3   822263 44.0
- #  Vcells 745374  5.7    1650153 12.6  1650106 12.6
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  503635 26.9     940480 50.3   940480 50.3
+ #  Vcells 1186522  9.1    2100404 16.1  2085253 16.0
 ```

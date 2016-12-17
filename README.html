@@ -61,7 +61,7 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<
 <p>Substitute without extra notation (errors-out).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">eval</span>(<span class="kw">substitute</span>(d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>),
                 <span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>)))
- <span class="co">#  Error in eval(expr, envir, enclos): non-numeric argument to binary operator</span></code></pre></div>
+ <span class="co">#  Error in mutate_impl(.data, dots): non-numeric argument to binary operator</span></code></pre></div>
 <p>Notice in both working cases the <code>dplyr::mutate</code> result landed in a column named <code>RankColumn</code> and not in the desired column <code>rank</code>. The <code>replyr::let</code> form is concise and works correctly.</p>
 <p>Similarly <code>base::with</code> can not perform the needed name remapping, none of the following variations simulate a name to name substitution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># rank &lt;- NULL # hide binding of rank to function</span>
@@ -108,7 +108,7 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumnsWrapped</
  <span class="co">#  3 3 5 0.6000000</span>
  <span class="co">#  4 4 6 0.6666667</span>
  <span class="co">#  5 5 7 0.7142857</span></code></pre></div>
-<p><code>replyr::let</code> is based on <code>gtools::strmacro</code> by Gregory R. Warnes, and the need for the final <code>()</code> to execute the returned function is left in because we have left <code>replyr::let</code> as a macro constructor as like <code>gtools::strmacro</code>.</p>
+<p><code>replyr::let</code> is based on <code>gtools::strmacro</code> by Gregory R. Warnes, and the need for the final <code>()</code> to execute the returned function is left in because we have left <code>replyr::let</code> as a macro constructor as was the case with <code>gtools::strmacro</code>.</p>
 <h2 id="replyrgapply"><code>replyr::gapply</code></h2>
 <p><code>replyr::gapply</code> is a &quot;grouped ordered apply&quot; data operation. Many calculations can be written in terms of this primitive, including per-group rank calculation (assuming your data services supports window functions), per-group summaries, and per-group selections. It is meant to be a specialization of <a href="https://www.jstatsoft.org/article/view/v040i01">&quot;The Split-Apply-Combine&quot;</a> strategy with all three steps wrapped into a single operator.</p>
 <p>Example:</p>
@@ -204,6 +204,6 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <h2 id="clean-up">Clean up</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
- <span class="co">#           used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells 483391 25.9     940480 50.3   822263 44.0</span>
- <span class="co">#  Vcells 745374  5.7    1650153 12.6  1650106 12.6</span></code></pre></div>
+ <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
+ <span class="co">#  Ncells  503635 26.9     940480 50.3   940480 50.3</span>
+ <span class="co">#  Vcells 1186522  9.1    2100404 16.1  2085253 16.0</span></code></pre></div>
