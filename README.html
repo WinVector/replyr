@@ -1,5 +1,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<p>This document describes <code>replyr</code>, an <a href="https://cran.r-project.org">R</a> package available from CRAN <a href="https://CRAN.R-project.org/package=replyr">here</a>.</p>
+<p>This document describes <code>replyr</code>, an <a href="https://cran.r-project.org">R</a> package available from <a href="https://github.com/WinVector/replyr">Github</a> and <a href="https://CRAN.R-project.org/package=replyr">CRAN</a>.</p>
+<p>To install from Github please try:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;WinVector/replyr&quot;</span>)</code></pre></div>
+<p>[Note: the CRAN version of replyr currently has a bug in <code>replyr_summary</code> that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.]</p>
 <h2 id="introduction">Introduction</h2>
 <p>It comes as a bit of a shock for <a href="https://cran.r-project.org">R</a> <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> users when they switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. The <a href="https://github.com/WinVector/replyr"><code>replyr</code></a> package attempts to provide practical data manipulation affordances.</p>
 <p><a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a></p>
@@ -205,5 +208,5 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  503635 26.9     940480 50.3   940480 50.3</span>
- <span class="co">#  Vcells 1186522  9.1    2100404 16.1  2085253 16.0</span></code></pre></div>
+ <span class="co">#  Ncells  503668 26.9     940480 50.3   940480 50.3</span>
+ <span class="co">#  Vcells 1186677  9.1    2100658 16.1  2085408 16.0</span></code></pre></div>

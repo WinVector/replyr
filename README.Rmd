@@ -17,7 +17,15 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
-This document describes `replyr`, an [R](https://cran.r-project.org) package available from CRAN [here](https://CRAN.R-project.org/package=replyr).
+This document describes `replyr`, an [R](https://cran.r-project.org) package available from [Github](https://github.com/WinVector/replyr) and  [CRAN](https://CRAN.R-project.org/package=replyr).
+
+To install from Github please try:
+
+```{r eval=FALSE}
+devtools::install_github("WinVector/replyr")
+```
+
+[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.]
 
 ## Introduction
 

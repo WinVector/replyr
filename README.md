@@ -1,5 +1,13 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-This document describes `replyr`, an [R](https://cran.r-project.org) package available from CRAN [here](https://CRAN.R-project.org/package=replyr).
+This document describes `replyr`, an [R](https://cran.r-project.org) package available from [Github](https://github.com/WinVector/replyr) and [CRAN](https://CRAN.R-project.org/package=replyr).
+
+To install from Github please try:
+
+``` r
+devtools::install_github("WinVector/replyr")
+```
+
+\[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.\]
 
 Introduction
 ------------
@@ -296,6 +304,6 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  503635 26.9     940480 50.3   940480 50.3
- #  Vcells 1186522  9.1    2100404 16.1  2085253 16.0
+ #  Ncells  503668 26.9     940480 50.3   940480 50.3
+ #  Vcells 1186677  9.1    2100658 16.1  2085408 16.0
 ```
