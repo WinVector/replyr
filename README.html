@@ -7,6 +7,7 @@
 <p>It comes as a bit of a shock for <a href="https://cran.r-project.org">R</a> <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> users when they switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. The <a href="https://github.com/WinVector/replyr"><code>replyr</code></a> package attempts to provide practical data manipulation affordances.</p>
 <p><a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a></p>
 <p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (<code>SQL</code> databases, <code>Spark</code>) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions.</p>
+<p><code>replyr</code> uniformly uses standard or paremtric interfaces (names of variables as strings) in favor of name capture so that you can easily program <em>over</em> <code>replyr</code>.</p>
 <p>Primary <code>replyr</code> services include:</p>
 <ul class="incremental">
 <li><code>replyr::let</code></li>
@@ -208,5 +209,5 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  503668 26.9     940480 50.3   940480 50.3</span>
- <span class="co">#  Vcells 1186677  9.1    2100658 16.1  2085408 16.0</span></code></pre></div>
+ <span class="co">#  Ncells  503669 26.9     940480 50.3   940480 50.3</span>
+ <span class="co">#  Vcells 1186724  9.1    2100726 16.1  2085455 16.0</span></code></pre></div>

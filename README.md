@@ -18,6 +18,8 @@ It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
+`replyr` uniformly uses standard or paremtric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
+
 Primary `replyr` services include:
 
 -   `replyr::let`
@@ -304,6 +306,6 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  503668 26.9     940480 50.3   940480 50.3
- #  Vcells 1186677  9.1    2100658 16.1  2085408 16.0
+ #  Ncells  503669 26.9     940480 50.3   940480 50.3
+ #  Vcells 1186724  9.1    2100726 16.1  2085455 16.0
 ```
