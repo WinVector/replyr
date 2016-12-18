@@ -18,14 +18,23 @@ options(width =100)
 ```
 
 
-This document describes `replyr`, an [R](https://cran.r-project.org) package available from CRAN [here](https://CRAN.R-project.org/package=replyr).
+This document describes `replyr`, an [R](https://cran.r-project.org) package available from [Github](https://github.com/WinVector/replyr) and  [CRAN](https://CRAN.R-project.org/package=replyr).
+
+To install from Github please try:
+
+```{r eval=FALSE}
+devtools::install_github("WinVector/replyr")
+```
+
+[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.]
 
 ## Introduction
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service.  A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale.  It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds.  The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
 
-
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
+
+`replyr` uniformly uses standard or paremtric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
 
 Primary `replyr` services include:
 
@@ -35,7 +44,7 @@ Primary `replyr` services include:
  
 ## `replyr::let`
 
-`replyr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute`).  This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms"  (and the direct use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms").
+`replyr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute` or `base::with`).  This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms"  (and the direct use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms").
 
 Example:
 
@@ -150,7 +159,7 @@ ComputeRatioOfColumnsWrapped <- function(d,NumeratorColumnName,DenominatorColumn
 d %>% ComputeRatioOfColumnsWrapped('a','b','c')
 ```
 
-`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes, and the need for the final `()` to execute the returned function is left in because we have left `replyr::let` as a macro constructor as like  `gtools::strmacro`.
+`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes, and the need for the final `()` to execute the returned function is left in because we have left `replyr::let` as a macro constructor as was the case with  `gtools::strmacro`.
 
 
 ## `replyr::gapply`
