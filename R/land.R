@@ -9,6 +9,7 @@
 #'
 #' @param value value to write
 #' @param name variable to write to
+#' @return value
 #'
 #' @examples
 #'
@@ -25,6 +26,7 @@
   assign(name,value,
          pos=envir,
          envir=envir)
+  value
 }
 
 #' @export
@@ -35,6 +37,7 @@
   assign(name,value,
          pos=envir,
          envir=envir)
+  value
 }
 
 #' @export
@@ -44,6 +47,7 @@
   assign(name,value,
          pos=envir,
          envir=envir)
+  value
 }
 
 #' @export
@@ -53,6 +57,7 @@
   assign(name,value,
          pos=envir,
          envir=envir)
+  value
 }
 
 

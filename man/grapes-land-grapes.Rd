@@ -20,6 +20,9 @@ value \%land_\% name
 
 \item{name}{variable to write to}
 }
+\value{
+value
+}
 \description{
 \%land\% and \%->\% copy a pipeline value to a variable on the RHS,
 \%land_\% and \%->_\% copy a pipeline value to
