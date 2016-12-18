@@ -12,7 +12,7 @@
 #'
 #' Technically these operators are
 #' are not "-> assignment", so they might not be specifically prohibited in a
-#' deliberately contrived reading of some style guides.
+#' pedantic reading of some style guides.
 #'
 #' @param value value to write
 #' @param name variable to write to
