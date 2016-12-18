@@ -5,9 +5,14 @@
 #' \%land\% and \%->\% copy a pipeline value to a variable on the RHS,
 #' \%land_\% and \%->_\% copy a pipeline value to
 #' a variable named by its RHS argument.  There is nothing these operators do
-#' better than "->" and they are mostly just a proof of concept (though technically they
-#' are not "-> assignment" so they may not be specifically prohibited in some style guides).
+#' better than "->" and they are mostly just a proof of concept.
 #' These operators use eager evaluation.
+#'
+#'
+#'
+#' Technically these operators are
+#' are not "-> assignment", so they might not be specifically prohibited in a
+#' deliberately contrived reading of some style guides.
 #'
 #' @param value value to write
 #' @param name variable to write to
