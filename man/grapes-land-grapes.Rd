@@ -29,6 +29,7 @@ value
 a variable named by its RHS argument.  There is nothing these operators do
 better than "->" and they are mostly just a proof of concept (though technically they
 are not "-> assignment" so they may not be specifically prohibited in some style guides).
+These operators use eager evaluation.
 }
 \examples{
 
