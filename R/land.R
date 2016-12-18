@@ -1,4 +1,5 @@
 
+
 #' Land a value to variable from a pipeline.
 #'
 #' \%land\% and \%->\% copy a pipeline value to a variable on the RHS,
@@ -20,45 +21,42 @@
 #' 7 %>% sin() %->_% varname
 #'
 #' @export
-`%land%` <- function(value,name) {
+`%land%` <- function(value, name) {
   name <- as.character(substitute(name))
   envir <- parent.frame(1)
-  assign(name,value,
-         pos=envir,
-         envir=envir)
-  value
+  assign(name, value,
+         pos = envir,
+         envir = envir)
+  invisible(value)
 }
 
 #' @export
 #' @rdname grapes-land-grapes
-`%->%` <- function(value,name) {
+`%->%` <- function(value, name) {
   name <- as.character(substitute(name))
   envir <- parent.frame(1)
-  assign(name,value,
-         pos=envir,
-         envir=envir)
-  value
+  assign(name, value,
+         pos = envir,
+         envir = envir)
+  invisible(value)
 }
 
 #' @export
 #' @rdname grapes-land-grapes
-`%->_%` <- function(value,name) {
+`%->_%` <- function(value, name) {
   envir <- parent.frame(1)
-  assign(name,value,
-         pos=envir,
-         envir=envir)
-  value
+  assign(name, value,
+         pos = envir,
+         envir = envir)
+  invisible(value)
 }
 
 #' @export
 #' @rdname grapes-land-grapes
-`%land_%` <- function(value,name) {
+`%land_%` <- function(value, name) {
   envir <- parent.frame(1)
-  assign(name,value,
-         pos=envir,
-         envir=envir)
-  value
+  assign(name, value,
+         pos = envir,
+         envir = envir)
+  invisible(value)
 }
-
-
-
