@@ -23,7 +23,7 @@ test_that("test_let.R", {
 
         # confirm set of groups.
         unique(d$GroupColumn) -> groups
-      })()
+      })
   #print(groups)
   #print(length(groups))
   #print(dres)
@@ -34,14 +34,14 @@ test_that("test_let.R", {
   d %>% let(alias = mapping,
             expr = {
               . %>% mutate(RankColumn = RankColumn - 1)
-            })()()
+            })()
 
   # Or:
 
   f <- let(alias = mapping,
            expr = {
              . %>% mutate(RankColumn = RankColumn - 1)
-           })()
+           })
   d %>% f
 
   # Be wary of using any assignment to attempt side-effects in these "delayed pipelines",
@@ -51,7 +51,7 @@ test_that("test_let.R", {
   g <- let(alias = mapping,
            expr = {
              . %>% mutate(RankColumn = RankColumn - 1) -> ZZZ
-           })()
+           })
   #print(ZZZ)
   # Notice ZZZ has captured a copy of the sub-pipeline and not waited for application of g.
   # Applying g performs a calculation, but does not overwrite ZZZ.
@@ -63,6 +63,6 @@ test_that("test_let.R", {
 
   # let works by string substitution aligning on word boundaries,
   # so it does (unfortunately) also re-write strings.
-  let(list(x = 'y'), 'x')()
+  let(list(x = 'y'), 'x')
 
 })

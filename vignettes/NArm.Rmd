@@ -114,7 +114,7 @@ dRemote %>% mutate(nna=0) -> dTmp
 for(ci in cols) {
   let(list(TARGETCOL=ci),
       dTmp %>% mutate(nna=nna+ifelse(is.na(TARGETCOL),1,0)) -> dTmp
-  )() 
+  )
 }
 print(dTmp)
 ```

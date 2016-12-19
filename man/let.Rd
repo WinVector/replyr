@@ -12,7 +12,7 @@ let(alias, expr)
 \item{expr}{block to prepare for execution}
 }
 \value{
-item ready to evaluate, need to apply with "()" to perform the evaluation in own environment.
+result of expr executed in calling environment
 }
 \description{
 \code{replyr::let} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
@@ -53,25 +53,25 @@ let(alias=mapping,
 
        # confirm set of groups.
        unique(d$GroupColumn) -> groups
-    })()
+    })
 print(groups)
 print(length(groups))
 print(dres)
 
 # It is also possible to pipe into let-blocks, but it takes some extra notation
-# (notice the extra ". \%>\%" at the beginning and the extra "()" at the end).
+# (notice the extra ". \%>\%" at the beginning and the extra "()" at the end,
+# to signal ot \%>\% to treat the let-block as a function to evaluate).
 
 d \%>\% let(alias=mapping,
          expr={
            . \%>\% mutate(RankColumn=RankColumn-1)
-         })()()
+         })()
 
 # Or:
 
-f <- let(alias=mapping,
-         expr={
-           . \%>\% mutate(RankColumn=RankColumn-1)
-         })()
+f <- let(mapping,
+         expr= . \%>\% mutate(RankColumn=RankColumn-1)
+         )
 d \%>\% f
 
 # Be wary of using any assignment to attempt side-effects in these "delayed pipelines",
@@ -81,7 +81,7 @@ d \%>\% f
 g <- let(alias=mapping,
          expr={
            . \%>\% mutate(RankColumn=RankColumn-1) -> ZZZ
-         })()
+         })
 print(ZZZ)
 # Notice ZZZ has captured a copy of the sub-pipeline and not waited for application of g.
 # Applying g performs a calculation, but does not overwrite ZZZ.
@@ -93,7 +93,7 @@ print(ZZZ)
 
 # let works by string substitution aligning on word boundaries,
 # so it does (unfortunately) also re-write strings.
-let(list(x='y'),'x')()
+let(list(x='y'),'x')
 
 }
 \seealso{

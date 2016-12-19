@@ -66,7 +66,7 @@ replyr_ranksummaries <- function(x,
                  nUniqueRanks=nUniqueRanks,
                  nBadOrders=nBadOrders,
                  stringsAsFactors = FALSE)
-    })() -> res
+    }) -> res
   res
 }
 

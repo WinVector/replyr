@@ -52,7 +52,7 @@ sumstat_intervals = function(dframe, colname, groupcolname=NULL) {
                              iqrlower = median(col)-0.5*IQR(col),
                              median=median(col),
                              iqrupper=median(col)+0.5*IQR(col))
-      })()
+      })
 }
 ```
 
@@ -100,7 +100,7 @@ if  (requireNamespace("ggplot2")) {
             geom_crossbar(data=sintervals, aes(y=center, ymin=lower, ymax=upper)) +
             ggtitle(title) + theme(plot.title=element_text(hjust=0.5)) +
             scale_color_brewer(palette="Dark2")
-        })()
+        })
   }
 }
 ```

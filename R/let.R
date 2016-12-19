@@ -34,7 +34,7 @@ isValidAndUnreservedName <- function(string) {
 #'
 #' @param alias mapping from free names in expr to target names to use.
 #' @param expr block to prepare for execution
-#' @return item ready to evaluate, need to apply with "()" to perform the evaluation in own environment.
+#' @return result of expr executed in calling environment
 #'
 #' @examples
 #'
@@ -56,25 +56,25 @@ isValidAndUnreservedName <- function(string) {
 #'
 #'        # confirm set of groups.
 #'        unique(d$GroupColumn) -> groups
-#'     })()
+#'     })
 #' print(groups)
 #' print(length(groups))
 #' print(dres)
 #'
 #' # It is also possible to pipe into let-blocks, but it takes some extra notation
-#' # (notice the extra ". %>%" at the beginning and the extra "()" at the end).
+#' # (notice the extra ". %>%" at the beginning and the extra "()" at the end,
+#' # to signal ot %>% to treat the let-block as a function to evaluate).
 #'
 #'d %>% let(alias=mapping,
 #'          expr={
 #'            . %>% mutate(RankColumn=RankColumn-1)
-#'          })()()
+#'          })()
 #'
 #' # Or:
 #'
-#' f <- let(alias=mapping,
-#'          expr={
-#'            . %>% mutate(RankColumn=RankColumn-1)
-#'          })()
+#' f <- let(mapping,
+#'          expr= . %>% mutate(RankColumn=RankColumn-1)
+#'          )
 #' d %>% f
 #'
 #' # Be wary of using any assignment to attempt side-effects in these "delayed pipelines",
@@ -84,7 +84,7 @@ isValidAndUnreservedName <- function(string) {
 #' g <- let(alias=mapping,
 #'          expr={
 #'            . %>% mutate(RankColumn=RankColumn-1) -> ZZZ
-#'          })()
+#'          })
 #' print(ZZZ)
 #' # Notice ZZZ has captured a copy of the sub-pipeline and not waited for application of g.
 #' # Applying g performs a calculation, but does not overwrite ZZZ.
@@ -96,7 +96,7 @@ isValidAndUnreservedName <- function(string) {
 #'
 #' # let works by string substitution aligning on word boundaries,
 #' # so it does (unfortunately) also re-write strings.
-#' let(list(x='y'),'x')()
+#' let(list(x='y'),'x')
 #'
 #' @export
 let <- function(alias, expr) {
@@ -150,16 +150,8 @@ let <- function(alias, expr) {
     value <- alias[[ni]]
     body <- gsub(pattern, value, body)
   }
-  fun <- parse(text = body)
-  # wrap re-mapped expr for execution
-  ff <- function(...) {
-    eval(fun, parent.frame())
-  }
-  # add annotations
-  mm <- match.call()
-  mm$expr <- NULL
-  mm[[1]] <- as.name("let")
-  attr(ff, "source") <- c(deparse(mm), strexpr)
-  # return function for user to execute
-  ff
+  op <- parse(text = body)
+  # try to execute expression in parent environment
+  envir <- parent.frame(1)
+  eval(op, parent.frame())
 }

@@ -65,7 +65,7 @@ ComputeRatioOfColumns <- function(d,NumeratorColumnName,DenominatorColumnName,Re
       # due to the let wrapper in this function it will behave as if it was
       # using the specified paremetric column names.
       d %>% mutate(ResultColumn=NumeratorColumn/DenominatorColumn)
-    })()
+    })
 }
 
 # example data
@@ -122,13 +122,13 @@ assign('RankColumn',quote(rank),envir = env)
 with(env,d %>% mutate(RankColumn=RankColumn-1))
 ```
 
-Whereas `replyr::let` works and is succinct (though notice the required closing of the `replyr::let` block with an extra `()`).
+Whereas `replyr::let` works and is succinct.
 
 ```{r subst3}
 replyr::let(
   alias=list(RankColumn='rank'),
   d %>% mutate(RankColumn=RankColumn-1)
-)()
+)
 ```
 
 
@@ -161,7 +161,7 @@ ComputeRatioOfColumnsWrapped <- function(d,NumeratorColumnName,DenominatorColumn
 d %>% ComputeRatioOfColumnsWrapped('a','b','c')
 ```
 
-`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes, and the need for the final `()` to execute the returned function is left in because we have left `replyr::let` as a macro constructor as was the case with  `gtools::strmacro`.
+`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
 
 
 ## `replyr::gapply`

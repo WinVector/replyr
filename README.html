@@ -29,7 +29,7 @@ ComputeRatioOfColumns &lt;-<span class="st"> </span>function(d,NumeratorColumnNa
       <span class="co"># due to the let wrapper in this function it will behave as if it was</span>
       <span class="co"># using the specified paremetric column names.</span>
       d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ResultColumn=</span>NumeratorColumn/DenominatorColumn)
-    })()
+    })
 }
 
 <span class="co"># example data</span>
@@ -75,11 +75,11 @@ env &lt;-<span class="st"> </span><span class="kw">new.env</span>()
 <span class="co"># assign(&#39;RankColumn&#39;,rank,envir = env)</span>
 <span class="co"># assign(&#39;RankColumn&#39;,&#39;rank&#39;,envir = env)</span>
 <span class="kw">with</span>(env,d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>))</code></pre></div>
-<p>Whereas <code>replyr::let</code> works and is succinct (though notice the required closing of the <code>replyr::let</code> block with an extra <code>()</code>).</p>
+<p>Whereas <code>replyr::let</code> works and is succinct.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">replyr::<span class="kw">let</span>(
   <span class="dt">alias=</span><span class="kw">list</span>(<span class="dt">RankColumn=</span><span class="st">&#39;rank&#39;</span>),
   d %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">RankColumn=</span>RankColumn<span class="dv">-1</span>)
-)()
+)
  <span class="co">#    Sepal_Length Sepal_Width Species rank</span>
  <span class="co">#  1          5.8         4.0  setosa    0</span>
  <span class="co">#  2          5.7         4.4  setosa    1</span></code></pre></div>
@@ -112,7 +112,7 @@ d %&gt;%<span class="st"> </span><span class="kw">ComputeRatioOfColumnsWrapped</
  <span class="co">#  3 3 5 0.6000000</span>
  <span class="co">#  4 4 6 0.6666667</span>
  <span class="co">#  5 5 7 0.7142857</span></code></pre></div>
-<p><code>replyr::let</code> is based on <code>gtools::strmacro</code> by Gregory R. Warnes, and the need for the final <code>()</code> to execute the returned function is left in because we have left <code>replyr::let</code> as a macro constructor as was the case with <code>gtools::strmacro</code>.</p>
+<p><code>replyr::let</code> is based on <code>gtools::strmacro</code> by Gregory R. Warnes.</p>
 <h2 id="replyrgapply"><code>replyr::gapply</code></h2>
 <p><code>replyr::gapply</code> is a &quot;grouped ordered apply&quot; data operation. Many calculations can be written in terms of this primitive, including per-group rank calculation (assuming your data services supports window functions), per-group summaries, and per-group selections. It is meant to be a specialization of <a href="https://www.jstatsoft.org/article/view/v040i01">&quot;The Split-Apply-Combine&quot;</a> strategy with all three steps wrapped into a single operator.</p>
 <p>Example:</p>
@@ -209,5 +209,5 @@ dRemote %&gt;%<span class="st"> </span>replyr::<span class="kw">replyr_filter</s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  503678 26.9     940480 50.3   940480 50.3</span>
- <span class="co">#  Vcells 1186890  9.1    2100732 16.1  2085642 16.0</span></code></pre></div>
+ <span class="co">#  Ncells  503606 26.9     940480 50.3   940480 50.3</span>
+ <span class="co">#  Vcells 1188209  9.1    2100650 16.1  2087150 16.0</span></code></pre></div>
