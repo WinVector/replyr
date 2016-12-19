@@ -264,9 +264,9 @@ for(partitionMethod in c('group_by','extract')) {
  #  5     2   0.3      2     3
 
 my_db <- NULL; gc();
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 479340 25.6     940480 50.3   750400 40.1
- #  Vcells 740812  5.7    1308461 10.0  1308457 10.0
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  501894 26.9     940480 50.3   920931 49.2
+ #  Vcells 1186782  9.1    2172764 16.6  2172764 16.6
 ```
 
 `Spark` example.
@@ -387,7 +387,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     1   0.1     10     2
  #  5     2   0.3      2     3
 my_db <- NULL; gc();
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 547452 29.3     940480 50.3   940480 50.3
- #  Vcells 801435  6.2    1650153 12.6  1308457 10.0
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  569094 30.4     940480 50.3   940480 50.3
+ #  Vcells 1245811  9.6    2172764 16.6  2172764 16.6
 ```

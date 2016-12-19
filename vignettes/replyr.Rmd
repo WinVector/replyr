@@ -26,12 +26,11 @@ To install from Github please try:
 devtools::install_github("WinVector/replyr")
 ```
 
-[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.]
+[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.  Also `replyr::let` take one less pair of parenthesis as of version `0.2.0`.]
 
 ## Introduction
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service.  A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale.  It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds.  The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
-
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 

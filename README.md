@@ -7,7 +7,7 @@ To install from Github please try:
 devtools::install_github("WinVector/replyr")
 ```
 
-\[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.\]
+\[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place. Also `replyr::let` take one less pair of parenthesis as of version `0.2.0`.\]
 
 Introduction
 ------------
@@ -306,6 +306,6 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  503606 26.9     940480 50.3   940480 50.3
- #  Vcells 1188209  9.1    2100650 16.1  2087150 16.0
+ #  Ncells  503594 26.9     940480 50.3   940480 50.3
+ #  Vcells 1188136  9.1    2100677 16.1  2087068 16.0
 ```

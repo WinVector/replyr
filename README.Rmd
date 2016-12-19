@@ -25,7 +25,7 @@ To install from Github please try:
 devtools::install_github("WinVector/replyr")
 ```
 
-[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.]
+[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place.  Also `replyr::let` take one less pair of parenthesis as of version `0.2.0`.]
 
 ## Introduction
 

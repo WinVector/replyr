@@ -305,7 +305,7 @@ runExample(remoteCopy(my_db))
  #  [1] "tbl_sqlite" "tbl_sql"    "tbl_lazy"   "tbl"       
  #  [1] "src_sqlite"
  #  Source:   query [?? x 2]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x     y
  #    <dbl> <chr>
@@ -337,7 +337,7 @@ runExample(remoteCopy(my_db))
  #  $ x <dbl> 1, 2
  #  $ y <chr> "a", "b"NULL
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -355,7 +355,7 @@ runExample(remoteCopy(my_db))
  #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
  #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -373,7 +373,7 @@ runExample(remoteCopy(my_db))
  #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
  #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 2]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x     y
  #    <chr> <int>
@@ -387,7 +387,7 @@ runExample(remoteCopy(my_db))
  #  
  #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
  #  Source:   query [?? x 2]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x     y
  #    <chr> <int>
@@ -398,7 +398,7 @@ runExample(remoteCopy(my_db))
  #  
  #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x     y match
  #    <chr> <int> <int>
@@ -409,7 +409,7 @@ runExample(remoteCopy(my_db))
  #  5     c     5     1
  #  6     c     6     1
  #  Source:   query [?? x 1]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x
  #    <dbl>
@@ -420,7 +420,7 @@ runExample(remoteCopy(my_db))
  #  
  #  d4 %>% replyr::replyr_uniqueValues("x") 
  #  Source:   query [?? x 2]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x     n
  #    <dbl> <dbl>
@@ -429,7 +429,7 @@ runExample(remoteCopy(my_db))
  #  3     3     2
  #  [1] "let example"
  #  Source:   query [?? x 4]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #    Sepal_Length Sepal_Width Species  rank
  #           <dbl>       <dbl>   <chr> <dbl>
@@ -437,7 +437,7 @@ runExample(remoteCopy(my_db))
  #  2          5.7         4.4  setosa     1
  #  [1] "gather/spread examples"
  #  Source:   query [?? x 4]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #    index  info meas1 meas2
  #    <dbl> <chr> <chr> <chr>
@@ -447,7 +447,7 @@ runExample(remoteCopy(my_db))
  #  
  #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #    index meastype  meas
  #    <dbl>    <chr> <chr>
@@ -460,15 +460,15 @@ runExample(remoteCopy(my_db))
  #  
  #   ds %>% replyr::replyr_spread('index','meastype','meas')
  #  Source:   query [?? x 3]
- #  Database: sqlite 3.8.6 [:memory:]
+ #  Database: sqlite 3.11.1 [:memory:]
  #  
  #    index meas1 meas2
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 519971 27.8     940480 50.3   940480 50.3
- #  Vcells 775053  6.0    1650153 12.6  1650153 12.6
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  544016 29.1     940480 50.3   940480 50.3
+ #  Vcells 1221117  9.4    2595180 19.8  2589324 19.8
 ```
 
 MySQL example.
@@ -644,9 +644,9 @@ runExample(remoteCopy(my_db))
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 555093 29.7     940480 50.3   940480 50.3
- #  Vcells 802621  6.2    2060183 15.8  2035489 15.6
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  579665 31.0     940480 50.3   940480 50.3
+ #  Vcells 1249307  9.6    2595180 19.8  2589324 19.8
 ```
 
 PostgreSQL example.
@@ -820,10 +820,10 @@ runExample(remoteCopy(my_db))
  #    <dbl> <chr> <chr>
  #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (64366, 0)
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 588834 31.5    1168576 62.5   940480 50.3
- #  Vcells 829067  6.4    2060183 15.8  2058696 15.8
+ #  Auto-disconnecting postgres connection (31415, 0)
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  614228 32.9    1168576 62.5   940480 50.3
+ #  Vcells 1276741  9.8    2595180 19.8  2595179 19.8
 ```
 
 Spark 1.6.2 example.
@@ -1001,7 +1001,7 @@ runExample(remoteCopy(my_db))
  #    <dbl> <chr> <chr>
  #  1     1  m2_1  m1_1
 my_db <- NULL; gc() # disconnect
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 624828 33.4    1168576 62.5  1168576 62.5
- #  Vcells 860571  6.6    2060183 15.8  2058696 15.8
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  650521 34.8    1168576 62.5  1168576 62.5
+ #  Vcells 1309906 10.0    2595180 19.8  2595179 19.8
 ```

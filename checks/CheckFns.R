@@ -85,7 +85,7 @@ runExample <- function(copyToRemote) {
     alias=mapping,
     expr={
       dlet %>% mutate(RankColumn=RankColumn-1) -> dletres
-    })()
+    })
   print(dletres)
 
   # gather/spread examples
