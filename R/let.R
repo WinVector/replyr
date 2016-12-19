@@ -152,6 +152,5 @@ let <- function(alias, expr) {
   }
   op <- parse(text = body)
   # try to execute expression in parent environment
-  envir <- parent.frame(1)
   eval(op, parent.frame())
 }
