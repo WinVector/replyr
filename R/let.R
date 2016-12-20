@@ -175,11 +175,13 @@ let <- function(alias, expr) {
 #'
 #' \code{letp} is a variation of \code{let} needed only for inline code placed immediately after \code{\%>\%}, as in the
 #' example below.
+#' \code{expr} must start with "\code{ . \%>\% }" and should not attempt assignments
+#' or other environment sensitive side-effects.
 #'
 #' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{let}}
 #'
 #' @param alias mapping from free names in expr to target names to use
-#' @param expr block to prepare for execution (expecting a dot argument, and should not have assignments)
+#' @param expr \code{magrittr} pipeline to prepare for execution
 #' @param . argument from \code{magrittr} pipeline (do not assign to this)
 #' @return result of expr executed in calling environment
 #'
@@ -245,12 +247,22 @@ letp <- function(alias, expr, .) {
   }
   # re-write the parse tree and prepare for execution
   # with extra (.) to sacrifice to margrittr pipeline
-  body <- c('(function(.) { ',strexpr,' })(.)(.)')
+  body <- c('({ ',strexpr,' })(.)')
   for (ni in names(alias)) {
     pattern <- paste0("\\b", ni, "\\b")
     value <- alias[[ni]]
     body <- gsub(pattern, value, body)
   }
+  # The above form is assuming that strexpr starts with ". %>% ".
+  # While implies it is itself a delay in evaluation.
+  # The subtlties include that the following two statements are
+  # not equivilant in current dplyr:
+  #  (function(.) { z <-. ; z %>% mutate(rank=rank-1) })(data.frame(rank=1:2))
+  #  (function(.) { z <-. ; . %>% mutate(rank=rank-1) })(data.frame(rank=1:2))
+  # This is due to the special meaning of ". %>%" even though "." could be a value.
+  # (. %>% mutate(rank=rank-1)) roughly always behaves like a function,
+  #  even if "." already has a value (so "." in this context is always treated
+  #  as a free variable.)
   `_reply_reserved_name` <- parse(text = body)
   rm(list=setdiff(ls(all.names=TRUE),list('.','_reply_reserved_name')))
   # eval in new environment

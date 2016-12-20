@@ -9,7 +9,7 @@ letp(alias, expr, .)
 \arguments{
 \item{alias}{mapping from free names in expr to target names to use}
 
-\item{expr}{block to prepare for execution (expecting a dot argument, and should not have assignments)}
+\item{expr}{\code{magrittr} pipeline to prepare for execution}
 
 \item{.}{argument from \code{magrittr} pipeline (do not assign to this)}
 }
@@ -24,6 +24,8 @@ for details.
 \details{
 \code{letp} is a variation of \code{let} needed only for inline code placed immediately after \code{\%>\%}, as in the
 example below.
+\code{expr} must start with "\code{ . \%>\% }" and should not attempt assignments
+or other environment sensitive side-effects.
 }
 \examples{
 
