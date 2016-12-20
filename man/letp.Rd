@@ -17,12 +17,12 @@ letp(alias, expr, .)
 result of expr executed in calling environment
 }
 \description{
-\code{replyr::letp} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
-\code{replyr::letp} is a specialization of \code{replyr::let} for use in \code{magrittr} pipelines, please see \code{\link{let}}
+\code{letp} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
+\code{letp} is a specialization of \code{let} for use in \code{magrittr} pipelines, please see \code{\link{let}}
 for details.
 }
 \details{
-\code{replyr::letp} is a variation of \code{replyr::let} needed only for inline code placed immediately after \code{\%>\%}, as in the
+\code{letp} is a variation of \code{let} needed only for inline code placed immediately after \code{\%>\%}, as in the
 example below.
 }
 \examples{
@@ -41,6 +41,6 @@ d \%>\% letp(alias=mapping,
 
 }
 \seealso{
-\code{\link{replyr_mapRestrictCols}} \code{\link{letp}}
+\code{\link{replyr_mapRestrictCols}} \code{\link{let}}
 }
 

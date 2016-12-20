@@ -15,7 +15,7 @@ let(alias, expr)
 result of expr executed in calling environment
 }
 \description{
-\code{replyr::let} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
+\code{let} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
 Mnemonic: "expr code symbols are on the left, external data and function argument names are on the right."
 }
 \details{
@@ -23,13 +23,13 @@ Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, 
 Please see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
 Transformation is performed by substitution on the expression parse tree, so be wary of name collisions or aliasing.
 
-Something like \code{replyr::let} is only useful to get control of a function that is parameterized
+Something like \code{let} is only useful to get control of a function that is parameterized
 (in the sense it take column names) but non-standard (in that it takes column names from
 non-standard evaluation argument name capture, and not as simple variables or parameters).  So  \code{replyr:let} is not
 useful for non-parameterized functions (functions that work only over values such as \code{base::sum}),
 and not useful for functions take parameters in straightforward way (such as \code{base::merge}'s "\code{by}" argument).
 \code{dplyr::mutate} is an example where
-we can use a \code{replyr::let} helper.   \code{dplyr::mutate} is
+we can use a \code{let} helper.   \code{dplyr::mutate} is
 parameterized (in the sense it can work over user supplied columns and expressions), but column names are captured through non-standard evaluation
 (and it rapidly becomes unwieldy to use complex formulas with the standard evaluation equivalent \code{dplyr::mutate_}).
 }

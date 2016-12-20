@@ -13,7 +13,7 @@ isValidAndUnreservedName <- function(string) {
 
 #' Execute expr with name substitutions specified in alias.
 #'
-#' \code{replyr::let} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
+#' \code{let} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
 #' Mnemonic: "expr code symbols are on the left, external data and function argument names are on the right."
 #'
 #'
@@ -22,13 +22,13 @@ isValidAndUnreservedName <- function(string) {
 #' Please see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
 #' Transformation is performed by substitution on the expression parse tree, so be wary of name collisions or aliasing.
 #'
-#' Something like \code{replyr::let} is only useful to get control of a function that is parameterized
+#' Something like \code{let} is only useful to get control of a function that is parameterized
 #' (in the sense it take column names) but non-standard (in that it takes column names from
 #' non-standard evaluation argument name capture, and not as simple variables or parameters).  So  \code{replyr:let} is not
 #' useful for non-parameterized functions (functions that work only over values such as \code{base::sum}),
 #' and not useful for functions take parameters in straightforward way (such as \code{base::merge}'s "\code{by}" argument).
 #' \code{dplyr::mutate} is an example where
-#' we can use a \code{replyr::let} helper.   \code{dplyr::mutate} is
+#' we can use a \code{let} helper.   \code{dplyr::mutate} is
 #' parameterized (in the sense it can work over user supplied columns and expressions), but column names are captured through non-standard evaluation
 #' (and it rapidly becomes unwieldy to use complex formulas with the standard evaluation equivalent \code{dplyr::mutate_}).
 #'
@@ -168,15 +168,15 @@ let <- function(alias, expr) {
 
 #' Wrap expr for \code{magrittr} pipeline execution with name substitutions specified in alias.
 #'
-#' \code{replyr::letp} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
-#' \code{replyr::letp} is a specialization of \code{replyr::let} for use in \code{magrittr} pipelines, please see \code{\link{let}}
+#' \code{letp} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
+#' \code{letp} is a specialization of \code{let} for use in \code{magrittr} pipelines, please see \code{\link{let}}
 #' for details.
 #'
 #'
-#' \code{replyr::letp} is a variation of \code{replyr::let} needed only for inline code placed immediately after \code{\%>\%}, as in the
+#' \code{letp} is a variation of \code{let} needed only for inline code placed immediately after \code{\%>\%}, as in the
 #' example below.
 #'
-#' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{letp}}
+#' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{let}}
 #'
 #' @param alias mapping from free names in expr to target names to use
 #' @param expr block to prepare for execution (expecting a dot argument, and should not have assignments)
