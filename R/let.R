@@ -162,7 +162,7 @@ let <- function(alias, expr) {
   `_reply_reserved_name` <- parse(text = body)
   rm(list=setdiff(ls(all.names=TRUE),list('_reply_reserved_name')))
   # try to execute expression in parent environment
-  eval(`_reply_reserved_name`, parent.frame())
+  eval(`_reply_reserved_name`, envir=parent.frame(), enclos=parent.frame())
 }
 
 
@@ -253,6 +253,8 @@ letp <- function(alias, expr, .) {
   }
   `_reply_reserved_name` <- parse(text = body)
   rm(list=setdiff(ls(all.names=TRUE),list('.','_reply_reserved_name')))
-  # eval in our environment
-  eval(`_reply_reserved_name`)
+  # eval in new environment
+  eenv <- new.env(parent=parent.frame())
+  assign('.', ., envir=eenv)
+  eval(`_reply_reserved_name`, envir=eenv, enclos=parent.frame())
 }
