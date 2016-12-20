@@ -63,7 +63,7 @@ isValidAndUnreservedName <- function(string) {
 #'
 #' # It is also possible to pipe into let-blocks, but it takes some extra notation
 #' # (notice the extra ". %>%" at the beginning and the extra "()" at the end,
-#' # to signal ot %>% to treat the let-block as a function to evaluate).
+#' # to signal %>% to treat the let-block as a function to evaluate).
 #'
 #'d %>% let(alias=mapping,
 #'          expr={
