@@ -31,6 +31,8 @@ isValidAndUnreservedName <- function(string) {
 #' we can use a \code{let} helper.   \code{dplyr::mutate} is
 #' parameterized (in the sense it can work over user supplied columns and expressions), but column names are captured through non-standard evaluation
 #' (and it rapidly becomes unwieldy to use complex formulas with the standard evaluation equivalent \code{dplyr::mutate_}).
+#' \code{alias} can not include the symbol "\code{.}".
+#'
 #'
 #' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{letp}}
 #'
@@ -118,6 +120,9 @@ let <- function(alias, expr) {
   # confirm alias is mapping strings to strings
   if (length(unique(names(alias))) != length(names(alias))) {
     stop('replyr::let alias keys must be unique')
+  }
+  if ('.' %in% c(names(alias),as.character(alias))) {
+    stop("replyr::let can not map to/from '.'")
   }
   for (ni in names(alias)) {
     if (is.null(ni)) {
@@ -211,6 +216,9 @@ letp <- function(alias, expr, .) {
   # confirm alias is mapping strings to strings
   if (length(unique(names(alias))) != length(names(alias))) {
     stop('replyr::letp alias keys must be unique')
+  }
+  if ('.' %in% c(names(alias),as.character(alias))) {
+    stop("replyr::letp can not map to/from '.'")
   }
   for (ni in names(alias)) {
     if (is.null(ni)) {
