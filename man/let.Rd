@@ -2,7 +2,7 @@
 % Please edit documentation in R/let.R
 \name{let}
 \alias{let}
-\title{Prepare expr for execution with name substitutions specified in alias.}
+\title{Execute expr with name substitutions specified in alias.}
 \usage{
 let(alias, expr)
 }
@@ -67,6 +67,13 @@ d \%>\% let(alias=mapping,
            . \%>\% mutate(RankColumn=RankColumn-1)
          })()
 
+# Or
+
+d \%>\% letp(alias=mapping,
+         expr={
+           . \%>\% mutate(RankColumn=RankColumn-1)
+         })
+
 # Or:
 
 f <- let(mapping,
@@ -97,6 +104,6 @@ let(list(x='y'),'x')
 
 }
 \seealso{
-\code{\link{replyr_mapRestrictCols}}
+\code{\link{replyr_mapRestrictCols}} \code{\link{letp}}
 }
 

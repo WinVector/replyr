@@ -11,10 +11,12 @@ isValidAndUnreservedName <- function(string) {
 }
 
 
-#' Prepare expr for execution with name substitutions specified in alias.
+#' Execute expr with name substitutions specified in alias.
 #'
 #' \code{replyr::let} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
 #' Mnemonic: "expr code symbols are on the left, external data and function argument names are on the right."
+#'
+#'
 #'
 #' Code adapted from \code{gtools::strmacro} by Gregory R. Warnes (License: GPL-2, this portion also available GPL-2 to respect gtools license).
 #' Please see the \code{replyr} \code{vignette} for some discussion of let and crossing function call boundaries: \code{vignette('replyr','replyr')}.
@@ -30,7 +32,7 @@ isValidAndUnreservedName <- function(string) {
 #' parameterized (in the sense it can work over user supplied columns and expressions), but column names are captured through non-standard evaluation
 #' (and it rapidly becomes unwieldy to use complex formulas with the standard evaluation equivalent \code{dplyr::mutate_}).
 #'
-#' @seealso \code{\link{replyr_mapRestrictCols}}
+#' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{letp}}
 #'
 #' @param alias mapping from free names in expr to target names to use.
 #' @param expr block to prepare for execution
@@ -65,10 +67,17 @@ isValidAndUnreservedName <- function(string) {
 #' # (notice the extra ". %>%" at the beginning and the extra "()" at the end,
 #' # to signal %>% to treat the let-block as a function to evaluate).
 #'
-#'d %>% let(alias=mapping,
+#' d %>% let(alias=mapping,
 #'          expr={
 #'            . %>% mutate(RankColumn=RankColumn-1)
 #'          })()
+#'
+#' # Or
+#'
+#' d %>% letp(alias=mapping,
+#'          expr={
+#'            . %>% mutate(RankColumn=RankColumn-1)
+#'          })
 #'
 #' # Or:
 #'
@@ -150,7 +159,100 @@ let <- function(alias, expr) {
     value <- alias[[ni]]
     body <- gsub(pattern, value, body)
   }
-  op <- parse(text = body)
+  `_reply_reserved_name` <- parse(text = body)
+  rm(list=setdiff(ls(all.names=TRUE),list('_reply_reserved_name')))
   # try to execute expression in parent environment
-  eval(op, parent.frame())
+  eval(`_reply_reserved_name`, parent.frame())
+}
+
+
+#' Wrap expr for \code{magrittr} pipeline execution with name substitutions specified in alias.
+#'
+#' \code{replyr::letp} implements a mapping from desired names (names used directly in the expr code) to names used in the data.
+#' \code{replyr::letp} is a specialization of \code{replyr::let} for use in \code{magrittr} pipelines, please see \code{\link{let}}
+#' for details.
+#'
+#'
+#' \code{replyr::letp} is a variation of \code{replyr::let} needed only for inline code placed immediately after \code{\%>\%}, as in the
+#' example below.
+#'
+#' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{letp}}
+#'
+#' @param alias mapping from free names in expr to target names to use
+#' @param expr block to prepare for execution (expecting a dot argument, and should not have assignments)
+#' @param . argument from \code{magrittr} pipeline (do not assign to this)
+#' @return result of expr executed in calling environment
+#'
+#' @examples
+#'
+#' library('dplyr')
+#' d <- data.frame(Sepal_Length=c(5.8,5.7),
+#'                 Sepal_Width=c(4.0,4.4),
+#'                 Species='setosa',
+#'                 rank=c(1,2))
+#'
+#' mapping = list(RankColumn='rank',GroupColumn='Species')
+#' d %>% letp(alias=mapping,
+#'          expr={
+#'            . %>% mutate(RankColumn=RankColumn-1)
+#'          })
+#'
+#' @export
+letp <- function(alias, expr, .) {
+  # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2,
+  # this portion also available GPL-2 to respect gtools license).
+  # capture expr
+  strexpr <- deparse(substitute(expr))
+  # make sure alias is a list (not a named vector)
+  alias <- as.list(alias)
+  force(.)
+  # confirm alias is mapping strings to strings
+  if (length(unique(names(alias))) != length(names(alias))) {
+    stop('replyr::letp alias keys must be unique')
+  }
+  for (ni in names(alias)) {
+    if (is.null(ni)) {
+      stop('replyr:letp alias keys must not be null')
+    }
+    if (!is.character(ni)) {
+      stop('replyr:letp alias keys must all be strings')
+    }
+    if (length(ni) != 1) {
+      stop('replyr:letp alias keys must all be strings')
+    }
+    if (nchar(ni) <= 0) {
+      stop('replyr:letp alias keys must be empty string')
+    }
+    if (!isValidAndUnreservedName(ni)) {
+      stop(paste('replyr:letp alias key not a valid name: "', ni, '"'))
+    }
+    vi <- alias[[ni]]
+    if (is.null(vi)) {
+      stop('replyr:letp alias values must not be null')
+    }
+    if (!is.character(vi)) {
+      stop('replyr:letp alias values must all be strings')
+    }
+    if (length(vi) != 1) {
+      stop('replyr:letp alias values must all be strings')
+    }
+    if (nchar(vi) <= 0) {
+      stop('replyr:letp alias values must be empty string')
+    }
+    if (!isValidAndUnreservedName(vi)) {
+      stop(paste('replyr:letp alias value not a valid name: "', vi, '"'))
+    }
+  }
+  # re-write the parse tree and prepare for execution
+  # with extra (.) to sacrifice to margrittr pipeline
+  body <- c('( ',strexpr,' )(.)')
+  for (ni in names(alias)) {
+    pattern <- paste0("\\b", ni, "\\b")
+    value <- alias[[ni]]
+    body <- gsub(pattern, value, body)
+  }
+  `_reply_reserved_name` <- parse(text = body)
+  rm(list=setdiff(ls(all.names=TRUE),list('.','_reply_reserved_name')))
+  # eval in our environment
+  eval(`_reply_reserved_name`)
 }
