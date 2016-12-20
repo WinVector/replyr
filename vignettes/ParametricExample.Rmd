@@ -1,0 +1,191 @@
+---
+title: "Parametric Programming in R"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Parametric Programming in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+Consider the problem of "parametric programming."  That is simply writing correct
+code before knowing some details, such as the names of the columns your
+procedure will have to be applied to in the future.
+
+Suppose for example your task was to and build a new advisory column that tells
+you which values in a column of a `data.frame` are missing or `NA`.  We will illustrate this in [R](https://cran.r-project.org) using the example data given below:
+
+```{r}
+d <- data.frame(x = c(1, NA))
+print(d)
+```
+
+Performing an ad hoc analysis is trivial in `R`: we would just
+directly write:
+
+```{r eval=FALSE}
+d$x_isNA <- is.na(d$x)
+```
+
+We used the fact that we are looking at the data interactively to note the only column is "`x`", and
+then picked "`x_isNA`" as our result name.  If we want to use  [`dplyr`](https://CRAN.R-project.org/package=dplyr )
+the notation remains straightforward:
+
+```{r}
+library("dplyr")
+d %>% mutate(x_isNA = is.na(x))
+```
+
+Now suppose, as is common in actual data science and data wrangling work, we
+are not the ones picking the column names.  Instead suppose we are trying to produce
+reusable code to perform this task again and again on many data sets.  In that
+case we would then expect the column names to be given to us as values inside
+other variables (i.e., as parameters).
+
+```{r}
+cname <- "x"                            # column we are examining
+rname <- paste(cname, "isNA", sep= '_') # where to land results
+print(rname)
+```
+
+And writing the matching code is again trivial:
+
+```{r, eval=FALSE}
+d[[rname]] <- is.na(d[[cname]])
+```
+
+We are now programming at a slightly higher level, or automating tasks.  We don't need
+to type in new code each time a new data set with a different column name comes in.  It
+is now easy to write a `for-loop` or `lapply` over a list of columns to analyze many columns
+in a single data set.  It is an absolute travesty when something that is purely virtual (such 
+as formulas and data) can not be automated over.  So the slightly clunkier "`[[]]`" notation (which
+can be automated) is a necessary complement to the more convenient "`$`" notation (which is too specific
+to be easily automated over).
+
+Using `dplyr`
+directly (when you know all the names) 
+is deliberately straightforward, but programming over `dplyr` can  become a challenge.
+
+## Standard practice
+
+The standard parametric `dplyr` practice is to use `dplyr::mutate_` (the standard 
+evaluation or parametric variation of `dplyr::mutate`). Unfortunately 
+the notation in using such an "underbar form" is currently cumbersome.
+
+You have the choice building up your formula through variations of
+one of:
+
+ * A formula
+ * Using `quote()`
+ * A string
+ 
+(source: [dplyr Non-standard evaluation](https://cran.r-project.org/web/packages/dplyr/vignettes/nse.html), for additional theory and upcoming official solutions please see [here](https://rpubs.com/hadley/lazyeval)).
+
+Let us try a few of these to try and emphasize we are proposing a new solution, not because
+we do not know of the current solutions, but instead because we are familiar with the current solutions.
+
+### Formula interface
+
+Formula interface is a nice option as it is `R`'s common way for holding names
+unevaluated.  The code looks like the following:
+ 
+```{r}
+d %>% mutate_(RCOL = lazyeval::interp(~ is.na(cname))) %>%
+      rename_(.dots = stats::setNames('RCOL', rname))
+```
+
+Currently `mutate_` does not take "two-sided formulas" so we need to control
+names outside of the formula.
+In this case we used the explicit `dplyr::rename_` because attempting to name the
+assignment in-line does not seem to be supported (or if it is supported, it uses 
+a different notation or convention than the one we have just seen):
+
+```{r}
+d %>% mutate_(.dots = stats::setNames(lazyeval::interp( ~ is.na(cname)),
+                                      rname))
+```
+
+### Trying `quote()`
+
+`quote()` can delay evaluation, but isn't the right tool for parameterizing
+(what the linked NSE reference called "mixing constants and variable").  We
+can only conveniently get about halfway to the solution (output parameterized,
+input hard-coded as "x").
+
+```{r}
+# dplyr mutate_ paste stats::setNames solution
+d %>% mutate_(.dots =
+                stats::setNames(quote(is.na(x)),
+                rname))
+```
+
+My point is: even if this is something that *you* know how to accomplish, 
+this is evidence we are really trying to swim upstream with this notation.
+
+### String solutions 
+
+String based solutions can involve using `paste` to get parameter values
+into the strings.  Here is an example:
+
+```{r}
+# dplyr mutate_ paste stats::setNames solution
+d %>% mutate_(.dots =
+                stats::setNames(paste0('is.na(', cname, ')'),
+                rname))
+```
+
+Or just using strings as an interface to control `lazyeval::interp`:
+
+```{r}
+# dplyr mutate_ lazyeval::interp solution
+d %>% mutate_(RCOL =
+                lazyeval::interp("is.na(cname)",
+                cname = as.name(cname))) %>%
+                rename_(.dots = setNames('RCOL', rname))
+```
+
+## Our advice
+
+Our advice is to give [`replyr::let`](https://github.com/WinVector/replyr) a try.
+`replyr::let` takes a name mapping list (called "`alias`") and a code-block (called "`expr`").
+The code-block is re-written so that names in `expr` appearing on the left hand sides
+of the `alias` map are replaced with names appearing on the right hand side of the `alias` map.
+
+The code looks like this:
+
+```{r}
+# replyr::let solution
+replyr::let(alias = list(cname = cname, rname = rname),
+            expr  = {
+            d %>% mutate(rname = is.na(cname))
+            })
+```
+
+Notice we are able to use `dplyr::mutate` instead of needing to invoke `dplyr::mutate_`.
+The expression block can be arbitrarily long and contain deep pipelines.  We now have
+a useful separation of concerns, the mapping code is a wrapper completely outside of the user
+pipeline (the two are no longer commingled). For complicated
+tasks the ratio of `replyr::let` boilerplate to actual useful work goes down quickly.
+
+The alias map is deliberately only allowed to be a string to string map (no environments, `as.name`, `formula`, expressions, or values) so `replyr::let` *itself* is easy to use in automation or program over. 
+I'll repeat that for emphasis: externally `replyr::let` is completely controllable through standard
+(or parametric) evaluation interfaces.
+Also notice the code we wrote is never directly mentions "`x`" or "`x_isNA`" as it pulls these names out of its execution environment.
+
+## More reading
+
+Our group has been writing *a lot* on `replyr::let`.  It is new code, yet something we think analysts should try.  Some of our recent notes include:
+
+ * [The original proposal](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/)
+ * [A non-trivial example](http://www.win-vector.com/blog/2016/12/using-replyrlet-to-parameterize-dplyr-expressions/)
+ * [The `replyr::let` help documentation](http://www.win-vector.com/blog/2016/12/helplet-packagereplyr/)
+ * [The `replyr` package README](https://github.com/WinVector/replyr/blob/master/README.md).
