@@ -245,7 +245,7 @@ letp <- function(alias, expr, .) {
   }
   # re-write the parse tree and prepare for execution
   # with extra (.) to sacrifice to margrittr pipeline
-  body <- c('( ',strexpr,' )(.)')
+  body <- c('(function(.) { ',strexpr,' })(.)(.)')
   for (ni in names(alias)) {
     pattern <- paste0("\\b", ni, "\\b")
     value <- alias[[ni]]
