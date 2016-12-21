@@ -181,7 +181,7 @@ We also have a varation for piping into (though to save such pipes for later you
 `replyr::let`, not `replyr::letp`):
 
 ```{r}
-# replyr::let solution
+# replyr::letp solution
 d %>% replyr::letp(alias = list(cname = cname, rname = rname),
                    expr  = {
                    . %>% mutate(rname = is.na(cname))
