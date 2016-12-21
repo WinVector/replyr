@@ -74,7 +74,7 @@ isValidAndUnreservedName <- function(string) {
 #'            . %>% mutate(RankColumn=RankColumn-1)
 #'          })()
 #'
-#' # Or
+#' # Or:
 #'
 #' d %>% letp(alias=mapping,
 #'          expr={
@@ -84,7 +84,7 @@ isValidAndUnreservedName <- function(string) {
 #' # Or:
 #'
 #' f <- let(mapping,
-#'          expr= . %>% mutate(RankColumn=RankColumn-1)
+#'          . %>% mutate(RankColumn=RankColumn-1)
 #'          )
 #' d %>% f
 #'
@@ -203,6 +203,13 @@ let <- function(alias, expr) {
 #'          expr={
 #'            . %>% mutate(RankColumn=RankColumn-1)
 #'          })
+#'
+#' # letp is only for transient pipelines, to save pipes use let:
+#'
+#' f <- let(mapping,
+#'          . %>% mutate(RankColumn=RankColumn-1)
+#' )
+#' d %>% f
 #'
 #' @export
 letp <- function(alias, expr, .) {

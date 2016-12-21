@@ -68,7 +68,7 @@ d \%>\% let(alias=mapping,
            . \%>\% mutate(RankColumn=RankColumn-1)
          })()
 
-# Or
+# Or:
 
 d \%>\% letp(alias=mapping,
          expr={
@@ -78,7 +78,7 @@ d \%>\% letp(alias=mapping,
 # Or:
 
 f <- let(mapping,
-         expr= . \%>\% mutate(RankColumn=RankColumn-1)
+         . \%>\% mutate(RankColumn=RankColumn-1)
          )
 d \%>\% f
 

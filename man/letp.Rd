@@ -41,6 +41,13 @@ d \%>\% letp(alias=mapping,
            . \%>\% mutate(RankColumn=RankColumn-1)
          })
 
+# letp is only for transient pipelines, to save pipes use let:
+
+f <- let(mapping,
+         . \%>\% mutate(RankColumn=RankColumn-1)
+)
+d \%>\% f
+
 }
 \seealso{
 \code{\link{replyr_mapRestrictCols}} \code{\link{let}}
