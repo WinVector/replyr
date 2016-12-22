@@ -17,11 +17,11 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
-Consider the problem of "parametric programming."  That is simply writing correct
+Consider the problem of "parametric programming."  That i:s simply writing correct
 code before knowing some details, such as the names of the columns your
 procedure will have to be applied to in the future.
 
-Suppose for example your task was to and build a new advisory column that tells
+Suppose, for example, your task was to and build a new advisory column that tells
 you which values in a column of a `data.frame` are missing or `NA`.  We will illustrate this in [R](https://cran.r-project.org) using the example data given below:
 
 ```{r}
