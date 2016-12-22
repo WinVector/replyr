@@ -88,7 +88,7 @@ one of:
  * Using `quote()`
  * A string
  
-(source: [dplyr Non-standard evaluation](https://cran.r-project.org/web/packages/dplyr/vignettes/nse.html), for additional theory and upcoming official solutions please see [here](https://rpubs.com/hadley/lazyeval)).
+(source: `dplyr` Non-standard evaluation vignette "nse", for additional theory and upcoming official solutions please see [here](https://rpubs.com/hadley/lazyeval)).
 
 Let us try a few of these to try and emphasize we are proposing a new solution, not because
 we do not know of the current solutions, but instead because we are familiar with the current solutions.
