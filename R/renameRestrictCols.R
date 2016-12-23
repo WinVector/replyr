@@ -17,6 +17,7 @@
 #'
 #' @param x data item to work on
 #' @param nmap named list mapping desired column names to column names in x. Doesn't support permutations of names.
+#' @param reverse logical if true apply the inverse of nmap intead of nmap.
 #' @return data item with columns limited down to those named as nmap values, and re-named from their orignal names (nmap values) to desired names (nmap keys).
 #'
 #' @examples
@@ -51,8 +52,13 @@
 #' replyr_mapRestrictCols(dm,invmap)
 #'
 #' @export
-replyr_mapRestrictCols <- function(x,nmap) {
+replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
   nmap <- as.list(nmap)
+  if(reverse) {
+    invmap <- names(nmap)
+    names(invmap) <- as.character(nmap)
+    nmap <- as.list(invmap)
+  }
   if(length(unique(nmap))!=length(nmap)) {
     stop("replyr::replyr_mapRestrictCols duplicate destination columns in replyr_mapRestrictCols")
   }
