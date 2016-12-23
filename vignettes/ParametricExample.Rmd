@@ -118,12 +118,11 @@ d %>% mutate_(.dots = stats::setNames(lazyeval::interp( ~ is.na(cname)),
 ### Trying `quote()`
 
 `quote()` can delay evaluation, but isn't the right tool for parameterizing
-(what the linked NSE reference called "mixing constants and variable").  We
-can only conveniently get about halfway to the solution (output parameterized,
-input hard-coded as "x").
+(what the linked NSE reference called "mixing constants and variable").  We have
+a hard time getting control of incoming and outgoing variables.
 
 ```{r}
-# dplyr mutate_ paste stats::setNames solution
+# dplyr mutate_ quote non-solution (harde coded x, failed to name result)
 d %>% mutate_(.dots =
                 stats::setNames(quote(is.na(x)),
                 rname))
