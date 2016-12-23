@@ -32,7 +32,7 @@ These operators use eager evaluation.
 }
 \details{
 Technically these operators are
-not "-> assignment", so they might not be specifically prohibited in a
+not "-> assignment", so they might not be specifically prohibited in an
 oppugnant reading of some style guides.
 }
 \examples{
