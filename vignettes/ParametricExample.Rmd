@@ -122,7 +122,8 @@ d %>% mutate_(.dots = stats::setNames(lazyeval::interp( ~ is.na(cname)),
 a hard time getting control of incoming and outgoing variables.
 
 ```{r}
-# dplyr mutate_ quote non-solution (harde coded x, failed to name result)
+# dplyr mutate_ quote non-solution
+# (hard coded x, failed to name result)
 d %>% mutate_(.dots =
                 stats::setNames(quote(is.na(x)),
                 rname))
