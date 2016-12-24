@@ -16,6 +16,11 @@ NULL
 #' https://www.jstatsoft.org/article/view/v040i01
 #'
 #'
+#'
+#' Note this is a fairly expensive operator, so it only makes sense to use
+#' in situations where \code{f} itself is fairly complicated and/or expensive.
+#'
+#'
 #' @param df remote dplyr data item
 #' @param gcolumn grouping column
 #' @param f transform function or pipleline

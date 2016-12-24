@@ -96,7 +96,7 @@ res$expr <- reorder(res$expr, -res$time)
 ggplot(data=res,aes(x=k,y=time,color=expr)) +
   geom_point() + geom_line() +
   scale_x_log10() + scale_y_log10() +
-  ggtitle("run times as function of method are replications")
+  ggtitle("run times as function of method and replications")
 ```
 
 ![](SmallTimings_files/figure-markdown_github/pressure-1.png)

@@ -40,6 +40,10 @@ This is powerfull
 enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 https://www.jstatsoft.org/article/view/v040i01
 }
+\details{
+Note this is a fairly expensive operator, so it only makes sense to use
+in situations where \code{f} itself is fairly complicated and/or expensive.
+}
 \examples{
 
 library('dplyr')
