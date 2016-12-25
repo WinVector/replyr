@@ -10,6 +10,60 @@ isValidAndUnreservedName <- function(string) {
   make.names(string,unique = FALSE, allow_ = TRUE) == string
 }
 
+letprep <- function(alias, strexpr) {
+  # make sure alias is a list (not a named vector)
+  alias <- as.list(alias)
+  # confirm alias is mapping strings to strings
+  if (length(unique(names(alias))) != length(names(alias))) {
+    stop('replyr::let alias keys must be unique')
+  }
+  if ('.' %in% c(names(alias),as.character(alias))) {
+    stop("replyr::let can not map to/from '.'")
+  }
+  for (ni in names(alias)) {
+    if (is.null(ni)) {
+      stop('replyr:let alias keys must not be null')
+    }
+    if (!is.character(ni)) {
+      stop('replyr:let alias keys must all be strings')
+    }
+    if (length(ni) != 1) {
+      stop('replyr:let alias keys must all be strings')
+    }
+    if (nchar(ni) <= 0) {
+      stop('replyr:let alias keys must be empty string')
+    }
+    if (!isValidAndUnreservedName(ni)) {
+      stop(paste('replyr:let alias key not a valid name: "', ni, '"'))
+    }
+    vi <- alias[[ni]]
+    if (is.null(vi)) {
+      stop('replyr:let alias values must not be null')
+    }
+    if (!is.character(vi)) {
+      stop('replyr:let alias values must all be strings')
+    }
+    if (length(vi) != 1) {
+      stop('replyr:let alias values must all be strings')
+    }
+    if (nchar(vi) <= 0) {
+      stop('replyr:let alias values must be empty string')
+    }
+    if (!isValidAndUnreservedName(vi)) {
+      stop(paste('replyr:let alias value not a valid name: "', vi, '"'))
+    }
+  }
+  # re-write the parse tree and prepare for execution
+  # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2,
+  # this portion also available GPL-2 to respect gtools license).
+  body <- strexpr
+  for (ni in names(alias)) {
+    pattern <- paste0("\\b", ni, "\\b")
+    value <- alias[[ni]]
+    body <- gsub(pattern, value, body)
+  }
+  parse(text = body)
+}
 
 #' Execute expr with name substitutions specified in alias.
 #'
@@ -65,6 +119,12 @@ isValidAndUnreservedName <- function(string) {
 #' print(length(groups))
 #' print(dres)
 #'
+#' # %:% pronounced "let in" is a mapping on left operator alias for let.
+#' mapping %:% { d %>%  mutate(RankColumn=RankColumn-1) }
+#'
+#' # %//% pronounced "eval over" or "eval where" is a mapping on right operator alias for let.
+#' { d %>%  mutate(RankColumn=RankColumn-1) } %//% mapping
+#'
 #' # It is also possible to pipe into let-blocks, but it takes some extra notation
 #' # (notice the extra ". %>%" at the beginning and the extra "()" at the end,
 #' # to signal %>% to treat the let-block as a function to evaluate).
@@ -111,65 +171,35 @@ isValidAndUnreservedName <- function(string) {
 #'
 #' @export
 let <- function(alias, expr) {
-  # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2,
-  # this portion also available GPL-2 to respect gtools license).
   # capture expr
   strexpr <- deparse(substitute(expr))
-  # make sure alias is a list (not a named vector)
-  alias <- as.list(alias)
-  # confirm alias is mapping strings to strings
-  if (length(unique(names(alias))) != length(names(alias))) {
-    stop('replyr::let alias keys must be unique')
-  }
-  if ('.' %in% c(names(alias),as.character(alias))) {
-    stop("replyr::let can not map to/from '.'")
-  }
-  for (ni in names(alias)) {
-    if (is.null(ni)) {
-      stop('replyr:let alias keys must not be null')
-    }
-    if (!is.character(ni)) {
-      stop('replyr:let alias keys must all be strings')
-    }
-    if (length(ni) != 1) {
-      stop('replyr:let alias keys must all be strings')
-    }
-    if (nchar(ni) <= 0) {
-      stop('replyr:let alias keys must be empty string')
-    }
-    if (!isValidAndUnreservedName(ni)) {
-      stop(paste('replyr:let alias key not a valid name: "', ni, '"'))
-    }
-    vi <- alias[[ni]]
-    if (is.null(vi)) {
-      stop('replyr:let alias values must not be null')
-    }
-    if (!is.character(vi)) {
-      stop('replyr:let alias values must all be strings')
-    }
-    if (length(vi) != 1) {
-      stop('replyr:let alias values must all be strings')
-    }
-    if (nchar(vi) <= 0) {
-      stop('replyr:let alias values must be empty string')
-    }
-    if (!isValidAndUnreservedName(vi)) {
-      stop(paste('replyr:let alias value not a valid name: "', vi, '"'))
-    }
-  }
-  # re-write the parse tree and prepare for execution
-  body <- strexpr
-  for (ni in names(alias)) {
-    pattern <- paste0("\\b", ni, "\\b")
-    value <- alias[[ni]]
-    body <- gsub(pattern, value, body)
-  }
-  `_reply_reserved_name` <- parse(text = body)
+  `_reply_reserved_name` <- letprep(alias,strexpr)
   rm(list=setdiff(ls(all.names=TRUE),list('_reply_reserved_name')))
   # try to execute expression in parent environment
   eval(`_reply_reserved_name`, envir=parent.frame(), enclos=parent.frame())
 }
 
+#' @export
+#' @rdname let
+`%:%` <- function(alias, expr) {
+  # capture expr
+  strexpr <- deparse(substitute(expr))
+  `_reply_reserved_name` <- letprep(alias,strexpr)
+  rm(list=setdiff(ls(all.names=TRUE),list('_reply_reserved_name')))
+  # try to execute expression in parent environment
+  eval(`_reply_reserved_name`, envir=parent.frame(), enclos=parent.frame())
+}
+
+#' @export
+#' @rdname let
+`%//%` <- function(expr, alias) {
+  # capture expr
+  strexpr <- deparse(substitute(expr))
+  `_reply_reserved_name` <- letprep(alias,strexpr)
+  rm(list=setdiff(ls(all.names=TRUE),list('_reply_reserved_name')))
+  # try to execute expression in parent environment
+  eval(`_reply_reserved_name`, envir=parent.frame(), enclos=parent.frame())
+}
 
 #' Wrap expr for \code{magrittr} pipeline execution with name substitutions specified in alias.
 #'
@@ -213,61 +243,10 @@ let <- function(alias, expr) {
 #'
 #' @export
 letp <- function(alias, expr, .) {
-  # Code adapted from gtools::strmacro by Gregory R. Warnes (License: GPL-2,
-  # this portion also available GPL-2 to respect gtools license).
   # capture expr
   strexpr <- deparse(substitute(expr))
-  # make sure alias is a list (not a named vector)
-  alias <- as.list(alias)
   force(.)
-  # confirm alias is mapping strings to strings
-  if (length(unique(names(alias))) != length(names(alias))) {
-    stop('replyr::letp alias keys must be unique')
-  }
-  if ('.' %in% c(names(alias),as.character(alias))) {
-    stop("replyr::letp can not map to/from '.'")
-  }
-  for (ni in names(alias)) {
-    if (is.null(ni)) {
-      stop('replyr:letp alias keys must not be null')
-    }
-    if (!is.character(ni)) {
-      stop('replyr:letp alias keys must all be strings')
-    }
-    if (length(ni) != 1) {
-      stop('replyr:letp alias keys must all be strings')
-    }
-    if (nchar(ni) <= 0) {
-      stop('replyr:letp alias keys must be empty string')
-    }
-    if (!isValidAndUnreservedName(ni)) {
-      stop(paste('replyr:letp alias key not a valid name: "', ni, '"'))
-    }
-    vi <- alias[[ni]]
-    if (is.null(vi)) {
-      stop('replyr:letp alias values must not be null')
-    }
-    if (!is.character(vi)) {
-      stop('replyr:letp alias values must all be strings')
-    }
-    if (length(vi) != 1) {
-      stop('replyr:letp alias values must all be strings')
-    }
-    if (nchar(vi) <= 0) {
-      stop('replyr:letp alias values must be empty string')
-    }
-    if (!isValidAndUnreservedName(vi)) {
-      stop(paste('replyr:letp alias value not a valid name: "', vi, '"'))
-    }
-  }
-  # re-write the parse tree and prepare for execution
-  # with extra (.) to sacrifice to margrittr pipeline
   body <- c('({ ',strexpr,' })(.)')
-  for (ni in names(alias)) {
-    pattern <- paste0("\\b", ni, "\\b")
-    value <- alias[[ni]]
-    body <- gsub(pattern, value, body)
-  }
   # The above form is assuming that strexpr starts with ". %>% ".
   # While implies it is itself a delay in evaluation.
   # The subtlties include that the following two statements are
@@ -278,7 +257,7 @@ letp <- function(alias, expr, .) {
   # (. %>% mutate(rank=rank-1)) roughly always behaves like a function,
   #  even if "." already has a value (so "." in this context is always treated
   #  as a free variable.)
-  `_reply_reserved_name` <- parse(text = body)
+  `_reply_reserved_name` <- letprep(alias,body)
   rm(list=setdiff(ls(all.names=TRUE),list('.','_reply_reserved_name')))
   # eval in new environment
   eenv <- new.env(parent=parent.frame())
