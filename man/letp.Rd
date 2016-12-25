@@ -4,14 +4,14 @@
 \alias{letp}
 \title{Wrap expr for \code{magrittr} pipeline execution with name substitutions specified in alias.}
 \usage{
-letp(alias, expr, .)
+letp(., alias, expr)
 }
 \arguments{
+\item{.}{incoming argument from \code{magrittr} pipeline (do not assign to this)}
+
 \item{alias}{mapping from free names in expr to target names to use}
 
 \item{expr}{\code{magrittr} pipeline to prepare for execution}
-
-\item{.}{argument from \code{magrittr} pipeline (do not assign to this)}
 }
 \value{
 result of expr executed in calling environment
@@ -36,16 +36,15 @@ d <- data.frame(Sepal_Length=c(5.8,5.7),
                 rank=c(1,2))
 
 mapping = list(RankColumn='rank',GroupColumn='Species')
-d \%>\% letp(alias=mapping,
-         expr={
+d \%>\% letp(mapping,
            . \%>\% mutate(RankColumn=RankColumn-1)
-         })
+          )
 
 # letp is only for transient pipelines, to save pipes use let:
 
 f <- let(mapping,
          . \%>\% mutate(RankColumn=RankColumn-1)
-)
+        )
 d \%>\% f
 
 }

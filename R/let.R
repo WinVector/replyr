@@ -215,9 +215,9 @@ let <- function(alias, expr) {
 #'
 #' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{let}}
 #'
+#' @param . incoming argument from \code{magrittr} pipeline (do not assign to this)
 #' @param alias mapping from free names in expr to target names to use
 #' @param expr \code{magrittr} pipeline to prepare for execution
-#' @param . argument from \code{magrittr} pipeline (do not assign to this)
 #' @return result of expr executed in calling environment
 #'
 #' @examples
@@ -229,20 +229,19 @@ let <- function(alias, expr) {
 #'                 rank=c(1,2))
 #'
 #' mapping = list(RankColumn='rank',GroupColumn='Species')
-#' d %>% letp(alias=mapping,
-#'          expr={
+#' d %>% letp(mapping,
 #'            . %>% mutate(RankColumn=RankColumn-1)
-#'          })
+#'           )
 #'
 #' # letp is only for transient pipelines, to save pipes use let:
 #'
 #' f <- let(mapping,
 #'          . %>% mutate(RankColumn=RankColumn-1)
-#' )
+#'         )
 #' d %>% f
 #'
 #' @export
-letp <- function(alias, expr, .) {
+letp <- function(., alias, expr) {
   # capture expr
   strexpr <- deparse(substitute(expr))
   force(.)
