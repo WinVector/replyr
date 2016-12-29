@@ -541,7 +541,7 @@ my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
  #  Ncells  574700 30.7     940480 50.3   940480 50.3
- #  Vcells 1239207  9.5    2595190 19.8  2559807 19.6
+ #  Vcells 1239207  9.5    2595190 19.8  2559795 19.6
 ```
 
 PostgreSQL example.
@@ -685,7 +685,7 @@ runExample(remoteCopy(my_db))
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (12993, 0)
+ #  Auto-disconnecting postgres connection (14192, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
  #  Ncells  609256 32.6    1168576 62.5   940480 50.3
  #  Vcells 1266506  9.7    2595190 19.8  2572532 19.7

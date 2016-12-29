@@ -160,6 +160,6 @@ runExample(remoteCopy(my_db))
  #  2          5.7         4.4  setosa     1
 my_db <- NULL; gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  538043 28.8     940480 50.3   940480 50.3
- #  Vcells 1214319  9.3    2095386 16.0  1676967 12.8
+ #  Ncells  538044 28.8     940480 50.3   940480 50.3
+ #  Vcells 1214358  9.3    2095386 16.0  1676967 12.8
 ```

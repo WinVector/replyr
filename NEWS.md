@@ -1,4 +1,9 @@
 
+'replyr' 0.2.01 2016/12/28
+
+- Excise direct use of lazyeval.
+- Drop gather/spread simulations.
+
 'replyr' 0.2.0 2016/12/14
 
 - Don't wrap let-return, instead eval it (removes need for one set of parenthesis).
