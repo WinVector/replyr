@@ -77,9 +77,19 @@ replyr_gather <- function(df,gatherColumns,measurementNameColumn,measurementValu
     # MySQL does not like such annotation.
     df %>% dplyr::select(dplyr::one_of(targetsA)) -> dtmp
     if(useAsChar) {
-      dtmp %>%
-        dplyr::mutate_(.dots=stats::setNames(paste0('as.character("',di,'")'), measurementNameColumn)) -> dtmp
+      let(
+        alias= list(NEWCOL=measurementNameColumn, OLDCOL=di),
+        expr= {
+          dtmp %>% dplyr::mutate(NEWCOL=as.character('OLDCOL')) -> dtmp
+        }
+      )
     } else {
+      let(
+        alias= list(NEWCOL=measurementNameColumn, OLDCOL=di),
+        expr= {
+          dtmp %>% dplyr::mutate(NEWCOL='OLDCOL') -> dtmp
+        }
+      )
       dtmp %>%
         dplyr::mutate_(.dots=stats::setNames(paste0('"',di,'"'), measurementNameColumn)) -> dtmp
     }
@@ -206,6 +216,6 @@ replyr_spread <- function(df,rowControlColumn,measurementNameColumn,measurementV
     }
     d1
   }
-  gapply(df,rowControlColumn,f,maxgroups=NULL)
+  gapply(df,rowControlColumn,f,maxgroups=NULL,partitionMethod='extract')
 }
 
