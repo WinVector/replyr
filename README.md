@@ -1,14 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 This document describes `replyr`, an [R](https://cran.r-project.org) package available from [Github](https://github.com/WinVector/replyr) and [CRAN](https://CRAN.R-project.org/package=replyr).
 
-To install from Github please try:
-
-``` r
-devtools::install_github("WinVector/replyr")
-```
-
-\[Note: the CRAN version of replyr currently has a bug in `replyr_summary` that is now fixed in the Github version. We will update the CRAN version after we get some more tests in place. Also `replyr::let` take one less pair of parenthesis as of version `0.2.0`.\]
-
 Introduction
 ------------
 
@@ -285,7 +277,7 @@ Good code should fill one important gap and work on a variety of `dplyr` back en
 -   Basic summary info: `replyr_nrow`, `replyr_dim`, and `replyr_summary`.
 -   Random row sampling (like `dplyr::sample_n`, but working with more service providers). Some of this functionality is provided by `replyr_filter` and `replyr_inTest`.
 -   Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `gapply`, `replyr_split`, and `replyr_bind_rows`.
--   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting), which is the purpose of `replyr_gather` and `replyr_spread` (still under development).
+-   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
 -   Patching around differences in `dplyr` services providers (and documenting the reasons for the patches).
 -   Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).
 
@@ -306,6 +298,6 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  503594 26.9     940480 50.3   940480 50.3
- #  Vcells 1188136  9.1    2100677 16.1  2087068 16.0
+ #  Ncells  503649 26.9     940480 50.3   940480 50.3
+ #  Vcells 1181161  9.1    2100404 16.1  2079354 15.9
 ```

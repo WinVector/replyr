@@ -5,6 +5,34 @@
 #' @importFrom dplyr collect copy_to arrange_
 NULL
 
+#' arrange df by columnName
+#'
+#' @param df data
+#' @param columnName name of column to arrange on
+#' @param decreasing logical, if TRUE arrange decreasing
+#' @return df arranged
+#'
+#' @examples
+#'
+#' replyr_arrange(data.frame(x=c(1,3,2)), 'x')
+#' replyr_arrange(data.frame(x=c(1,3,2)), 'x', decreasing=TRUE)
+#'
+#' @export
+#'
+replyr_arrange <- function(df,columnName,decreasing=FALSE) {
+  if(is.null(columnName)) {
+    return(df)
+  }
+  if(!decreasing) {
+    return(dplyr::arrange_(df,columnName))
+  }
+  desc <- function(...) {}; rm(list='desc') # declare desc isn't unbound
+  XCOL <- NULL # declare this is not a free binding
+  let(alias= list(XCOL=columnName),
+      expr= {
+        dplyr::arrange(df,desc(XCOL))
+      })
+}
 
 #' grouped ordered apply
 #'
@@ -87,12 +115,7 @@ gapply <- function(df,gcolumn,f,
     # don't enforce maxgroups in this case, as large numbers of groups should not be a problem
     df %>% dplyr::group_by_(gcolumn) -> df
     if(!is.null(ocolumn)) {
-      if(decreasing) {
-        #df %>% dplyr::arrange_(.dots=stats::setNames(paste0('desc(',ocolumn,')'),ocolumn)) -> df
-        df %>% dplyr::arrange_(interp(~desc(x),x=as.name(ocolumn))) -> df
-      } else {
-        df %>% dplyr::arrange_(ocolumn) -> df
-      }
+      df <- replyr_arrange(df,ocolumn,decreasing)
     }
     if(!is.null(f)) {
       df %>% f -> df
@@ -110,14 +133,8 @@ gapply <- function(df,gcolumn,f,
     }
     df %>% base::split(df[[gcolumn]]) -> res
     if(!is.null(ocolumn)) {
-      if(decreasing) {
-        orderer <- function(di) {
-          dplyr::arrange_(di,interp(~desc(x),x=as.name(ocolumn)))
-        }
-      } else {
-        orderer <- function(di) {
-          dplyr::arrange_(di,ocolumn)
-        }
+      orderer <- function(di) {
+        replyr_arrange(di,ocolumn,decreasing)
       }
       res <- lapply(res,orderer)
     }
@@ -136,12 +153,7 @@ gapply <- function(df,gcolumn,f,
                   function(gi) {
                     df %>% replyr_filter(cname=gcolumn,values=gi,verbose=FALSE) -> gsubi
                     if(!is.null(ocolumn)) {
-                      if(decreasing) {
-                        #gsubi %>% dplyr::arrange_(.dots=stats::setNames(paste0('desc(',ocolumn,')'),ocolumn)) -> gsubi
-                        gsubi %>% dplyr::arrange_(interp(~desc(x),x=as.name(ocolumn))) -> gsubi
-                      } else {
-                        gsubi %>% dplyr::arrange_(ocolumn) -> gsubi
-                      }
+                      gsubi <- replyr_arrange(gsubi,ocolumn,decreasing)
                     }
                     if(!is.null(f)) {
                       gsubi <- f(gsubi)

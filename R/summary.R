@@ -5,7 +5,6 @@
 #' @importFrom dplyr %>% ungroup summarize transmute summarise_each funs filter_
 #' @importFrom stats sd setNames
 #' @importFrom utils capture.output head
-#' @importFrom lazyeval interp
 NULL
 
 localFrame <- function(d) {
@@ -39,9 +38,12 @@ replyr_summary <- function(x,countUnique=TRUE) {
   suppressWarnings({
    numSums <- lapply(numericCols,
                     function(ci) {
-                      filter_criteria <- lazyeval::interp(~ !is.na(which_column), which_column = as.name(ci))
-                      x %>% dplyr::select_(ci) %>%
-                        filter_(filter_criteria) -> xsub
+                      WCOL <- NULL # declare this is not a free binding
+                      let(alias=list(WCOL=ci),
+                          expr={
+                            x %>% dplyr::select(WCOL) %>%
+                              dplyr::filter(!is.na(WCOL)) -> xsub
+                          })
                       ngood <- replyr_nrow(xsub)
                       xsub %>% dplyr::summarise_each(dplyr::funs(min = min,
                                             # q25 = quantile(., 0.25),  # MySQL can't do this
@@ -72,9 +74,12 @@ replyr_summary <- function(x,countUnique=TRUE) {
                     })
    oSums <- lapply(setdiff(cnames,numericCols),
                     function(ci) {
-                      filter_criteria <- lazyeval::interp(~ !is.na(which_column), which_column = as.name(ci))
-                      x %>% dplyr::select_(ci) %>%
-                        filter_(filter_criteria) -> xsub
+                      WCOL <- NULL # declare this is not a free binding
+                      let(alias=list(WCOL=ci),
+                          expr={
+                            x %>% dplyr::select(WCOL) %>%
+                              dplyr::filter(!is.na(WCOL)) -> xsub
+                          })
                       ngood <- replyr_nrow(xsub)
                       # min/max don't work local data.frames for factors, but do for strings.
                       si <- data.frame(lexmin = NA_character_,

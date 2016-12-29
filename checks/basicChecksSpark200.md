@@ -158,38 +158,8 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "gather/spread examples"
- #  Source:   query [?? x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    index  info meas1 meas2
- #    <dbl> <chr> <chr> <chr>
- #  1     1     a  m1_1  m2_1
- #  2     2     b  m1_2  m2_2
- #  3     3     c  m1_3  m2_3
- #  
- #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    index meastype  meas
- #    <dbl>    <chr> <chr>
- #  1     1    meas1  m1_1
- #  2     2    meas1  m1_2
- #  3     3    meas1  m1_3
- #  4     1    meas2  m2_1
- #  5     2    meas2  m2_2
- #  6     3    meas2  m2_3
- #  
- #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    index meas1 meas2
- #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  543614 29.1     940480 50.3   940480 50.3
- #  Vcells 1230147  9.4    2095378 16.0  1676963 12.8
+ #  Ncells  538043 28.8     940480 50.3   940480 50.3
+ #  Vcells 1214319  9.3    2095386 16.0  1676967 12.8
 ```

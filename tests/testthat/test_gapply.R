@@ -46,6 +46,7 @@ test_that("test_gapply.R", {
         partitionMethod = partitionMethod
       )
    # )
+
   }
 
 })

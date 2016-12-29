@@ -124,26 +124,6 @@ runExample(noopCopy)
  #    Sepal_Length Sepal_Width Species rank
  #  1          5.8         4.0  setosa    0
  #  2          5.7         4.4  setosa    1
- #  [1] "gather/spread examples"
- #    index info meas1 meas2
- #  1     1    a  m1_1  m2_1
- #  2     2    b  m1_2  m2_2
- #  3     3    c  m1_3  m2_3
- #  
- #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #    index meastype meas
- #  1     1    meas1 m1_1
- #  2     2    meas1 m1_2
- #  3     3    meas1 m1_3
- #  4     1    meas2 m2_1
- #  5     2    meas2 m2_2
- #  6     3    meas2 m2_3
- #  
- #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  # A tibble: 1 × 3
- #    index meas1 meas2
- #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
 ```
 
 Local `tbl` example.
@@ -269,30 +249,6 @@ runExample(tblCopy)
  #           <dbl>       <dbl>  <fctr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "gather/spread examples"
- #  # A tibble: 3 × 4
- #    index  info meas1 meas2
- #    <dbl> <chr> <chr> <chr>
- #  1     1     a  m1_1  m2_1
- #  2     2     b  m1_2  m2_2
- #  3     3     c  m1_3  m2_3
- #  
- #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  # A tibble: 6 × 3
- #    index meastype  meas
- #    <dbl>    <chr> <chr>
- #  1     1    meas1  m1_1
- #  2     2    meas1  m1_2
- #  3     3    meas1  m1_3
- #  4     1    meas2  m2_1
- #  5     2    meas2  m2_2
- #  6     3    meas2  m2_3
- #  
- #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  # A tibble: 1 × 3
- #    index meas1 meas2
- #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
 ```
 
 `SQLite` example.
@@ -435,40 +391,10 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "gather/spread examples"
- #  Source:   query [?? x 4]
- #  Database: sqlite 3.11.1 [:memory:]
- #  
- #    index  info meas1 meas2
- #    <dbl> <chr> <chr> <chr>
- #  1     1     a  m1_1  m2_1
- #  2     2     b  m1_2  m2_2
- #  3     3     c  m1_3  m2_3
- #  
- #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: sqlite 3.11.1 [:memory:]
- #  
- #    index meastype  meas
- #    <dbl>    <chr> <chr>
- #  1     1    meas1  m1_1
- #  2     2    meas1  m1_2
- #  3     3    meas1  m1_3
- #  4     1    meas2  m2_1
- #  5     2    meas2  m2_2
- #  6     3    meas2  m2_3
- #  
- #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: sqlite 3.11.1 [:memory:]
- #  
- #    index meas1 meas2
- #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  544234 29.1     940480 50.3   940480 50.3
- #  Vcells 1225746  9.4    2595180 19.8  2593953 19.8
+ #  Ncells  539003 28.8     940480 50.3   940480 50.3
+ #  Vcells 1211108  9.3    2595190 19.8  2095992 16.0
 ```
 
 MySQL example.
@@ -611,42 +537,11 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "gather/spread examples"
- #  Source:   query [?? x 4]
- #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
- #  
- #    index  info meas1 meas2
- #    <dbl> <chr> <chr> <chr>
- #  1     1     a  m1_1  m2_1
- #  2     2     b  m1_2  m2_2
- #  3     3     c  m1_3  m2_3
- #  
- #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
- #  
- #    index meastype  meas
- #    <dbl>    <chr> <chr>
- #  1     1    meas1  m1_1
- #  2     2    meas1  m1_2
- #  3     3    meas1  m1_3
- #  4     1    meas2  m2_1
- #  5     2    meas2  m2_2
- #  6     3    meas2  m2_3
- #  
- #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
- #  Source:   query [?? x 3]
- #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
- #  
- #    index meas1 meas2
- #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  579883 31.0     940480 50.3   940480 50.3
- #  Vcells 1253936  9.6    2595180 19.8  2593953 19.8
+ #  Ncells  574700 30.7     940480 50.3   940480 50.3
+ #  Vcells 1239207  9.5    2595190 19.8  2559807 19.6
 ```
 
 PostgreSQL example.
@@ -789,41 +684,11 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "gather/spread examples"
- #  Source:   query [?? x 4]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
- #    index  info meas1 meas2
- #    <dbl> <chr> <chr> <chr>
- #  1     1     a  m1_1  m2_1
- #  2     2     b  m1_2  m2_2
- #  3     3     c  m1_3  m2_3
- #  
- #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
- #    index meastype  meas
- #    <dbl>    <chr> <chr>
- #  1     1    meas1  m1_1
- #  2     2    meas1  m1_2
- #  3     3    meas1  m1_3
- #  4     1    meas2  m2_1
- #  5     2    meas2  m2_2
- #  6     3    meas2  m2_3
- #  
- #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
- #    index meas1 meas2
- #    <dbl> <chr> <chr>
- #  1     1  m1_1  m2_1
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (35746, 0)
+ #  Auto-disconnecting postgres connection (12993, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  614446 32.9    1168576 62.5   940480 50.3
- #  Vcells 1281370  9.8    2595180 19.8  2595180 19.8
+ #  Ncells  609256 32.6    1168576 62.5   940480 50.3
+ #  Vcells 1266506  9.7    2595190 19.8  2572532 19.7
 ```
 
 Spark 1.6.2 example.
@@ -970,38 +835,8 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "gather/spread examples"
- #  Source:   query [?? x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    index  info meas1 meas2
- #    <dbl> <chr> <chr> <chr>
- #  1     1     a  m1_1  m2_1
- #  2     2     b  m1_2  m2_2
- #  3     3     c  m1_3  m2_3
- #  
- #   dg %>% replyr::replyr_gather(c('meas1','meas2'),'meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    index meastype  meas
- #    <dbl>    <chr> <chr>
- #  1     1    meas1  m1_1
- #  2     2    meas1  m1_2
- #  3     3    meas1  m1_3
- #  4     1    meas2  m2_1
- #  5     2    meas2  m2_2
- #  6     3    meas2  m2_3
- #  
- #   ds %>% replyr::replyr_spread('index','meastype','meas')
- #  Source:   query [?? x 3]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
- #    index meas2 meas1
- #    <dbl> <chr> <chr>
- #  1     1  m2_1  m1_1
 my_db <- NULL; gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  650618 34.8    1168576 62.5  1168576 62.5
- #  Vcells 1314487 10.1    2595180 19.8  2595180 19.8
+ #  Ncells  644320 34.5    1168576 62.5  1168576 62.5
+ #  Vcells 1296566  9.9    2595190 19.8  2572532 19.7
 ```

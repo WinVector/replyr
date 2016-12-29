@@ -99,8 +99,10 @@ Formula interface is a nice option as it is `R`'s common way for holding names
 unevaluated.  The code looks like the following:
  
 ```{r}
-d %>% mutate_(RCOL = lazyeval::interp(~ is.na(cname))) %>%
-      rename_(.dots = stats::setNames('RCOL', rname))
+if  (requireNamespace("lazyeval")) {
+  print(d %>% mutate_(RCOL = lazyeval::interp(~ is.na(cname))) %>%
+          rename_(.dots = stats::setNames('RCOL', rname)))
+}
 ```
 
 Currently `mutate_` does not take "two-sided formulas" so we need to control
@@ -111,8 +113,10 @@ a different notation or convention than the one we have just seen):
 
 ```{r}
 # the following does not correctly name the result column
-d %>% mutate_(.dots = stats::setNames(lazyeval::interp( ~ is.na(cname)),
-                                      rname))
+if  (requireNamespace("lazyeval")) {
+  print(d %>% mutate_(.dots = stats::setNames(lazyeval::interp( ~ is.na(cname)),
+                                              rname)))
+}
 ```
 
 ### Trying `quote()`
@@ -148,10 +152,12 @@ Or just using strings as an interface to control `lazyeval::interp`:
 
 ```{r}
 # dplyr mutate_ lazyeval::interp solution
-d %>% mutate_(RCOL =
-                lazyeval::interp("is.na(cname)",
-                cname = as.name(cname))) %>%
-                rename_(.dots = setNames('RCOL', rname))
+if  (requireNamespace("lazyeval")) {
+  print(d %>% mutate_(RCOL =
+                        lazyeval::interp("is.na(cname)",
+                                         cname = as.name(cname))) %>%
+          rename_(.dots = setNames('RCOL', rname)))
+}
 ```
 
 ## Our advice
