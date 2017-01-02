@@ -4,10 +4,12 @@
 \alias{restrictToNameAssignments}
 \title{Restrict an alias mapping list to things that look like name assignments}
 \usage{
-restrictToNameAssignments(alias)
+restrictToNameAssignments(alias, restrictToAllCaps = TRUE)
 }
 \arguments{
 \item{alias}{mapping list}
+
+\item{restrictToAllCaps}{logical, if true only use all-capitalized keys}
 }
 \value{
 string to string mapping

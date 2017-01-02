@@ -19,6 +19,7 @@ isValidAndUnreservedName <- function(string) {
 #' Restrict an alias mapping list to things that look like name assignments
 #'
 #' @param alias mapping list
+#' @param restrictToAllCaps logical, if true only use all-capitalized keys
 #' @return string to string mapping
 #'
 #' @examples
@@ -30,13 +31,14 @@ isValidAndUnreservedName <- function(string) {
 #'
 #' @export
 #'
-restrictToNameAssignments <- function(alias) {
+restrictToNameAssignments <- function(alias, restrictToAllCaps=TRUE) {
   # make sure alias is a list (not a named vector)
   alias <- as.list(alias)
   usableEntries <- vapply(names(alias),
                           function(ai) {
                             vi <- alias[[ai]]
-                            isValidAndUnreservedName(ai) && isValidAndUnreservedName(vi)
+                            isValidAndUnreservedName(ai) && isValidAndUnreservedName(vi) &&
+                            ( (!restrictToAllCaps) || (toupper(ai)==ai))
                           },
                           logical(1))
   # return sublist
