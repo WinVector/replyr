@@ -1,0 +1,27 @@
+---
+title: "Knitr Parameters"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+params:
+   region: east
+   name: "'v'"
+vignette: >
+  %\VignetteIndexEntry{Knitr Parameters}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+An idea of [Jason Becker](http://jsonbecker.com)'s, using `replyr::let` with `knitr` passed parameters.
+
+```{r}
+library("replyr")
+print(params)
+
+east = 7
+let(
+  alias=restrictToNameAssignments(params),
+  expr={ 
+    print(region)
+  })
+```

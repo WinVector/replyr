@@ -5,9 +5,42 @@
 
 
 # checking for valid unreserved names
+# this one is not vectorized
+# also don't allow dot to be used here as remapping that is problem in magrittr pipelines
+#  this is essentially treating "." as reserved (which is more compatible with magrittr)
 # from: http://stackoverflow.com/questions/8396577/check-if-character-value-is-a-valid-r-object-name
 isValidAndUnreservedName <- function(string) {
-  make.names(string,unique = FALSE, allow_ = TRUE) == string
+  (is.character(string)) &&
+    (length(string)==1) &&
+    (string!='.') &&
+    (make.names(string,unique = FALSE, allow_ = TRUE) == string)
+}
+
+#' Restrict an alias mapping list to things that look like name assignments
+#'
+#' @param alias mapping list
+#' @return string to string mapping
+#'
+#' @examples
+#'
+#' alias <- list(region= 'east', str= "'seven'")
+#' aliasR <- restrictToNameAssignments(alias)
+#' print(aliasR)
+#'
+#'
+#' @export
+#'
+restrictToNameAssignments <- function(alias) {
+  # make sure alias is a list (not a named vector)
+  alias <- as.list(alias)
+  usableEntries <- vapply(names(alias),
+                          function(ai) {
+                            vi <- alias[[ai]]
+                            isValidAndUnreservedName(ai) && isValidAndUnreservedName(vi)
+                          },
+                          logical(1))
+  # return sublist
+  alias[usableEntries]
 }
 
 letprep <- function(alias, strexpr) {
