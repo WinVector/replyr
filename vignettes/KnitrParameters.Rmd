@@ -35,7 +35,7 @@ let(
 
 ## Values
 
-Or, assuming everything you do is only standard evaluation and you don't care about capturing variable names, you can capture references to values once and have all subsequent blocks use those values.
+Or, assuming everything you do is only standard evaluation and you don't care about capturing variable names: you can capture references to values once and have all subsequent blocks use those values.
 
 ```{r values}
 FN <- let(restrictToNameAssignments(params), FN)
