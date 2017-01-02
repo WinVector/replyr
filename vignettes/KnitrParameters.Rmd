@@ -14,7 +14,11 @@ vignette: >
 
 An idea of [Jason Becker](http://jsonbecker.com)'s: using `replyr::let` with `knitr` passed parameters.
 
-```{r}
+## Bindings
+
+You can use the `knitr` parameters in `replyr::let` blocks.
+
+```{r bindings}
 library("replyr")
 print(params)
 
@@ -25,4 +29,15 @@ let(
     plot(FN(0.1*(1:20)))
     title(params$title)
   })
+```
+
+## Values
+
+Or, assuming everything you do is only standard evaluation and you don't care about capturing variable names, you can capture references to values once and have all subsequent blocks use those values.
+
+```{r values}
+FN <- let(restrictToNameAssignments(params), FN)
+
+plot(FN(0.1*(1:20)))
+title(params$title)
 ```
