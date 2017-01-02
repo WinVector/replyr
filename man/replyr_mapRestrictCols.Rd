@@ -17,7 +17,7 @@ replyr_mapRestrictCols(x, nmap, reverse = FALSE)
 data item with columns limited down to those named as nmap values, and re-named from their orignal names (nmap values) to desired names (nmap keys).
 }
 \description{
-Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation.
+Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation. Except for identity assigments keys and destinations must be disjoint.
 }
 \details{
 Something like \code{replyr::replyr_mapRestrictCols} is only useful to get control of a function that is not parameterized

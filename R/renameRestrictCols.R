@@ -8,7 +8,7 @@
 
 #' Map names of columns to known values and drop other columns.
 #'
-#' Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation.
+#' Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation. Except for identity assigments keys and destinations must be disjoint.
 #'
 #' Something like \code{replyr::replyr_mapRestrictCols} is only useful to get control of a function that is not parameterized
 #' (in the sense it has hard-coded column names inside its implementation that don't the match column names in our data).
@@ -99,7 +99,7 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
     }
     if(ti!=ni) {
       if(ti %in% names(nmap)) {
-        stop("replyr::replyr_mapRestrictCols source and destination columns overlap in replyr_mapRestrictCols")
+        stop("replyr::replyr_mapRestrictCols except for identity assigments keys and destinations must be disjoint")
       }
     }
   }

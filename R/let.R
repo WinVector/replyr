@@ -79,13 +79,18 @@ letprep <- function(alias, strexpr) {
       stop('replyr:let alias values must all be strings')
     }
     if (length(vi) != 1) {
-      stop('replyr:let alias values must all be strings')
+      stop('replyr:let alias values must all be single strings (not arrays)')
     }
     if (nchar(vi) <= 0) {
-      stop('replyr:let alias values must be empty string')
+      stop('replyr:let alias values must not be empty string')
     }
     if (!isValidAndUnreservedName(vi)) {
       stop(paste('replyr:let alias value not a valid name: "', vi, '"'))
+    }
+    if(vi!=ni) {
+      if(vi %in% names(alias)) {
+        stop("replyr::let except for identity assigments keys and destinations must be disjoint")
+      }
     }
   }
   # re-write the parse tree and prepare for execution
@@ -93,9 +98,11 @@ letprep <- function(alias, strexpr) {
   # this portion also available GPL-2 to respect gtools license).
   body <- strexpr
   for (ni in names(alias)) {
-    pattern <- paste0("\\b", ni, "\\b")
     value <- alias[[ni]]
-    body <- gsub(pattern, value, body)
+    if(ni!=value) {
+      pattern <- paste0("\\b", ni, "\\b")
+      body <- gsub(pattern, value, body)
+    }
   }
   parse(text = body)
 }
@@ -120,7 +127,7 @@ letprep <- function(alias, strexpr) {
 #' we can use a \code{let} helper.   \code{dplyr::mutate} is
 #' parameterized (in the sense it can work over user supplied columns and expressions), but column names are captured through non-standard evaluation
 #' (and it rapidly becomes unwieldy to use complex formulas with the standard evaluation equivalent \code{dplyr::mutate_}).
-#' \code{alias} can not include the symbol "\code{.}".
+#' \code{alias} can not include the symbol "\code{.}". Except for identity assigments keys and destinations must be disjoint.
 #'
 #'
 #' @seealso \code{\link{replyr_mapRestrictCols}} \code{\link{letp}}
