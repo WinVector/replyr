@@ -4,15 +4,15 @@ author: "John Mount"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 params:
-   region: east
-   name: "'v'"
+  fn: sin
+  title: "user chosen function plot"
 vignette: >
   %\VignetteIndexEntry{Knitr Parameters}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-An idea of [Jason Becker](http://jsonbecker.com)'s, using `replyr::let` with `knitr` passed parameters.
+An idea of [Jason Becker](http://jsonbecker.com)'s: using `replyr::let` with `knitr` passed parameters.
 
 ```{r}
 library("replyr")
@@ -22,6 +22,7 @@ east = 7
 let(
   alias=restrictToNameAssignments(params),
   expr={ 
-    print(region)
+    plot(fn(0.1*(1:20)))
+    title(params$title)
   })
 ```
