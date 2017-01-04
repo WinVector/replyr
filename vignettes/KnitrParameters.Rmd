@@ -15,6 +15,19 @@ vignette: >
 
 An idea of [Jason Becker](http://jsonbecker.com)'s: using `replyr::let` with `knitr` passed parameters.
 
+The idea is we can include variable bindings in the `params` block of the `knitr` `yaml` header.
+
+```{yaml}
+---
+params:
+  FN: sin
+  VAR: east
+  title: "user chosen function plot"
+---
+```
+
+Then such assignments can be made available as variable name and function substitutions.  We are using the convention that name bindings are specified in all caps.
+
 ## Bindings
 
 You can use the `knitr` parameters in `replyr::let` blocks.
@@ -36,6 +49,8 @@ let(
 ## Values
 
 Or, assuming everything you do is only standard evaluation and you don't care about capturing variable names: you can capture references to values once and have all subsequent blocks use those values.
+
+Notice the plot uses the user specified function, but does not know its name (so can no longer print it in the y-axis).
 
 ```{r values}
 FN <- let(restrictToNameAssignments(params), FN)
