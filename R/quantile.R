@@ -53,8 +53,11 @@ replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
   x %>% dplyr::select_(cname) %>% dplyr::ungroup() -> x
   # make the variable name "x" as dplyr is much easier if we know the variable name
   if(cname!='x') {
-    # see: http://stackoverflow.com/questions/26619329/dplyr-rename-standard-evaluation-function-not-working-as-expected
-    x %>% dplyr::rename_(.dots = setNames(cname, 'x')) -> x
+    XCOL <- NULL # declare no external binding
+    let(
+      list(XCOL=cname),
+      x %>% dplyr::rename(x=XCOL) -> x
+    )
   }
   # filter out NA
   x %>% dplyr::filter(!is.na(x)) -> x
@@ -136,8 +139,11 @@ replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25)) {
   x %>% dplyr::select_(cname) %>% dplyr::ungroup() -> x
   # make the variable name "x" as dplyr is much easier if we know the variable name
   if(cname!='x') {
-    # see: http://stackoverflow.com/questions/26619329/dplyr-rename-standard-evaluation-function-not-working-as-expected
-    x %>% dplyr::rename_(.dots = setNames(cname, 'x')) -> x
+    XCOL <- NULL # declare no external binding
+    let(
+      list(XCOL=cname),
+      x %>% dplyr::rename(x=XCOL) -> x
+    )
   }
   # filter out NA
   x %>% dplyr::filter(!is.na(x)) -> x

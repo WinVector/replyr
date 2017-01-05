@@ -3,7 +3,6 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 #' @importFrom dplyr %>% ungroup select_ mutate mutate_ group_by_ summarize tbl as.tbl compute left_join
-#' @importFrom stats setNames
 NULL
 
 #' Product a column noting if another columns values are in a given set.
@@ -20,7 +19,7 @@ NULL
 #' @examples
 #'
 #' values <- c('a','c')
-#' d <- data.frame(x=c('a','a','b','b','c','c'),y=1:6,
+#' d <- data.frame(x=c('a','a','b',NA,'c','c'),y=1:6,
 #'                 stringsAsFactors=FALSE)
 #' replyr_inTest(d,'x',values,'match')
 #'
@@ -70,7 +69,10 @@ replyr_inTest <- function(x,cname,values,nname,verbose=TRUE) {
     dplyr::db_drop_table(cn,tmpnam)
   }
   # replace NA with false
-  # from: http://stackoverflow.com/questions/26003574/r-dplyr-mutate-use-dynamic-variable-names
-  res %>% dplyr::mutate_(.dots=stats::setNames(paste0('!is.na(',nname,')'), nname)) -> res
+  RCOL <- NULL # declare no external binding
+  let(
+    list(RCOL=nname),
+    res %>% dplyr::mutate(RCOL=!is.na(RCOL)) -> res
+  )
   res
 }

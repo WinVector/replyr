@@ -2,6 +2,8 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
+#' @importFrom stats setNames
+NULL
 
 # dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
@@ -110,6 +112,7 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
   for(ni in names(nmap)) {
     ti <- nmap[[ni]]
     if(ti!=ni) {
+      # use setNames here so this code is independent of let
       x %>% dplyr::rename_(.dots=stats::setNames(ti,ni)) -> x
     }
   }
