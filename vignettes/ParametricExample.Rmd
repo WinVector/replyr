@@ -97,28 +97,27 @@ we do not know of the current solutions, but instead because we are familiar wit
 ### Formula interface
 
 Formula interface is a nice option as it is `R`'s common way for holding names
-unevaluated.  The code looks like the following (but does  not work for `dplyr version '0.5.0' or '0.5.0.9000' latest Github and dev as of 1-5-2017`):
+unevaluated.  The code looks like the following:
  
 ```{r}
 if  (requireNamespace("lazyeval")) {
-  print(d %>% mutate_(RCOL = lazyeval::interp(~ is.na(cname))) %>%
+  print(d %>% mutate_(RCOL = lazyeval::interp(~ is.na(VAR), 
+                                              VAR=as.name(cname))) %>%
           rename_(.dots = stats::setNames('RCOL', rname)))
 }
 ```
 
-Currently `mutate_` does not take "two-sided formulas" so we need to control
-names outside of the formula.
-In this case we used the explicit `dplyr::rename_` because attempting to name the
-assignment in-line does not seem to be supported (or if it is supported, it uses 
-a different notation or convention than the one we have just seen, (but does  not work for `dplyr version '0.5.0' or '0.5.0.9000' latest Github and dev as of 1-5-2017`):
+Currently `mutate_` does not take "two-sided formulas" so we can not write:
 
-```{r}
-# the following does not correctly name the result column
+
+```{r, error=TRUE}
 if  (requireNamespace("lazyeval")) {
-  print(d %>% mutate_(.dots = stats::setNames(lazyeval::interp( ~ is.na(cname)),
-                                              rname)))
+  print(d %>% mutate_(RCOL = lazyeval::interp(RES ~ is.na(VAR),
+                                              VAR= as.name(cname),
+                                              RES= as.name(rname))))
 }
 ```
+
 
 ### Trying `quote()`
 
