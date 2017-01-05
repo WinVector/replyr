@@ -8,6 +8,29 @@ NULL
 # dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
 
+#' Rename a column
+#'
+#' @param .data data object to work on
+#' @param newName character new column name
+#' @param oldName character old column name
+#'
+#' @examples
+#'
+#' d <- data.frame(Sepal_Length= c(5.8,5.7),
+#'                 Sepal_Width= c(4.0,4.4),
+#'                 Species= 'setosa', rank=c(1,2))
+#' replyr_rename(d, 'family', 'Species')
+#'
+#' @export
+#'
+replyr_rename <- function(.data, newName, oldName) {
+  if(newName!=oldName) {
+    # use setNames here so this code is independent of let
+    return(dplyr::rename_(.data,.dots=stats::setNames(oldName, newName)))
+  }
+  .data
+}
+
 #' Map names of columns to known values and drop other columns.
 #'
 #' Used to restrict a data item's column names and re-name them in bulk.  Note: this can be expensive operation. Except for identity assigments keys and destinations must be disjoint.
@@ -31,7 +54,8 @@ NULL
 #' }
 #'
 #' # our example data, with different column names
-#' d <- data.frame(Sepal_Length=c(5.8,5.7),Sepal_Width=c(4.0,4.4),
+#' d <- data.frame(Sepal_Length=c(5.8,5.7),
+#'                 Sepal_Width=c(4.0,4.4),
 #'                 Species='setosa',rank=c(1,2))
 #' print(d)
 #'
@@ -47,11 +71,8 @@ NULL
 #' dm <- DecreaseRankColumnByOne(dm)
 #'
 #' # map back to our original column names (for the columns we retained)
-#' invmap <- names(nmap)
-#' names(invmap) <- as.character(nmap)
-#' print(invmap)
 #' # Note: can only map back columns that were retained in first mapping.
-#' replyr_mapRestrictCols(dm,invmap)
+#' replyr_mapRestrictCols(dm, nmap, reverse=TRUE)
 #'
 #' @export
 replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
@@ -106,14 +127,12 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
     }
   }
   # limit down to only names we are mapping
-  #do.call(dplyr::select_,c(list(x),as.list(names(nmap)))) -> x
   x %>% dplyr::select(dplyr::one_of(as.character(nmap))) -> x
   # re-map names
   for(ni in names(nmap)) {
     ti <- nmap[[ni]]
     if(ti!=ni) {
-      # use setNames here so this code is independent of let
-      x %>% dplyr::rename_(.dots=stats::setNames(ti,ni)) -> x
+      x <- replyr_rename(x, newName= ni, oldName= ti)
     }
   }
   x

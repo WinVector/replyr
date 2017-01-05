@@ -32,7 +32,8 @@ DecreaseRankColumnByOne <- function(d) {
 }
 
 # our example data, with different column names
-d <- data.frame(Sepal_Length=c(5.8,5.7),Sepal_Width=c(4.0,4.4),
+d <- data.frame(Sepal_Length=c(5.8,5.7),
+                Sepal_Width=c(4.0,4.4),
                 Species='setosa',rank=c(1,2))
 print(d)
 
@@ -48,11 +49,8 @@ print(dm)
 dm <- DecreaseRankColumnByOne(dm)
 
 # map back to our original column names (for the columns we retained)
-invmap <- names(nmap)
-names(invmap) <- as.character(nmap)
-print(invmap)
 # Note: can only map back columns that were retained in first mapping.
-replyr_mapRestrictCols(dm,invmap)
+replyr_mapRestrictCols(dm, nmap, reverse=TRUE)
 
 }
 \seealso{
