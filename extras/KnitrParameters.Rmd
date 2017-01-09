@@ -8,7 +8,7 @@ output:
 params:
   FN: sin
   VAR: east
-  title: "user chosen function plot"
+  title: "User chosen function plot"
 ---
 
 

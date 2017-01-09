@@ -30,7 +30,7 @@ print(params)
     ## [1] "east"
     ## 
     ## $title
-    ## [1] "user chosen function plot"
+    ## [1] "User chosen function plot"
 
 ``` r
 east = 7
