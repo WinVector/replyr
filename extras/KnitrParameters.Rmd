@@ -2,15 +2,13 @@
 title: "Knitr Parameters"
 author: "John Mount"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  md_document:
+    variant: markdown_github
 params:
   FN: sin
   VAR: east
   title: "user chosen function plot"
-vignette: >
-  %\VignetteIndexEntry{Knitr Parameters}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 
