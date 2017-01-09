@@ -13,24 +13,26 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-An idea of [Jason Becker](http://jsonbecker.com)'s: using `replyr::let` with `knitr` passed parameters.
 
-The idea is we can include variable bindings in the `params` block of the `knitr` `yaml` header.
+[Jason Becker](http://jsonbecker.com)'s recently noticed that [`replyr::let`](https://github.com/WinVector/replyr) works well in binding `knitr` worksheet parameters ([link](https://twitter.com/jsonbecker/status/815953228642811905)). This isn't something you want to expose to end-users, but is very powerful in managing your own reproducible research.
+
+The idea is: `knitr` already takes a `params` block which is an arbitrary `yaml` object and `replyr::let` is willing to treat string to string associations and name rebindings.  If we just add the convention that all uppercase names are to be read as re-bindings (and not values) we can accept user specified function names and variable name directly from the RMarkdown controls.
+
+For examine in the RMarkdown document that produced this note we included in the header the
+following params:
 
 ```{yaml}
 ---
 params:
   FN: sin
   VAR: east
-  title: "user chosen function plot"
+  title: "User chosen function plot"
 ---
 ```
 
-Then such assignments can be made available as variable name and function substitutions.  We are using the convention that name bindings are specified in all caps.
+## Bindings 
 
-## Bindings
-
-You can use the `knitr` parameters in `replyr::let` blocks.
+The user assignments are available as variable name and function substitutions.  We are using the convention that name bindings are specified in all caps (an option of `replyr::restrictToNameAssignments` available in version `0.2.01` and newer).
 
 ```{r bindings}
 library("replyr")
@@ -50,7 +52,6 @@ let(
 
 Or, assuming everything you do is only standard evaluation and you don't care about capturing variable names: you can capture references to values once and have all subsequent blocks use those values.
 
-Notice the plot uses the user specified function, but does not know its name (so can no longer print it in the y-axis).
 
 ```{r values}
 FN <- let(restrictToNameAssignments(params), FN)
@@ -58,3 +59,10 @@ FN <- let(restrictToNameAssignments(params), FN)
 plot(FN(0.1*(1:20)))
 title(params$title)
 ```
+
+Notice the plot uses the user specified function, but does not know its original name (so can no longer print it in the y-axis).
+
+## Conclusion
+
+`replyr::let` takes `knitr` parameters one step further.
+
