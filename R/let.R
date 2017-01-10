@@ -161,12 +161,6 @@ letprep <- function(alias, strexpr) {
 #' print(length(groups))
 #' print(dres)
 #'
-#' # %:% pronounced "let in" is a mapping on left operator alias for let.
-#' mapping %:% { d %>%  mutate(RankColumn=RankColumn-1) }
-#'
-#' # %//% pronounced "eval over" or "eval where" is a mapping on right operator alias for let.
-#' { d %>%  mutate(RankColumn=RankColumn-1) } %//% mapping
-#'
 #' # It is also possible to pipe into let-blocks, but it takes some extra notation
 #' # (notice the extra ". %>%" at the beginning and the extra "()" at the end,
 #' # to signal %>% to treat the let-block as a function to evaluate).
@@ -221,27 +215,6 @@ let <- function(alias, expr) {
   eval(`_reply_reserved_name`, envir=parent.frame(), enclos=parent.frame())
 }
 
-#' @export
-#' @rdname let
-`%:%` <- function(alias, expr) {
-  # capture expr
-  strexpr <- deparse(substitute(expr))
-  `_reply_reserved_name` <- letprep(alias,strexpr)
-  rm(list=setdiff(ls(all.names=TRUE),list('_reply_reserved_name')))
-  # try to execute expression in parent environment
-  eval(`_reply_reserved_name`, envir=parent.frame(), enclos=parent.frame())
-}
-
-#' @export
-#' @rdname let
-`%//%` <- function(expr, alias) {
-  # capture expr
-  strexpr <- deparse(substitute(expr))
-  `_reply_reserved_name` <- letprep(alias,strexpr)
-  rm(list=setdiff(ls(all.names=TRUE),list('_reply_reserved_name')))
-  # try to execute expression in parent environment
-  eval(`_reply_reserved_name`, envir=parent.frame(), enclos=parent.frame())
-}
 
 #' Wrap expr for \code{magrittr} pipeline execution with name substitutions specified in alias.
 #'

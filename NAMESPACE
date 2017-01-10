@@ -2,8 +2,6 @@
 
 export("%->%")
 export("%->_%")
-export("%//%")
-export("%:%")
 export("%land%")
 export("%land_%")
 export(gapply)
