@@ -18,7 +18,6 @@ RoxygenNote: 5.0.1
 Suggests: testthat,
     knitr,
     rmarkdown,
-    tidyr,
     RSQLite,
     ggplot2,
     lazyeval
