@@ -6,7 +6,7 @@ Introduction
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
 
-<a href="https://www.flickr.com/photos/42988571@N08/18029435653" target="_blank"><img src="18029435653_4d64c656c8_z.jpg"> </a>
+<img src="IrwinViseGrip.jpg">
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
@@ -94,7 +94,7 @@ Substitute without extra notation (errors-out).
 ``` r
 eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
                 list(RankColumn='rank')))
- #  Error in mutate_impl(.data, dots): non-numeric argument to binary operator
+ #  Error in eval(expr, envir, enclos): non-numeric argument to binary operator
 ```
 
 Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
@@ -297,7 +297,7 @@ Clean up
 ``` r
 rm(list=ls())
 gc()
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  503649 26.9     940480 50.3   940480 50.3
- #  Vcells 1181161  9.1    2100404 16.1  2079354 15.9
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 483655 25.9     940480 50.3   823314 44.0
+ #  Vcells 742987  5.7    1650153 12.6  1650107 12.6
 ```
