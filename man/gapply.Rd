@@ -5,7 +5,7 @@
 \title{grouped ordered apply}
 \usage{
 gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
-  partitionMethod = "group_by", bindrows = TRUE, maxgroups = 100,
+  partitionMethod = "split", bindrows = TRUE, maxgroups = 100,
   eagerCompute = FALSE)
 }
 \arguments{

@@ -92,7 +92,7 @@ gapply <- function(df,gcolumn,f,
                    ...,
                    ocolumn=NULL,
                    decreasing=FALSE,
-                   partitionMethod='group_by',
+                   partitionMethod='split',
                    bindrows=TRUE,
                    maxgroups=100,
                    eagerCompute=FALSE) {
