@@ -119,18 +119,23 @@ if  (requireNamespace("lazyeval")) {
 ```
 
 
-### Trying `quote()`
+### Trying `quote()` / `substitute()`
 
 `quote()` can delay evaluation, but isn't the right tool for parameterizing
-(what the linked NSE reference called "mixing constants and variable").  We have
-a hard time getting control of incoming and outgoing variables.
+(what the linked NSE reference called "mixing constants and variable").  We can
+use the related `substitute()` method as shown below (notice `mutate_` ingores
+our first attempt to name the result and we have to guess/reconstruct what
+name `mutate_` ends up using).
 
 ```{r}
-# dplyr mutate_ quote non-solution
-# (hard coded x, failed to name result)
 d %>% mutate_(.dots =
-                stats::setNames(quote(is.na(x)),
-                rname))
+    stats::setNames(substitute(is.na(XVAR),list(XVAR=cname)),
+                    rname))  %>%
+  rename_(.dots =
+    stats::setNames(paste0('`is.na("',
+                           cname,
+                           '")`'),
+                    rname))
 ```
 
 My point is: even if this is something that *you* know how to accomplish, 
