@@ -9,7 +9,7 @@ For examine in the RMarkdown document that produced this note we included in the
 params:
   FN: sin
   VAR: east
-  title: "User chosen function plot"
+  TITLE: "User chosen function plot"
 ---
 ```
 
@@ -29,7 +29,7 @@ print(params)
     ## $VAR
     ## [1] "east"
     ## 
-    ## $title
+    ## $TITLE
     ## [1] "User chosen function plot"
 
 ``` r
@@ -39,7 +39,7 @@ let(
   expr={ 
     print(paste(quote(VAR),VAR))
     plot(FN(0.1*(1:20)))
-    title(params$title)
+    title(params$TITLE)
   })
 ```
 

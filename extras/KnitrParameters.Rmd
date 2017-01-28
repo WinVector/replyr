@@ -8,7 +8,7 @@ output:
 params:
   FN: sin
   VAR: east
-  title: "User chosen function plot"
+  TITLE: "User chosen function plot"
 ---
 
 
@@ -24,7 +24,7 @@ following params:
 params:
   FN: sin
   VAR: east
-  title: "User chosen function plot"
+  TITLE: "User chosen function plot"
 ---
 ```
 
@@ -42,7 +42,7 @@ let(
   expr={ 
     print(paste(quote(VAR),VAR))
     plot(FN(0.1*(1:20)))
-    title(params$title)
+    title(params$TITLE)
   })
 ```
 
