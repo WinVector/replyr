@@ -2,10 +2,10 @@
 
 #' Land a value to variable from a pipeline.
 #'
-#' \%land\% and \%->\% copy a pipeline value to a variable on the RHS,
+#' \%land\% and \%->\% ("writearrow") copy a pipeline value to a variable on the
+#' right hand side.
 #' \%land_\% and \%->_\% copy a pipeline value to
-#' a variable named by its RHS argument.  There is nothing these operators do
-#' better than "->" and they are mostly just a proof of concept.
+#' a variable named by the value referenced by its right hand side argument.
 #' These operators use eager evaluation.
 #'
 #'
