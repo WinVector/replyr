@@ -40,7 +40,10 @@ DebugFn <- function(saveFile,fn,...) {
   },
   error = function(e) {
     saveRDS(object=list(fn=fn,args=args),file=saveFile)
-    stop(paste0("Wrote '",saveFile,"' on catching '",as.character(e),"'"))
+    stop(paste0("replyr::DebugFn: wrote '",saveFile,
+                "' on catching '",as.character(e),"'",
+                "\n You can reproduce the error with:",
+                "\n'p <- readRDS('",saveFile,"'); do.call(p$fn_name, p$args)'"))
     })
 }
 
@@ -88,7 +91,10 @@ DebugPrintFn <- function(saveFile,fn,...) {
   },
   error = function(e) {
     saveRDS(object=list(fn=fn,args=args),file=saveFile)
-    stop(paste0("Wrote '",saveFile,"' on catching '",as.character(e),"'"))
+    stop(paste0("replyr::DebugPrintFn: wrote '",saveFile,
+                "' on catching '",as.character(e),"'",
+                "\n You can reproduce the error with:",
+                "\n'p <- readRDS('",saveFile,"'); do.call(p$fn_name, p$args)'"))
   })
 }
 
@@ -133,7 +139,11 @@ DebugFnE <- function(saveFile,fn,...) {
   },
   error = function(e) {
     saveRDS(object=list(fn=fn,args=args,env=envir), file=saveFile)
-    stop(paste0("Wrote '",saveFile,"' on catching '",as.character(e),"'"))
+    stop(paste0("replyr::DebugFnE: wrote '",saveFile,
+                "' on catching '",as.character(e),"'",
+                "\n You can reproduce the error with:",
+                "\n'p <- readRDS('",saveFile,
+                "'); do.call(p$fn_name, p$args, envir=p$env)'"))
   })
 }
 
@@ -181,6 +191,10 @@ DebugPrintFnE <- function(saveFile,fn,...) {
   },
   error = function(e) {
     saveRDS(object=list(fn=fn,args=args,env=envir), file=saveFile)
-    stop(paste0("Wrote '",saveFile,"' on catching '",as.character(e),"'"))
+    stop(paste0("replyr::DebugPrintFnE: wrote '",saveFile,
+                "' on catching '",as.character(e),"'",
+                "\n You can reproduce the error with:",
+                "\n'p <- readRDS('",saveFile,
+                "'); do.call(p$fn_name, p$args, envir=p$env)'"))
   })
 }
