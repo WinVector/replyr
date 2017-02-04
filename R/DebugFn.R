@@ -70,9 +70,6 @@ DebugFn <- function(saveDest,fn,...) {
     do.call(fn, args, envir=envir)
   },
   error = function(e) {
-    if(is.null(saveDest)) {
-      saveDest <- paste0(tempfile('debug'),'.RDS')
-    }
     cap <- list(fn=fn,
                 args=args,
                 fn_name=fn_name)
