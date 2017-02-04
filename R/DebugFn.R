@@ -35,10 +35,15 @@ DebugFn <- function(saveFile,fn,...) {
   envir = parent.frame()
   namedargs <- match.call()
   fn_name <- as.character(namedargs[['fn']])
+  force(saveFile)
+  force(fn)
   tryCatch({
     do.call(fn, args, envir=envir)
   },
   error = function(e) {
+    if(is.null(saveFile)) {
+      saveFile <- paste0(tempfile('debug'),'.RDS')
+    }
     saveRDS(object=list(fn=fn,
                         args=args,
                         fn_name=fn_name),
@@ -87,15 +92,22 @@ DebugFn <- function(saveFile,fn,...) {
 DebugFnW <- function(saveFile,fn) {
   namedargs <- match.call()
   fn_name <- as.character(namedargs[['fn']])
+  force(saveFile)
+  force(fn)
   function(...) {
     args <- list(...)
     envir = parent.frame()
+    namedargs <- match.call()
     tryCatch({
       do.call(fn, args, envir=envir)
     },
     error = function(e) {
+      if(is.null(saveFile)) {
+        saveFile <- paste0(tempfile('debug'),'.RDS')
+      }
       saveRDS(object=list(fn=fn,
                           args=args,
+                          namedargs=namedargs,
                           fn_name=fn_name),
               file=saveFile)
       stop(paste0("replyr::DebugFnW: wrote '",saveFile,
@@ -146,12 +158,17 @@ DebugPrintFn <- function(saveFile,fn,...) {
   namedargs <- match.call()
   fn_name <- as.character(namedargs[['fn']])
   envir = parent.frame()
+  force(saveFile)
+  force(fn)
   tryCatch({
     res = do.call(fn, args, envir=envir)
     print(res)
     res
   },
   error = function(e) {
+    if(is.null(saveFile)) {
+      saveFile <- paste0(tempfile('debug'),'.RDS')
+    }
     saveRDS(object=list(fn=fn,
                         args=args,
                         fn_name=fn_name),
@@ -200,10 +217,15 @@ DebugFnE <- function(saveFile,fn,...) {
   envir = parent.frame()
   namedargs <- match.call()
   fn_name <- as.character(namedargs[['fn']])
+  force(saveFile)
+  force(fn)
   tryCatch({
     do.call(fn, args, envir=envir)
   },
   error = function(e) {
+    if(is.null(saveFile)) {
+      saveFile <- paste0(tempfile('debug'),'.RDS')
+    }
     saveRDS(object=list(fn=fn,
                         args=args,
                         env=envir,
@@ -255,17 +277,24 @@ DebugFnE <- function(saveFile,fn,...) {
 DebugFnWE <- function(saveFile,fn,...) {
   namedargs <- match.call()
   fn_name <- as.character(namedargs[['fn']])
+  force(saveFile)
+  force(fn)
   function(...) {
     args <- list(...)
     envir = parent.frame()
+    namedargs <- match.call()
     tryCatch({
       do.call(fn, args, envir=envir)
     },
     error = function(e) {
+      if(is.null(saveFile)) {
+        saveFile <- paste0(tempfile('debug'),'.RDS')
+      }
       saveRDS(object=list(fn=fn,
                           args=args,
-                          env=envir,
-                          fn_name=fn_name),
+                          namedargs=namedargs,
+                          fn_name=fn_name,
+                          env=envir),
               file=saveFile)
       stop(paste0("replyr::DebugFnWE: wrote '",saveFile,
                   "' on catching '",as.character(e),"'",
@@ -314,12 +343,17 @@ DebugPrintFnE <- function(saveFile,fn,...) {
   envir = parent.frame()
   namedargs <- match.call()
   fn_name <- as.character(namedargs[['fn']])
+  force(saveFile)
+  force(fn)
   tryCatch({
     res = do.call(fn, args, envir=envir)
     print(res)
     res
   },
   error = function(e) {
+    if(is.null(saveFile)) {
+      saveFile <- paste0(tempfile('debug'),'.RDS')
+    }
     saveRDS(object=list(fn=fn,
                         args=args,
                         env=envir,
