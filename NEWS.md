@@ -1,10 +1,13 @@
 
+'replyr' 0.2.2 2017-02-04
+ 
+ * Add Debug* functions.
+
 'replyr' 0.2.1 2017-01-21
 
  * Excise direct use of lazyeval.
  * Drop gather/spread simulations.
  * Change default gapply to split.
- * Add Debug* functions.
 
 'replyr' 0.2.0 2016-12-14
 

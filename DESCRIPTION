@@ -1,8 +1,8 @@
 Package: replyr
 Type: Package
 Title: Fluid Use of 'dplyr' and Parametric Arguments
-Version: 0.2.1
-Date: 2017-01-21
+Version: 0.2.2
+Date: 2017-02-04
 Author: John Mount, Nina Zumel
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr
