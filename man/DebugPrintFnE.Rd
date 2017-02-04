@@ -4,17 +4,17 @@
 \alias{DebugPrintFnE}
 \title{Capture arguments and environment of exception throwing function call for later debugging.}
 \usage{
-DebugPrintFnE(saveFile, fn, ...)
+DebugPrintFnE(saveDest, fn, ...)
 }
 \arguments{
-\item{saveFile}{path to save RDS to.}
+\item{saveDest}{path to save RDS or function to pass argument to for saving.}
 
 \item{fn}{function to call}
 
 \item{...}{arguments for fn}
 }
 \value{
-fn(...) normally, but if fn(...) throws an exception save to saveFile RDS of list r such that do.call(r$fn,r$args) repeats the call to fn with args.
+fn(...) normally, but if fn(...) throws an exception save to saveDest RDS of list r such that do.call(r$fn,r$args) repeats the call to fn with args.
 }
 \description{
 Run fn and print result, save arguments on failure.  Use on systems like ggplot()
@@ -22,23 +22,23 @@ where some calculation is delayed until print().
 }
 \examples{
 
-saveName <- paste0(tempfile('debug'),'.RDS')
+saveDest <- paste0(tempfile('debug'),'.RDS')
 f <- function(i) { (1:10)[[i]] }
 # correct run
-DebugPrintFnE(saveName, f, 5)
+DebugPrintFnE(saveDest, f, 5)
 # now re-run
 # capture error on incorrect run
 tryCatch(
-   DebugPrintFnE(saveName, f, 12),
+   DebugPrintFnE(saveDest, f, 12),
    error = function(e) { print(e) })
 # examine details
-situation <- readRDS(saveName)
+situation <- readRDS(saveDest)
 str(situation)
 # fix and re-run
 situation$args[[1]] <- 6
 do.call(situation$fn, situation$args, envir=situation$env)
 # clean up
-file.remove(saveName)
+file.remove(saveDest)
 
 }
 \seealso{

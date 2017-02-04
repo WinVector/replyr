@@ -4,10 +4,10 @@
 \alias{DebugFnW}
 \title{Wrap a function for debugging.}
 \usage{
-DebugFnW(saveFile, fn)
+DebugFnW(saveDest, fn)
 }
 \arguments{
-\item{saveFile}{path to save RDS to.}
+\item{saveDest}{path to save RDS or function to pass argument to for saving.}
 
 \item{fn}{function to call}
 }
@@ -19,9 +19,9 @@ Run fn, save arguments on failure.
 }
 \examples{
 
-saveName <- paste0(tempfile('debug'),'.RDS')
+saveDest <- paste0(tempfile('debug'),'.RDS')
 f <- function(i) { (1:10)[[i]] }
-df <- DebugFnW(saveName,f)
+df <- DebugFnW(saveDest,f)
 # correct run
 df(5)
 # now re-run
@@ -30,13 +30,27 @@ tryCatch(
    df(12),
    error = function(e) { print(e) })
 # examine details
-situation <- readRDS(saveName)
+situation <- readRDS(saveDest)
 str(situation)
 # fix and re-run
 situation$args[[1]] <- 6
 do.call(situation$fn,situation$args)
 # clean up
-file.remove(saveName)
+file.remove(saveDest)
+
+
+f <- function(i) { (1:10)[[i]] }
+curEnv <- environment()
+writeBack <- function(sit) {
+   assign('lastError', sit, envir=curEnv)
+}
+attr(writeBack,'name') <- 'writeBack'
+df <- DebugFnW(writeBack,f)
+tryCatch(
+   df(12),
+   error = function(e) { print(e) })
+str(lastError)
+
 
 }
 \seealso{

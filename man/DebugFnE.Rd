@@ -4,40 +4,40 @@
 \alias{DebugFnE}
 \title{Capture arguments and environment of exception throwing function call for later debugging.}
 \usage{
-DebugFnE(saveFile, fn, ...)
+DebugFnE(saveDest, fn, ...)
 }
 \arguments{
-\item{saveFile}{path to save RDS to.}
+\item{saveDest}{path to save RDS or function to pass argument to for saving.}
 
 \item{fn}{function to call}
 
 \item{...}{arguments for fn}
 }
 \value{
-fn(...) normally, but if fn(...) throws an exception save to saveFile RDS of list r such that do.call(r$fn,r$args) repeats the call to fn with args.
+fn(...) normally, but if fn(...) throws an exception save to saveDest RDS of list r such that do.call(r$fn,r$args) repeats the call to fn with args.
 }
 \description{
 Run fn, save arguments on failure.
 }
 \examples{
 
-saveName <- paste0(tempfile('debug'),'.RDS')
+saveDest <- paste0(tempfile('debug'),'.RDS')
 f <- function(i) { (1:10)[[i]] }
 # correct run
-DebugFnE(saveName, f, 5)
+DebugFnE(saveDest, f, 5)
 # now re-run
 # capture error on incorrect run
 tryCatch(
-   DebugFnE(saveName, f, 12),
+   DebugFnE(saveDest, f, 12),
    error = function(e) { print(e) })
 # examine details
-situation <- readRDS(saveName)
+situation <- readRDS(saveDest)
 str(situation)
 # fix and re-run
 situation$args[[1]] <- 6
 do.call(situation$fn, situation$args, envir=situation$env)
 # clean up
-file.remove(saveName)
+file.remove(saveDest)
 
 }
 \seealso{
