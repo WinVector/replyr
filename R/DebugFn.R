@@ -1,7 +1,9 @@
 
 
 # return an error to a file or callback
-returnCapture <- function(e, saveDest, cap, wrapperName) {
+returnCapture <- function(e, saveDest, cap, wrapperName,
+                          recallString = 'do.call(p$fn, p$args)') {
+  es <- trimws(paste(as.character(e), collapse = ' '))
   if(is.null(saveDest)) {
     saveDest <- paste0(tempfile('debug'),'.RDS')
   }
@@ -9,22 +11,33 @@ returnCapture <- function(e, saveDest, cap, wrapperName) {
     saveDest(cap)
     fName <- attr(saveDest, 'name')
     if(!is.null(fName)) {
-      stop(paste0("replyr::", wrapperName, ": wrote error to user function: ",
-                  fName))
+      return(paste0("replyr::", wrapperName,
+                    ": wrote error to user function: '",
+                  fName, "' on catching '", es, "'",
+                  "\n You can reproduce the error with:",
+                  "\n '", recallString,
+                  "' (replace 'p' with actual variable name)"))
     }
-    stop(paste0("replyr::", wrapperName, ": wrote error to user function"))
+    return(paste0("replyr::", wrapperName,
+                  ": wrote error to user function on catching '",
+                  es, "'",
+                  "\n You can reproduce the error with:",
+                  "\n '", recallString,
+                  "' (replace 'p' with actual variable name)"))
   }
   if(is.character(saveDest)) {
     saveRDS(object=cap,
             file=saveDest)
-    stop(paste0("replyr::", wrapperName, ": wrote '",saveDest,
-                "' on catching '",as.character(e),"'",
+    return(paste0("replyr::", wrapperName, ": wrote '",saveDest,
+                "' on catching '",es,"'",
                 "\n You can reproduce the error with:",
                 "\n'p <- readRDS('",saveDest,
-                "'); do.call(p$fn, p$args)'"))
+                "'); ", recallString, "'"))
   }
-  stop(paste0("replyr::", wrapperName, ": don't know how to write error to ",
-              class(saveDest)))
+  return(paste0("replyr::", wrapperName,
+                ": don't know how to write error to '",
+              class(saveDest),
+              "' on catching '", es, "'"))
 }
 
 
@@ -73,7 +86,8 @@ DebugFn <- function(saveDest,fn,...) {
     cap <- list(fn=fn,
                 args=args,
                 fn_name=fn_name)
-    returnCapture(e, saveDest, cap, "DebugFn")
+    es <- returnCapture(e, saveDest, cap, "DebugFn")
+    stop(es)
   })
 }
 
@@ -141,7 +155,8 @@ DebugFnW <- function(saveDest,fn) {
                   args=args,
                   namedargs=namedargs,
                   fn_name=fn_name)
-      returnCapture(e, saveDest, cap, "DebugFnW")
+      es <- returnCapture(e, saveDest, cap, "DebugFnW")
+      stop(es)
     })
   }
 }
@@ -196,7 +211,8 @@ DebugPrintFn <- function(saveDest,fn,...) {
     cap <- list(fn=fn,
                 args=args,
                 fn_name=fn_name)
-    returnCapture(e, saveDest, cap, "DebugPrintFn")
+    es <- returnCapture(e, saveDest, cap, "DebugPrintFn")
+    stop(es)
   })
 }
 
@@ -246,7 +262,9 @@ DebugFnE <- function(saveDest,fn,...) {
                 args=args,
                 env=envir,
                 fn_name=fn_name)
-    returnCapture(e, saveDest, cap, "DebugFnE")
+    es <- returnCapture(e, saveDest, cap, "DebugFnE",
+                        recallString = 'do.call(p$fn, p$args, envir= p$env)')
+    stop(es)
   })
 }
 
@@ -303,7 +321,9 @@ DebugFnWE <- function(saveDest,fn,...) {
                   namedargs=namedargs,
                   fn_name=fn_name,
                   env=envir)
-      returnCapture(e, saveDest, cap, "DebugFnWE")
+      es <- returnCapture(e, saveDest, cap, "DebugFnWE",
+                          recallString = 'do.call(p$fn, p$args, envir= p$env)')
+      stop(es)
     })
   }
 }
@@ -358,7 +378,9 @@ DebugPrintFnE <- function(saveDest,fn,...) {
                 args=args,
                 env=envir,
                 fn_name=fn_name)
-    returnCapture(e, saveDest, cap, "DebugPrintFnE")
+    es <- returnCapture(e, saveDest, cap, "DebugPrintFnE",
+                        recallString = 'do.call(p$fn, p$args, envir= p$env)')
+    stop(es)
   })
 }
 
