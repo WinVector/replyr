@@ -11,7 +11,6 @@
 #'
 #' @examples
 #'
-#' d <- data.frame(x=1:5)
 #' saveName <- paste0(tempfile('debug'),'.RDS')
 #' f <- function(i) { (1:10)[[i]] }
 #' # correct run
@@ -65,7 +64,6 @@ DebugFn <- function(saveFile,fn,...) {
 #'
 #' @examples
 #'
-#' d <- data.frame(x=1:5)
 #' saveName <- paste0(tempfile('debug'),'.RDS')
 #' f <- function(i) { (1:10)[[i]] }
 #' df <- DebugFnW(saveName,f)
@@ -124,7 +122,6 @@ DebugFnW <- function(saveFile,fn) {
 #'
 #' @examples
 #'
-#' d <- data.frame(x=1:5)
 #' saveName <- paste0(tempfile('debug'),'.RDS')
 #' f <- function(i) { (1:10)[[i]] }
 #' # correct run
@@ -179,7 +176,6 @@ DebugPrintFn <- function(saveFile,fn,...) {
 #'
 #' @examples
 #'
-#' d <- data.frame(x=1:5)
 #' saveName <- paste0(tempfile('debug'),'.RDS')
 #' f <- function(i) { (1:10)[[i]] }
 #' # correct run
@@ -236,7 +232,6 @@ DebugFnE <- function(saveFile,fn,...) {
 #'
 #' @examples
 #'
-#' d <- data.frame(x=1:5)
 #' saveName <- paste0(tempfile('debug'),'.RDS')
 #' f <- function(i) { (1:10)[[i]] }
 #' df <- DebugFnWE(saveName, f)
@@ -295,7 +290,6 @@ DebugFnWE <- function(saveFile,fn,...) {
 #'
 #' @examples
 #'
-#' d <- data.frame(x=1:5)
 #' saveName <- paste0(tempfile('debug'),'.RDS')
 #' f <- function(i) { (1:10)[[i]] }
 #' # correct run

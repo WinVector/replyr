@@ -21,7 +21,6 @@ Run fn, save arguments on failure.
 }
 \examples{
 
-d <- data.frame(x=1:5)
 saveName <- paste0(tempfile('debug'),'.RDS')
 f <- function(i) { (1:10)[[i]] }
 df <- DebugFnWE(saveName, f)
