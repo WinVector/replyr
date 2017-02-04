@@ -34,16 +34,23 @@
 DebugFn <- function(saveFile,fn,...) {
   args <- list(...)
   envir = parent.frame()
+  namedargs <- match.call()
+  fn_name <- as.character(namedargs[['fn']])
   tryCatch({
     res = do.call(fn, args, envir=envir)
     res
   },
   error = function(e) {
-    saveRDS(object=list(fn=fn,args=args),file=saveFile)
+    saveRDS(object=list(fn=fn,
+                        args=args,
+                        namedargs=namedargs,
+                        fn_name=fn_name),
+            file=saveFile)
     stop(paste0("replyr::DebugFn: wrote '",saveFile,
                 "' on catching '",as.character(e),"'",
                 "\n You can reproduce the error with:",
-                "\n'p <- readRDS('",saveFile,"'); do.call(p$fn_name, p$args)'"))
+                "\n'p <- readRDS('",saveFile,
+                "'); do.call(p$fn, p$args)'"))
     })
 }
 
@@ -83,6 +90,8 @@ DebugFn <- function(saveFile,fn,...) {
 #' @export
 DebugPrintFn <- function(saveFile,fn,...) {
   args <- list(...)
+  namedargs <- match.call()
+  fn_name <- as.character(namedargs[['fn']])
   envir = parent.frame()
   tryCatch({
     res = do.call(fn, args, envir=envir)
@@ -90,11 +99,16 @@ DebugPrintFn <- function(saveFile,fn,...) {
     res
   },
   error = function(e) {
-    saveRDS(object=list(fn=fn,args=args),file=saveFile)
+    saveRDS(object=list(fn=fn,
+                        args=args,
+                        namedargs=namedargs,
+                        fn_name=fn_name),
+            file=saveFile)
     stop(paste0("replyr::DebugPrintFn: wrote '",saveFile,
                 "' on catching '",as.character(e),"'",
                 "\n You can reproduce the error with:",
-                "\n'p <- readRDS('",saveFile,"'); do.call(p$fn_name, p$args)'"))
+                "\n'p <- readRDS('",saveFile,
+                "'); do.call(p$fn, p$args)'"))
   })
 }
 
@@ -133,17 +147,24 @@ DebugPrintFn <- function(saveFile,fn,...) {
 DebugFnE <- function(saveFile,fn,...) {
   args <- list(...)
   envir = parent.frame()
+  namedargs <- match.call()
+  fn_name <- as.character(namedargs[['fn']])
   tryCatch({
     res = do.call(fn, args, envir=envir)
     res
   },
   error = function(e) {
-    saveRDS(object=list(fn=fn,args=args,env=envir), file=saveFile)
+    saveRDS(object=list(fn=fn,
+                        args=args,
+                        env=envir,
+                        namedargs=namedargs,
+                        fn_name=fn_name),
+            file=saveFile)
     stop(paste0("replyr::DebugFnE: wrote '",saveFile,
                 "' on catching '",as.character(e),"'",
                 "\n You can reproduce the error with:",
                 "\n'p <- readRDS('",saveFile,
-                "'); do.call(p$fn_name, p$args, envir=p$env)'"))
+                "'); do.call(p$fn, p$args, envir=p$env)'"))
   })
 }
 
@@ -184,17 +205,24 @@ DebugFnE <- function(saveFile,fn,...) {
 DebugPrintFnE <- function(saveFile,fn,...) {
   args <- list(...)
   envir = parent.frame()
+  namedargs <- match.call()
+  fn_name <- as.character(namedargs[['fn']])
   tryCatch({
     res = do.call(fn, args, envir=envir)
     print(res)
     res
   },
   error = function(e) {
-    saveRDS(object=list(fn=fn,args=args,env=envir), file=saveFile)
+    saveRDS(object=list(fn=fn,
+                        args=args,
+                        env=envir,
+                        namedargs=namedargs,
+                        fn_name=fn_name),
+            file=saveFile)
     stop(paste0("replyr::DebugPrintFnE: wrote '",saveFile,
                 "' on catching '",as.character(e),"'",
                 "\n You can reproduce the error with:",
                 "\n'p <- readRDS('",saveFile,
-                "'); do.call(p$fn_name, p$args, envir=p$env)'"))
+                "'); do.call(p$fn, p$args, envir=p$env)'"))
   })
 }
