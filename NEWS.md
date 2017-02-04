@@ -4,6 +4,7 @@
  * Excise direct use of lazyeval.
  * Drop gather/spread simulations.
  * Change default gapply to split.
+ * Add Debug* functions.
 
 'replyr' 0.2.0 2016-12-14
 
