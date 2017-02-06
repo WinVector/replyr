@@ -17,7 +17,7 @@ DebugFnWE(saveDest, fn, ...)
 wrapped function that captures state on error.
 }
 \description{
-Run fn, save arguments on failure.
+Wrap fn, so it will save arguments and environment on failure.
 }
 \examples{
 

@@ -17,7 +17,7 @@ DebugFnE(saveDest, fn, ...)
 fn(...) normally, but if fn(...) throws an exception save to saveDest RDS of list r such that do.call(r$fn,r$args) repeats the call to fn with args.
 }
 \description{
-Run fn, save arguments on failure.
+Run fn, save arguments, and environment on failure.
 }
 \examples{
 
