@@ -101,7 +101,7 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
     if(nchar(ni)<=0) {
       stop('replyr::replyr_mapRestrictCols nmap keys must not be empty strings')
     }
-    if(!isValidAndUnreservedName(ni)) {
+    if(!wrapr:::isValidAndUnreservedName(ni)) {
       stop(paste('replyr:replyr_mapRestrictCols nmap key not a valid name: "',ni,'"'))
     }
     ti <- nmap[[ni]]
@@ -117,7 +117,7 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
     if(nchar(ti)<=0) {
       stop('replyr::replyr_mapRestrictCols nmap values must not be empty strings')
     }
-    if(!isValidAndUnreservedName(ti)) {
+    if(!wrapr:::isValidAndUnreservedName(ti)) {
       stop(paste('replyr:replyr_mapRestrictCols nmap value not a valid name: "',ti,'"'))
     }
     if(ti!=ni) {

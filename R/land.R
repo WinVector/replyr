@@ -30,7 +30,7 @@
 `%land%` <- function(value, name) {
   name <- as.character(substitute(name))
   if((length(name)!=1)||(!is.character(name))||
-     (!isValidAndUnreservedName(name))) {
+     (!wrapr:::isValidAndUnreservedName(name))) {
     stop("replyr::`%land%` name argument must be a valid potential variable name")
   }
   force(value)
@@ -46,7 +46,7 @@
 `%->%` <- function(value, name) {
   name <- as.character(substitute(name))
   if((length(name)!=1)||(!is.character(name))||
-     (!isValidAndUnreservedName(name))) {
+     (!wrapr:::isValidAndUnreservedName(name))) {
     stop("replyr::`%->%` name argument must be a valid potential variable name")
   }
   force(value)
@@ -61,7 +61,7 @@
 #' @rdname grapes-land-grapes
 `%->_%` <- function(value, name) {
   if((length(name)!=1)||(!is.character(name))||
-     (!isValidAndUnreservedName(name))) {
+     (!wrapr:::isValidAndUnreservedName(name))) {
     stop("replyr::`%->_%` name argument must be a valid potential variable name")
   }
   force(value)
@@ -76,7 +76,7 @@
 #' @rdname grapes-land-grapes
 `%land_%` <- function(value, name) {
   if((length(name)!=1)||(!is.character(name))||
-     (!isValidAndUnreservedName(name))) {
+     (!wrapr:::isValidAndUnreservedName(name))) {
     stop("replyr::`%land_%` name argument must be a valid potential variable name")
   }
   force(value)
