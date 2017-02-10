@@ -167,16 +167,16 @@ if  (requireNamespace("lazyeval")) {
 
 ## Our advice
 
-Our advice is to give [`replyr::let`](https://github.com/WinVector/replyr) a try.
-`replyr::let` takes a name mapping list (called "`alias`") and a code-block (called "`expr`").
+Our advice is to give [`wrapr::let`](https://github.com/WinVector/replyr) a try.
+`wrapr::let` takes a name mapping list (called "`alias`") and a code-block (called "`expr`").
 The code-block is re-written so that names in `expr` appearing on the left hand sides
 of the `alias` map are replaced with names appearing on the right hand side of the `alias` map.
 
 The code looks like this:
 
 ```{r}
-# replyr::let solution
-replyr::let(alias = list(cname = cname, rname = rname),
+# wrapr::let solution
+wrapr::let(alias = list(cname = cname, rname = rname),
             expr  = {
             d %>% mutate(rname = is.na(cname))
             })
@@ -186,10 +186,10 @@ Notice we are able to use `dplyr::mutate` instead of needing to invoke `dplyr::m
 The expression block can be arbitrarily long and contain deep pipelines.  We now have
 a useful separation of concerns, the mapping code is a wrapper completely outside of the user
 pipeline (the two are no longer commingled). For complicated
-tasks the ratio of `replyr::let` boilerplate to actual useful work goes down quickly.
+tasks the ratio of `wrapr::let` boilerplate to actual useful work goes down quickly.
 
 We also have a varation for piping into (though to save such pipes for later you use 
-`replyr::let`, not `replyr::letp`):
+`wrapr::let`, not `replyr::letp`):
 
 ```{r}
 # replyr::letp solution
@@ -199,18 +199,18 @@ d %>% replyr::letp(alias = list(cname = cname, rname = rname),
                    })
 ```
 
-The alias map is deliberately only allowed to be a string to string map (no environments, `as.name`, `formula`, expressions, or values) so `replyr::let` *itself* is easy to use in automation or program over. 
-I'll repeat that for emphasis: externally `replyr::let` is completely controllable through standard
+The alias map is deliberately only allowed to be a string to string map (no environments, `as.name`, `formula`, expressions, or values) so `wrapr::let` *itself* is easy to use in automation or program over. 
+I'll repeat that for emphasis: externally `wrapr::let` is completely controllable through standard
 (or parametric) evaluation interfaces.
 Also notice the code we wrote is never directly mentions "`x`" or "`x_isNA`" as it pulls these names out of its execution environment.
 
-All of these solutions have consequences and corner cases.  Our (biased) opinion is: we dislike `replyr::let` the least.
+All of these solutions have consequences and corner cases.  Our (biased) opinion is: we dislike `wrapr::let` the least.
 
 ## More reading
 
-Our group has been writing *a lot* on `replyr::let`.  It is new code, yet something we think analysts should try.  Some of our recent notes include:
+Our group has been writing *a lot* on `wrapr::let`.  It is new code, yet something we think analysts should try.  Some of our recent notes include:
 
  * [The original proposal](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/)
  * [A non-trivial example](http://www.win-vector.com/blog/2016/12/using-replyrlet-to-parameterize-dplyr-expressions/)
- * [The `replyr::let` help documentation](http://www.win-vector.com/blog/2016/12/helplet-packagereplyr/)
+ * [The `wrapr::let` help documentation](http://www.win-vector.com/blog/2016/12/helplet-packagereplyr/)
  * [The `replyr` package README](https://github.com/WinVector/replyr/blob/master/README.md).

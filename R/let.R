@@ -1,7 +1,6 @@
 
 #' @importFrom wrapr let
-#' @export
-wrapr::let
+NULL
 
 #' Wrap expr for \code{magrittr} pipeline execution with name substitutions specified in alias.
 #'

@@ -35,7 +35,7 @@ one row per group containing:
 * the upper and lower bounds of an interval +/- one-half the IQR around the median.
 
 The `dplyr` expression for such a table is easy when the column names
-are known, but complicated when they are not. We use `replyr::let` to write such a
+are known, but complicated when they are not. We use `wrapr::let` to write such a
 function without the use of `lazyeval`.
 
 ```{r sumstat_intervals}
@@ -70,7 +70,7 @@ sumstat_intervals(iris, "Sepal.Length", "Species")
 sumstat_intervals(iris, "Petal.Length", "Species")
 ```
 
-We can also use `let` to parameterize other functions that specify their parameters via non-standard evaluation. For example, we could write a `ggplot2` function to plot the information in `sumstat_intervals` (either the mean-centered interval or the median-centered one) using `ggplot2::aes_string`. Or we could use `replyr::let`.
+We can also use `let` to parameterize other functions that specify their parameters via non-standard evaluation. For example, we could write a `ggplot2` function to plot the information in `sumstat_intervals` (either the mean-centered interval or the median-centered one) using `ggplot2::aes_string`. Or we could use `wrapr::let`.
 
 ```{r ggplotf}
 plot_distributions = NULL

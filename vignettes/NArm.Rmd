@@ -106,7 +106,7 @@ for(ci in cols) {
 print(dTmp)
 ```
 
-Or using `replyr::let`:
+Or using `wrapr::let`:
 
 ```{r countforloopr}
 cols = setdiff(colnames(dRemote),'rowNum')
