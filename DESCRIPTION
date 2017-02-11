@@ -12,9 +12,8 @@ Description: Methods to get a grip on working with remote 'tbl' sources ('SQL' d
     working with an in-memory 'data.frame'.  Results do depend on which 'dplyr' data service you use.
 License: GPL-3
 LazyData: TRUE
-Depends:
-  wrapr
 Imports:
+  wrapr,
   dplyr (>= 0.5.0)
 RoxygenNote: 5.0.1
 Suggests: testthat,

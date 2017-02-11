@@ -19,3 +19,39 @@
 #' @docType package
 #' @name replyr
 NULL
+
+
+# re-export so old code and demos work (from when functions were here)
+
+#' @importFrom wrapr let
+#' @export
+wrapr::let
+
+#' @importFrom wrapr restrictToNameAssignments
+#' @export
+wrapr::restrictToNameAssignments
+
+
+#' @importFrom wrapr DebugFn
+#' @export
+wrapr::DebugFn
+
+#' @importFrom wrapr DebugFnE
+#' @export
+wrapr::DebugFnE
+
+#' @importFrom wrapr DebugFnW
+#' @export
+wrapr::DebugFnW
+
+#' @importFrom wrapr DebugFnWE
+#' @export
+wrapr::DebugFnWE
+
+#' @importFrom wrapr DebugPrintFn
+#' @export
+wrapr::DebugPrintFn
+
+#' @importFrom wrapr DebugPrintFnE
+#' @export
+wrapr::DebugPrintFnE
