@@ -22,6 +22,8 @@ Suggests: testthat,
     rmarkdown,
     RSQLite,
     ggplot2,
-    lazyeval
+    lazyeval,
+    babynames,
+    magrittr
 VignetteBuilder: knitr
 Remotes: WinVector/wrapr
