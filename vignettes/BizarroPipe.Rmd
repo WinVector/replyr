@@ -59,7 +59,7 @@ babynames ->.;
     print(.)
 ```
 
-This above form is now single step debuggable.  We can step through each stage
+This above form is now single step or per-line debuggable.  We can step through each stage
 of the outer pipeline and examine the contents of "`.`" after each step (either
 by printing "`.`" or by using `RStudio` with `RStudio -> Preferences -> General -> "Show .Last.value in environment listing"` checked).  We have a free video of the technique in action [here](https://youtu.be/7Xifeq3-FGU?list=PLAKBwakacHbQT51nPHex1on3YNCCmggZA).
 
