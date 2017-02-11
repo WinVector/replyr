@@ -71,6 +71,6 @@ Also note: while we can
 think of `->.;` as an eager operator we may need to force computation of a 
 lazy structure (such as a `tbl`) by printing "`.`".
 
-Overall the trick is to train your eye to see `->.;` as an atomic or indivisible glyph (or super hero).
+Overall the trick is to train your eye to see `->.;` as an atomic or indivisible glyph (with superhero logo).
 
 ![Bizarro Pipe logo](BizarroPipe.jpg)
