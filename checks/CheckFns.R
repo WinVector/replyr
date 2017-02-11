@@ -81,7 +81,7 @@ runExample <- function(copyToRemote) {
                   Species='setosa',
                   rank=c(1,2)),'dlet')
   mapping = list(RankColumn='rank')
-  replyr::let(
+  wrapr::let(
     alias=mapping,
     expr={
       dlet %>% mutate(RankColumn=RankColumn-1) -> dletres

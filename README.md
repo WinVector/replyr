@@ -14,14 +14,14 @@ It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https
 
 Primary `replyr` services include:
 
--   `replyr::let`
+-   `wrapr::let`
 -   `replyr::gapply`
 -   `replyr::replyr_*`
 
-`replyr::let`
--------------
+`wrapr::let`
+------------
 
-`replyr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute` or `base::with`). This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms" (and the direct use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms").
+`wrapr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute` or `base::with`). This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms" (and the direct use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms").
 
 Example:
 
@@ -32,7 +32,7 @@ library('dplyr')
 ``` r
 # nice parametric function we write
 ComputeRatioOfColumns <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
-  replyr::let(
+  wrapr::let(
     alias=list(NumeratorColumn=NumeratorColumnName,
                DenominatorColumn=DenominatorColumnName,
                ResultColumn=ResultColumnName),
@@ -57,7 +57,7 @@ d %>% ComputeRatioOfColumns('a','b','c')
  #  5 5 7 0.7142857
 ```
 
-`replyr::let` makes construction of abstract functions over `dplyr` controlled data much easier. It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
+`wrapr::let` makes construction of abstract functions over `dplyr` controlled data much easier. It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
 
 Note that `base::substitute` is not powerful enough to remap both names and values without some helper notation (see [here](http://stackoverflow.com/questions/22005419/dplyr-without-hard-coding-the-variable-names) for an using substitute. What we mean by this is show below:
 
@@ -97,7 +97,7 @@ eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
  #  Error in eval(expr, envir, enclos): non-numeric argument to binary operator
 ```
 
-Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `replyr::let` form is concise and works correctly.
+Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `wrapr::let` form is concise and works correctly.
 
 Similarly `base::with` can not perform the needed name remapping, none of the following variations simulate a name to name substitution.
 
@@ -111,10 +111,10 @@ assign('RankColumn',quote(rank),envir = env)
 with(env,d %>% mutate(RankColumn=RankColumn-1))
 ```
 
-Whereas `replyr::let` works and is succinct.
+Whereas `wrapr::let` works and is succinct.
 
 ``` r
-replyr::let(
+wrapr::let(
   alias=list(RankColumn='rank'),
   d %>% mutate(RankColumn=RankColumn-1)
 )
@@ -123,7 +123,7 @@ replyr::let(
  #  2          5.7         4.4  setosa    1
 ```
 
-Note `replyr::let` only controls name bindings in the the scope of the `expr={}` block, and not inside functions called in the block. To be clear `replyr::let` is re-writing function arguments (which is how we use `dplyr::mutate` in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not parameterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or if `dplyr` itself (or a data adapter) implemented something like the view stack proposal found [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/).
+Note `wrapr::let` only controls name bindings in the the scope of the `expr={}` block, and not inside functions called in the block. To be clear `wrapr::let` is re-writing function arguments (which is how we use `dplyr::mutate` in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not parameterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or if `dplyr` itself (or a data adapter) implemented something like the view stack proposal found [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/).
 
 ``` r
 library('dplyr')
@@ -159,7 +159,7 @@ d %>% ComputeRatioOfColumnsWrapped('a','b','c')
  #  5 5 7 0.7142857
 ```
 
-`replyr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
+`wrapr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
 
 `replyr::gapply`
 ----------------
@@ -178,17 +178,15 @@ d <- data.frame(group=c(1,1,2,2,2),
 rank_in_group <- . %>% mutate(constcol=1) %>%
           mutate(rank=cumsum(constcol)) %>% select(-constcol)
 d %>% replyr::gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
- #  # A tibble: 5 × 3
- #    group order  rank
- #    <dbl> <dbl> <dbl>
- #  1     2   0.5     1
- #  2     2   0.4     2
- #  3     2   0.3     3
- #  4     1   0.2     1
- #  5     1   0.1     2
+ #    group order rank
+ #  1     1   0.2    1
+ #  2     1   0.1    2
+ #  3     2   0.5    1
+ #  4     2   0.4    2
+ #  5     2   0.3    3
 ```
 
-The user supplies a function or pipeline that is meant to be applied per-group and the `replyr::gapply` wrapper orchestrates the calculation. In this example `rank_in_group` was assumed to know the column names in our data, so we directly used them instead of abstracting through `replyr::let`. `replyr::gapply` defaults to using `dplyr::group_by` as its splitting or partitioning control, but can also perform actual splits using 'split' ('base::split') or 'extract' (sequential extraction). Semantics are slightly different between cases given how `dplyr` treats grouping columns, the issue is illustrated in the difference between the definitions of `sumgroupS` and `sumgroupG` in [this example](https://github.com/WinVector/replyr/blob/master/checks/gapply.md)).
+The user supplies a function or pipeline that is meant to be applied per-group and the `replyr::gapply` wrapper orchestrates the calculation. In this example `rank_in_group` was assumed to know the column names in our data, so we directly used them instead of abstracting through `wrapr::let`. `replyr::gapply` defaults to using `dplyr::group_by` as its splitting or partitioning control, but can also perform actual splits using 'split' ('base::split') or 'extract' (sequential extraction). Semantics are slightly different between cases given how `dplyr` treats grouping columns, the issue is illustrated in the difference between the definitions of `sumgroupS` and `sumgroupG` in [this example](https://github.com/WinVector/replyr/blob/master/checks/gapply.md)).
 
 `replyr::replyr_*`
 ------------------
@@ -298,6 +296,6 @@ Clean up
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 483655 25.9     940480 50.3   823314 44.0
- #  Vcells 742987  5.7    1650153 12.6  1650107 12.6
+ #  Ncells 484888 25.9     940480 50.3   911723 48.7
+ #  Vcells 739975  5.7    1650153 12.6  1648944 12.6
 ```
