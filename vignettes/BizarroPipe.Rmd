@@ -31,7 +31,7 @@ babynames %>%
 ```
 
 To write the same pipeline using "Bizarro Pipe" we must make all the
-uses of first argument explicit with "`.`" in all of the "outer pipeline" (not actually a bad practice in terms of readability).
+uses of first argument explicit with an extra "dot notation" in all of the "outer pipeline" (not actually a bad practice in terms of readability).
 By "outer pipes" we mean `magrittr` pipes that are in the outer pipeline
 and not inside the argument of an operator 
 (i.e., not as with the "`name %>% substr(1, 3) %>% equals("Ste")`" inner pipeline).
@@ -62,6 +62,10 @@ babynames ->.;
 This above form is now single step debuggable.  We can step through each stage
 of the outer pipeline and examine the contents of "`.`" after each step (either
 by printing "`.`" or by using `RStudio` with `RStudio -> Preferences -> General -> "Show .Last.value in environment listing"` checked).  We have a free video of the technique in action [here](https://youtu.be/7Xifeq3-FGU?list=PLAKBwakacHbQT51nPHex1on3YNCCmggZA).
+
+It is a little disappointing we can't replace the inner or sub-expression pipes with Bizarro Pipe; but they are part of an
+expression that is captured for row-wise execution in the `filter` and
+not something we could step through in the context of the outer pipeline anyway.
 
 Also note: while we can
 think of `->.;` as an eager operator we may need to force computation of a 
