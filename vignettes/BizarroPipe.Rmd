@@ -1,6 +1,6 @@
 ---
 title: "Bizarro Pipe"
-author: "Vignette Author"
+author: "John Mount"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
