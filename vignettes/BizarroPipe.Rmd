@@ -74,3 +74,8 @@ lazy structure (such as a `tbl`) by printing "`.`".
 Overall the trick is to train your eye to see `->.;` as an atomic or indivisible glyph (with superhero logo).
 
 ![Bizarro Pipe logo](BizarroPipe.jpg)
+
+The following image illustrates a pipeline (taken from [here](https://blog.rstudio.org/2015/09/29/purrr-0-1-0/)) without `magrittr` or `dplyr` (using only `purrr` verbs and Bizarro Pipe).
+
+![](Pipe2.jpg)
+
