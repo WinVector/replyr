@@ -22,4 +22,3 @@ d <- data.frame(xvals=rev(1:1000))
 replyr_quantilec(d,'xvals')
 
 }
-

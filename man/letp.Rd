@@ -51,4 +51,3 @@ d \%>\% f
 \seealso{
 \code{\link{replyr_mapRestrictCols}} \code{\link{let}}
 }
-

@@ -31,4 +31,3 @@ d <- data.frame(x=c('a','a','b',NA,'c','c'),y=1:6,
 replyr_inTest(d,'x',values,'match')
 
 }
-

@@ -25,4 +25,3 @@ replyr_arrange(data.frame(x=c(1,3,2)), 'x')
 replyr_arrange(data.frame(x=c(1,3,2)), 'x', decreasing=TRUE)
 
 }
-

@@ -1,0 +1,71 @@
+
+#' Augement a data frame by adding additional rows.
+#'
+#' Note: do not count on order of resulting data.
+#'
+#' @param data data.frame data to augment
+#' @param support data.frame rows of unique key-values into data
+#' @param ... not used, force later arguments to bind by name
+#' @param fills list default values to fill in columns
+#' @param newRowColumn character if not null name to use for newrow indicator
+#' @return augmented data
+#'
+#' @examples
+#'
+#' data <- data.frame(year = c(2005,2007,2010),
+#'                    count = c(6,1,NA),
+#'                    name = c('a','b','c'),
+#'                    stringsAsFactors = FALSE)
+#' support <- data.frame(year=2005:2010)
+#' filled <- replyr_coalesce(data, support,
+#'                           fills=list(count=0))
+#' filled <- filled[order(filled$year), ]
+#' filled
+#'
+#' @export
+#'
+replyr_coalesce <- function(data, support,
+                            ...,
+                            fills= NULL,
+                            newRowColumn= NULL) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_coalesce unexpected arugments")
+  }
+  dataCols <- colnames(data)
+  joinCols <- colnames(support)
+  if(length(joinCols)<=0) {
+    stop("replyr::replyr_coalesce support must have columns")
+  }
+  if(length(setdiff(joinCols, dataCols))>0) {
+    stop("replyr::replyr_coalesce data cols must be a superset of support columns")
+  }
+  if(length(setdiff(names(fills), dataCols))>0) {
+    stop("replyr::replyr_coalesce fill columns must be a subset of data columns")
+  }
+  if(length(intersect(names(fills), joinCols))>0) {
+    stop("replyr::replyr_coalesce fill columns must not overlap key columns")
+  }
+  additions <- dplyr::anti_join(support, data, by=joinCols)
+  if( (replyr_nrow(data)+replyr_nrow(additions)) != replyr_nrow(support)) {
+    stop("replyr::replyr_coalesce support is not a unique set of keys for data")
+  }
+  if(nrow(additions)<=0) {
+    return(data)
+  }
+  for(ci in dataCols) {
+    if(!(ci %in% joinCols)) {
+      if(ci %in% names(fills)) {
+        vi <- fills[[ci]]
+        let(list(COLI=ci),
+            additions <- dplyr::mutate(additions, COLI=vi)
+        )
+      } else {
+        let(list(COLI=ci),
+            additions <- dplyr::mutate(additions, COLI=NA)
+        )
+      }
+    }
+  }
+  res <- dplyr::bind_rows(data, additions)
+  res
+}

@@ -23,4 +23,3 @@ d <- data.frame(x=1:2)
 replyr_bind_rows(list(d,d,d))
 
 }
-

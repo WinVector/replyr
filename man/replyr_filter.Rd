@@ -29,4 +29,3 @@ d <- data.frame(x=c('a','a','b','b','c','c'),y=1:6,
 replyr_filter(d,'x',values)
 
 }
-

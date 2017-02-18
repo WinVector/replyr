@@ -23,4 +23,3 @@ d <- data.frame(x=c(1,2,3,3))
 replyr_uniqueValues(d,'x')
 
 }
-

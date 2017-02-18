@@ -24,4 +24,3 @@ replyr_dataServiceName(data.frame(x=1))
 replyr_dataServiceName(dplyr::as.tbl(data.frame(x=1)))
 
 }
-

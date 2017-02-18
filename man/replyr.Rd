@@ -23,4 +23,3 @@ working with an in-memory data.frame.  Results do depend on which dplyr service 
 To learn more about replyr, please start with the vignette:
 \code{vignette('replyr','replyr')}
 }
-

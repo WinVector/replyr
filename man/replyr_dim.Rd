@@ -21,4 +21,3 @@ d<- data.frame(x=c(1,2))
 replyr_dim(d)
 
 }
-
