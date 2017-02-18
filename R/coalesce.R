@@ -1,13 +1,14 @@
 
-#' Augement a data frame by adding additional rows.
+#' Augment a data frame by adding additional rows.
 #'
-#' Note: do not count on order of resulting data.
+#' Note: do not count on order of resulting data.  Also only added rows
+#' are altered by the fill instructions.
 #'
 #' @param data data.frame data to augment
 #' @param support data.frame rows of unique key-values into data
 #' @param ... not used, force later arguments to bind by name
 #' @param fills list default values to fill in columns
-#' @param newRowColumn character if not null name to use for newrow indicator
+#' @param newRowColumn character if not null name to use for new row indicator
 #' @return augmented data
 #'
 #' @examples
@@ -49,6 +50,11 @@ replyr_coalesce <- function(data, support,
   if( (replyr_nrow(data)+replyr_nrow(additions)) != replyr_nrow(support)) {
     stop("replyr::replyr_coalesce support is not a unique set of keys for data")
   }
+  if(!is.null(newRowColumn)) {
+    let(list(NEWROWCOL=newRowColumn),
+        data <- dplyr::mutate(data, NEWROWCOL= FALSE)
+    )
+  }
   if(nrow(additions)<=0) {
     return(data)
   }
@@ -65,6 +71,11 @@ replyr_coalesce <- function(data, support,
         )
       }
     }
+  }
+  if(!is.null(newRowColumn)) {
+    let(list(NEWROWCOL=newRowColumn),
+        additions <- dplyr::mutate(additions, NEWROWCOL= TRUE)
+    )
   }
   res <- dplyr::bind_rows(data, additions)
   res

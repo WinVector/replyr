@@ -2,7 +2,7 @@
 % Please edit documentation in R/coalesce.R
 \name{replyr_coalesce}
 \alias{replyr_coalesce}
-\title{Augement a data frame by adding additional rows.}
+\title{Augment a data frame by adding additional rows.}
 \usage{
 replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL)
 }
@@ -15,13 +15,14 @@ replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL)
 
 \item{fills}{list default values to fill in columns}
 
-\item{newRowColumn}{character if not null name to use for newrow indicator}
+\item{newRowColumn}{character if not null name to use for new row indicator}
 }
 \value{
 augmented data
 }
 \description{
-Note: do not count on order of resulting data.
+Note: do not count on order of resulting data.  Also only added rows
+are altered by the fill instructions.
 }
 \examples{
 
