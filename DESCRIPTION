@@ -1,6 +1,6 @@
 Package: replyr
 Type: Package
-Title: Fluid Use of 'dplyr' and Parametric Arguments
+Title: Fluid Use of 'dplyr'
 Version: 0.2.3
 Date: 2017-02-10
 Author: John Mount, Nina Zumel
