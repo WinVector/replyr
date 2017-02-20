@@ -1,0 +1,67 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+### head(d, n=1) has problems on sparklyr (possibly to to blank values)
+
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+OSX 10.11.6.
+Spark installed as described at http://spark.rstudio.com
+
+```
+library('sparklyr')
+spark_install(version = "2.0.0")
+```
+
+```{r setup}
+library('dplyr')
+library('sparklyr')
+R.Version()$version.string
+packageVersion('dplyr')
+packageVersion('sparklyr')
+my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
+class(my_db)
+my_db$spark_home
+print(my_db)
+```
+
+```{r issue, error=TRUE}
+support <- copy_to(my_db,
+                   data.frame(year=2005:2010),
+                   'support')
+
+# This works.
+head(support)
+
+# This works.
+head(support, n=1)
+
+support <- mutate(support, name='')
+
+# This works.
+head(support)
+
+# This does not work.
+head(support, n=1)
+```
+
+To sumbit as sparklyr issue.
+
+```{r printversion}
+version
+```
+
+
