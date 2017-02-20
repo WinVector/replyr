@@ -64,7 +64,7 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:53247"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:53499"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
@@ -75,22 +75,22 @@ print(my_db)
  #               "yes"              "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpz5ZYCx/file126507d7ca72e_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpBV0X0q/file127c713737cde_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@8dbf495
+ #    org.apache.spark.SparkContext@334319f9
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@a7cdca2
+ #    org.apache.spark.api.java.JavaSparkContext@75886717
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@56ebcf45
+ #    org.apache.spark.sql.SparkSession@50bc7a00
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -180,7 +180,7 @@ dplyr::union_all(s1,s2)
  #  12     b  2010
 ```
 
-To submit as a sparklyr issue.
+Submitted as a [sparklyr issue 507](https://github.com/rstudio/sparklyr/issues/507).
 
 ``` r
 version

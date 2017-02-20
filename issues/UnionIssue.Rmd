@@ -62,7 +62,7 @@ dplyr::union(s1,s2)
 dplyr::union_all(s1,s2)
 ```
 
-To submit as a sparklyr issue.
+Submitted as a [sparklyr issue 507](https://github.com/rstudio/sparklyr/issues/507).
 
 ```{r printversion}
 version
