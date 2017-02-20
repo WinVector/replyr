@@ -1,3 +1,7 @@
+### Altering captured reference damages spark results.
+
+If you use a variable in `dplyr::mutate()` against a `sparklyr` data source the lazy eval captures references to user variables. Changing values of those variables implicitly changes the `mutate` and changes the values seen in the `sparklyr` result (which is itself a query). This can be worked around by dropping in `dplyr::compute()` but it seems like it can produce a lot of incorrect calculations. Below is a small example and a lot information on the versions of everything beeing run. I am assuming the is a `sparklyr` issue as the query views are failrly different than a number of other `dplyr` structures, but it could be a `dplyr` issue.
+
 <!-- Generated from .Rmd. Please edit that file -->
 OSX 10.11.6. Spark installed as described at <http://spark.rstudio.com>
 
@@ -62,33 +66,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:58964"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:59154"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
  #          description               class                mode                text              opened 
- #  "->localhost:58961"          "sockconn"                "rb"            "binary"            "opened" 
+ #  "->localhost:59151"          "sockconn"                "rb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpxkn3Al/filefeb634813b11_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp7V8BoH/fileffc027edcfe0_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@73d0c0e5
+ #    org.apache.spark.SparkContext@4fc20fe9
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@4e527f99
+ #    org.apache.spark.api.java.JavaSparkContext@5ca96df5
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@1346ee7
+ #    org.apache.spark.sql.SparkSession@279bd0b6
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -136,7 +140,7 @@ print(s1) # print 2
 
 Notice `s1` changed its value (like due to lazy evaluation and having captured a reference to `v`).
 
-To submit as a dplyr issue.
+To submit as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503).
 
 ``` r
 version

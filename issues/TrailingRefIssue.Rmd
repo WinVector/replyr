@@ -4,6 +4,9 @@ output:
     variant: markdown_github
 ---
 
+### Altering captured reference damages spark results.
+
+If you use a variable in `dplyr::mutate()` against a `sparklyr` data source the lazy eval captures references to user variables.  Changing values of those variables implicitly changes the `mutate` and changes the values seen in the `sparklyr` result (which is itself a query).  This can be worked around by dropping in `dplyr::compute()` but it seems like it can produce a lot of incorrect calculations.  Below is a small example and a lot information on the versions of everything beeing run.  I am assuming the is a `sparklyr` issue as the query views are failrly different than a number of other `dplyr` structures, but it could be a `dplyr` issue.
 
 <!-- Generated from .Rmd. Please edit that file -->
 
@@ -57,7 +60,7 @@ print(s1) # print 2
 Notice `s1` changed its value (like due to lazy evaluation and having captured a reference to `v`).
 
 
-To submit as a dplyr issue.
+To submit as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503).
 
 ```{r printversion}
 version
