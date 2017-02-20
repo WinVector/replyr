@@ -58,7 +58,7 @@ head(support)
 head(support, n=1)
 ```
 
-To sumbit as sparklyr issue.
+Submitted as [sparklyr issue 506](https://github.com/rstudio/sparklyr/issues/506).
 
 ```{r printversion}
 version

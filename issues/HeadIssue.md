@@ -64,33 +64,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:61336"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:61551"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
  #          description               class                mode                text              opened 
- #  "->localhost:61333"          "sockconn"                "rb"            "binary"            "opened" 
+ #  "->localhost:61548"          "sockconn"                "rb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpPsk9C9/file106c53d4cbe67_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpRm00Ju/file107a6620296d4_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@27555644
+ #    org.apache.spark.SparkContext@73d0c0e5
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@59652256
+ #    org.apache.spark.api.java.JavaSparkContext@4e527f99
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@6e1c290
+ #    org.apache.spark.sql.SparkSession@1346ee7
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -148,7 +148,7 @@ head(support, n=1)
  #  Problem variables: 'name'
 ```
 
-To sumbit as sparklyr issue.
+Submitted as [sparklyr issue 506](https://github.com/rstudio/sparklyr/issues/506).
 
 ``` r
 version
