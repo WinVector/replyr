@@ -54,7 +54,7 @@ dplyr::bind_rows(support, support)
 dplyr::bind_rows(list(support, support))
 ```
 
-To submit as sparklyr issue.
+Submitted as [sparklyr issue 505](https://github.com/rstudio/sparklyr/issues/505).
 
 ```{r printversion}
 version

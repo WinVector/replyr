@@ -66,33 +66,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:59749"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:59941"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
  #          description               class                mode                text              opened 
- #  "->localhost:59746"          "sockconn"                "rb"            "binary"            "opened" 
+ #  "->localhost:59938"          "sockconn"                "rb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp53Q24W/file1028369792a5f_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpmEh0l2/file1036b3ee7df70_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@4fc20fe9
+ #    org.apache.spark.SparkContext@358b911d
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@5ca96df5
+ #    org.apache.spark.api.java.JavaSparkContext@2518d77f
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@279bd0b6
+ #    org.apache.spark.sql.SparkSession@712ac526
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -128,7 +128,7 @@ dplyr::bind_rows(list(support, support))
  #  Error in eval(expr, envir, enclos): incompatible sizes (1 != 3)
 ```
 
-To submit as sparklyr issue.
+Submitted as [sparklyr issue 505](https://github.com/rstudio/sparklyr/issues/505).
 
 ``` r
 version
