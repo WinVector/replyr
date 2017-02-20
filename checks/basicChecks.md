@@ -124,14 +124,40 @@ runExample(noopCopy)
  #    Sepal_Length Sepal_Width Species rank
  #  1          5.8         4.0  setosa    0
  #  2          5.7         4.4  setosa    1
- #  [1] "coalesce example"
+ #  [1] "coalesce example 1"
  #    year count name
  #  1 2005     6    a
  #  2 2007     1    b
  #  3 2010    NA    c
  #  4 2009     0     
  #  5 2008     0     
- #  6 2006     0
+ #  6 2006     0     
+ #  [1] "coalesce example 2"
+ #     year count name
+ #  1  2005     6    a
+ #  2  2007     1    b
+ #  3  2010    NA    c
+ #  4  2010     0    d
+ #  5  2009     0    d
+ #  6  2008     0    d
+ #  7  2007     0    d
+ #  8  2006     0    d
+ #  9  2005     0    d
+ #  10 2009     0    c
+ #  11 2008     0    c
+ #  12 2007     0    c
+ #  13 2006     0    c
+ #  14 2005     0    c
+ #  15 2010     0    b
+ #  16 2009     0    b
+ #  17 2008     0    b
+ #  18 2006     0    b
+ #  19 2005     0    b
+ #  20 2010     0    a
+ #  21 2009     0    a
+ #  22 2008     0    a
+ #  23 2007     0    a
+ #  24 2006     0    a
  #  NULL
 ```
 
@@ -258,7 +284,7 @@ runExample(tblCopy)
  #           <dbl>       <dbl>  <fctr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "coalesce example"
+ #  [1] "coalesce example 1"
  #  # A tibble: 6 × 3
  #     year count  name
  #    <dbl> <dbl> <chr>
@@ -267,7 +293,22 @@ runExample(tblCopy)
  #  3  2010    NA     c
  #  4  2009     0      
  #  5  2008     0      
- #  6  2006     0
+ #  6  2006     0      
+ #  [1] "coalesce example 2"
+ #  # A tibble: 24 × 3
+ #      year count  name
+ #     <dbl> <dbl> <chr>
+ #  1   2005     6     a
+ #  2   2007     1     b
+ #  3   2010    NA     c
+ #  4   2010     0     d
+ #  5   2009     0     d
+ #  6   2008     0     d
+ #  7   2007     0     d
+ #  8   2006     0     d
+ #  9   2005     0     d
+ #  10  2009     0     c
+ #  # ... with 14 more rows
  #  NULL
 ```
 
@@ -412,7 +453,7 @@ runExample(copyToRemote)
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "coalesce example"
+ #  [1] "coalesce example 1"
  #  Source:   query [?? x 3]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
@@ -423,12 +464,29 @@ runExample(copyToRemote)
  #  3  2010    NA     c
  #  4  2006     0      
  #  5  2008     0      
- #  6  2009     0
+ #  6  2009     0      
+ #  [1] "coalesce example 2"
+ #  Source:   query [?? x 3]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #      year count  name
+ #     <dbl> <dbl> <chr>
+ #  1   2005     6     a
+ #  2   2007     1     b
+ #  3   2010    NA     c
+ #  4   2006     0     a
+ #  5   2007     0     a
+ #  6   2008     0     a
+ #  7   2009     0     a
+ #  8   2010     0     a
+ #  9   2005     0     b
+ #  10  2006     0     b
+ #  # ... with more rows
  #  NULL
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 533290 28.5     940480 50.3   940480 50.3
- #  Vcells 785683  6.0    1650153 12.6  1650153 12.6
+ #  Ncells 533879 28.6     940480 50.3   940480 50.3
+ #  Vcells 787313  6.1    2060183 15.8  2060183 15.8
 ```
 
 MySQL example ("docker start mysql").
@@ -572,7 +630,7 @@ runExample(copyToRemote)
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "coalesce example"
+ #  [1] "coalesce example 1"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
 
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
@@ -588,12 +646,31 @@ runExample(copyToRemote)
  #  3  2010     0     c
  #  4  2006     0      
  #  5  2008     0      
- #  6  2009     0
+ #  6  2009     0      
+ #  [1] "coalesce example 2"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #      year count  name
+ #     <dbl> <dbl> <chr>
+ #  1   2005     6     a
+ #  2   2007     1     b
+ #  3   2010     0     c
+ #  4   2006     0     a
+ #  5   2007     0     a
+ #  6   2008     0     a
+ #  7   2009     0     a
+ #  8   2010     0     a
+ #  9   2005     0     b
+ #  10  2006     0     b
+ #  # ... with more rows
  #  NULL
 my_db <- NULL; gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 568414 30.4     940480 50.3   940480 50.3
- #  Vcells 812809  6.3    1650153 12.6  1650153 12.6
+ #  Ncells 569034 30.4     940480 50.3   940480 50.3
+ #  Vcells 814544  6.3    2060183 15.8  2060183 15.8
 ```
 
 PostgreSQL example ("docker start pg").
@@ -737,7 +814,7 @@ runExample(copyToRemote)
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "coalesce example"
+ #  [1] "coalesce example 1"
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -748,13 +825,30 @@ runExample(copyToRemote)
  #  3  2010    NA     c
  #  4  2006     0      
  #  5  2008     0      
- #  6  2009     0
+ #  6  2009     0      
+ #  [1] "coalesce example 2"
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #      year count  name
+ #     <dbl> <dbl> <chr>
+ #  1   2005     6     a
+ #  2   2007     1     b
+ #  3   2010    NA     c
+ #  4   2006     0     a
+ #  5   2007     0     a
+ #  6   2008     0     a
+ #  7   2009     0     a
+ #  8   2010     0     a
+ #  9   2005     0     b
+ #  10  2006     0     b
+ #  # ... with more rows
  #  NULL
 my_db <- NULL; gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 602217 32.2    1168576 62.5   940480 50.3
- #  Vcells 839090  6.5    1650153 12.6  1650153 12.6
+ #  Ncells 602825 32.2    1168576 62.5   940480 50.3
+ #  Vcells 840905  6.5    2060183 15.8  2060183 15.8
 ```
 
 Spark 2.0.0. example (lowest version of Spark we are supporting).
@@ -902,7 +996,7 @@ runExample(copyToRemote)
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
- #  [1] "coalesce example"
+ #  [1] "coalesce example 1"
  #  Source:   query [6 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -913,11 +1007,28 @@ runExample(copyToRemote)
  #  3  2008     0      
  #  4  2010   NaN     c
  #  5  2006     0      
- #  6  2009     0
+ #  6  2009     0      
+ #  [1] "coalesce example 2"
+ #  Source:   query [24 x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #      year count  name
+ #     <dbl> <dbl> <chr>
+ #  1   2007     1     b
+ #  2   2005     0     b
+ #  3   2005     0     c
+ #  4   2007     0     c
+ #  5   2006     0     d
+ #  6   2007     0     d
+ #  7   2008     0     d
+ #  8   2005     6     a
+ #  9   2006     0     a
+ #  10  2007     0     a
+ #  # ... with 14 more rows
  #  NULL
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (71351, 0)
+ #  Auto-disconnecting postgres connection (74688, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 638964 34.2    1168576 62.5  1168576 62.5
- #  Vcells 872717  6.7    1650153 12.6  1650153 12.6
+ #  Ncells 639757 34.2    1168576 62.5  1168576 62.5
+ #  Vcells 875310  6.7    2060183 15.8  2060183 15.8
 ```

@@ -22,6 +22,10 @@ r_replyr_bind_rows <- function(lst, eagerCompute) {
   # ideas from https://github.com/rstudio/sparklyr/issues/76
   # would like to use union_all, but seems to have problems with Spark 2.0.0
   # (spread example from basicChecksSpark200.Rmd)
+  # make sure columns are in same order (dplyr::union over Spark doesn't like disorder)
+  colnams <- intersect(colnames(left), colnames(right))
+  left <- dplyr::select_(left, .dots=colnams)
+  right <- dplyr::select_(right, .dots=colnams)
   if(length(intersect(c('spark_connection','src_spark'), replyr_dataServiceName(left)))>0) {
     res <- dplyr::union(left,right)
   } else {

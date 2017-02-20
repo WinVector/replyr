@@ -5,6 +5,7 @@
  * add replyr_coalesce.
  * Add many work-around for different remote data stores.
  * Make minimal Spark version 2.0.0.
+ * replyr_bind_rows reorder and intersect column names.
  
 'replyr' 0.2.2 2017-02-04
  

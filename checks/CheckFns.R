@@ -89,7 +89,7 @@ runExample <- function(copyToRemote) {
   print(dletres)
 
   # coalesce example
-  print("coalesce example")
+  print("coalesce example 1")
   dcoalesce <- copyToRemote(data.frame(year = c(2005,2007,2010),
                      count = c(6,1,NA),
                      name = c('a','b','c'),
@@ -100,6 +100,21 @@ runExample <- function(copyToRemote) {
   filled <-  replyr::replyr_coalesce(dcoalesce, support,
                             fills=list(count= 0, name= ''))
   print(filled)
+
+  print("coalesce example 2")
+  data <- copyToRemote(data.frame(year = c(2005,2007,2010),
+                                  count = c(6,1,NA),
+                                  name = c('a','b','c'),
+                                  stringsAsFactors = FALSE),
+                       'dcoal2')
+  support <- copyToRemote(expand.grid(year=2005:2010,
+                                      name= c('a','b','c','d'),
+                                      stringsAsFactors = FALSE),
+                          'support2')
+  filled <-  replyr::replyr_coalesce(data, support,
+                            fills=list(count=0))
+  print(filled)
+
 
   NULL
 }
