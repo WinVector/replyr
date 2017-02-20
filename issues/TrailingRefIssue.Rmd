@@ -60,7 +60,7 @@ print(s1) # print 2
 Notice `s1` changed its value (like due to lazy evaluation and having captured a reference to `v`).
 
 
-To submit as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503).
+Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503).
 
 ```{r printversion}
 version
