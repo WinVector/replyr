@@ -1,0 +1,66 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+OSX 10.11.6.
+Spark installed as described at http://spark.rstudio.com
+
+```
+library('sparklyr')
+spark_install(version = "2.0.0")
+```
+
+```{r setup}
+library('dplyr')
+library('sparklyr')
+R.Version()$version.string
+packageVersion('dplyr')
+packageVersion('sparklyr')
+my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
+class(my_db)
+my_db$spark_home
+print(my_db)
+```
+
+ * Expected outcome: `s1` has the same value 
+ * Observed outcome: changing varaible v changes `s1` column.
+
+```{r issue}
+support <- copy_to(my_db,
+                   data.frame(year=2005:2010),
+                   'support')
+v <- 0
+s1 <- dplyr::mutate(support,count=v)
+
+print(s1) # print 1
+
+# s1 <- dplyr::compute(s1) # likely work-around
+v <- ''
+
+print(s1) # print 2
+```
+
+Notice `s1` changed its value (like due to lazy evaluation and having captured a reference to `v`).
+
+
+To submit as a dplyr issue.
+
+```{r printversion}
+version
+```
+
+
