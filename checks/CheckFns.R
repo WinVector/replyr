@@ -1,7 +1,8 @@
 
 
 # ignores row order
-sameData <- function(df1, df2) {
+sameData <- function(df1, df2,
+                     ingoreLeftNAs= FALSE, keySet= NULL) {
   n1 <- replyr::replyr_nrow(df1)
   n2 <- replyr::replyr_nrow(df2)
   if(n1!=n2) {
@@ -19,8 +20,11 @@ sameData <- function(df1, df2) {
   if(!ae) {
     return(FALSE)
   }
-  ds1 <- dplyr::arrange_(df1, .dots=c1)
-  ds2 <- dplyr::arrange_(df2, .dots=c1)
+  if(is.null(keySet)) {
+    keySet = c1
+  }
+  ds1 <- dplyr::arrange_(df1, .dots= keySet)
+  ds2 <- dplyr::arrange_(df2, .dots= keySet)
   for(ci in c1) {
     v1 <- ds1[[ci]]
     v2 <- ds2[[ci]]
@@ -35,6 +39,11 @@ sameData <- function(df1, df2) {
       }
       v1 <- as.double(v1)
       v2 <- as.double(v2)
+    }
+    if(ingoreLeftNAs) {
+      vIdxs <- !is.na(v1)
+      v1 <- v1[vIdxs]
+      v2 <- v2[vIdxs]
     }
     alle <- all.equal(v1, v2)
     if(!is.logical(alle)) {

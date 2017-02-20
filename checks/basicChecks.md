@@ -486,8 +486,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 535706 28.7     940480 50.3   940480 50.3
- #  Vcells 790745  6.1    1650153 12.6  1650153 12.6
+ #  Ncells 535780 28.7     940480 50.3   940480 50.3
+ #  Vcells 790881  6.1    1650153 12.6  1650153 12.6
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -668,110 +668,30 @@ resMySQL <- runExample(copyToRemote)
  #  10  2006     0     b
  #  # ... with more rows
 failures <- failingFrameIndices(resBase, resMySQL) 
+retrykeys <- list()
+retrykeys[[2]] <- c('x', 'z')
+retrykeys[[3]] <- c('x', 'z')
+retrykeys[[7]] <- c('year', 'name')
+retrykeys[[8]] <- c('year', 'name')
 for(i in failures) {
-  print(paste("MySQL res differs",i))
-  print("base result")
-  print(as.data.frame(resBase[[i]]))
-  print("mysql result")
-  print(as.data.frame(resMySQL[[i]]))
+  explained <- sameData(resBase[[i]], resMySQL[[i]],
+                       ingoreLeftNAs= TRUE, keySet=retrykeys[[i]])
+  print(paste("MySQL res differs",i,
+              " explained by left NAs: ",
+              explained))
+  if(!explained) {
+    stop("MySQL non NA differnce")
+  }
 }
- #  [1] "MySQL res differs 2"
- #  [1] "base result"
- #    x  y z
- #  1 1  3 a
- #  2 2  5 a
- #  3 3 NA z
- #  [1] "mysql result"
- #    x y z
- #  1 1 3 a
- #  2 2 5 a
- #  3 3 0 z
- #  [1] "MySQL res differs 3"
- #  [1] "base result"
- #    x  y z
- #  1 1  3 a
- #  2 2  5 a
- #  3 3 NA z
- #  [1] "mysql result"
- #    x y z
- #  1 1 3 a
- #  2 2 5 a
- #  3 3 0 z
- #  [1] "MySQL res differs 7"
- #  [1] "base result"
- #    year count name
- #  1 2005     6    a
- #  2 2007     1    b
- #  3 2010    NA    c
- #  4 2009     0     
- #  5 2008     0     
- #  6 2006     0     
- #  [1] "mysql result"
- #    year count name
- #  1 2005     6    a
- #  2 2007     1    b
- #  3 2010     0    c
- #  4 2006     0     
- #  5 2008     0     
- #  6 2009     0     
- #  [1] "MySQL res differs 8"
- #  [1] "base result"
- #     year count name
- #  1  2005     6    a
- #  2  2007     1    b
- #  3  2010    NA    c
- #  4  2010     0    d
- #  5  2009     0    d
- #  6  2008     0    d
- #  7  2007     0    d
- #  8  2006     0    d
- #  9  2005     0    d
- #  10 2009     0    c
- #  11 2008     0    c
- #  12 2007     0    c
- #  13 2006     0    c
- #  14 2005     0    c
- #  15 2010     0    b
- #  16 2009     0    b
- #  17 2008     0    b
- #  18 2006     0    b
- #  19 2005     0    b
- #  20 2010     0    a
- #  21 2009     0    a
- #  22 2008     0    a
- #  23 2007     0    a
- #  24 2006     0    a
- #  [1] "mysql result"
- #     year count name
- #  1  2005     6    a
- #  2  2007     1    b
- #  3  2010     0    c
- #  4  2006     0    a
- #  5  2007     0    a
- #  6  2008     0    a
- #  7  2009     0    a
- #  8  2010     0    a
- #  9  2005     0    b
- #  10 2006     0    b
- #  11 2008     0    b
- #  12 2009     0    b
- #  13 2010     0    b
- #  14 2005     0    c
- #  15 2006     0    c
- #  16 2007     0    c
- #  17 2008     0    c
- #  18 2009     0    c
- #  19 2005     0    d
- #  20 2006     0    d
- #  21 2007     0    d
- #  22 2008     0    d
- #  23 2009     0    d
- #  24 2010     0    d
+ #  [1] "MySQL res differs 2  explained by left NAs:  TRUE"
+ #  [1] "MySQL res differs 3  explained by left NAs:  TRUE"
+ #  [1] "MySQL res differs 7  explained by left NAs:  TRUE"
+ #  [1] "MySQL res differs 8  explained by left NAs:  TRUE"
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 571048 30.5     940480 50.3   940480 50.3
- #  Vcells 819315  6.3    1650153 12.6  1650153 12.6
+ #  Ncells 571299 30.6     940480 50.3   940480 50.3
+ #  Vcells 820099  6.3    1650153 12.6  1650153 12.6
 ```
 
 PostgreSQL example ("docker start pg").
@@ -948,10 +868,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL res differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
- #  Auto-disconnecting postgres connection (77136, 0)
+ #  Auto-disconnecting postgres connection (77936, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 604765 32.3    1168576 62.5   940480 50.3
- #  Vcells 845660  6.5    1650153 12.6  1650153 12.6
+ #  Ncells 604871 32.4    1168576 62.5   940480 50.3
+ #  Vcells 845645  6.5    1650153 12.6  1650153 12.6
 ```
 
 Spark 2.0.0. example (lowest version of Spark we are supporting).
@@ -1133,6 +1053,16 @@ if(!listsOfSameData(resBase, resSpark)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 641788 34.3    1168576 62.5  1168576 62.5
- #  Vcells 877343  6.7    1650153 12.6  1650153 12.6
+ #  Ncells 641833 34.3    1168576 62.5  1168576 62.5
+ #  Vcells 877059  6.7    1650153 12.6  1650153 12.6
+```
+
+``` r
+print("all done")
+ #  [1] "all done"
+rm(list=ls())
+gc()
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 639998 34.2    1168576 62.5  1168576 62.5
+ #  Vcells 873707  6.7    1650153 12.6  1650153 12.6
 ```

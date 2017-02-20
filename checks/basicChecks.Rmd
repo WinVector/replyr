@@ -71,12 +71,20 @@ class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resMySQL <- runExample(copyToRemote)
 failures <- failingFrameIndices(resBase, resMySQL) 
+retrykeys <- list()
+retrykeys[[2]] <- c('x', 'z')
+retrykeys[[3]] <- c('x', 'z')
+retrykeys[[7]] <- c('year', 'name')
+retrykeys[[8]] <- c('year', 'name')
 for(i in failures) {
-  print(paste("MySQL res differs",i))
-  print("base result")
-  print(as.data.frame(resBase[[i]]))
-  print("mysql result")
-  print(as.data.frame(resMySQL[[i]]))
+  explained <- sameData(resBase[[i]], resMySQL[[i]],
+                       ingoreLeftNAs= TRUE, keySet=retrykeys[[i]])
+  print(paste("MySQL res differs",i,
+              " explained by left NAs: ",
+              explained))
+  if(!explained) {
+    stop("MySQL non NA differnce")
+  }
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
@@ -110,3 +118,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
 
+```{r done}
+print("all done")
+rm(list=ls())
+gc()
+```
