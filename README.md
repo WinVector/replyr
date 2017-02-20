@@ -231,7 +231,7 @@ We will probably only ever cover:
 -   `RMySQL`
 -   `RPostgreSQL`
 -   `SQLite`
--   `sparklyr` (`Spark` 2 preferred)
+-   `sparklyr` (`Spark` 2.0.0 or greater)
 
 Additional functions
 --------------------
@@ -287,7 +287,7 @@ Additional desired capabilities of interest include:
 Conclusion
 ----------
 
-`replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as `Spark 1.6.2` versions `Spark 2.0.0`).
+`replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources.
 
 Clean up
 --------
@@ -296,6 +296,6 @@ Clean up
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 484888 25.9     940480 50.3   911723 48.7
- #  Vcells 739975  5.7    1650153 12.6  1648944 12.6
+ #  Ncells 485135 26.0     940480 50.3   940480 50.3
+ #  Vcells 746333  5.7    1900863 14.6  1849887 14.2
 ```
