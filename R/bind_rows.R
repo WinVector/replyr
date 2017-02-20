@@ -23,6 +23,7 @@ r_replyr_bind_rows <- function(lst, eagerCompute) {
   # would like to use union_all, but seems to have problems with Spark 2.0.0
   # (spread example from basicChecksSpark200.Rmd)
   # make sure columns are in same order (dplyr::union over Spark doesn't like disorder)
+  # see: https://github.com/WinVector/replyr/blob/master/issues/UnionIssue.md
   colnams <- intersect(colnames(left), colnames(right))
   left <- dplyr::select_(left, .dots=colnams)
   right <- dplyr::select_(right, .dots=colnams)
