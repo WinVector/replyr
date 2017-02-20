@@ -1,6 +1,68 @@
 
 
+# ignores row order
+sameData <- function(df1, df2) {
+  n1 <- replyr::replyr_nrow(df1)
+  n2 <- replyr::replyr_nrow(df2)
+  if(n1!=n2) {
+    return(FALSE)
+  }
+  c1 <- colnames(df1)
+  c2 <- colnames(df1)
+  if(length(c1)!=length(c2)) {
+    return(FALSE)
+  }
+  ae <- all.equal(c1,c2)
+  if(!is.logical(ae)) {
+    return(FALSE)
+  }
+  if(!ae) {
+    return(FALSE)
+  }
+  ds1 <- dplyr::arrange_(df1, .dots=c1)
+  ds2 <- dplyr::arrange_(df2, .dots=c1)
+  for(ci in c1) {
+    v1 <- ds1[[ci]]
+    v2 <- ds2[[ci]]
+    # get rid of some path dependent type diffs
+    if(is.factor(v1) || is.factor(v2)) {
+      v1 <- as.character(v1)
+      v2 <- as.character(v2)
+    }
+    if(is.numeric(v1) || is.numeric(v2)) {
+      if(is.numeric(v1) != is.numeric(v2)) {
+        return(FALSE)
+      }
+      v1 <- as.double(v1)
+      v2 <- as.double(v2)
+    }
+    alle <- all.equal(v1, v2)
+    if(!is.logical(alle)) {
+      return(FALSE)
+    }
+    if(!alle) {
+      return(FALSE)
+    }
+  }
+  return(TRUE)
+}
 
+failingFrameIndices <- function(l1, l2) {
+  n1 <- length(l1)
+  n2 <- length(l2)
+  if(n1!=n2) {
+    stop("lists are different lengths")
+  }
+  which(vapply(seq_len(n1),
+               function(i) {
+                 !sameData(l1[[i]], l2[[i]])
+               },
+               logical(1)))
+}
+
+listsOfSameData <- function(l1, l2) {
+  length(failingFrameIndices(l1, l2))<=0
+}
 
 remoteCopy <- function(my_db) {
   force(my_db)
@@ -111,10 +173,18 @@ runExample <- function(copyToRemote) {
                                       name= c('a','b','c','d'),
                                       stringsAsFactors = FALSE),
                           'support2')
-  filled <-  replyr::replyr_coalesce(data, support,
+  filled2 <-  replyr::replyr_coalesce(data, support,
                             fills=list(count=0))
-  print(filled)
+  print(filled2)
 
-
-  NULL
+  resFrames <- list(d1,
+                    d2,
+                    d2b,
+                    d3,
+                    d4,
+                    dletres,
+                    filled,
+                    filled2)
+  resFrames <- lapply(resFrames, replyr::replyr_copy_from)
+  resFrames
 }

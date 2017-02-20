@@ -23,8 +23,7 @@ Local `data.frame` example.
 noopCopy <- function(df,name) {
   df
 }
-
-runExample(noopCopy)
+resBase <- runExample(noopCopy)
  #  [1] "data.frame"
  #  [1] "data.frame"
  #    x y
@@ -158,7 +157,6 @@ runExample(noopCopy)
  #  22 2008     0    a
  #  23 2007     0    a
  #  24 2006     0    a
- #  NULL
 ```
 
 Local `tbl` example.
@@ -167,8 +165,7 @@ Local `tbl` example.
 tblCopy <- function(df,name) {
   as.tbl(df)
 }
-
-runExample(tblCopy)
+resTbl <- runExample(tblCopy)
  #  [1] "tbl_df"     "tbl"        "data.frame"
  #  [1] "tbl"
  #  # A tibble: 2 × 2
@@ -309,7 +306,9 @@ runExample(tblCopy)
  #  9   2005     0     d
  #  10  2009     0     c
  #  # ... with 14 more rows
- #  NULL
+if(!listsOfSameData(resBase, resTbl)) {
+  stop("tbl res differs")
+}
 ```
 
 `SQLite` example.
@@ -319,7 +318,7 @@ my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 class(my_db)
  #  [1] "src_sqlite" "src_sql"    "src"
 copyToRemote <- remoteCopy(my_db)
-runExample(copyToRemote)
+resSQLite <- runExample(copyToRemote)
  #  [1] "tbl_sqlite" "tbl_sql"    "tbl_lazy"   "tbl"       
  #  [1] "src_sqlite"
  #  Source:   query [?? x 2]
@@ -482,21 +481,23 @@ runExample(copyToRemote)
  #  9   2005     0     b
  #  10  2006     0     b
  #  # ... with more rows
- #  NULL
-my_db <- NULL; gc() # disconnect
+if(!listsOfSameData(resBase, resSQLite)) {
+  stop("SQLite res differs")
+}
+rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 533879 28.6     940480 50.3   940480 50.3
- #  Vcells 787313  6.1    2060183 15.8  2060183 15.8
+ #  Ncells 535706 28.7     940480 50.3   940480 50.3
+ #  Vcells 790745  6.1    1650153 12.6  1650153 12.6
 ```
 
-MySQL example ("docker start mysql").
+MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
 
 ``` r
 my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
 class(my_db)
  #  [1] "src_mysql" "src_sql"   "src"
 copyToRemote <- remoteCopy(my_db)
-runExample(copyToRemote)
+resMySQL <- runExample(copyToRemote)
  #  [1] "tbl_mysql" "tbl_sql"   "tbl_lazy"  "tbl"      
  #  [1] "src_mysql"
  #  Source:   query [?? x 2]
@@ -666,11 +667,111 @@ runExample(copyToRemote)
  #  9   2005     0     b
  #  10  2006     0     b
  #  # ... with more rows
- #  NULL
-my_db <- NULL; gc() # disconnect
+failures <- failingFrameIndices(resBase, resMySQL) 
+for(i in failures) {
+  print(paste("MySQL res differs",i))
+  print("base result")
+  print(as.data.frame(resBase[[i]]))
+  print("mysql result")
+  print(as.data.frame(resMySQL[[i]]))
+}
+ #  [1] "MySQL res differs 2"
+ #  [1] "base result"
+ #    x  y z
+ #  1 1  3 a
+ #  2 2  5 a
+ #  3 3 NA z
+ #  [1] "mysql result"
+ #    x y z
+ #  1 1 3 a
+ #  2 2 5 a
+ #  3 3 0 z
+ #  [1] "MySQL res differs 3"
+ #  [1] "base result"
+ #    x  y z
+ #  1 1  3 a
+ #  2 2  5 a
+ #  3 3 NA z
+ #  [1] "mysql result"
+ #    x y z
+ #  1 1 3 a
+ #  2 2 5 a
+ #  3 3 0 z
+ #  [1] "MySQL res differs 7"
+ #  [1] "base result"
+ #    year count name
+ #  1 2005     6    a
+ #  2 2007     1    b
+ #  3 2010    NA    c
+ #  4 2009     0     
+ #  5 2008     0     
+ #  6 2006     0     
+ #  [1] "mysql result"
+ #    year count name
+ #  1 2005     6    a
+ #  2 2007     1    b
+ #  3 2010     0    c
+ #  4 2006     0     
+ #  5 2008     0     
+ #  6 2009     0     
+ #  [1] "MySQL res differs 8"
+ #  [1] "base result"
+ #     year count name
+ #  1  2005     6    a
+ #  2  2007     1    b
+ #  3  2010    NA    c
+ #  4  2010     0    d
+ #  5  2009     0    d
+ #  6  2008     0    d
+ #  7  2007     0    d
+ #  8  2006     0    d
+ #  9  2005     0    d
+ #  10 2009     0    c
+ #  11 2008     0    c
+ #  12 2007     0    c
+ #  13 2006     0    c
+ #  14 2005     0    c
+ #  15 2010     0    b
+ #  16 2009     0    b
+ #  17 2008     0    b
+ #  18 2006     0    b
+ #  19 2005     0    b
+ #  20 2010     0    a
+ #  21 2009     0    a
+ #  22 2008     0    a
+ #  23 2007     0    a
+ #  24 2006     0    a
+ #  [1] "mysql result"
+ #     year count name
+ #  1  2005     6    a
+ #  2  2007     1    b
+ #  3  2010     0    c
+ #  4  2006     0    a
+ #  5  2007     0    a
+ #  6  2008     0    a
+ #  7  2009     0    a
+ #  8  2010     0    a
+ #  9  2005     0    b
+ #  10 2006     0    b
+ #  11 2008     0    b
+ #  12 2009     0    b
+ #  13 2010     0    b
+ #  14 2005     0    c
+ #  15 2006     0    c
+ #  16 2007     0    c
+ #  17 2008     0    c
+ #  18 2009     0    c
+ #  19 2005     0    d
+ #  20 2006     0    d
+ #  21 2007     0    d
+ #  22 2008     0    d
+ #  23 2009     0    d
+ #  24 2010     0    d
+rm(list=c('my_db','copyToRemote')); gc() # disconnect
+ #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 569034 30.4     940480 50.3   940480 50.3
- #  Vcells 814544  6.3    2060183 15.8  2060183 15.8
+ #  Ncells 571048 30.5     940480 50.3   940480 50.3
+ #  Vcells 819315  6.3    1650153 12.6  1650153 12.6
 ```
 
 PostgreSQL example ("docker start pg").
@@ -680,7 +781,7 @@ my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',pa
 class(my_db)
  #  [1] "src_postgres" "src_sql"      "src"
 copyToRemote <- remoteCopy(my_db)
-runExample(copyToRemote)
+resPostgreSQL <- runExample(copyToRemote)
  #  [1] "tbl_postgres" "tbl_sql"      "tbl_lazy"     "tbl"         
  #  [1] "src_postgres"
  #  Source:   query [?? x 2]
@@ -843,12 +944,14 @@ runExample(copyToRemote)
  #  9   2005     0     b
  #  10  2006     0     b
  #  # ... with more rows
- #  NULL
-my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting mysql connection (0, 0)
+if(!listsOfSameData(resBase, resPostgreSQL)) {
+  stop("PostgreSQL res differs")
+}
+rm(list=c('my_db','copyToRemote')); gc() # disconnect
+ #  Auto-disconnecting postgres connection (77136, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 602825 32.2    1168576 62.5   940480 50.3
- #  Vcells 840905  6.5    2060183 15.8  2060183 15.8
+ #  Ncells 604765 32.3    1168576 62.5   940480 50.3
+ #  Vcells 845660  6.5    1650153 12.6  1650153 12.6
 ```
 
 Spark 2.0.0. example (lowest version of Spark we are supporting).
@@ -862,7 +965,7 @@ class(my_db)
 my_db$spark_home
  #  [1] "/Users/johnmount/Library/Caches/spark/spark-2.0.0-bin-hadoop2.7"
 copyToRemote <- remoteCopy(my_db)
-runExample(copyToRemote)
+resSpark <- runExample(copyToRemote)
  #  [1] "tbl_spark" "tbl_sql"   "tbl_lazy"  "tbl"      
  #  [1] "src_spark"
  #  Source:   query [2 x 2]
@@ -1025,10 +1128,11 @@ runExample(copyToRemote)
  #  9   2006     0     a
  #  10  2007     0     a
  #  # ... with 14 more rows
- #  NULL
-my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (74688, 0)
+if(!listsOfSameData(resBase, resSpark)) {
+  stop("Spark res differs")
+}
+rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 639757 34.2    1168576 62.5  1168576 62.5
- #  Vcells 875310  6.7    2060183 15.8  2060183 15.8
+ #  Ncells 641788 34.3    1168576 62.5  1168576 62.5
+ #  Vcells 877343  6.7    1650153 12.6  1650153 12.6
 ```
