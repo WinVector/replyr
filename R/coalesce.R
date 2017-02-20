@@ -32,6 +32,8 @@ replyr_coalesce <- function(data, support,
   if(length(list(...))>0) {
     stop("replyr::replyr_coalesce unexpected arugments")
   }
+  sname <- replyr_dataServiceName(data)
+  sname <- replyr_dataServiceName(support)
   dataCols <- colnames(data)
   joinCols <- colnames(support)
   if(length(joinCols)<=0) {
@@ -46,8 +48,8 @@ replyr_coalesce <- function(data, support,
   if(length(intersect(names(fills), joinCols))>0) {
     stop("replyr::replyr_coalesce fill columns must not overlap key columns")
   }
-  additions <- dplyr::anti_join(support, data, by=joinCols)
-  if( (replyr_nrow(data)+replyr_nrow(additions)) != replyr_nrow(support)) {
+  replyr_private_name_additions <- dplyr::anti_join(support, data, by=joinCols)
+  if( (replyr_nrow(data)+replyr_nrow(replyr_private_name_additions)) != replyr_nrow(support)) {
     stop("replyr::replyr_coalesce support is not a unique set of keys for data")
   }
   if(!is.null(newRowColumn)) {
@@ -55,28 +57,46 @@ replyr_coalesce <- function(data, support,
         data <- dplyr::mutate(data, NEWROWCOL= FALSE)
     )
   }
-  if(nrow(additions)<=0) {
+  if(replyr_nrow(replyr_private_name_additions)<=0) {
     return(data)
   }
   for(ci in dataCols) {
     if(!(ci %in% joinCols)) {
       if(ci %in% names(fills)) {
-        vi <- fills[[ci]]
-        let(list(COLI=ci),
-            additions <- dplyr::mutate(additions, COLI=vi)
-        )
+        replyr_private_name_vi <- fills[[ci]]
+        # PostgresSQL and Spark1.6.2 don't like blank character values
+        # hopy dplyr lazyeval carries the cast over to the database
+        # And MySQL can't accept the SQL dplyr emits with character cast
+        sname <- replyr_dataServiceName(replyr_private_name_additions)
+        useCharCast <- is.character(replyr_private_name_vi) && (!("src_mysql" %in% sname))
+        if(useCharCast) {
+          let(list(COLI=ci),
+              replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions,
+                                                             COLI=as.character(replyr_private_name_vi))
+          )
+          } else {
+            let(list(COLI=ci),
+                replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions,
+                                                               COLI=replyr_private_name_vi)
+            )
+          }
       } else {
         let(list(COLI=ci),
-            additions <- dplyr::mutate(additions, COLI=NA)
+            replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions,
+                                                           COLI=NA)
         )
       }
+      # force calculation as chaning of replyr_private_name_vi was chaning previously assigned columns!
+      # needed to work around this: https://github.com/WinVector/replyr/blob/master/issues/TrailingRefIssue.md
+      replyr_private_name_additions <- compute(replyr_private_name_additions)
     }
   }
   if(!is.null(newRowColumn)) {
     let(list(NEWROWCOL=newRowColumn),
-        additions <- dplyr::mutate(additions, NEWROWCOL= TRUE)
+        replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions, NEWROWCOL= TRUE)
     )
   }
-  res <- dplyr::bind_rows(data, additions)
+  # Can't use dplyr::bind_rows see https://github.com/WinVector/replyr/blob/master/issues/BindIssue.md
+  res <- replyr::replyr_bind_rows(list(data, replyr_private_name_additions))
   res
 }

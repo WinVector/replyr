@@ -66,7 +66,7 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
     warning=function(x) NULL
   )
   if(!is.null(rowNumberColumn)) {
-    df[[rowNumberColumn]] <- seq_len(nrow(df))
+    df[[rowNumberColumn]] <- seq_len(replyr_nrow(df))
   }
   dplyr::copy_to(dest, df, name,
                  temporary=FALSE,

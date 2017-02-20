@@ -124,6 +124,15 @@ runExample(noopCopy)
  #    Sepal_Length Sepal_Width Species rank
  #  1          5.8         4.0  setosa    0
  #  2          5.7         4.4  setosa    1
+ #  [1] "coalesce example"
+ #    year count name
+ #  1 2005     6    a
+ #  2 2007     1    b
+ #  3 2010    NA    c
+ #  4 2009     0     
+ #  5 2008     0     
+ #  6 2006     0
+ #  NULL
 ```
 
 Local `tbl` example.
@@ -249,6 +258,17 @@ runExample(tblCopy)
  #           <dbl>       <dbl>  <fctr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
+ #  [1] "coalesce example"
+ #  # A tibble: 6 × 3
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010    NA     c
+ #  4  2009     0      
+ #  5  2008     0      
+ #  6  2006     0
+ #  NULL
 ```
 
 `SQLite` example.
@@ -257,7 +277,8 @@ runExample(tblCopy)
 my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 class(my_db)
  #  [1] "src_sqlite" "src_sql"    "src"
-runExample(remoteCopy(my_db))
+copyToRemote <- remoteCopy(my_db)
+runExample(copyToRemote)
  #  [1] "tbl_sqlite" "tbl_sql"    "tbl_lazy"   "tbl"       
  #  [1] "src_sqlite"
  #  Source:   query [?? x 2]
@@ -391,19 +412,33 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
+ #  [1] "coalesce example"
+ #  Source:   query [?? x 3]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010    NA     c
+ #  4  2006     0      
+ #  5  2008     0      
+ #  6  2009     0
+ #  NULL
 my_db <- NULL; gc() # disconnect
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  539003 28.8     940480 50.3   940480 50.3
- #  Vcells 1211108  9.3    2595190 19.8  2095992 16.0
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 533290 28.5     940480 50.3   940480 50.3
+ #  Vcells 785683  6.0    1650153 12.6  1650153 12.6
 ```
 
-MySQL example.
+MySQL example ("docker start mysql").
 
 ``` r
 my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
 class(my_db)
  #  [1] "src_mysql" "src_sql"   "src"
-runExample(remoteCopy(my_db))
+copyToRemote <- remoteCopy(my_db)
+runExample(copyToRemote)
  #  [1] "tbl_mysql" "tbl_sql"   "tbl_lazy"  "tbl"      
  #  [1] "src_mysql"
  #  Source:   query [?? x 2]
@@ -537,20 +572,38 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
+ #  [1] "coalesce example"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010     0     c
+ #  4  2006     0      
+ #  5  2008     0      
+ #  6  2009     0
+ #  NULL
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting mysql connection (0, 0)
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  574700 30.7     940480 50.3   940480 50.3
- #  Vcells 1239207  9.5    2595190 19.8  2559795 19.6
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 568414 30.4     940480 50.3   940480 50.3
+ #  Vcells 812809  6.3    1650153 12.6  1650153 12.6
 ```
 
-PostgreSQL example.
+PostgreSQL example ("docker start pg").
 
 ``` r
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 class(my_db)
  #  [1] "src_postgres" "src_sql"      "src"
-runExample(remoteCopy(my_db))
+copyToRemote <- remoteCopy(my_db)
+runExample(copyToRemote)
  #  [1] "tbl_postgres" "tbl_sql"      "tbl_lazy"     "tbl"         
  #  [1] "src_postgres"
  #  Source:   query [?? x 2]
@@ -684,27 +737,41 @@ runExample(remoteCopy(my_db))
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
+ #  [1] "coalesce example"
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010    NA     c
+ #  4  2006     0      
+ #  5  2008     0      
+ #  6  2009     0
+ #  NULL
 my_db <- NULL; gc() # disconnect
- #  Auto-disconnecting postgres connection (14192, 0)
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  609256 32.6    1168576 62.5   940480 50.3
- #  Vcells 1266506  9.7    2595190 19.8  2572532 19.7
+ #  Auto-disconnecting mysql connection (0, 0)
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 602217 32.2    1168576 62.5   940480 50.3
+ #  Vcells 839090  6.5    1650153 12.6  1650153 12.6
 ```
 
-Spark 1.6.2 example.
+Spark 2.0.0. example (lowest version of Spark we are supporting).
 
 ``` r
 # Can't easilly override Spark version once it is up.
-my_db <- sparklyr::spark_connect(version='1.6.2', 
+my_db <- sparklyr::spark_connect(version='2.0.0', 
    master = "local")
 class(my_db)
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
 my_db$spark_home
- #  [1] "/Users/johnmount/Library/Caches/spark/spark-1.6.2-bin-hadoop2.6"
-runExample(remoteCopy(my_db))
+ #  [1] "/Users/johnmount/Library/Caches/spark/spark-2.0.0-bin-hadoop2.7"
+copyToRemote <- remoteCopy(my_db)
+runExample(copyToRemote)
  #  [1] "tbl_spark" "tbl_sql"   "tbl_lazy"  "tbl"      
  #  [1] "src_spark"
- #  Source:   query [?? x 2]
+ #  Source:   query [2 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y
@@ -732,11 +799,11 @@ runExample(remoteCopy(my_db))
  #  
  #  d1 %>% replyr::replyr_str() 
  #  nrows: 2
- #  Observations: NA
+ #  Observations: 2
  #  Variables: 2
  #  $ x <dbl> 1, 2
  #  $ y <chr> "a", "b"NULL
- #  Source:   query [?? x 3]
+ #  Source:   query [3 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y     z
@@ -754,7 +821,7 @@ runExample(remoteCopy(my_db))
  #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
  #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
- #  Source:   query [?? x 3]
+ #  Source:   query [3 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y     z
@@ -772,7 +839,7 @@ runExample(remoteCopy(my_db))
  #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
  #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
- #  Source:   query [?? x 2]
+ #  Source:   query [6 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y
@@ -786,7 +853,7 @@ runExample(remoteCopy(my_db))
  #  [1] "a" "c"
  #  
  #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
- #  Source:   query [?? x 2]
+ #  Source:   query [4 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y
@@ -797,7 +864,7 @@ runExample(remoteCopy(my_db))
  #  4     c     6
  #  
  #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
- #  Source:   query [?? x 3]
+ #  Source:   query [6 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y match
@@ -808,7 +875,7 @@ runExample(remoteCopy(my_db))
  #  4     b     4 FALSE
  #  5     c     5  TRUE
  #  6     c     6  TRUE
- #  Source:   query [?? x 1]
+ #  Source:   query [4 x 1]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x
@@ -819,24 +886,38 @@ runExample(remoteCopy(my_db))
  #  4     3
  #  
  #  d4 %>% replyr::replyr_uniqueValues("x") 
- #  Source:   query [?? x 2]
+ #  Source:   query [3 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     n
  #    <dbl> <dbl>
  #  1     1     1
- #  2     2     1
- #  3     3     2
+ #  2     3     2
+ #  3     2     1
  #  [1] "let example"
- #  Source:   query [?? x 4]
+ #  Source:   query [2 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    Sepal_Length Sepal_Width Species  rank
  #           <dbl>       <dbl>   <chr> <dbl>
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
+ #  [1] "coalesce example"
+ #  Source:   query [6 x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2007     1     b
+ #  2  2005     6     a
+ #  3  2008     0      
+ #  4  2010   NaN     c
+ #  5  2006     0      
+ #  6  2009     0
+ #  NULL
 my_db <- NULL; gc() # disconnect
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  644320 34.5    1168576 62.5  1168576 62.5
- #  Vcells 1296566  9.9    2595190 19.8  2572532 19.7
+ #  Auto-disconnecting postgres connection (71351, 0)
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 638964 34.2    1168576 62.5  1168576 62.5
+ #  Vcells 872717  6.7    1650153 12.6  1650153 12.6
 ```

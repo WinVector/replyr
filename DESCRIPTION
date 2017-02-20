@@ -8,7 +8,7 @@ Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr
 BugReports: https://github.com/WinVector/replyr/issues
 Description: Methods to get a grip on working with remote 'tbl' sources ('SQL' databases,
-    'Spark') through 'dplyr'.  Adds convenience functions to make such tasks more like
+    'sparklyr' 'Spark' 2.0.0 and above) through 'dplyr'.  Adds convenience functions to make such tasks more like
     working with an in-memory 'data.frame'.  Results do depend on which 'dplyr' data service you use.
 License: GPL-3
 LazyData: TRUE
@@ -20,6 +20,7 @@ Suggests: testthat,
     knitr,
     rmarkdown,
     RSQLite,
+    sparklyr,
     ggplot2,
     lazyeval,
     babynames,

@@ -29,8 +29,10 @@ replyr_nrow <- function(x) {
   }
   tmp <- NULL
   # get empty corner case correct (counting returned NA on PostgreSQL for this)
+  # had problems with head(n=1) on sparklyr
+  # https://github.com/WinVector/replyr/blob/master/issues/HeadIssue.md
   suppressWarnings(
-    x %>% dplyr::ungroup() %>% head(n=1) %>% dplyr::collect() %>% as.data.frame() -> tmp)
+    x %>% dplyr::ungroup() %>% head() %>% dplyr::collect() %>% as.data.frame() -> tmp)
   if(is.null(nrow(tmp))||(nrow(tmp)<1)||(ncol(tmp)<1)) {
     return(0)
   }

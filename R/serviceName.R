@@ -28,8 +28,6 @@ replyr_dataServiceName <- function(df,
     # give up
     return(paste(sort(cls),collapse=' '))
   }
-  # 'spark_connection' Spark 1.6.2
-  # 'src_spark' Spark 2.0.0
   for(m in expectedNames) {
     if(m %in% srvcls) {
       return(m)

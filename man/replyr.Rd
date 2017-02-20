@@ -6,9 +6,9 @@
 \alias{replyr-package}
 \title{replyr: an R package for fluid use of dplyr}
 \description{
-replyr supplies methods to get a grip on working with remote tbl sources (SQL databases,
-Spark) through dplyr.  The idea is to add convenience functions to make such task more like
-working with an in-memory data.frame.  Results do depend on which dplyr service you use.
+Methods to get a grip on working with remote 'tbl' sources ('SQL' databases,
+sparklyr' 'Spark' 2.0.0 and above) through 'dplyr'.  Adds convenience functions to make such tasks more like
+working with an in-memory 'data.frame'.  Results do depend on which 'dplyr' data service you use.
 }
 \details{
 \code{replyr} helps with the following:

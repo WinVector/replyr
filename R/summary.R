@@ -127,7 +127,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                       si
                     })
   })
-  res <- dplyr::bind_rows(c(numSums,oSums))
+  res <- replyr_bind_rows(c(numSums,oSums))
   res$index <- cmap[res$column]
   classtr <- lapply(cclass,function(vi) {
     paste(vi,collapse=', ')

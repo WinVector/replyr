@@ -87,4 +87,19 @@ runExample <- function(copyToRemote) {
       dlet %>% mutate(RankColumn=RankColumn-1) -> dletres
     })
   print(dletres)
+
+  # coalesce example
+  print("coalesce example")
+  dcoalesce <- copyToRemote(data.frame(year = c(2005,2007,2010),
+                     count = c(6,1,NA),
+                     name = c('a','b','c'),
+                     stringsAsFactors = FALSE),
+                     'dcoalesce')
+  support <- copyToRemote(data.frame(year=2005:2010),
+                          'support')
+  filled <-  replyr::replyr_coalesce(dcoalesce, support,
+                            fills=list(count= 0, name= ''))
+  print(filled)
+
+  NULL
 }
