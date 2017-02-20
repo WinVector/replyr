@@ -1,0 +1,71 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+### Union order issue
+
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+OSX 10.11.6.
+Spark installed as described at http://spark.rstudio.com
+
+```
+library('sparklyr')
+spark_install(version = "2.0.0")
+```
+
+```{r setup}
+library('dplyr')
+library('sparklyr')
+R.Version()$version.string
+packageVersion('dplyr')
+packageVersion('sparklyr')
+my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
+class(my_db)
+my_db$spark_home
+print(my_db)
+```
+
+ * Expected outcome: dplyr::union and dplyr::union_all should match columns.
+ * Observed outcome: matches columns on local data frames, matches positions on spark2.0.0.
+
+```{r issue}
+d1 <- data.frame(year=2005:2010,
+                 name='a',
+                 stringsAsFactors = FALSE)
+d2 <- data.frame(name='b',
+                 year=2005:2010,
+                 stringsAsFactors = FALSE)
+
+# local frames: uses names on union
+dplyr::union(d1, d2)
+dplyr::union_all(d1, d2)
+
+
+s1 <- copy_to(my_db, d1, 's1')
+s2 <- copy_to(my_db, d2, 's2')
+
+# remore frames: uses position, co-mingline different types
+dplyr::union(s1,s2)
+dplyr::union_all(s1,s2)
+```
+
+To submit as a sparklyr issue.
+
+```{r printversion}
+version
+```
+
+
