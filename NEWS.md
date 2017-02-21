@@ -1,10 +1,10 @@
 
 'replyr' 0.2.3 2017-02-20
  
- * Move let to wrapr https://github.com/WinVector/wrapr .
+ * Move "let()" to wrapr https://github.com/WinVector/wrapr .
  * add replyr_coalesce.
- * Add many work-around for different remote data stores.
- * Make minimal Spark version 2.0.0.
+ * Add many work-arounds for different remote data stores.
+ * Make minimal Spark version: 2.0.0.
  * replyr_bind_rows reorder and intersect column names.
  
 'replyr' 0.2.2 2017-02-04
