@@ -1,6 +1,6 @@
 ### Altering captured reference damages spark results.
 
-If you use a variable in `dplyr::mutate()` against a `sparklyr` data source the lazy eval captures references to user variables. Changing values of those variables implicitly changes the `mutate` and changes the values seen in the `sparklyr` result (which is itself a query). This can be worked around by dropping in `dplyr::compute()` but it seems like it can produce a lot of incorrect calculations. Below is a small example and a lot information on the versions of everything beeing run. I am assuming the is a `sparklyr` issue as the query views are failrly different than a number of other `dplyr` structures, but it could be a `dplyr` issue.
+If you use a variable in `dplyr::mutate()` against a `sparklyr` data source the lazy eval captures references to user variables. Changing values of those variables implicitly changes the `mutate` and changes the values seen in the `sparklyr` result (which is itself a query). This can be worked around by dropping in `dplyr::compute()` but it seems like it can produce a lot of incorrect calculations. Below is a small example and a lot information on the versions of everything being run. I am assuming the is a `sparklyr` issue as the query views are failrly different than a number of other `dplyr` structures, but it could be a `dplyr` issue.
 
 <!-- Generated from .Rmd. Please edit that file -->
 OSX 10.11.6. Spark installed as described at <http://spark.rstudio.com>
@@ -66,33 +66,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:59377"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:60680"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
  #          description               class                mode                text              opened 
- #  "->localhost:59374"          "sockconn"                "rb"            "binary"            "opened" 
+ #  "->localhost:60677"          "sockconn"                "rb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpl1ThNE/file100ffd81a94e_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp3zepH9/file13f2048166043_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@28cf3033
+ #    org.apache.spark.SparkContext@4fc20fe9
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@23d36cbc
+ #    org.apache.spark.api.java.JavaSparkContext@5ca96df5
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@12601c20
+ #    org.apache.spark.sql.SparkSession@279bd0b6
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -140,7 +140,7 @@ print(s1) # print 2
 
 Notice `s1` changed its value (like due to lazy evaluation and having captured a reference to `v`).
 
-Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503).
+Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503) and [dplyr issue 2455](https://github.com/hadley/dplyr/issues/2455).
 
 ``` r
 version
