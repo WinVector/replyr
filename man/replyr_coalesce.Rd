@@ -4,7 +4,8 @@
 \alias{replyr_coalesce}
 \title{Augment a data frame by adding additional rows.}
 \usage{
-replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL)
+replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL,
+  copy = TRUE)
 }
 \arguments{
 \item{data}{data.frame data to augment}
@@ -16,6 +17,8 @@ replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL)
 \item{fills}{list default values to fill in columns}
 
 \item{newRowColumn}{character if not null name to use for new row indicator}
+
+\item{copy}{logical sets copy during dplyr::anti_join}
 }
 \value{
 augmented data

@@ -9,6 +9,7 @@
 #' @param ... not used, force later arguments to bind by name
 #' @param fills list default values to fill in columns
 #' @param newRowColumn character if not null name to use for new row indicator
+#' @param copy logical sets copy during dplyr::anti_join
 #' @return augmented data
 #'
 #' @examples
@@ -43,7 +44,8 @@
 replyr_coalesce <- function(data, support,
                             ...,
                             fills= NULL,
-                            newRowColumn= NULL) {
+                            newRowColumn= NULL,
+                            copy= TRUE) {
   if(length(list(...))>0) {
     stop("replyr::replyr_coalesce unexpected arugments")
   }
@@ -63,7 +65,8 @@ replyr_coalesce <- function(data, support,
   if(length(intersect(names(fills), joinCols))>0) {
     stop("replyr::replyr_coalesce fill columns must not overlap key columns")
   }
-  replyr_private_name_additions <- dplyr::anti_join(support, data, by=joinCols)
+  replyr_private_name_additions <- dplyr::anti_join(support, data,
+                                                    by=joinCols, copy= copy)
   if( (replyr_nrow(data)+replyr_nrow(replyr_private_name_additions)) != replyr_nrow(support)) {
     stop("replyr::replyr_coalesce support is not a unique set of keys for data")
   }
