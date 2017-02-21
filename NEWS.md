@@ -1,5 +1,5 @@
 
-'replyr' 0.2.3 2017-02-04
+'replyr' 0.2.3 2017-02-20
  
  * Move let to wrapr https://github.com/WinVector/wrapr .
  * add replyr_coalesce.
