@@ -1,4 +1,4 @@
-Standard deviation with `SQLite` is zero when there is one data item, not the expected `NA`.
+Standard deviation with `SQLite` is zero when there is one data item, not the expected `NA`. Nocie the `sd()` calculation agrees with `R`'s local calculation when `n`&gt;1 so this isn't just a sample variance versus population variance issue.
 
 <!-- Generated from .Rmd. Please edit that file -->
 ``` r
@@ -18,18 +18,73 @@ packageVersion('RSQLite')
  #  [1] '1.1.2'
 
 my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
-d <- data.frame(x=1)
-dplyr::summarise_all(d, dplyr::funs(sd))
+
+# confirm sqlite can represent NA
+d <- data.frame(x = c(1,NA,3))
+dbData <- dplyr::copy_to(my_db, d, name='d', 
+                           create=TRUE, overwrite=TRUE)
+print(dbData)
+ #  Source:   query [?? x 1]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #        x
+ #    <dbl>
+ #  1     1
+ #  2    NA
+ #  3     3
+
+for(n in 1:3) {
+  print("***********")
+  print(paste('n',n))
+  dplyr::db_drop_table(my_db$con, 'd')
+  d <- data.frame(x= seq_len(n))
+  print("local")
+  print(dplyr::summarise_all(d, dplyr::funs(sd)))
+  dbData <- dplyr::copy_to(my_db, d, name='d', 
+                           create=TRUE, overwrite=TRUE)
+  print("RSQLite")
+  print(dplyr::summarise_all(dbData, dplyr::funs(sd)))
+  print("***********")
+}
+ #  [1] "***********"
+ #  [1] "n 1"
+ #  [1] "local"
  #     x
  #  1 NA
-dbData <- dplyr::copy_to(my_db, d, create=TRUE)
-dplyr::summarise_all(dbData, dplyr::funs(sd))
+ #  [1] "RSQLite"
  #  Source:   query [?? x 1]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
  #        x
  #    <dbl>
  #  1     0
+ #  [1] "***********"
+ #  [1] "***********"
+ #  [1] "n 2"
+ #  [1] "local"
+ #            x
+ #  1 0.7071068
+ #  [1] "RSQLite"
+ #  Source:   query [?? x 1]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #            x
+ #        <dbl>
+ #  1 0.7071068
+ #  [1] "***********"
+ #  [1] "***********"
+ #  [1] "n 3"
+ #  [1] "local"
+ #    x
+ #  1 1
+ #  [1] "RSQLite"
+ #  Source:   query [?? x 1]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #        x
+ #    <dbl>
+ #  1     1
+ #  [1] "***********"
 ```
 
 Filed as [RSQLite 201](https://github.com/rstats-db/RSQLite/issues/201).
@@ -57,6 +112,6 @@ version
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 470262 25.2     750400 40.1   592000 31.7
- #  Vcells 657577  5.1    1308461 10.0   906295  7.0
+ #  Ncells 469545 25.1     750400 40.1   592000 31.7
+ #  Vcells 657764  5.1    1308461 10.0   914785  7.0
 ```
