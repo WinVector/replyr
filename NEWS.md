@@ -1,4 +1,9 @@
 
+'replyr' 0.2.4 2017-02-22
+
+ * Fix unique_valeus can't use "n" issue.
+ * Fix sd on SQLite issue.
+
 'replyr' 0.2.3 2017-02-20
  
  * Move "let()" to wrapr https://github.com/WinVector/wrapr .

@@ -1,13 +1,13 @@
 Package: replyr
 Type: Package
-Title: Fluid Use of 'dplyr'
-Version: 0.2.3
-Date: 2017-02-20
+Title: Fluid Use of 'dplyr' remote data interfaces
+Version: 0.2.4
+Date: 2017-02-22
 Author: John Mount, Nina Zumel
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr
 BugReports: https://github.com/WinVector/replyr/issues
-Description: Methods to get a grip on working with remote 'tbl' sources ('SQL' databases,
+Description: Methods to get a grip on working with remote 'dplyr' data sources ('SQL' databases,
     'sparklyr' 'Spark' 2.0.0 and above) through 'dplyr'.  Adds convenience functions to make such tasks more like
     working with an in-memory 'data.frame'.  Results do depend on which 'dplyr' data service you use.
 License: GPL-3
