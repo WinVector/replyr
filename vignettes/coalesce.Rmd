@@ -95,6 +95,33 @@ replyr::replyr_coalesce(dbData, dbSupport,
                         fills = list(count=0))
 ```
 
+As we mentioned <code>replyr_coalesce</code> only alter column that it has added.  Under this convention the column "<code>n</code>" is not zeroed in the "<code>c</code>-row".
+
+```{r fill}
+d <- data.frame(x=c('a','c'), n=c(1,NA), 
+                stringsAsFactors=FALSE)
+s <- data.frame(x=c('a','b','c'), 
+                stringsAsFactors=FALSE)
+
+print(d)
+
+replyr::replyr_coalesce(d,s,
+                        fills= list(n=0))
+```
+
+Also <code>replyr_coalesce</code> intentionally throws if the join discovers new rows in `data`.  This is to help defend against silent data loss.
+
+```{r detect}
+d <- data.frame(x=c('a','c'), n=c(1,NA), 
+                stringsAsFactors=FALSE)
+s <- data.frame(x=c('a','b'), 
+                stringsAsFactors=FALSE)
+tryCatch(
+  replyr::replyr_coalesce(d,s,
+                        fills= list(n=0)),
+  error= function(e) { e })
+```
+
 Cleaning up:
 
 ```{r cleanup}
