@@ -2,8 +2,9 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr collect copy_to
+#' @importFrom dplyr collect copy_to db_drop_table
 NULL
+
 
 
 
@@ -59,7 +60,7 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
     cn <- dest$con
     if(!("NULL" %in% class(cn))) {
       if(name %in% dplyr::db_list_tables(cn)) {
-        dplyr::db_drop_table(cn,name)
+        dplyr::db_drop_table(cn, name)
       }
     }},
     error=function(x) NULL,
