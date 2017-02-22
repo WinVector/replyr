@@ -53,6 +53,11 @@ replyr_summary <- function(x,countUnique=TRUE) {
                                             mean = mean,
                                             sd = sd)) %>%
                         dplyr::collect() %>% as.data.frame() -> si
+                      # dplyr::summarize_each has sd=0 for single row SQLite examples
+                      # please see here: https://github.com/WinVector/replyr/blob/master/issues/SQLitesd.md
+                      if(ngood<=1) {
+                        si$sd <- NA
+                      }
                       nunique = NA
                       if(countUnique) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
