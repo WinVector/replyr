@@ -9,7 +9,7 @@ replyr_uniqueValues(x, cname)
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
 
-\item{cname}{name of columns to examine, must not be equal to 'n'.}
+\item{cname}{name of columns to examine, must not be equal to 'replyr_private_value_n'.}
 }
 \value{
 unique values for the column.

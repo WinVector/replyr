@@ -134,6 +134,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
   })
   res$class <- classtr[res$column]
   res <- res[order(res$index),]
+  rownames(res) <- NULL
   res
 }
 
