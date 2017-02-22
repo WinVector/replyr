@@ -19,9 +19,9 @@ options(width =100)
 
 ```{r copyissueover, error=TRUE}
 library('dplyr')
-library('SQLite')
+library('RSQLite')
 packageVersion('dplyr')
-packageVersion('SQLite')
+packageVersion('RSQLite')
 
 my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 d <- data.frame(x=1)
@@ -30,6 +30,7 @@ dbData <- dplyr::copy_to(my_db, d, create=TRUE)
 dplyr::summarise_all(dbData, dplyr::funs(sd))
 ```
 
+Filed as [RSQLite 201](https://github.com/rstats-db/RSQLite/issues/201).
 
 ```{r printversion}
 version

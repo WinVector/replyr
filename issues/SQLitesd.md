@@ -11,12 +11,11 @@ library('dplyr')
  #  The following objects are masked from 'package:base':
  #  
  #      intersect, setdiff, setequal, union
-library('SQLite')
- #  Error in library("SQLite"): there is no package called 'SQLite'
+library('RSQLite')
 packageVersion('dplyr')
  #  [1] '0.5.0'
-packageVersion('SQLite')
- #  Error in packageVersion("SQLite"): package 'SQLite' not found
+packageVersion('RSQLite')
+ #  [1] '1.1.2'
 
 my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 d <- data.frame(x=1)
@@ -32,6 +31,8 @@ dplyr::summarise_all(dbData, dplyr::funs(sd))
  #    <dbl>
  #  1     0
 ```
+
+Filed as [RSQLite 201](https://github.com/rstats-db/RSQLite/issues/201).
 
 ``` r
 version
@@ -56,6 +57,6 @@ version
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 470685 25.2     750400 40.1   592000 31.7
- #  Vcells 658467  5.1    1308461 10.0   873791  6.7
+ #  Ncells 470262 25.2     750400 40.1   592000 31.7
+ #  Vcells 657577  5.1    1308461 10.0   906295  7.0
 ```
