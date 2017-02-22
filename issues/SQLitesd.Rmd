@@ -1,0 +1,41 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Standard deviation with `SQLite` is zero when there is one data item, not the expected `NA`.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+```{r copyissueover, error=TRUE}
+library('dplyr')
+library('SQLite')
+packageVersion('dplyr')
+packageVersion('SQLite')
+
+my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+d <- data.frame(x=1)
+dplyr::summarise_all(d, dplyr::funs(sd))
+dbData <- dplyr::copy_to(my_db, d, create=TRUE)
+dplyr::summarise_all(dbData, dplyr::funs(sd))
+```
+
+
+```{r printversion}
+version
+```
+
+```{r cleanup}
+rm(list=ls())
+gc()
+```
