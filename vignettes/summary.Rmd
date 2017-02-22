@@ -37,6 +37,9 @@ summary(dbData)
 
 replyr::replyr_summary(dbData)
 
+# glimpse works more like str or head
+dplyr::glimpse(dbData)
+
 ```
 
 ```{r cleanup}
