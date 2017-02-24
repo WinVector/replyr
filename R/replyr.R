@@ -1,6 +1,6 @@
-#' replyr: an R package for fluid use of dplyr
+#' replyr: Fluid Use of Big Data in R
 #'
-#' Methods to get a grip on working with remote 'tbl' sources ('SQL' databases,
+#' Methods to get a grip on working with remote data sources ('SQL' databases,
 #' sparklyr' 'Spark' 2.0.0 and above) through 'dplyr'.  Adds convenience functions to make such tasks more like
 #' working with an in-memory 'data.frame'.  Results do depend on which 'dplyr' data service you use.
 #'
