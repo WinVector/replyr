@@ -14,7 +14,8 @@ localFrame <- function(d) {
 #' Compute usable summary of columns of tbl.
 #'
 #' @param x tbl or item that can be coerced into such.
-#' @param countUnique logical, if true include unique non-NA counts.
+#' @param countUniqueNum logical, if true include unique non-NA counts for numeric cols.
+#' @param countUniqueNonNum logical, if true include unique non-NA counts for non-numeric cols.
 #' @return summary of columns.
 #'
 #' @examples
@@ -24,7 +25,9 @@ localFrame <- function(d) {
 #' replyr_summary(d)
 #'
 #' @export
-replyr_summary <- function(x,countUnique=TRUE) {
+replyr_summary <- function(x,
+                           countUniqueNum= FALSE,
+                           countUniqueNonNum= FALSE) {
   nrows <- replyr_nrow(x)
   cnames <- colnames(x)
   cmap <- seq_len(length(cnames))
@@ -59,7 +62,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                         si$sd <- NA
                       }
                       nunique = NA
-                      if(countUnique) {
+                      if(countUniqueNum) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
                       }
                       si <-  data.frame(column=ci,
@@ -113,7 +116,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                                          stringsAsFactors = FALSE)
                       }
                       nunique = NA
-                      if(countUnique) {
+                      if(countUniqueNonNum) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
                       }
                       si <- data.frame(column=ci,
