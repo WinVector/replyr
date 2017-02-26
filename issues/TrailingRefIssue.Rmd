@@ -57,10 +57,10 @@ v <- ''
 print(s1) # print 2
 ```
 
-Notice `s1` changed its value (like due to lazy evaluation and having captured a reference to `v`).
+Notice `s1` changed its value (likely due to lazy evaluation and having captured a reference to `v`).
 
 
-Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503) and [dplyr issue 2455](https://github.com/hadley/dplyr/issues/2455).
+Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503) and [dplyr issue 2455](https://github.com/hadley/dplyr/issues/2455).  Reported fixed in dev [dplyr issue 2370](https://github.com/hadley/dplyr/issues/2370)).
 
 ```{r printversion}
 version

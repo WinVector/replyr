@@ -66,33 +66,33 @@ print(my_db)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:60680"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:52321"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
- #          description               class                mode                text              opened 
- #  "->localhost:60677"          "sockconn"                "rb"            "binary"            "opened" 
- #             can read           can write 
- #                "yes"               "yes" 
+ #         description              class               mode               text             opened 
+ #  "->localhost:8880"         "sockconn"               "rb"           "binary"           "opened" 
+ #            can read          can write 
+ #               "yes"              "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp3zepH9/file13f2048166043_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpu2k879/file102594d8b2921_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@4fc20fe9
+ #    org.apache.spark.SparkContext@8dbf495
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@5ca96df5
+ #    org.apache.spark.api.java.JavaSparkContext@a7cdca2
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@279bd0b6
+ #    org.apache.spark.sql.SparkSession@56ebcf45
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -138,9 +138,9 @@ print(s1) # print 2
  #  6  2010
 ```
 
-Notice `s1` changed its value (like due to lazy evaluation and having captured a reference to `v`).
+Notice `s1` changed its value (likely due to lazy evaluation and having captured a reference to `v`).
 
-Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503) and [dplyr issue 2455](https://github.com/hadley/dplyr/issues/2455).
+Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503) and [dplyr issue 2455](https://github.com/hadley/dplyr/issues/2455). Reported fixed in dev [dplyr issue 2370](https://github.com/hadley/dplyr/issues/2370)).
 
 ``` r
 version
