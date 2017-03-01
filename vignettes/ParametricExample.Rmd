@@ -131,12 +131,7 @@ name `mutate_` ends up using).
 
 ```{r}
 d %>% mutate_(.dots =
-    stats::setNames(substitute(is.na(XVAR),list(XVAR=cname)),
-                    rname))  %>%
-  rename_(.dots =
-    stats::setNames(paste0('`is.na("',
-                           cname,
-                           '")`'),
+    stats::setNames(list(substitute(is.na(XVAR),list(XVAR=cname))),
                     rname))
 ```
 
