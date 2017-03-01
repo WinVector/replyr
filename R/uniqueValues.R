@@ -10,7 +10,7 @@ NULL
 #' Compute number of rows of a tbl.
 #'
 #' @param x tbl or item that can be coerced into such.
-#' @param cname name of columns to examine, must not be equal to 'n'.
+#' @param cname name of columns to examine, must not be equal to 'replyr_private_value_n'.
 #' @return unique values for the column.
 #'
 #' @examples
@@ -20,19 +20,19 @@ NULL
 #'
 #' @export
 replyr_uniqueValues <- function(x,cname) {
-  if((!is.character(cname))||(length(cname)!=1)||(cname[[1]]=='n')) {
-    stop('replyr_uniqueValues cname must be a single string not equal to "n"')
+  if((!is.character(cname))||(length(cname)!=1)||(cname[[1]]=='replyr_private_value_n')) {
+    stop('replyr_uniqueValues cname must be a single string not equal to "replyr_private_value_n"')
   }
-  n <- NULL # false binding for 'n' so name does not look unbound to CRAN check
+  replyr_private_value_n <- NULL # false binding for 'replyr_private_value_n' so name does not look unbound to CRAN check
   x %>% dplyr::ungroup() %>%
-    dplyr::select_(cname) %>% dplyr::mutate(n=1.0) %>%
-    dplyr::group_by_(cname) %>% dplyr::summarize(n=sum(n)) -> res
+    dplyr::select_(cname) %>% dplyr::mutate(replyr_private_value_n=1.0) %>%
+    dplyr::group_by_(cname) %>% dplyr::summarize(replyr_private_value_n=sum(replyr_private_value_n)) -> res
   # # Can't get rid of the warning on MySQL, even the following doesn't shut it up
   # suppressWarnings(
   #   # on mutate step in MySQL:  In .local(conn, statement, ...) : Decimal MySQL column 1 imported as numeric
   #   x %>% dplyr::ungroup() %>%
-  #     dplyr::select_(cname) %>% dplyr::mutate(n=1.0) %>%
-  #     dplyr::group_by_(cname) %>% dplyr::summarize(n=sum(n)) %>%
+  #     dplyr::select_(cname) %>% dplyr::mutate(replyr_private_value_n=1.0) %>%
+  #     dplyr::group_by_(cname) %>% dplyr::summarize(replyr_private_value_n=sum(replyr_private_value_n)) %>%
   #     dplyr::compute() -> res
   # )
   res

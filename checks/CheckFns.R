@@ -1,6 +1,77 @@
 
 
+# ignores row order
+sameData <- function(df1, df2,
+                     ingoreLeftNAs= FALSE, keySet= NULL) {
+  n1 <- replyr::replyr_nrow(df1)
+  n2 <- replyr::replyr_nrow(df2)
+  if(n1!=n2) {
+    return(FALSE)
+  }
+  c1 <- colnames(df1)
+  c2 <- colnames(df1)
+  if(length(c1)!=length(c2)) {
+    return(FALSE)
+  }
+  ae <- all.equal(c1,c2)
+  if(!is.logical(ae)) {
+    return(FALSE)
+  }
+  if(!ae) {
+    return(FALSE)
+  }
+  if(is.null(keySet)) {
+    keySet = c1
+  }
+  ds1 <- dplyr::arrange_(df1, .dots= keySet)
+  ds2 <- dplyr::arrange_(df2, .dots= keySet)
+  for(ci in c1) {
+    v1 <- ds1[[ci]]
+    v2 <- ds2[[ci]]
+    # get rid of some path dependent type diffs
+    if(is.factor(v1) || is.factor(v2)) {
+      v1 <- as.character(v1)
+      v2 <- as.character(v2)
+    }
+    if(is.numeric(v1) || is.numeric(v2)) {
+      if(is.numeric(v1) != is.numeric(v2)) {
+        return(FALSE)
+      }
+      v1 <- as.double(v1)
+      v2 <- as.double(v2)
+    }
+    if(ingoreLeftNAs) {
+      vIdxs <- !is.na(v1)
+      v1 <- v1[vIdxs]
+      v2 <- v2[vIdxs]
+    }
+    alle <- all.equal(v1, v2)
+    if(!is.logical(alle)) {
+      return(FALSE)
+    }
+    if(!alle) {
+      return(FALSE)
+    }
+  }
+  return(TRUE)
+}
 
+failingFrameIndices <- function(l1, l2) {
+  n1 <- length(l1)
+  n2 <- length(l2)
+  if(n1!=n2) {
+    stop("lists are different lengths")
+  }
+  which(vapply(seq_len(n1),
+               function(i) {
+                 !sameData(l1[[i]], l2[[i]])
+               },
+               logical(1)))
+}
+
+listsOfSameData <- function(l1, l2) {
+  length(failingFrameIndices(l1, l2))<=0
+}
 
 remoteCopy <- function(my_db) {
   force(my_db)
@@ -87,4 +158,42 @@ runExample <- function(copyToRemote) {
       dlet %>% mutate(RankColumn=RankColumn-1) -> dletres
     })
   print(dletres)
+
+  # coalesce example
+  print("coalesce example 1")
+  dcoalesce <- copyToRemote(data.frame(year = c(2005,2007,2010),
+                     count = c(6,1,NA),
+                     name = c('a','b','c'),
+                     stringsAsFactors = FALSE),
+                     'dcoalesce')
+  support <- copyToRemote(data.frame(year=2005:2010),
+                          'support')
+  filled <-  replyr::replyr_coalesce(dcoalesce, support,
+                            fills=list(count= 0, name= ''))
+  print(filled)
+
+  print("coalesce example 2")
+  data <- copyToRemote(data.frame(year = c(2005,2007,2010),
+                                  count = c(6,1,NA),
+                                  name = c('a','b','c'),
+                                  stringsAsFactors = FALSE),
+                       'dcoal2')
+  support <- copyToRemote(expand.grid(year=2005:2010,
+                                      name= c('a','b','c','d'),
+                                      stringsAsFactors = FALSE),
+                          'support2')
+  filled2 <-  replyr::replyr_coalesce(data, support,
+                            fills=list(count=0))
+  print(filled2)
+
+  resFrames <- list(d1,
+                    d2,
+                    d2b,
+                    d3,
+                    d4,
+                    dletres,
+                    filled,
+                    filled2)
+  resFrames <- lapply(resFrames, replyr::replyr_copy_from)
+  resFrames
 }

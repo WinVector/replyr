@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
-Example trying most of the `replyr` on a Spark 2.0.0 local instance.
+
 
 ```{r setup}
 library('dplyr')
@@ -23,17 +23,25 @@ library('sparklyr')
 source('CheckFns.R')
 ```
 
+Spark 1.6.2 example (failing, no longer supporting Spark 1.6.2).
 
-Spark 2.0.0. example.
-
-```{r Spark200example}
+```{r Spark162example, error=TRUE}
 # Can't easilly override Spark version once it is up.
-my_db <- sparklyr::spark_connect(version='2.0.0', 
+my_db <- sparklyr::spark_connect(version='1.6.2', 
    master = "local")
 class(my_db)
 my_db$spark_home
-runExample(remoteCopy(my_db))
+copyToRemote <- remoteCopy(my_db)
+runExample(copyToRemote)
 my_db <- NULL; gc() # disconnect
 ```
+
+
+```{r cleanup}
+rm(list=ls())
+gc()
+```
+
+
 
 

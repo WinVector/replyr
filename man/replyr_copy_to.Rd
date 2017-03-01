@@ -29,7 +29,7 @@ Copy data to remote service.
 
 if (requireNamespace("RSQLite", quietly = TRUE)) {
   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
-  d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
+  d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
   print(d)
 }
 

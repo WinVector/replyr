@@ -1,0 +1,69 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+### Altering captured reference damages spark results.
+
+If you use a variable in `dplyr::mutate()` against a `sparklyr` data source the lazy eval captures references to user variables.  Changing values of those variables implicitly changes the `mutate` and changes the values seen in the `sparklyr` result (which is itself a query).  This can be worked around by dropping in `dplyr::compute()` but it seems like it can produce a lot of incorrect calculations.  Below is a small example and a lot information on the versions of everything being run.  I am assuming the is a `sparklyr` issue as the query views are failrly different than a number of other `dplyr` structures, but it could be a `dplyr` issue.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+OSX 10.11.6.
+Spark installed as described at http://spark.rstudio.com
+
+```
+library('sparklyr')
+spark_install(version = "2.0.0")
+```
+
+```{r setup}
+library('dplyr')
+library('sparklyr')
+R.Version()$version.string
+packageVersion('dplyr')
+packageVersion('sparklyr')
+my_db <- sparklyr::spark_connect(version='2.0.0', master = "local")
+class(my_db)
+my_db$spark_home
+print(my_db)
+```
+
+ * Expected outcome: `s1` has the same value 
+ * Observed outcome: changing varaible v changes `s1` column.
+
+```{r issue}
+support <- copy_to(my_db,
+                   data.frame(year=2005:2010),
+                   'support')
+v <- 0
+s1 <- dplyr::mutate(support,count=v)
+
+print(s1) # print 1
+
+# s1 <- dplyr::compute(s1) # likely work-around
+v <- ''
+
+print(s1) # print 2
+```
+
+Notice `s1` changed its value (likely due to lazy evaluation and having captured a reference to `v`).
+
+
+Submitted as [sparklyr issue 503](https://github.com/rstudio/sparklyr/issues/503) and [dplyr issue 2455](https://github.com/hadley/dplyr/issues/2455).  Reported fixed in dev ([dplyr issue 2370](https://github.com/hadley/dplyr/issues/2370)).
+
+```{r printversion}
+version
+```
+
+

@@ -14,7 +14,8 @@ localFrame <- function(d) {
 #' Compute usable summary of columns of tbl.
 #'
 #' @param x tbl or item that can be coerced into such.
-#' @param countUnique logical, if true include unique non-NA counts.
+#' @param countUniqueNum logical, if true include unique non-NA counts for numeric cols.
+#' @param countUniqueNonNum logical, if true include unique non-NA counts for non-numeric cols.
 #' @return summary of columns.
 #'
 #' @examples
@@ -24,7 +25,9 @@ localFrame <- function(d) {
 #' replyr_summary(d)
 #'
 #' @export
-replyr_summary <- function(x,countUnique=TRUE) {
+replyr_summary <- function(x,
+                           countUniqueNum= FALSE,
+                           countUniqueNonNum= FALSE) {
   nrows <- replyr_nrow(x)
   cnames <- colnames(x)
   cmap <- seq_len(length(cnames))
@@ -53,8 +56,13 @@ replyr_summary <- function(x,countUnique=TRUE) {
                                             mean = mean,
                                             sd = sd)) %>%
                         dplyr::collect() %>% as.data.frame() -> si
+                      # dplyr::summarize_each has sd=0 for single row SQLite examples
+                      # please see here: https://github.com/WinVector/replyr/blob/master/issues/SQLitesd.md
+                      if(ngood<=1) {
+                        si$sd <- NA
+                      }
                       nunique = NA
-                      if(countUnique) {
+                      if(countUniqueNum) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
                       }
                       si <-  data.frame(column=ci,
@@ -108,7 +116,7 @@ replyr_summary <- function(x,countUnique=TRUE) {
                                          stringsAsFactors = FALSE)
                       }
                       nunique = NA
-                      if(countUnique) {
+                      if(countUniqueNonNum) {
                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
                       }
                       si <- data.frame(column=ci,
@@ -127,13 +135,14 @@ replyr_summary <- function(x,countUnique=TRUE) {
                       si
                     })
   })
-  res <- dplyr::bind_rows(c(numSums,oSums))
+  res <- replyr_bind_rows(c(numSums,oSums))
   res$index <- cmap[res$column]
   classtr <- lapply(cclass,function(vi) {
     paste(vi,collapse=', ')
   })
   res$class <- classtr[res$column]
   res <- res[order(res$index),]
+  rownames(res) <- NULL
   res
 }
 

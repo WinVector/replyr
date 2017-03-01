@@ -1,0 +1,132 @@
+---
+title: "coalesce"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{coalesce}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<code>replyr::coalesce()</code> is used to fill in missing data especially for 
+data coming from counting aggregations.  The issue is that for data representing
+counts you often do want rows for zero-counts, and data produced by un-weighted
+counting can never produce such rows (please see ["The Zero Bug"](http://www.win-vector.com/blog/2017/02/the-zero-bug/) for some discussion).
+
+<code>replyr::coalesce()</code> takes two primary arguments  `data` (the data to be augmented) and
+`support` (the pattern of rows defining the complete desired range of the data).  `support`
+is taken as a list of keys.  If `support` can not be unique joined into `data` (say `data` has
+rows that are do not correspond to `support` key combinations) then <code>replyr::coalesce()</code>
+intentionally throws to avoid silent data loss.  Otherwise an anti-join is performed to discover
+new rows that need to be added to `data` and column in this new row set are populated either by `NA`
+or by scalar values from the named-list argument `fills`.  <code>replyr::coalesce()</code> works
+over various `dplyr` controlled data services (Spark 2 and above, PostgreSQL, SQLite, and local data).
+
+Some examples are given below.
+
+Setting up:
+
+```{r setup}
+library("dplyr")
+library("replyr")
+```
+
+A simple single key example:
+
+
+```{r simpleexample}
+# single column key example
+data <- data.frame(year = c(2005,2007,2010),
+                   count = c(6,1,NA),
+                   name = c('a','b','c'),
+                   stringsAsFactors = FALSE)
+support <- data.frame(year=2005:2010)
+filled <- replyr_coalesce(data, support,
+                          fills=list(count=0))
+filled <- filled[order(filled$year), ]
+filled
+```
+
+A cross product of keys example:
+
+```{r crossproductexample}
+# complex key example
+data <- data.frame(year = c(2005,2007,2010),
+                   count = c(6,1,NA),
+                   name = c('a','b','c'),
+                   stringsAsFactors = FALSE)
+support <- expand.grid(year=2005:2010,
+                   name= c('a','b','c','d'),
+                   stringsAsFactors = FALSE)
+filled <- replyr_coalesce(data, support,
+                          fills=list(count=0))
+filled <- filled[order(filled$year, filled$name), ]
+filled
+```
+
+An irregular (cities contained in counties) example:
+
+```{r irregularexample}
+# cities and counties
+def <- data.frame(county= c('Calaveras County',
+                            'Colusa County',
+                            'Colusa County'),
+                  city= c('Angels Camp',
+                          'Colusa',
+                          'Williams'),
+                  stringsAsFactors= FALSE)
+counts <- data.frame(county= c('Calaveras County',
+                               'Colusa County'),
+                     city= c('Angels Camp',
+                             'Colusa'),
+                     n= c(2,3),
+                     stringsAsFactors= FALSE)
+replyr::replyr_coalesce(counts, def, fills = list(n=0))
+```
+
+Re-running and example in a database:
+
+```{r dbexample}
+my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+dbData <- dplyr::copy_to(my_db, data)
+dbSupport <- dplyr::copy_to(my_db, support)
+replyr::replyr_coalesce(dbData, dbSupport, 
+                        fills = list(count=0))
+```
+
+As we mentioned <code>replyr_coalesce</code> only alter column that it has added.  Under this convention the column "<code>n</code>" is not zeroed in the "<code>c</code>-row".
+
+```{r fill}
+d <- data.frame(x=c('a','c'), n=c(1,NA), 
+                stringsAsFactors=FALSE)
+s <- data.frame(x=c('a','b','c'), 
+                stringsAsFactors=FALSE)
+
+print(d)
+
+replyr::replyr_coalesce(d,s,
+                        fills= list(n=0))
+```
+
+Also <code>replyr_coalesce</code> intentionally throws if the join discovers new rows in `data`.  This is to help defend against silent data loss.
+
+```{r detect}
+d <- data.frame(x=c('a','c'), n=c(1,NA), 
+                stringsAsFactors=FALSE)
+s <- data.frame(x=c('a','b'), 
+                stringsAsFactors=FALSE)
+tryCatch(
+  replyr::replyr_coalesce(d,s,
+                        fills= list(n=0)),
+  error= function(e) { e })
+```
+
+Cleaning up:
+
+```{r cleanup}
+rm(list=ls())
+gc()
+```
+
+

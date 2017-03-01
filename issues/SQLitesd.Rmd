@@ -1,0 +1,60 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+Standard deviation with `SQLite` is zero when there is one data item, not the expected `NA`.
+Nocie the `sd()` calculation agrees with `R`'s local calculation when `n`>1 so this
+isn't just a sample variance versus population variance issue.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+
+```{r copyissueover, error=TRUE}
+library('dplyr')
+library('RSQLite')
+packageVersion('dplyr')
+packageVersion('RSQLite')
+
+my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+
+# confirm sqlite can represent NA
+d <- data.frame(x = c(1,NA,3))
+dbData <- dplyr::copy_to(my_db, d, name='d', 
+                           create=TRUE, overwrite=TRUE)
+print(dbData)
+
+for(n in 1:3) {
+  print("***********")
+  print(paste('n',n))
+  dplyr::db_drop_table(my_db$con, 'd')
+  d <- data.frame(x= seq_len(n))
+  print("local")
+  print(dplyr::summarise_all(d, dplyr::funs(sd)))
+  dbData <- dplyr::copy_to(my_db, d, name='d', 
+                           create=TRUE, overwrite=TRUE)
+  print("RSQLite")
+  print(dplyr::summarise_all(dbData, dplyr::funs(sd)))
+  print("***********")
+}
+```
+
+Filed as [RSQLite 201](https://github.com/rstats-db/RSQLite/issues/201).
+
+```{r printversion}
+version
+```
+
+```{r cleanup}
+rm(list=ls())
+gc()
+```

@@ -264,9 +264,9 @@ for(partitionMethod in c('group_by','extract')) {
  #  5     2   0.3      2     3
 
 my_db <- NULL; gc();
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  502470 26.9     940480 50.3   940480 50.3
- #  Vcells 1180642  9.1    2099627 16.1  2086843 16.0
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 483162 25.9     940480 50.3   750400 40.1
+ #  Vcells 745050  5.7    1308461 10.0  1308461 10.0
 ```
 
 `Spark` example.
@@ -298,7 +298,7 @@ for(partitionMethod in c('group_by','extract')) {
 }
  #  [1] "group_by"
  #  [1] "cumulative sum example"
- #  Source:   query [?? x 4]
+ #  Source:   query [5 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values    cv
@@ -309,7 +309,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
  #  [1] "summary example"
- #  Source:   query [?? x 3]
+ #  Source:   query [5 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values
@@ -320,7 +320,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4
  #  5     2   0.5      8
  #  [1] "ranking example"
- #  Source:   query [?? x 4]
+ #  Source:   query [5 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values  rank
@@ -331,7 +331,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
  #  [1] "ranking example (decreasing)"
- #  Source:   query [?? x 4]
+ #  Source:   query [5 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values  rank
@@ -343,7 +343,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  5     2   0.3      2     3
  #  [1] "extract"
  #  [1] "cumulative sum example"
- #  Source:   query [?? x 4]
+ #  Source:   query [5 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values    cv
@@ -354,7 +354,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
  #  [1] "summary example"
- #  Source:   query [?? x 3]
+ #  Source:   query [5 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values
@@ -365,7 +365,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4
  #  5     2   0.5      8
  #  [1] "ranking example"
- #  Source:   query [?? x 4]
+ #  Source:   query [5 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values  rank
@@ -376,7 +376,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     1   0.2     20     2
  #  5     2   0.5      8     3
  #  [1] "ranking example (decreasing)"
- #  Source:   query [?? x 4]
+ #  Source:   query [5 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #    group order values  rank
@@ -387,7 +387,7 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     1   0.1     10     2
  #  5     2   0.3      2     3
 my_db <- NULL; gc();
- #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  569454 30.5     940480 50.3   940480 50.3
- #  Vcells 1239278  9.5    2099627 16.1  2086843 16.0
+ #           used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells 562302 30.1     940480 50.3   940480 50.3
+ #  Vcells 813299  6.3    1650153 12.6  1308461 10.0
 ```

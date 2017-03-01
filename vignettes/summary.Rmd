@@ -1,0 +1,48 @@
+---
+title: "summary"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{summary}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+`replyr_summary` example.
+
+`replyr_summary` works on various data sources, counts <code>NA</code>, and returns a <code>data.frame</code> (instead of text).
+ 
+ 
+```{r example}
+
+d <- data.frame(x=c(NA,'b'), y=c(1,NA), stringsAsFactors= FALSE)
+
+summary(d)
+
+replyr::replyr_summary(d)
+
+my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+dbData <- dplyr::copy_to(my_db, d)
+
+summary(dbData)
+
+replyr::replyr_summary(dbData)
+
+# glimpse works more like str or head
+dplyr::glimpse(dbData)
+
+```
+
+```{r cleanup}
+rm(list=ls())
+gc()
+```

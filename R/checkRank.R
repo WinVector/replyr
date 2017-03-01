@@ -34,8 +34,10 @@ replyr_ranksummaries <- function(x,
         replyr::replyr_nrow() -> nBadRanks
       x %>% replyr::replyr_uniqueValues('RankColumn') %>%
         replyr::replyr_nrow() -> nUniqueRanks
+      # had problems with head(n=1) on sparklyr
+      # https://github.com/WinVector/replyr/blob/master/issues/HeadIssue.md
       x %>% replyr::replyr_uniqueValues('GroupColumn') %>%
-        head(n=1) %>% replyr::replyr_copy_from() -> tmp
+        head() %>% replyr::replyr_copy_from() %>% head(n=1) -> tmp
       groupID <- tmp$GroupColumn[[1]]
       x %>% replyr::replyr_uniqueValues('GroupColumn') %>%
         replyr::replyr_nrow() -> nGroups

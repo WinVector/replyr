@@ -12,11 +12,20 @@ vignette: >
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = " # "
 )
 options(width =100)
 ```
 
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # ",
+  fig.path = "README-"
+)
+options(width =100)
+```
 
 This document describes `replyr`, an [R](https://cran.r-project.org) package available from [Github](https://github.com/WinVector/replyr) and  [CRAN](https://CRAN.R-project.org/package=replyr).
 
@@ -24,6 +33,8 @@ This document describes `replyr`, an [R](https://cran.r-project.org) package ava
 ## Introduction
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service.  A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale.  It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds.  The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
+
+<img src="replyrs.png">
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
@@ -210,7 +221,7 @@ We will probably only ever cover:
  * `RMySQL`
  * `RPostgreSQL`
  * `SQLite`
- * `sparklyr` (`Spark` 2 preferred)
+ * `sparklyr` (`Spark` 2.0.0 or greater)
  
 
 ## Additional functions
@@ -257,7 +268,7 @@ Additional desired capabilities of interest include:
 
 ## Conclusion
 
-`replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`).  It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources (such as `Spark 1.6.2` versions `Spark 2.0.0`).
+`replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`).  It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources.
 
 ## Clean up
 

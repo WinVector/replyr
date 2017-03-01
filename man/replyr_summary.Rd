@@ -4,12 +4,14 @@
 \alias{replyr_summary}
 \title{Compute usable summary of columns of tbl.}
 \usage{
-replyr_summary(x, countUnique = TRUE)
+replyr_summary(x, countUniqueNum = FALSE, countUniqueNonNum = FALSE)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
 
-\item{countUnique}{logical, if true include unique non-NA counts.}
+\item{countUniqueNum}{logical, if true include unique non-NA counts for numeric cols.}
+
+\item{countUniqueNonNum}{logical, if true include unique non-NA counts for non-numeric cols.}
 }
 \value{
 summary of columns.

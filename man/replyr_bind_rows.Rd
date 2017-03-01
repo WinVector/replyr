@@ -4,7 +4,7 @@
 \alias{replyr_bind_rows}
 \title{bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources)}
 \usage{
-replyr_bind_rows(lst, eagerCompute = FALSE)
+replyr_bind_rows(lst, eagerCompute = TRUE)
 }
 \arguments{
 \item{lst}{list of items to combine, must be all in same dplyr data service}
