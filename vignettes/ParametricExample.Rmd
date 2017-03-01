@@ -101,13 +101,15 @@ unevaluated.  The code looks like the following (using `lazyeval::interp` to exe
  
 ```{r}
 if  (requireNamespace("lazyeval")) {
-  # Please see: http://www.win-vector.com/blog/2017/02/my-recent-barug-talk-parametric-programming-in-r-with-replyr/#comment-66488
   print(d %>%
     mutate_(.dots = stats::setNames(list(
       lazyeval::interp(~ is.na(VAR),
                        VAR = as.name(cname))), rname)))
 }
 ```
+
+The extra layer of `list()`-wrapping seems to be needed to successfully control
+both the name of the input and result (please see [here]( http://www.win-vector.com/blog/2017/02/my-recent-barug-talk-parametric-programming-in-r-with-replyr/#comment-66488) for the original solution).
 
 Currently `mutate_` does not take "two-sided formulas" so we can not write:
 
@@ -155,10 +157,9 @@ Or just using strings as an interface to control `lazyeval::interp` (without the
 ```{r}
 # dplyr mutate_ lazyeval::interp solution
 if  (requireNamespace("lazyeval")) {
-  print(d %>% mutate_(RCOL =
-                        lazyeval::interp("is.na(cname)",
-                                         cname = as.name(cname))) %>%
-          rename_(.dots = setNames('RCOL', rname)))
+  print(d %>% mutate_(.dots =
+                        stats::setNames(list(lazyeval::interp("is.na(cname)",
+                                         cname = as.name(cname))), rname)))
 }
 ```
 
