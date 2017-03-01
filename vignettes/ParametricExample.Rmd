@@ -97,13 +97,15 @@ we do not know of the current solutions, but instead because we are familiar wit
 ### Formula interface
 
 Formula interface is a nice option as it is `R`'s common way for holding names
-unevaluated.  The code looks like the following:
+unevaluated.  The code looks like the following (using `lazyeval::interp` to execute):
  
 ```{r}
 if  (requireNamespace("lazyeval")) {
-  print(d %>% mutate_(RCOL = lazyeval::interp(~ is.na(VAR), 
-                                              VAR=as.name(cname))) %>%
-          rename_(.dots = stats::setNames('RCOL', rname)))
+  # Please see: http://www.win-vector.com/blog/2017/02/my-recent-barug-talk-parametric-programming-in-r-with-replyr/#comment-66488
+  print(d %>%
+    mutate_(.dots = stats::setNames(list(
+      lazyeval::interp(~ is.na(VAR),
+                       VAR = as.name(cname))), rname)))
 }
 ```
 
@@ -153,7 +155,7 @@ d %>% mutate_(.dots =
                 rname))
 ```
 
-Or just using strings as an interface to control `lazyeval::interp`:
+Or just using strings as an interface to control `lazyeval::interp` (without the formula interface):
 
 ```{r}
 # dplyr mutate_ lazyeval::interp solution
