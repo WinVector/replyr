@@ -28,4 +28,3 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
 }
 
 }
-

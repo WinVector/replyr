@@ -24,4 +24,3 @@ d <- data.frame(Sepal_Length= c(5.8,5.7),
 replyr_rename(d, 'family', 'Species')
 
 }
-

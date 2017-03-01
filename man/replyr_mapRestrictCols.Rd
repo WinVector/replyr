@@ -56,4 +56,3 @@ replyr_mapRestrictCols(dm, nmap, reverse=TRUE)
 \seealso{
 \code{\link{let}}
 }
-

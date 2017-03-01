@@ -43,4 +43,3 @@ d <- data.frame(group=c(1,1,2,2,2),
 d \%>\% replyr_split('group')
 
 }
-
