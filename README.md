@@ -213,9 +213,9 @@ summary(dRemote)
 
 replyr::replyr_summary(dRemote)
  #    column index     class nrows nna nunique min max     mean        sd lexmin lexmax
- #  1      x     1   numeric     3   0       2   1   2 1.666667 0.5773503   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5 4.000000 1.4142136   <NA>   <NA>
- #  3      z     3 character     3   1       2  NA  NA       NA        NA      a      b
+ #  1      x     1   numeric     3   0      NA   1   2 1.666667 0.5773503   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5 4.000000 1.4142136   <NA>   <NA>
+ #  3      z     3 character     3   1      NA  NA  NA       NA        NA      a      b
 ```
 
 Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of `replyr` is to provide at least some convenient version of typical functions such as: `summary`, `nrow`, unique values, and filter rows by values in a set.
@@ -275,14 +275,18 @@ Good code should fill one important gap and work on a variety of `dplyr` back en
 -   Basic summary info: `replyr_nrow`, `replyr_dim`, and `replyr_summary`.
 -   Random row sampling (like `dplyr::sample_n`, but working with more service providers). Some of this functionality is provided by `replyr_filter` and `replyr_inTest`.
 -   Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `gapply`, `replyr_split`, and `replyr_bind_rows`.
--   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
 -   Patching around differences in `dplyr` services providers (and documenting the reasons for the patches).
--   Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).
+-   Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable). Note: this functionality is now imported from `wrapr`.
 
 Additional desired capabilities of interest include:
 
--   `cumsum` or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
+-   `cumsum`, ranking, or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
 -   Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.
+-   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
+-   `choice` function (picking up to `k` from each group arbitrarily).
+-   Window functions (pick min/max example from each group).
+-   `dfapply` like `lapply` bind all results together into a single `data.frame`.
+-   `dflatten` like flatten recursive- but stop at `data.frame`s, turns arbitrarily nested lists into a single `data.frame`.
 
 Conclusion
 ----------
@@ -296,6 +300,6 @@ Clean up
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 485471 26.0     940480 50.3   940480 50.3
- #  Vcells 748387  5.8    1903828 14.6  1852242 14.2
+ #  Ncells 485670 26.0     940480 50.3   940480 50.3
+ #  Vcells 748929  5.8    1904154 14.6  1757464 13.5
 ```
