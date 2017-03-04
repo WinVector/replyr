@@ -4,10 +4,11 @@ output:
     variant: markdown_github
 ---
 
-`NA` issue while using `sparklyr`, `Spark2`, and `dplyr`.
+`NA` issue while using `sparklyr`, `Spark2`, and `dplyr`.  It also looks like several places
+`NA` and `""` are confused and reversed.
 
 It thank `NA`'s can be represented in Spark2, they are definitely behaving
-as something different than a blank string.  They are also error-out.
+as something different than a blank string.  They are also erroring-out.
 
 <!-- Generated from .Rmd. Please edit that file -->
 
@@ -56,8 +57,8 @@ ds2 %>% summarize_each(funs(min))
 ```{r d3, error=TRUE}
 # this block is showing behavior different than
 # previous block due to NA
-d3 <- data.frame(x= c('a',NA),
-                 y= 1:2,
+d3 <- data.frame(x= c('a', '', NA),
+                 y= 1:3,
                  stringsAsFactors= FALSE)
 print(d3)
 nrow(d3)
@@ -65,7 +66,7 @@ d3 %>% summarize_each(funs(min))
 d3 %>% mutate(isna= is.na(x))
 
 ds3 <- dplyr::copy_to(sc,d3)
-print(ds3)
+print(ds3) # Note NA and '' are reversed
 nrow(ds3)
 # errors
 ds3 %>% summarize_each(funs(min))
@@ -80,8 +81,10 @@ ds3 %>% mutate(isna= is.na(x))
 ```{r d3f, error=TRUE}
 # works
 ds3 %>% filter(y==1)
-# errors out
+# works
 ds3 %>% filter(y==2)
+# errors out
+ds3 %>% filter(y==3)
 ```
 
 Submitted as [sparklyr issue 528](https://github.com/rstudio/sparklyr/issues/528).

@@ -1,6 +1,6 @@
-`NA` issue while using `sparklyr`, `Spark2`, and `dplyr`.
+`NA` issue while using `sparklyr`, `Spark2`, and `dplyr`. It also looks like several places `NA` and `""` are confused and reversed.
 
-It thank `NA`'s can be represented in Spark2, they are definitely behaving as something different than a blank string. They are also error-out.
+It thank `NA`'s can be represented in Spark2, they are definitely behaving as something different than a blank string. They are also erroring-out.
 
 <!-- Generated from .Rmd. Please edit that file -->
 ``` r
@@ -77,34 +77,37 @@ ds2 %>% summarize_each(funs(min))
 ``` r
 # this block is showing behavior different than
 # previous block due to NA
-d3 <- data.frame(x= c('a',NA),
-                 y= 1:2,
+d3 <- data.frame(x= c('a', '', NA),
+                 y= 1:3,
                  stringsAsFactors= FALSE)
 print(d3)
  #       x y
  #  1    a 1
- #  2 <NA> 2
+ #  2      2
+ #  3 <NA> 3
 nrow(d3)
- #  [1] 2
+ #  [1] 3
 d3 %>% summarize_each(funs(min))
  #       x y
  #  1 <NA> 1
 d3 %>% mutate(isna= is.na(x))
  #       x y  isna
  #  1    a 1 FALSE
- #  2 <NA> 2  TRUE
+ #  2      2 FALSE
+ #  3 <NA> 3  TRUE
 
 ds3 <- dplyr::copy_to(sc,d3)
-print(ds3)
- #  Source:   query [2 x 2]
+print(ds3) # Note NA and '' are reversed
+ #  Source:   query [3 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y
  #    <chr> <int>
  #  1     a     1
- #  2           2
+ #  2  <NA>     2
+ #  3           3
 nrow(ds3)
- #  [1] 2
+ #  [1] 3
 # errors
 ds3 %>% summarize_each(funs(min))
  #  Source:   query [1 x 2]
@@ -116,13 +119,14 @@ ds3 %>% summarize_each(funs(min))
 ``` r
 # errors
 ds3 %>% mutate(isna= is.na(x))
- #  Source:   query [2 x 3]
+ #  Source:   query [3 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #        x     y  isna
  #    <chr> <int> <lgl>
  #  1     a     1 FALSE
- #  2           2 FALSE
+ #  2  <NA>     2  TRUE
+ #  3           3 FALSE
 ```
 
 ``` r
@@ -134,8 +138,16 @@ ds3 %>% filter(y==1)
  #        x     y
  #    <chr> <int>
  #  1     a     1
-# errors out
+# works
 ds3 %>% filter(y==2)
+ #  Source:   query [1 x 2]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #        x     y
+ #    <chr> <int>
+ #  1  <NA>     2
+# errors out
+ds3 %>% filter(y==3)
  #  Source:   query [1 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  Error: Variables must be length 1 or 1.
@@ -191,7 +203,7 @@ print(sc)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:55901"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:58781"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
@@ -202,22 +214,22 @@ print(sc)
  #               "yes"              "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp4rymUh/file867851d72ec_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpzPjvgl/file90754513f04b_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@67f95d13
+ #    org.apache.spark.SparkContext@467165a5
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@727269d9
+ #    org.apache.spark.api.java.JavaSparkContext@883023e
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@7f05982
+ #    org.apache.spark.sql.SparkSession@955e4f1
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
