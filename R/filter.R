@@ -56,7 +56,7 @@ replyr_filter <- function(x,cname,values,verbose=TRUE) {
   )
   # Try to fix it.
   if((!good) && ('tbl_spark' %in% class(x))) {
-    cn <- x$src$con
+    cn <- dplyr_src_to_db_handle(x$src)
     tmpnam <- paste('replyr_filter_tmp',sample.int(1000000000,1),sep='_')
     tmp <- replyr_copy_to(cn,jtab,tmpnam)
     x %>% dplyr::inner_join(tmp,by=byClause) %>%

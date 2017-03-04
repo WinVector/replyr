@@ -6,6 +6,16 @@
 NULL
 
 
+# get the db handle from a dplyr src
+# Spark2 handles are DBIConnection s
+# SQLite are not
+dplyr_src_to_db_handle <- function(dplyr_src) {
+  if("DBIConnection" %in% class(dplyr_src)) {
+    return(dplyr_src)
+  }
+  return(dplyr_src$con)
+}
+
 #' Drop a table from a source
 #'
 #' @param dest remote data source
@@ -45,7 +55,7 @@ replyr_drop_table_name <- function(dest, name) {
   # not filing this as MySQL isn't a preferred back end.
   found = FALSE
   tryCatch({
-    cn <- dest$con
+    cn <- dplyr_src_to_db_handle(dest)
     if(!("NULL" %in% class(cn))) {
       if(name %in% dplyr::db_list_tables(cn)) {
         found = TRUE

@@ -65,9 +65,9 @@ resBase <- runExample(noopCopy)
  #  
  #  d2 %>% replyr::replyr_summary() 
  #    column index   class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1 numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2 numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3  factor     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1 numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2 numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3  factor     3   0      NA  NA  NA   NA       NA      a      z
  #    x  y z
  #  1 1  3 a
  #  2 2  5 a
@@ -79,9 +79,9 @@ resBase <- runExample(noopCopy)
  #  
  #  d2b %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #    x y
  #  1 a 1
  #  2 a 2
@@ -114,11 +114,11 @@ resBase <- runExample(noopCopy)
  #  
  #  d4 %>% replyr::replyr_uniqueValues("x") 
  #  # A tibble: 3 × 2
- #        x     n
- #    <dbl> <dbl>
- #  1     1     1
- #  2     2     1
- #  3     3     2
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     2                      1
+ #  3     3                      2
  #  [1] "let example"
  #    Sepal_Length Sepal_Width Species rank
  #  1          5.8         4.0  setosa    0
@@ -211,9 +211,9 @@ resTbl <- runExample(tblCopy)
  #  
  #  d2 %>% replyr::replyr_summary() 
  #    column index   class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1 numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2 numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3  factor     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1 numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2 numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3  factor     3   0      NA  NA  NA   NA       NA      a      z
  #  # A tibble: 3 × 3
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -227,9 +227,9 @@ resTbl <- runExample(tblCopy)
  #  
  #  d2b %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #  # A tibble: 6 × 2
  #        x     y
  #    <chr> <int>
@@ -270,11 +270,11 @@ resTbl <- runExample(tblCopy)
  #  
  #  d4 %>% replyr::replyr_uniqueValues("x") 
  #  # A tibble: 3 × 2
- #        x     n
- #    <dbl> <dbl>
- #  1     1     1
- #  2     2     1
- #  3     3     2
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     2                      1
+ #  3     3                      2
  #  [1] "let example"
  #  # A tibble: 2 × 4
  #    Sepal_Length Sepal_Width Species  rank
@@ -368,9 +368,9 @@ resSQLite <- runExample(copyToRemote)
  #  
  #  d2 %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
@@ -386,9 +386,9 @@ resSQLite <- runExample(copyToRemote)
  #  
  #  d2b %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
@@ -439,11 +439,11 @@ resSQLite <- runExample(copyToRemote)
  #  Source:   query [?? x 2]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
- #        x     n
- #    <dbl> <dbl>
- #  1     1     1
- #  2     2     1
- #  3     3     2
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     2                      1
+ #  3     3                      2
  #  [1] "let example"
  #  Source:   query [?? x 4]
  #  Database: sqlite 3.11.1 [:memory:]
@@ -486,8 +486,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 535780 28.7     940480 50.3   940480 50.3
- #  Vcells 790881  6.1    1650153 12.6  1650153 12.6
+ #  Ncells 536418 28.7     940480 50.3   940480 50.3
+ #  Vcells 793836  6.1    2060183 15.8  1649962 12.6
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -547,9 +547,9 @@ resMySQL <- runExample(copyToRemote)
  #  
  #  d2 %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3 2.000000 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   0       3   0   5 2.666667 2.516611   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA       NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3 2.000000 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   0      NA   0   5 2.666667 2.516611   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA       NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
@@ -565,9 +565,9 @@ resMySQL <- runExample(copyToRemote)
  #  
  #  d2b %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3 2.000000 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   0       3   0   5 2.666667 2.516611   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA       NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3 2.000000 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   0      NA   0   5 2.666667 2.516611   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA       NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  
@@ -618,11 +618,11 @@ resMySQL <- runExample(copyToRemote)
  #  Source:   query [?? x 2]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
- #        x     n
- #    <dbl> <dbl>
- #  1     1     1
- #  2     2     1
- #  3     3     2
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     2                      1
+ #  3     3                      2
  #  [1] "let example"
  #  Source:   query [?? x 4]
  #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
@@ -690,8 +690,8 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 571299 30.6     940480 50.3   940480 50.3
- #  Vcells 820099  6.3    1650153 12.6  1650153 12.6
+ #  Ncells 571949 30.6     940480 50.3   940480 50.3
+ #  Vcells 823084  6.3    2060183 15.8  2039641 15.6
 ```
 
 PostgreSQL example ("docker start pg").
@@ -751,9 +751,9 @@ resPostgreSQL <- runExample(copyToRemote)
  #  
  #  d2 %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -769,9 +769,9 @@ resPostgreSQL <- runExample(copyToRemote)
  #  
  #  d2b %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #  Source:   query [?? x 2]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -822,11 +822,11 @@ resPostgreSQL <- runExample(copyToRemote)
  #  Source:   query [?? x 2]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
- #        x     n
- #    <dbl> <dbl>
- #  1     1     1
- #  2     3     2
- #  3     2     1
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     3                      2
+ #  3     2                      1
  #  [1] "let example"
  #  Source:   query [?? x 4]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
@@ -868,10 +868,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL res differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
- #  Auto-disconnecting postgres connection (77936, 0)
+ #  Auto-disconnecting postgres connection (33108, 0)
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 604871 32.4    1168576 62.5   940480 50.3
- #  Vcells 845645  6.5    1650153 12.6  1650153 12.6
+ #  Ncells 605512 32.4    1168576 62.5  1168576 62.5
+ #  Vcells 848624  6.5    2060183 15.8  2045659 15.7
 ```
 
 Spark 2.0.0. example (lowest version of Spark we are supporting).
@@ -935,9 +935,9 @@ resSpark <- runExample(copyToRemote)
  #  
  #  d2 %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #  Source:   query [3 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -953,9 +953,9 @@ resSpark <- runExample(copyToRemote)
  #  
  #  d2b %>% replyr::replyr_summary() 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
- #  1      x     1   numeric     3   0       3   1   3    2 1.000000   <NA>   <NA>
- #  2      y     2   numeric     3   1       2   3   5    4 1.414214   <NA>   <NA>
- #  3      z     3 character     3   0       2  NA  NA   NA       NA      a      z
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
  #  Source:   query [6 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -1006,11 +1006,11 @@ resSpark <- runExample(copyToRemote)
  #  Source:   query [3 x 2]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
- #        x     n
- #    <dbl> <dbl>
- #  1     1     1
- #  2     3     2
- #  3     2     1
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     3                      2
+ #  3     2                      1
  #  [1] "let example"
  #  Source:   query [2 x 4]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
@@ -1053,8 +1053,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 641833 34.3    1168576 62.5  1168576 62.5
- #  Vcells 877059  6.7    1650153 12.6  1650153 12.6
+ #  Ncells 642626 34.4    1168576 62.5  1168576 62.5
+ #  Vcells 880737  6.8    2060183 15.8  2045659 15.7
 ```
 
 ``` r
@@ -1063,6 +1063,6 @@ print("all done")
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 639998 34.2    1168576 62.5  1168576 62.5
- #  Vcells 873707  6.7    1650153 12.6  1650153 12.6
+ #  Ncells 640678 34.3    1168576 62.5  1168576 62.5
+ #  Vcells 876708  6.7    2060183 15.8  2045659 15.7
 ```
