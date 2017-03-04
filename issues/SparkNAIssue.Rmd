@@ -1,0 +1,97 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+`NA` issue while using `sparklyr`, `Spark2`, and `dplyr`.
+
+It thank `NA`'s can be represented in Spark2, they are definitely behaving
+as something different than a blank string.  They are also error-out.
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r opts, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+```{r setup}
+library('dplyr')
+library('sparklyr')
+sc <- sparklyr::spark_connect(version='2.0.0', 
+                              master = "local")
+```
+
+```{r d1}
+d1 <- data.frame(x= c('a',NA), 
+                 stringsAsFactors= FALSE)
+print(d1)
+nrow(d1)
+
+# Notice d1 appears truncated to 1 row
+ds1 <- dplyr::copy_to(sc,d1)
+print(ds1)
+nrow(ds1)
+```
+
+```{r d2, error=TRUE}
+# this block is just repeating expected behavior
+# without NA
+d2 <- data.frame(x= c('a','b'),
+                 y= 1:2,
+                 stringsAsFactors= FALSE)
+print(d2)
+nrow(d2)
+
+ds2 <- dplyr::copy_to(sc,d2)
+print(ds2)
+nrow(ds2)
+ds2 %>% summarize_each(funs(min))
+```
+
+```{r d3, error=TRUE}
+# this block is showing behavior different than
+# previous block due to NA
+d3 <- data.frame(x= c('a',NA),
+                 y= 1:2,
+                 stringsAsFactors= FALSE)
+print(d3)
+nrow(d3)
+d3 %>% summarize_each(funs(min))
+d3 %>% mutate(isna= is.na(x))
+
+ds3 <- dplyr::copy_to(sc,d3)
+print(ds3)
+nrow(ds3)
+# errors
+ds3 %>% summarize_each(funs(min))
+```
+
+
+```{r d3b, error=TRUE}
+# errors
+ds3 %>% mutate(isna= is.na(x))
+```
+
+```{r d3f, error=TRUE}
+# works
+ds3 %>% filter(y==1)
+# errors out
+ds3 %>% filter(y==2)
+```
+
+```{r info}
+R.Version()$version.string
+packageVersion('dplyr')
+packageVersion('sparklyr')
+class(sc)
+sc$spark_home
+print(sc)
+version
+```
+
+
