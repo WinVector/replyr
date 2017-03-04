@@ -142,6 +142,8 @@ ds3 %>% filter(y==2)
  #  Problem variables: 'x'
 ```
 
+Submitted as [sparklyr issue 528](https://github.com/rstudio/sparklyr/issues/528).
+
 ``` r
 R.Version()$version.string
  #  [1] "R version 3.3.2 (2016-10-31)"
@@ -189,7 +191,7 @@ print(sc)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:55721"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:55901"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
@@ -200,22 +202,22 @@ print(sc)
  #               "yes"              "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpP68Gyp/file85ab5ba030d7_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp4rymUh/file867851d72ec_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@67916c9a
+ #    org.apache.spark.SparkContext@67f95d13
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@10d71182
+ #    org.apache.spark.api.java.JavaSparkContext@727269d9
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@7aec0ce4
+ #    org.apache.spark.sql.SparkSession@7f05982
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
