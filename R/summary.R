@@ -16,6 +16,7 @@ localFrame <- function(d) {
 #' @param x tbl or item that can be coerced into such.
 #' @param countUniqueNum logical, if true include unique non-NA counts for numeric cols.
 #' @param countUniqueNonNum logical, if true include unique non-NA counts for non-numeric cols.
+#' @param cols if not nul set of columns to restrict to.
 #' @return summary of columns.
 #'
 #' @examples
@@ -27,9 +28,13 @@ localFrame <- function(d) {
 #' @export
 replyr_summary <- function(x,
                            countUniqueNum= FALSE,
-                           countUniqueNonNum= FALSE) {
+                           countUniqueNonNum= FALSE,
+                           cols= NULL) {
   nrows <- replyr_nrow(x)
   cnames <- colnames(x)
+  if(!is.null(cols)) {
+    cnames <- intersect(cnames, cols)
+  }
   cmap <- seq_len(length(cnames))
   names(cmap) <- cnames
   numericCols <- cnames[replyr_testCols(x,is.numeric)]
