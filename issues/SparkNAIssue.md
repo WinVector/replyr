@@ -114,6 +114,24 @@ ds3 %>% summarize_each(funs(min))
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  Error: Variables must be length 1 or 1.
  #  Problem variables: 'x'
+ds3 %>% mutate(xb=paste0('|',x,'|'))
+ #  Source:   query [3 x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #        x     y    xb
+ #    <chr> <int> <chr>
+ #  1     a     1   |a|
+ #  2  <NA>     2  <NA>
+ #  3           3    ||
+ds3 %>% mutate(xn=nchar(x))
+ #  Source:   query [3 x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #        x     y    xn
+ #    <chr> <int> <int>
+ #  1     a     1     1
+ #  2  <NA>     2    NA
+ #  3           3     0
 ```
 
 ``` r
@@ -203,33 +221,33 @@ print(sc)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:58781"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:53768"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
  #  $monitor
- #         description              class               mode               text             opened 
- #  "->localhost:8880"         "sockconn"               "rb"           "binary"           "opened" 
- #            can read          can write 
- #               "yes"              "yes" 
+ #          description               class                mode                text              opened 
+ #  "->localhost:53765"          "sockconn"                "rb"            "binary"            "opened" 
+ #             can read           can write 
+ #                "yes"               "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpzPjvgl/file90754513f04b_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp9l32j3/filedd9c3245161d_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@467165a5
+ #    org.apache.spark.SparkContext@552b139a
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@883023e
+ #    org.apache.spark.api.java.JavaSparkContext@4a2064c5
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@955e4f1
+ #    org.apache.spark.sql.SparkSession@33761221
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"

@@ -70,6 +70,8 @@ print(ds3) # Note NA and '' are reversed
 nrow(ds3)
 # errors
 ds3 %>% summarize_each(funs(min))
+ds3 %>% mutate(xb=paste0('|',x,'|'))
+ds3 %>% mutate(xn=nchar(x))
 ```
 
 
