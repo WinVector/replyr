@@ -172,7 +172,6 @@ ds3 %>% filter(y==3)
  #  Problem variables: 'x'
 ```
 
-Submitted as [sparklyr issue 528](https://github.com/rstudio/sparklyr/issues/528).
 
 ``` r
 R.Version()$version.string
