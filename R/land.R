@@ -1,12 +1,18 @@
 
 
+isValidAndUnreservedName <- function(string) {
+  (is.character(string)) &&
+    (length(string)==1) &&
+    (make.names(string,unique = FALSE, allow_ = TRUE) == string)
+}
+
 #' Land a value to variable from a pipeline.
 #'
 #' \%land\% and \%->\% ("writearrow") copy a pipeline value to a variable on the
 #' right hand side.
 #' \%land_\% and \%->_\% copy a pipeline value to
 #' a variable named by the value referenced by its right hand side argument.
-#' These operators use eager evaluation.
+#' These operators try to use eager evaluation.
 #'
 #'
 #'
@@ -30,10 +36,13 @@
 `%land%` <- function(value, name) {
   name <- as.character(substitute(name))
   if((length(name)!=1)||(!is.character(name))||
-     (!wrapr:::isValidAndUnreservedName(name))) {
+     (!isValidAndUnreservedName(name))) {
     stop("replyr::`%land%` name argument must be a valid potential variable name")
   }
   force(value)
+  if('tbl' %in% class(value)) {
+    value <- dplyr::compute(value)
+  }
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -46,10 +55,13 @@
 `%->%` <- function(value, name) {
   name <- as.character(substitute(name))
   if((length(name)!=1)||(!is.character(name))||
-     (!wrapr:::isValidAndUnreservedName(name))) {
+     (!isValidAndUnreservedName(name))) {
     stop("replyr::`%->%` name argument must be a valid potential variable name")
   }
   force(value)
+  if('tbl' %in% class(value)) {
+    value <- dplyr::compute(value)
+  }
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -61,10 +73,13 @@
 #' @rdname grapes-land-grapes
 `%->_%` <- function(value, name) {
   if((length(name)!=1)||(!is.character(name))||
-     (!wrapr:::isValidAndUnreservedName(name))) {
+     (!isValidAndUnreservedName(name))) {
     stop("replyr::`%->_%` name argument must be a valid potential variable name")
   }
   force(value)
+  if('tbl' %in% class(value)) {
+    value <- dplyr::compute(value)
+  }
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -76,13 +91,18 @@
 #' @rdname grapes-land-grapes
 `%land_%` <- function(value, name) {
   if((length(name)!=1)||(!is.character(name))||
-     (!wrapr:::isValidAndUnreservedName(name))) {
+     (!isValidAndUnreservedName(name))) {
     stop("replyr::`%land_%` name argument must be a valid potential variable name")
   }
   force(value)
+  if('tbl' %in% class(value)) {
+    value <- dplyr::compute(value)
+  }
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
          envir = envir)
   invisible(value)
 }
+
+
