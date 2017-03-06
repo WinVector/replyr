@@ -1,0 +1,51 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+`mutate` issue while using `sparklyr`, `Spark2`, and the dev version of `dplyr` (‘0.5.0.9000’, https://github.com/hadley/dplyr commit f39db50921110c3d23612cc81a7b3e027c0b3d1c ).
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+```{r opts, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = " # "
+)
+options(width =100)
+```
+
+```{r setup}
+library(sparklyr)
+library(dplyr)
+library(nycflights13)
+sc <- spark_connect(version='2.0.0', master = "local")
+flts <- replyr::replyr_copy_to(sc, flights)
+```
+
+Ok:
+
+```{r ok}
+flights %>% mutate(zzz=1)
+```
+
+Throws:
+
+```{r issue, error=TRUE}
+flts %>% mutate(zzz=1)
+```
+
+
+```{r info}
+R.Version()$version.string
+packageVersion('dplyr')
+packageVersion('lazyeval')
+packageVersion('sparklyr')
+class(sc)
+sc$spark_home
+print(sc)
+version
+```
+
+
