@@ -48,4 +48,5 @@ print(sc)
 version
 ```
 
+Submitted as [dplyr issue 2495](https://github.com/hadley/dplyr/issues/2495).
 

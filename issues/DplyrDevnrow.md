@@ -97,7 +97,7 @@ print(sc)
  #  
  #  $backend
  #          description               class                mode                text              opened 
- #  "->localhost:51499"          "sockconn"                "wb"            "binary"            "opened" 
+ #  "->localhost:51613"          "sockconn"                "wb"            "binary"            "opened" 
  #             can read           can write 
  #                "yes"               "yes" 
  #  
@@ -108,22 +108,22 @@ print(sc)
  #               "yes"              "yes" 
  #  
  #  $output_file
- #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpopGA2j/file12dd82d06e23f_spark.log"
+ #  [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpFeboip/file12e94122b24f7_spark.log"
  #  
  #  $spark_context
  #  <jobj[5]>
  #    class org.apache.spark.SparkContext
- #    org.apache.spark.SparkContext@d47c549
+ #    org.apache.spark.SparkContext@1dd0b076
  #  
  #  $java_context
  #  <jobj[6]>
  #    class org.apache.spark.api.java.JavaSparkContext
- #    org.apache.spark.api.java.JavaSparkContext@3e64cd38
+ #    org.apache.spark.api.java.JavaSparkContext@16f3a9fe
  #  
  #  $hive_context
  #  <jobj[9]>
  #    class org.apache.spark.sql.SparkSession
- #    org.apache.spark.sql.SparkSession@7b1e1d1d
+ #    org.apache.spark.sql.SparkSession@43de19c0
  #  
  #  attr(,"class")
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
@@ -144,3 +144,5 @@ version
  #  version.string R version 3.3.2 (2016-10-31)
  #  nickname       Sincere Pumpkin Patch
 ```
+
+Submitted as [dplyr issue 2495](https://github.com/hadley/dplyr/issues/2495).
