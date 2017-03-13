@@ -6,7 +6,7 @@ Introduction
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
 
-<img src="replyrs.png">
+<img src="vignettes/replyrs.png">
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
@@ -300,6 +300,6 @@ Clean up
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 485670 26.0     940480 50.3   940480 50.3
- #  Vcells 748929  5.8    1904154 14.6  1757464 13.5
+ #  Ncells 482062 25.8     940480 50.3   940480 50.3
+ #  Vcells 673559  5.2    1308461 10.0  1308461 10.0
 ```

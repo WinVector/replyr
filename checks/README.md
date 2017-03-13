@@ -1,5 +1,5 @@
 <!-- Generated from .Rmd. Please edit that file -->
-Not every packages is going to work every time, for every user, across every installation, with all data. The examples in this directory attempt to mitigate this for `replyr` by showing `replyr` in use with multiple data sources:
+Not every package is going to work every time, for every user, across every installation, with all data. The examples in this directory attempt to mitigate this for `replyr` by showing `replyr` in use with multiple data sources:
 
 -   `data.frame`
 -   `tbl`
