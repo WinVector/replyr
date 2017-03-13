@@ -2,7 +2,7 @@ Package: replyr
 Type: Package
 Title: Fluid Use of Big Data in R
 Version: 0.2.4
-Date: 2017-02-22
+Date: 2017-03-13
 Author: John Mount, Nina Zumel
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr

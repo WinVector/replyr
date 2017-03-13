@@ -6,7 +6,7 @@
  * R version 3.3.2
  * win-builder (devel and release) 
 
-## R CMD check --as-cran replyr_0.2.3.tar.gz 
+## R CMD check --as-cran --self-contained replyr_0.2.4.tar.gz 
 
 * using log directory ‘/Users/johnmount/Documents/work/replyr.Rcheck’
 * using R version 3.3.2 (2016-10-31)
