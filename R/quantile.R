@@ -2,7 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr %>% select_ rename_ mutate arrange
+#' @importFrom dplyr mutate arrange
 NULL
 
 # binary search adapted for number of rows queries
@@ -50,7 +50,7 @@ replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
   if((!is.character(cname))||(length(cname)!=1)) {
     stop('replyr_quantile cname must be a single string')
   }
-  x %>% dplyr::select_(cname) %>% dplyr::ungroup() -> x
+  x %>% replyr_select(cname) %>% dplyr::ungroup() -> x
   # make the variable name "x" as dplyr is much easier if we know the variable name
   if(cname!='x') {
     XCOL <- NULL # declare no external binding
@@ -136,7 +136,7 @@ replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25)) {
   if((!is.character(cname))||(length(cname)!=1)) {
     stop('replyr_quantilec cname must be a single string')
   }
-  x %>% dplyr::select_(cname) %>% dplyr::ungroup() -> x
+  x %>% replyr_select(cname) %>% dplyr::ungroup() -> x
   # make the variable name "x" as dplyr is much easier if we know the variable name
   if(cname!='x') {
     XCOL <- NULL # declare no external binding

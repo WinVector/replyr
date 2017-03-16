@@ -8,28 +8,6 @@ NULL
 # dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
 
-#' Rename a column
-#'
-#' @param .data data object to work on
-#' @param newName character new column name
-#' @param oldName character old column name
-#'
-#' @examples
-#'
-#' d <- data.frame(Sepal_Length= c(5.8,5.7),
-#'                 Sepal_Width= c(4.0,4.4),
-#'                 Species= 'setosa', rank=c(1,2))
-#' replyr_rename(d, 'family', 'Species')
-#'
-#' @export
-#'
-replyr_rename <- function(.data, newName, oldName) {
-  if(newName!=oldName) {
-    # use setNames here so this code is independent of let
-    return(dplyr::rename_(.data,.dots=stats::setNames(oldName, newName)))
-  }
-  .data
-}
 
 #' Map names of columns to known values and drop other columns.
 #'

@@ -2,7 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr %>% ungroup select_ mutate group_by_ summarize tbl as.tbl compute inner_join
+#' @importFrom dplyr ungroup mutate summarize tbl as.tbl compute inner_join
 NULL
 
 #' Filter a tbl on a column having values in a given set.

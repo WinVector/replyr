@@ -2,7 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr %>% ungroup summarize transmute summarise_each funs filter_
+#' @importFrom dplyr %>% ungroup summarize transmute summarise_each funs
 #' @importFrom stats sd
 #' @importFrom utils capture.output head
 NULL

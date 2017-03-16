@@ -5,7 +5,7 @@
 NULL
 
 # list length>=1 no null entries
-r_replyr_bind_rows <- function(lst, eagerCompute) {
+r_replyr_bind_rows <- function(lst, colnames, eagerCompute) {
   n <- length(lst)
   if(n<=1) {
     res <- lst[[1]]
@@ -17,16 +17,15 @@ r_replyr_bind_rows <- function(lst, eagerCompute) {
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- r_replyr_bind_rows(lst[leftSeq],eagerCompute)
-  right <- r_replyr_bind_rows(lst[rightSeq],eagerCompute)
+  left <- r_replyr_bind_rows(lst[leftSeq], colnames, eagerCompute)
+  right <- r_replyr_bind_rows(lst[rightSeq], colnames, eagerCompute)
   # ideas from https://github.com/rstudio/sparklyr/issues/76
   # would like to use union_all, but seems to have problems with Spark 2.0.0
   # (spread example from basicChecksSpark200.Rmd)
   # make sure columns are in same order (dplyr::union over Spark doesn't like disorder)
   # see: https://github.com/WinVector/replyr/blob/master/issues/UnionIssue.md
-  colnams <- intersect(colnames(left), colnames(right))
-  left <- dplyr::select_(left, .dots=colnams)
-  right <- dplyr::select_(right, .dots=colnams)
+  left <- replyr_select(left, colnames)
+  right <- replyr_select(right, colnames)
   if(length(intersect(c('spark_connection','src_spark'), replyr_dataServiceName(left)))>0) {
     res <- dplyr::union(left,right)
   } else {
@@ -60,6 +59,10 @@ replyr_bind_rows <- function(lst, eagerCompute= TRUE) {
   if(length(lst)<=0) {
     return(NULL)
   }
-  names(list) <- NULL
-  r_replyr_bind_rows(lst, eagerCompute)
+  names(lst) <- NULL
+  colnames <- Reduce(intersect, lapply(lst, colnames))
+  if(length(colnames)<=0) {
+    return(NULL)
+  }
+  r_replyr_bind_rows(lst, colnames, eagerCompute)
 }

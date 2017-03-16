@@ -2,7 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr %>% ungroup select_ mutate mutate_ group_by_ summarize tbl as.tbl compute left_join
+#' @importFrom dplyr ungroup mutate summarize tbl as.tbl compute left_join
 NULL
 
 #' Product a column noting if another columns values are in a given set.

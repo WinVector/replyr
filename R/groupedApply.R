@@ -2,37 +2,10 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr collect copy_to arrange_
+#' @importFrom dplyr collect copy_to
 NULL
 
-#' arrange df by columnName
-#'
-#' @param df data
-#' @param columnName name of column to arrange on
-#' @param decreasing logical, if TRUE arrange decreasing
-#' @return df arranged
-#'
-#' @examples
-#'
-#' replyr_arrange(data.frame(x=c(1,3,2)), 'x')
-#' replyr_arrange(data.frame(x=c(1,3,2)), 'x', decreasing=TRUE)
-#'
-#' @export
-#'
-replyr_arrange <- function(df,columnName,decreasing=FALSE) {
-  if(is.null(columnName)) {
-    return(df)
-  }
-  if(!decreasing) {
-    return(dplyr::arrange_(df,columnName))
-  }
-  desc <- function(...) {}; rm(list='desc') # declare desc isn't unbound
-  XCOL <- NULL # declare this is not a free binding
-  let(alias= list(XCOL=columnName),
-      expr= {
-        dplyr::arrange(df,desc(XCOL))
-      })
-}
+
 
 #' grouped ordered apply
 #'
@@ -113,7 +86,7 @@ gapply <- function(df,gcolumn,f,
       stop("replyr::gapply needs bindRows=TRUE")
     }
     # don't enforce maxgroups in this case, as large numbers of groups should not be a problem
-    df %>% dplyr::group_by_(gcolumn) -> df
+    df %>% replyr_group_by(gcolumn) -> df
     if(!is.null(ocolumn)) {
       df <- replyr_arrange(df,ocolumn,decreasing)
     }
