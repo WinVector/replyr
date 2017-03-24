@@ -19,6 +19,7 @@ NULL
 #' @param . incoming argument from \code{magrittr} pipeline (do not assign to this)
 #' @param alias mapping from free names in expr to target names to use
 #' @param expr \code{magrittr} pipeline to prepare for execution
+#' @param strict logical if TRUE only allow single name replacements.
 #' @return result of expr executed in calling environment
 #'
 #' @examples
@@ -42,7 +43,8 @@ NULL
 #' d %>% f
 #'
 #' @export
-letp <- function(., alias, expr) {
+letp <- function(., alias, expr,
+                 strict= TRUE) {
   # capture expr
   strexpr <- deparse(substitute(expr))
   force(.)
@@ -57,7 +59,7 @@ letp <- function(., alias, expr) {
   # (. %>% mutate(rank=rank-1)) roughly always behaves like a function,
   #  even if "." already has a value (so "." in this context is always treated
   #  as a free variable.)
-  `_reply_reserved_name` <- wrapr:::letprep(alias,body)
+  `_reply_reserved_name` <- wrapr::letprep(alias, body, strict)
   rm(list=setdiff(ls(all.names=TRUE),list('.','_reply_reserved_name')))
   # eval in new environment
   eenv <- new.env(parent=parent.frame())

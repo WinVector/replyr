@@ -4,7 +4,7 @@
 \alias{letp}
 \title{Wrap expr for \code{magrittr} pipeline execution with name substitutions specified in alias.}
 \usage{
-letp(., alias, expr)
+letp(., alias, expr, strict = TRUE)
 }
 \arguments{
 \item{.}{incoming argument from \code{magrittr} pipeline (do not assign to this)}
@@ -12,6 +12,8 @@ letp(., alias, expr)
 \item{alias}{mapping from free names in expr to target names to use}
 
 \item{expr}{\code{magrittr} pipeline to prepare for execution}
+
+\item{strict}{logical if TRUE only allow single name replacements.}
 }
 \value{
 result of expr executed in calling environment
