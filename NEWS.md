@@ -6,7 +6,7 @@
 'replyr' 0.2.4 2017-03-13
 
  * Respond to "CRAN packages maintained by you" request (images in root dir).
- * Fix unique_valeus can't use "n" issue.
+ * Fix unique_values can't use "n" issue.
  * Fix sd on SQLite issue.
 
 'replyr' 0.2.3 2017-02-20
