@@ -7,7 +7,7 @@ NULL
 
 
 
-#' Compute number of unique values in a column.
+#' Compute number of unique values for each level in a column.
 #'
 #' @param x tbl or item that can be coerced into such.
 #' @param cname name of columns to examine, must not be equal to 'replyr_private_value_n'.
@@ -19,13 +19,15 @@ NULL
 #' replyr_uniqueValues(d,'x')
 #'
 #' @export
-replyr_uniqueValues <- function(x,cname) {
+replyr_uniqueValues <- function(x, cname) {
   if((!is.character(cname))||(length(cname)!=1)||(cname[[1]]=='replyr_private_value_n')) {
     stop('replyr_uniqueValues cname must be a single string not equal to "replyr_private_value_n"')
   }
   replyr_private_value_n <- NULL # false binding for 'replyr_private_value_n' so name does not look unbound to CRAN check
   x %>% dplyr::ungroup() %>%
-    replyr_select(cname) %>% dplyr::mutate(replyr_private_value_n=1.0) %>%
+    replyr_select(cname) %>%
+    dplyr::mutate(replyr_private_value_n=1.0) %>%
+    dplyr::group_by_(cname) %>%
     dplyr::summarize(replyr_private_value_n=sum(replyr_private_value_n)) -> res
   # # Can't get rid of the warning on MySQL, even the following doesn't shut it up
   # suppressWarnings(
