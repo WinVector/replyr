@@ -2,7 +2,7 @@
 % Please edit documentation in R/uniqueValues.R
 \name{replyr_uniqueValues}
 \alias{replyr_uniqueValues}
-\title{Compute number of rows of a tbl.}
+\title{Compute number of unique values for each level in a column.}
 \usage{
 replyr_uniqueValues(x, cname)
 }
@@ -15,7 +15,7 @@ replyr_uniqueValues(x, cname)
 unique values for the column.
 }
 \description{
-Compute number of rows of a tbl.
+Compute number of unique values for each level in a column.
 }
 \examples{
 
