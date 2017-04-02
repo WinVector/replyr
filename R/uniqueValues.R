@@ -7,7 +7,7 @@ NULL
 
 
 
-#' Compute number of rows of a tbl.
+#' Compute number of unique values in a column.
 #'
 #' @param x tbl or item that can be coerced into such.
 #' @param cname name of columns to examine, must not be equal to 'replyr_private_value_n'.
@@ -26,7 +26,7 @@ replyr_uniqueValues <- function(x,cname) {
   replyr_private_value_n <- NULL # false binding for 'replyr_private_value_n' so name does not look unbound to CRAN check
   x %>% dplyr::ungroup() %>%
     replyr_select(cname) %>% dplyr::mutate(replyr_private_value_n=1.0) %>%
-    replyr_select(cname) %>% dplyr::summarize(replyr_private_value_n=sum(replyr_private_value_n)) -> res
+    dplyr::summarize(replyr_private_value_n=sum(replyr_private_value_n)) -> res
   # # Can't get rid of the warning on MySQL, even the following doesn't shut it up
   # suppressWarnings(
   #   # on mutate step in MySQL:  In .local(conn, statement, ...) : Decimal MySQL column 1 imported as numeric
