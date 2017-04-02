@@ -83,7 +83,7 @@ replyr_coalesce <- function(data, support,
       if(ci %in% names(fills)) {
         replyr_private_name_vi <- fills[[ci]]
         # PostgresSQL and Spark1.6.2 don't like blank character values
-        # hopy dplyr lazyeval carries the cast over to the database
+        # hope dplyr lazyeval carries the cast over to the database
         # And MySQL can't accept the SQL dplyr emits with character cast
         sname <- replyr_dataServiceName(replyr_private_name_additions)
         useCharCast <- is.character(replyr_private_name_vi) && (!("src_mysql" %in% sname))

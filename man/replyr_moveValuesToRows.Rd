@@ -2,7 +2,7 @@
 % Please edit documentation in R/gather_spread.R
 \name{replyr_moveValuesToRows}
 \alias{replyr_moveValuesToRows}
-\title{Collect values found in columnsToTakeFrom as tuples}
+\title{Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers)}
 \usage{
 replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
   columnsToTakeFrom, eagerCompute = FALSE)

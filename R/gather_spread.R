@@ -2,12 +2,12 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr select mutate_ one_of
+#' @importFrom dplyr select mutate one_of
 NULL
 
 # dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
-#' Collect values found in columnsToTakeFrom as tuples
+#' Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers)
 #'
 #' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
 #' and value found (placed in nameForNewValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
@@ -77,26 +77,26 @@ replyr_moveValuesToRows <- function(data,
     # PostgreSQL needs to know types on character types with the lazyeval form.
     # MySQL does not like such annotation.
     data %>% dplyr::select(dplyr::one_of(targetsA)) -> dtmp
+    NEWCOL <- NULL  # declare not unbound
+    OLDCOL <- NULL  # declare not unbound
     if(useAsChar) {
-      let(
-        alias= list(NEWCOL=nameForNewKeyColumn, OLDCOL=di),
-        expr= {
-          dtmp %>% dplyr::mutate(NEWCOL=as.character('OLDCOL')) -> dtmp
-        }
+      wrapr::let(
+        c(NEWCOL=nameForNewKeyColumn, OLDCOL=di),
+        dtmp %>% dplyr::mutate(NEWCOL=as.character('OLDCOL')) -> dtmp
       )
     } else {
-      let(
-        alias= list(NEWCOL=nameForNewKeyColumn, OLDCOL=di),
-        expr= {
-          dtmp %>% dplyr::mutate(NEWCOL='OLDCOL') -> dtmp
-        }
+      wrapr::let(
+        c(NEWCOL=nameForNewKeyColumn, OLDCOL=di),
+        dtmp %>% dplyr::mutate(NEWCOL='OLDCOL') -> dtmp
       )
-      dtmp %>%
-        dplyr::mutate_(.dots=stats::setNames(paste0('"',di,'"'), nameForNewKeyColumn)) -> dtmp
     }
-    dtmp %>%
-      dplyr::mutate_(.dots=stats::setNames(di, nameForNewValueColumn)) %>%
-      dplyr::select(dplyr::one_of(targetsB)) -> dtmp
+    print('.')
+    wrapr::let(
+      c(NEWCOL=nameForNewValueColumn, OLDCOL=di),
+      dtmp %>%
+        dplyr::mutate(NEWCOL= OLDCOL) %>%
+        dplyr::select(dplyr::one_of(targetsB)) -> dtmp
+    )
     if(eagerCompute) {
       dtmp %>% dplyr::compute() -> dtmp
     }
@@ -108,7 +108,7 @@ replyr_moveValuesToRows <- function(data,
 
 
 
-#' Spread values found in rowKeyColumns row groups as new columns. A concept demonstration, not a fully usable function.
+#' Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers)
 #'
 #' Spread values found in rowKeyColumns row groups as new columns.
 #' Values types (new column names) are identified in nameForNewKeyColumn and values are taken
@@ -207,12 +207,16 @@ replyr_moveValuesToColumns <- function(data,
       # see http://stackoverflow.com/questions/26003574/r-dplyr-mutate-use-dynamic-variable-names
       # PostgreSQL needs to know types on character types with the lazyeval form.
       # MySQL does not like such annotation.
+      NEWCOLNAME <- NULL  # declare not unbound
       if(useAsChar && is.character(vi)) {
-        varval <- lazyeval::interp(~as.character(vi),vi=vi)
+        wrapr::let(c(NEWCOLNAME= ni),
+          d1 %>% dplyr::mutate(NEWCOLNAME = as.character(vi)) -> d1
+        )
       } else {
-        varval <- lazyeval::interp(~vi,vi=vi)
+        wrapr::let(c(NEWCOLNAME= ni),
+          d1 %>% dplyr::mutate(NEWCOLNAME = vi) -> d1
+        )
       }
-      d1 %>% dplyr::mutate_(.dots=stats::setNames(list(varval), ni)) -> d1
     }
     if(eagerCompute) {
       dplyr::compute(d1) -> d1

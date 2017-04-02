@@ -2,7 +2,7 @@
 % Please edit documentation in R/gather_spread.R
 \name{replyr_moveValuesToColumns}
 \alias{replyr_moveValuesToColumns}
-\title{Spread values found in rowKeyColumns row groups as new columns. A concept demonstration, not a fully usable function.}
+\title{Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers)}
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
   rowKeyColumns, maxcols = 100, eagerCompute = FALSE)
