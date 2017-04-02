@@ -249,13 +249,13 @@ Good code should fill one important gap and work on a variety of `dplyr` back en
  * Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `gapply`, `replyr_split`, and `replyr_bind_rows`.
  * Patching around differences in `dplyr` services providers (and documenting the reasons for the patches).
  * Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).  Note: this functionality is now imported from `wrapr`.
+ * Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
  
  
 Additional desired capabilities of interest include:
 
  * `cumsum`, ranking, or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
  * Inserting random values (or even better random unique values) in a remote column.  Most service providers have a pseudo-random source you can use.
- * Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
  * `choice` function (picking up to `k` from each group arbitrarily).
  * Window functions (pick min/max example from each group).
  * `dfapply` like `lapply` bind all results together into a single `data.frame`.
