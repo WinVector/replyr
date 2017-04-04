@@ -2,41 +2,41 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr select mutate one_of
+# @importFrom dplyr select mutate one_of
 NULL
 
 # dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
-#' Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers)
-#'
-#' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
-#' and value found (placed in nameForNewValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
-#'
-#' @param data data.frame to work with.
-#' @param nameForNewKeyColumn character name of column to write new keys in.
-#' @param nameForNewValueColumn character name of column to write new values in.
-#' @param columnsToTakeFrom character array names of columns to take values from.
-#' @param eagerCompute if TRUE call compute on intermediate results
-#' @return data item
-#'
-#' @examples
-#'
-#' d <- data.frame(
-#'   index = c(1, 2, 3),
-#'   info = c('a', 'b', 'c'),
-#'   meas1 = c('m1_1', 'm1_2', 'm1_3'),
-#'   meas2 = c('m2_1', 'm2_2', 'm2_3'),
-#'   stringsAsFactors = FALSE)
-#' replyr_moveValuesToRows(d,
-#'               nameForNewKeyColumn= 'meastype',
-#'               nameForNewValueColumn= 'meas',
-#'               columnsToTakeFrom= c('meas1','meas2'))
-#' # cdata::moveValuesToRows(d,
-#' #               nameForNewKeyColumn= 'meastype',
-#' #               nameForNewValueColumn= 'meas',
-#' #               columnsToTakeFrom= c('meas1','meas2'))
-#'
-#' @export
+# Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers)
+#
+# Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
+# and value found (placed in nameForNewValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
+#
+# @param data data.frame to work with.
+# @param nameForNewKeyColumn character name of column to write new keys in.
+# @param nameForNewValueColumn character name of column to write new values in.
+# @param columnsToTakeFrom character array names of columns to take values from.
+# @param eagerCompute if TRUE call compute on intermediate results
+# @return data item
+#
+# @examples
+#
+# d <- data.frame(
+#   index = c(1, 2, 3),
+#   info = c('a', 'b', 'c'),
+#   meas1 = c('m1_1', 'm1_2', 'm1_3'),
+#   meas2 = c('m2_1', 'm2_2', 'm2_3'),
+#   stringsAsFactors = FALSE)
+# replyr_moveValuesToRows(d,
+#               nameForNewKeyColumn= 'meastype',
+#               nameForNewValueColumn= 'meas',
+#               columnsToTakeFrom= c('meas1','meas2'))
+# # cdata::moveValuesToRows(d,
+# #               nameForNewKeyColumn= 'meastype',
+# #               nameForNewValueColumn= 'meas',
+# #               columnsToTakeFrom= c('meas1','meas2'))
+#
+# @export
 replyr_moveValuesToRows <- function(data,
                                     nameForNewKeyColumn,
                                     nameForNewValueColumn,
@@ -108,41 +108,41 @@ replyr_moveValuesToRows <- function(data,
 
 
 
-#' Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers)
-#'
-#' Spread values found in rowKeyColumns row groups as new columns.
-#' Values types (new column names) are identified in nameForNewKeyColumn and values are taken
-#' from nameForNewValueColumn.
-#' This is denormalizing operation, or essentially a tidyr::spread, dplyr::dcast, or pivot.
-#' This implementation moves
-#' so much data it is essentially working locally and also very inefficient.
-#'
-#' @param data data.frame to work with.
-#' @param columnToTakeKeysFrom character name of column build new column names from.
-#' @param columnToTakeValuesFrom character name of column to get values from.
-#' @param rowKeyColumns character array names columns that should be table keys.
-#' @param maxcols maximum number of values to expand to columns
-#' @param eagerCompute if TRUE call compute on intermediate results
-#' @return data item
-#'
-#' @examples
-#'
-#' d <- data.frame(
-#'   index = c(1, 2, 3, 1, 2, 3),
-#'   meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
-#'   meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
-#'   stringsAsFactors = FALSE)
-#' replyr_moveValuesToColumns(d,
-#'                            columnToTakeKeysFrom= 'meastype',
-#'                            columnToTakeValuesFrom= 'meas',
-#'                            rowKeyColumns= 'index')
-#' # cdata::moveValuesToColumns(d,
-#' #                            columnToTakeKeysFrom= 'meastype',
-#' #                            columnToTakeValuesFrom= 'meas',
-#' #                            rowKeyColumns= 'index')
-#'
-#'
-#' @export
+# Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers)
+#
+# Spread values found in rowKeyColumns row groups as new columns.
+# Values types (new column names) are identified in nameForNewKeyColumn and values are taken
+# from nameForNewValueColumn.
+# This is denormalizing operation, or essentially a tidyr::spread, dplyr::dcast, or pivot.
+# This implementation moves
+# so much data it is essentially working locally and also very inefficient.
+#
+# @param data data.frame to work with.
+# @param columnToTakeKeysFrom character name of column build new column names from.
+# @param columnToTakeValuesFrom character name of column to get values from.
+# @param rowKeyColumns character array names columns that should be table keys.
+# @param maxcols maximum number of values to expand to columns
+# @param eagerCompute if TRUE call compute on intermediate results
+# @return data item
+#
+# @examples
+#
+# d <- data.frame(
+#   index = c(1, 2, 3, 1, 2, 3),
+#   meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
+#   meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
+#   stringsAsFactors = FALSE)
+# replyr_moveValuesToColumns(d,
+#                            columnToTakeKeysFrom= 'meastype',
+#                            columnToTakeValuesFrom= 'meas',
+#                            rowKeyColumns= 'index')
+# # cdata::moveValuesToColumns(d,
+# #                            columnToTakeKeysFrom= 'meastype',
+# #                            columnToTakeValuesFrom= 'meas',
+# #                            rowKeyColumns= 'index')
+#
+#
+# @export
 replyr_moveValuesToColumns <- function(data,
                                        columnToTakeKeysFrom,
                                        columnToTakeValuesFrom,
