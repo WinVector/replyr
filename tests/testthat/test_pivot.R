@@ -23,7 +23,7 @@ test_that("test_pivot.R", {
                        meastype = c('meas1','meas2','meas1','meas2','meas1','meas2'),
                        meas= c('m1_1', 'm2_1', 'm1_2', 'm2_2', 'm1_3', 'm2_3'),
                        stringsAsFactors = FALSE)
-  expect_true(all.equal(expect, rp))
+  expect_true(all.equal(expect, data.frame(rp)))
 
   # test unpivot
   d <- data.frame(
@@ -41,5 +41,5 @@ test_that("test_pivot.R", {
                        meas1 = c('m1_1', 'm1_2', 'm1_3'),
                        meas2 = c('m2_1', 'm2_2', 'm2_3'),
                        stringsAsFactors = FALSE)
-  expect_true(all.equal(expect, rp))
+  expect_true(all.equal(expect, data.frame(rp)))
 })

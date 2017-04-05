@@ -41,7 +41,7 @@ replyr_moveValuesToRows <- function(data,
                                     nameForNewKeyColumn,
                                     nameForNewValueColumn,
                                     columnsToTakeFrom,
-                                    eagerCompute=FALSE) {
+                                    eagerCompute= FALSE) {
   if((!is.character(columnsToTakeFrom))||(length(columnsToTakeFrom)<1)) {
     stop('replyr_moveValuesToRows columnsToTakeFrom must be a character vector')
   }
@@ -96,12 +96,12 @@ replyr_moveValuesToRows <- function(data,
         dplyr::mutate(NEWCOL= OLDCOL) %>%
         dplyr::select(dplyr::one_of(targetsB)) -> dtmp
     )
-    if(eagerCompute) {
-      dtmp %>% dplyr::compute() -> dtmp
-    }
+    # worry about drifting ref issue
+    # See issues/TrailingRefIssue.Rmd
+    dtmp %>% dplyr::compute() -> dtmp
     dtmp
   })
-  replyr_bind_rows(rlist)
+  replyr_bind_rows(rlist, eagerCompute=eagerCompute)
 }
 
 
@@ -146,8 +146,8 @@ replyr_moveValuesToColumns <- function(data,
                                        columnToTakeKeysFrom,
                                        columnToTakeValuesFrom,
                                        rowKeyColumns,
-                                       maxcols=100,
-                                       eagerCompute=FALSE) {
+                                       maxcols= 100,
+                                       eagerCompute= TRUE) {
   if(length(rowKeyColumns)>0) {
     if((!is.character(rowKeyColumns))||(length(rowKeyColumns)!=1)||
      (nchar(rowKeyColumns)<1)) {
@@ -186,18 +186,20 @@ replyr_moveValuesToColumns <- function(data,
   if(length(newCols)>maxcols) {
     stop("replyr_moveValuesToColumns too many new columns")
   }
+  VCOL <- NULL # declare not unbound
   let(
     c(VCOL= columnToTakeValuesFrom),
-    (data %>%
-      dplyr::summarize(x=min(VCOL)) %>%
-      collect)$x -> minV
+    {
+      data %>%
+        dplyr::filter(!is.na(VCOL)) -> data # use absence instead of NA
+      (data %>%
+         dplyr::summarize(x=min(VCOL)) %>%
+         dplyr::collect())$x -> minV
+    }
   )
-  if(is.na(minV)) {
-    stop("replyr_moveValuesToColumns can't currently move NAs")
-  }
   sentinalV <- NA
   if(is.numeric(minV)) {
-    sentinalV <- minV - 0.1*minv - 1
+    sentinalV <- minV - 0.1*minV - 1
   } else if(is.character(minV)) {
     # can fix this by padding strings on the left with a "V"
     if(minV=='') {
@@ -211,29 +213,49 @@ replyr_moveValuesToColumns <- function(data,
     stop("replyr_moveValuesToColumns failed to pick sentinal value")
   }
   mcols <- c(columnToTakeKeysFrom,columnToTakeValuesFrom)
+  KCOL <- NULL # declare not unbound
+  NEWCOL <- NULL # declare not unbound
   for(ci in newCols) {
     wrapr::let(
       c(NEWCOL=ci,
         KCOL=columnToTakeKeysFrom,
         VCOL=columnToTakeValuesFrom),
       data %>%
-        mutate(NEWCOL = ifelse(KCOL==ci, VCOL, sentinalV)) -> data
+        dplyr::mutate(NEWCOL = ifelse(KCOL==ci, VCOL, sentinalV)) -> data
     )
+    # Must call compute here or ci value changing changes mutate.
+    # See issues/TrailingRefIssue.Rmd
+    data <- compute(data)
   }
-  copyCols <- c(setdiff(cnames,mcols),newCols)
+  copyCols <- c(setdiff(cnames, mcols), newCols)
   data %>%
-    select(one_of(copyCols)) -> data
+    dplyr::select(dplyr::one_of(copyCols)) -> data
   if(length(rowKeyColumns)<=0) {
     data %>%
-      summarize_all(max) -> data
+      dplyr::summarize_all(max) -> data
   } else {
     # Right now this only works with single key column
+    KEYCOLS <- NULL # declare not unbound
     wrapr::let(
       c(KEYCOLS= rowKeyColumns),
       data %>%
-        group_by(KEYCOLS) %>%
-        summarize_all(max) -> data
+        dplyr::group_by(KEYCOLS) %>%
+        dplyr::summarize_all("max") -> data
     )
+  }
+  # replace sentinal with NA
+  for(ci in newCols) {
+    wrapr::let(
+      c(NEWCOL=ci),
+      data %>%
+        dplyr::mutate(NEWCOL = ifelse(NEWCOL==sentinalV, NA, NEWCOL)) -> data
+    )
+    # Must call compute here or ci value changing changes mutate.
+    # See issues/TrailingRefIssue.Rmd
+    data <- compute(data)
+  }
+  if(eagerCompute) {
+    data <- dplyr::compute(data)
   }
   data
 }

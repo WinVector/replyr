@@ -5,7 +5,7 @@
 \title{Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers)}
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
-  rowKeyColumns, maxcols = 100, eagerCompute = FALSE)
+  rowKeyColumns, maxcols = 100, eagerCompute = TRUE)
 }
 \arguments{
 \item{data}{data.frame to work with.}
