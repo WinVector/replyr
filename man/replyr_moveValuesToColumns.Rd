@@ -2,7 +2,7 @@
 % Please edit documentation in R/rowscols.R
 \name{replyr_moveValuesToColumns}
 \alias{replyr_moveValuesToColumns}
-\title{Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers)}
+\title{Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
   rowKeyColumns, maxcols = 100, eagerCompute = TRUE)
@@ -24,12 +24,10 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 data item
 }
 \description{
-Spread values found in rowKeyColumns row groups as new columns.
-Values types (new column names) are identified in nameForNewKeyColumn and values are taken
+Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 from nameForNewValueColumn.
-This is denormalizing operation, or essentially a tidyr::spread, dplyr::dcast, or pivot.
-This implementation moves
-so much data it is essentially working locally and also very inefficient.
+This is denormalizing operation, or essentially a \code{tidyr::spread}, \code{dplyr::dcast}, or pivot.
+Similar interface as in the \code{cdata} package.
 }
 \examples{
 

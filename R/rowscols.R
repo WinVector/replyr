@@ -7,10 +7,11 @@ NULL
 
 #' dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
-#' Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers)
+#' Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).
 #'
 #' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
-#' and value found (placed in nameForNewValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
+#' and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
+#' Similar interface as in the \code{cdata} package.
 #'
 #' @param data data.frame to work with.
 #' @param nameForNewKeyColumn character name of column to write new keys in.
@@ -107,14 +108,12 @@ replyr_moveValuesToRows <- function(data,
 
 
 
-#' Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers)
+#' Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers).
 #'
-#' Spread values found in rowKeyColumns row groups as new columns.
-#' Values types (new column names) are identified in nameForNewKeyColumn and values are taken
+#' Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 #' from nameForNewValueColumn.
-#' This is denormalizing operation, or essentially a tidyr::spread, dplyr::dcast, or pivot.
-#' This implementation moves
-#' so much data it is essentially working locally and also very inefficient.
+#' This is denormalizing operation, or essentially a \code{tidyr::spread}, \code{dplyr::dcast}, or pivot.
+#' Similar interface as in the \code{cdata} package.
 #'
 #' @param data data.frame to work with.
 #' @param columnToTakeKeysFrom character name of column build new column names from.

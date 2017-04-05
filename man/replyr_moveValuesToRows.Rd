@@ -3,7 +3,7 @@
 \name{replyr_moveValuesToRows}
 \alias{replyr_moveValuesToRows}
 \title{dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
-Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers)}
+Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
   columnsToTakeFrom, eagerCompute = FALSE)
@@ -24,7 +24,8 @@ data item
 }
 \description{
 Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
-and value found (placed in nameForNewValueColumn).  This is essentially a tidyr::gather, dplyr::melt, or anti-pivot.
+and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
+Similar interface as in the \code{cdata} package.
 }
 \examples{
 

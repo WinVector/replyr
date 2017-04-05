@@ -277,7 +277,7 @@ Good code should fill one important gap and work on a variety of `dplyr` back en
 -   Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `gapply`, `replyr_split`, and `replyr_bind_rows`.
 -   Patching around differences in `dplyr` services providers (and documenting the reasons for the patches).
 -   Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable). Note: this functionality is now imported from `wrapr`.
--   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
+-   Emulating `tidyr` `gather`/`spread` (or pivoting and anti-pivoting, but using interfaces similar to the `cdata` package).
 
 Additional desired capabilities of interest include:
 
@@ -300,6 +300,6 @@ Clean up
 rm(list=ls())
 gc()
  #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 487308 26.1     940480 50.3   940480 50.3
- #  Vcells 765939  5.9    1784217 13.7  1776581 13.6
+ #  Ncells 487334 26.1     940480 50.3   940480 50.3
+ #  Vcells 766936  5.9    1785636 13.7  1777566 13.6
 ```
