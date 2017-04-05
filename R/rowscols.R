@@ -148,9 +148,11 @@ replyr_moveValuesToColumns <- function(data,
                                        rowKeyColumns,
                                        maxcols=100,
                                        eagerCompute=FALSE) {
-  if((!is.character(rowKeyColumns))||(length(rowKeyColumns)!=1)||
+  if(length(rowKeyColumns)>0) {
+    if((!is.character(rowKeyColumns))||(length(rowKeyColumns)!=1)||
      (nchar(rowKeyColumns)<1)) {
-    stop('replyr_moveValuesToColumns rowKeyColumns must be a single non-empty string')
+     stop('replyr_moveValuesToColumns rowKeyColumns must be a single non-empty string')
+    }
   }
   if((!is.character(columnToTakeKeysFrom))||(length(columnToTakeKeysFrom)!=1)||
      (nchar(columnToTakeKeysFrom)<1)) {
@@ -160,17 +162,10 @@ replyr_moveValuesToColumns <- function(data,
      (nchar(columnToTakeValuesFrom)<1)) {
     stop('replyr_moveValuesToColumns columnToTakeValuesFrom must be a single non-empty string')
   }
-  ucols <- c(rowKeyColumns,columnToTakeKeysFrom,columnToTakeValuesFrom)
-  if(length(unique(ucols))!=3) {
-    stop('replyr_moveValuesToColumns columnToTakeValuesFrom must be a single non-empty string')
-  }
   if(columnToTakeKeysFrom==columnToTakeValuesFrom) {
     stop('replyr_moveValuesToColumns rowKeyColumns,columnToTakeKeysFrom,columnToTakeValuesFrom must all be distinct')
   }
   cnames <- colnames(data)
-  if(!(rowKeyColumns %in% cnames)) {
-    stop('replyr_moveValuesToColumns rowKeyColumns must be a data column name')
-  }
   if(!(columnToTakeKeysFrom %in% cnames)) {
     stop('replyr_moveValuesToColumns columnToTakeKeysFrom must be a data column name')
   }
@@ -228,13 +223,18 @@ replyr_moveValuesToColumns <- function(data,
   copyCols <- c(setdiff(cnames,mcols),newCols)
   data %>%
     select(one_of(copyCols)) -> data
-  # this only works with single key column
-  wrapr::let(
-    c(KEYCOLS= rowKeyColumns),
+  if(length(rowKeyColumns)<=0) {
     data %>%
-      group_by(KEYCOLS) %>%
       summarize_all(max) -> data
-  )
+  } else {
+    # Right now this only works with single key column
+    wrapr::let(
+      c(KEYCOLS= rowKeyColumns),
+      data %>%
+        group_by(KEYCOLS) %>%
+        summarize_all(max) -> data
+    )
+  }
   data
 }
 
