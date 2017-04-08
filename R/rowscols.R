@@ -121,6 +121,7 @@ replyr_moveValuesToRows <- function(data,
 #' @param columnToTakeValuesFrom character name of column to get values from.
 #' @param rowKeyColumns character array names columns that should be table keys.
 #' @param fill value to fill in missing values from original (both those that are originally explicitly NA, and those not present as rows).
+#' @param sep character, if not null build composite column names as COLsepVALUE, use new columns names are just VALUE.
 #' @param maxcols maximum number of values to expand to columns
 #' @param eagerCompute if TRUE call compute on intermediate results
 #' @return data item
@@ -135,11 +136,13 @@ replyr_moveValuesToRows <- function(data,
 #' replyr_moveValuesToColumns(d,
 #'                            columnToTakeKeysFrom= 'meastype',
 #'                            columnToTakeValuesFrom= 'meas',
-#'                            rowKeyColumns= 'index')
+#'                            rowKeyColumns= 'index',
+#'                            sep= '_')
 #' # cdata::moveValuesToColumns(d,
 #' #                            columnToTakeKeysFrom= 'meastype',
 #' #                            columnToTakeValuesFrom= 'meas',
-#' #                            rowKeyColumns= 'index')
+#' #                            rowKeyColumns= 'index',
+#' #                            sep= '_')
 #'
 #'
 #' @export
@@ -148,6 +151,7 @@ replyr_moveValuesToColumns <- function(data,
                                        columnToTakeValuesFrom,
                                        rowKeyColumns,
                                        fill= NA,
+                                       sep= NULL,
                                        maxcols= 100,
                                        eagerCompute= TRUE) {
   if(length(rowKeyColumns)>0) {
@@ -181,7 +185,12 @@ replyr_moveValuesToColumns <- function(data,
   data %>%
     replyr_uniqueValues(columnToTakeKeysFrom) %>%
     replyr_copy_from(maxrow=maxcols) -> colStats
-  newCols <- sort(colStats[[columnToTakeKeysFrom]])
+  valSupport <- sort(colStats[[columnToTakeKeysFrom]])
+  newCols <- valSupport
+  if(!is.null(sep)) {
+    newCols <- paste(columnToTakeKeysFrom, newCols, sep=sep)
+  }
+  names(newCols) <- valSupport
   if(any(newCols %in% cnames)) {
     stop('replyr_moveValuesToColumns columnToTakeKeysFrom values must not include any data column names')
   }
@@ -217,13 +226,14 @@ replyr_moveValuesToColumns <- function(data,
   mcols <- c(columnToTakeKeysFrom,columnToTakeValuesFrom)
   KCOL <- NULL # declare not unbound
   NEWCOL <- NULL # declare not unbound
-  for(ci in newCols) {
+  for(vi in names(newCols)) {
+    ci <- newCols[[vi]]
     wrapr::let(
       c(NEWCOL=ci,
         KCOL=columnToTakeKeysFrom,
         VCOL=columnToTakeValuesFrom),
       data %>%
-        dplyr::mutate(NEWCOL = ifelse(KCOL==ci, VCOL, sentinelV)) -> data
+        dplyr::mutate(NEWCOL = ifelse(KCOL==vi, VCOL, sentinelV)) -> data
     )
     # Must call compute here or ci value changing changes mutate.
     # See issues/TrailingRefIssue.Rmd
