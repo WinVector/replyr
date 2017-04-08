@@ -120,6 +120,7 @@ replyr_moveValuesToRows <- function(data,
 #' @param columnToTakeKeysFrom character name of column build new column names from.
 #' @param columnToTakeValuesFrom character name of column to get values from.
 #' @param rowKeyColumns character array names columns that should be table keys.
+#' @param fill value to fill in missing values from original (both those that are originally explicitly NA, and those not present as rows).
 #' @param maxcols maximum number of values to expand to columns
 #' @param eagerCompute if TRUE call compute on intermediate results
 #' @return data item
@@ -146,6 +147,7 @@ replyr_moveValuesToColumns <- function(data,
                                        columnToTakeKeysFrom,
                                        columnToTakeValuesFrom,
                                        rowKeyColumns,
+                                       fill= NA,
                                        maxcols= 100,
                                        eagerCompute= TRUE) {
   if(length(rowKeyColumns)>0) {
@@ -248,7 +250,7 @@ replyr_moveValuesToColumns <- function(data,
     wrapr::let(
       c(NEWCOL=ci),
       data %>%
-        dplyr::mutate(NEWCOL = ifelse(NEWCOL==sentinelV, NA, NEWCOL)) -> data
+        dplyr::mutate(NEWCOL = ifelse(NEWCOL==sentinelV, fill, NEWCOL)) -> data
     )
     # Must call compute here or ci value changing changes mutate.
     # See issues/TrailingRefIssue.Rmd

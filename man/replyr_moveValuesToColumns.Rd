@@ -5,7 +5,7 @@
 \title{Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
-  rowKeyColumns, maxcols = 100, eagerCompute = TRUE)
+  rowKeyColumns, fill = NA, maxcols = 100, eagerCompute = TRUE)
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -15,6 +15,8 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 \item{columnToTakeValuesFrom}{character name of column to get values from.}
 
 \item{rowKeyColumns}{character array names columns that should be table keys.}
+
+\item{fill}{value to fill in missing values from original (both those that are originally explicitly NA, and those not present as rows).}
 
 \item{maxcols}{maximum number of values to expand to columns}
 
