@@ -72,36 +72,37 @@ replyr_moveValuesToRows <- function(data,
     useAsChar <- FALSE
   }
   dcols <- setdiff(cnames,columnsToTakeFrom)
-  rlist <- lapply(columnsToTakeFrom, function(di) {
-    targetsA <- c(dcols,di)
-    targetsB <- c(dcols,nameForNewKeyColumn,nameForNewValueColumn)
-    # PostgreSQL needs to know types on character types with the lazyeval form.
-    # MySQL does not like such annotation.
-    data %>% dplyr::select(dplyr::one_of(targetsA)) -> dtmp
-    NEWCOL <- NULL  # declare not unbound
-    OLDCOL <- NULL  # declare not unbound
-    if(useAsChar) {
-      wrapr::let(
-        c(NEWCOL=nameForNewKeyColumn, OLDCOL=di),
-        dtmp %>% dplyr::mutate(NEWCOL=as.character('OLDCOL')) -> dtmp
-      )
-    } else {
-      wrapr::let(
-        c(NEWCOL=nameForNewKeyColumn, OLDCOL=di),
-        dtmp %>% dplyr::mutate(NEWCOL='OLDCOL') -> dtmp
-      )
-    }
-    wrapr::let(
-      c(NEWCOL=nameForNewValueColumn, OLDCOL=di),
-      dtmp %>%
-        dplyr::mutate(NEWCOL= OLDCOL) %>%
-        dplyr::select(dplyr::one_of(targetsB)) -> dtmp
-    )
-    # worry about drifting ref issue
-    # See issues/TrailingRefIssue.Rmd
-    dtmp %>% dplyr::compute() -> dtmp
-    dtmp
-  })
+  rlist <- lapply(columnsToTakeFrom,
+                  function(di) {
+                    targetsA <- c(dcols, di)
+                    targetsB <- c(dcols, nameForNewKeyColumn, nameForNewValueColumn)
+                    # PostgreSQL needs to know types on character types with the lazyeval form.
+                    # MySQL does not like such annotation.
+                    data %>% dplyr::select(dplyr::one_of(targetsA)) -> dtmp
+                    NEWCOL <- NULL  # declare not unbound
+                    OLDCOL <- NULL  # declare not unbound
+                    if(useAsChar) {
+                      wrapr::let(
+                        c(NEWCOL=nameForNewKeyColumn),
+                        dtmp %>% dplyr::mutate(NEWCOL= as.character(di)) -> dtmp
+                      )
+                    } else {
+                      wrapr::let(
+                        c(NEWCOL=nameForNewKeyColumn),
+                        dtmp %>% dplyr::mutate(NEWCOL= di) -> dtmp
+                      )
+                    }
+                    wrapr::let(
+                      c(NEWCOL=nameForNewValueColumn, OLDCOL=di),
+                      dtmp %>%
+                        dplyr::mutate(NEWCOL= OLDCOL) %>%
+                        dplyr::select(dplyr::one_of(targetsB)) -> dtmp
+                    )
+                    # worry about drifting ref issue
+                    # See issues/TrailingRefIssue.Rmd
+                    dtmp %>% dplyr::compute() -> dtmp
+                    dtmp
+                  })
   replyr_bind_rows(rlist, eagerCompute=eagerCompute)
 }
 
@@ -196,20 +197,20 @@ replyr_moveValuesToColumns <- function(data,
          dplyr::collect())$x -> minV
     }
   )
-  sentinalV <- NA
+  sentinelV <- NA
   if(is.numeric(minV)) {
-    sentinalV <- minV - 0.1*minV - 1
+    sentinelV <- minV - 0.1*minV - 1
   } else if(is.character(minV)) {
     # can fix this by padding strings on the left with a "V"
     if(minV=='') {
       stop("replyr_moveValuesToColumns can't currently handle blanks")
     }
-    sentinalV <- ''
+    sentinelV <- ''
   } else {
     stop("replyr_moveValuesToColumns can only currently handle numeric or character data")
   }
-  if(sentinalV>=minV) {
-    stop("replyr_moveValuesToColumns failed to pick sentinal value")
+  if(sentinelV>=minV) {
+    stop("replyr_moveValuesToColumns failed to pick sentinel value")
   }
   mcols <- c(columnToTakeKeysFrom,columnToTakeValuesFrom)
   KCOL <- NULL # declare not unbound
@@ -220,7 +221,7 @@ replyr_moveValuesToColumns <- function(data,
         KCOL=columnToTakeKeysFrom,
         VCOL=columnToTakeValuesFrom),
       data %>%
-        dplyr::mutate(NEWCOL = ifelse(KCOL==ci, VCOL, sentinalV)) -> data
+        dplyr::mutate(NEWCOL = ifelse(KCOL==ci, VCOL, sentinelV)) -> data
     )
     # Must call compute here or ci value changing changes mutate.
     # See issues/TrailingRefIssue.Rmd
@@ -242,12 +243,12 @@ replyr_moveValuesToColumns <- function(data,
         dplyr::summarize_all("max") -> data
     )
   }
-  # replace sentinal with NA
+  # replace sentinel with NA
   for(ci in newCols) {
     wrapr::let(
       c(NEWCOL=ci),
       data %>%
-        dplyr::mutate(NEWCOL = ifelse(NEWCOL==sentinalV, NA, NEWCOL)) -> data
+        dplyr::mutate(NEWCOL = ifelse(NEWCOL==sentinelV, NA, NEWCOL)) -> data
     )
     # Must call compute here or ci value changing changes mutate.
     # See issues/TrailingRefIssue.Rmd
