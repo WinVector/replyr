@@ -2,11 +2,10 @@
 % Please edit documentation in R/rowscols.R
 \name{replyr_moveValuesToRows}
 \alias{replyr_moveValuesToRows}
-\title{dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
-Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).}
+\title{Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
-  columnsToTakeFrom, eagerCompute = FALSE)
+  columnsToTakeFrom, na.rm = FALSE, eagerCompute = FALSE)
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -17,6 +16,8 @@ replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
 
 \item{columnsToTakeFrom}{character array names of columns to take values from.}
 
+\item{na.rm}{logical if TRUE remove rows with NA in nameForNewValueColumn.}
+
 \item{eagerCompute}{if TRUE call compute on intermediate results}
 }
 \value{
@@ -25,7 +26,7 @@ data item
 \description{
 Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
 and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
-Similar interface as in the \code{cdata} package.
+Similar interface as in the \code{cdata} package (though does not perform pre/post condition checks).
 }
 \examples{
 

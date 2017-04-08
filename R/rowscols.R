@@ -5,18 +5,19 @@
 #' @importFrom dplyr select mutate one_of
 NULL
 
-#' dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
+# dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
 #' Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).
 #'
 #' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
 #' and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
-#' Similar interface as in the \code{cdata} package.
+#' Similar interface as in the \code{cdata} package (though does not perform pre/post condition checks).
 #'
 #' @param data data.frame to work with.
 #' @param nameForNewKeyColumn character name of column to write new keys in.
 #' @param nameForNewValueColumn character name of column to write new values in.
 #' @param columnsToTakeFrom character array names of columns to take values from.
+#' @param na.rm logical if TRUE remove rows with NA in nameForNewValueColumn.
 #' @param eagerCompute if TRUE call compute on intermediate results
 #' @return data item
 #'
@@ -42,9 +43,10 @@ replyr_moveValuesToRows <- function(data,
                                     nameForNewKeyColumn,
                                     nameForNewValueColumn,
                                     columnsToTakeFrom,
+                                    na.rm= FALSE,
                                     eagerCompute= FALSE) {
   if((!is.character(columnsToTakeFrom))||(length(columnsToTakeFrom)<1)) {
-    stop('replyr_moveValuesToRows columnsToTakeFrom must be a character vector')
+    stop('replyr_moveValuesToRows columnsToTakeFrom must be a non-NA non-empty character vector')
   }
   if((!is.character(nameForNewKeyColumn))||(length(nameForNewKeyColumn)!=1)||
      (nchar(nameForNewKeyColumn)<1)) {
@@ -103,7 +105,15 @@ replyr_moveValuesToRows <- function(data,
                     dtmp %>% dplyr::compute() -> dtmp
                     dtmp
                   })
-  replyr_bind_rows(rlist, eagerCompute=eagerCompute)
+  res <- replyr_bind_rows(rlist, eagerCompute=eagerCompute)
+  if(na.rm) {
+    NEWCOL <- NULL  # declare not unbound
+    let(
+      c(NEWCOL=nameForNewValueColumn),
+      res <- dplyr::filter(res, !is.na(NEWCOL))
+    )
+  }
+  res
 }
 
 
@@ -114,7 +124,7 @@ replyr_moveValuesToRows <- function(data,
 #' Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 #' from nameForNewValueColumn.
 #' This is denormalizing operation, or essentially a \code{tidyr::spread}, \code{dplyr::dcast}, or pivot.
-#' Similar interface as in the \code{cdata} package.
+#' Similar interface as in the \code{cdata} package (though does not perform pre/post condition checks).
 #'
 #' @param data data.frame to work with.
 #' @param columnToTakeKeysFrom character name of column build new column names from.

@@ -32,7 +32,7 @@ data item
 Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 from nameForNewValueColumn.
 This is denormalizing operation, or essentially a \code{tidyr::spread}, \code{dplyr::dcast}, or pivot.
-Similar interface as in the \code{cdata} package.
+Similar interface as in the \code{cdata} package (though does not perform pre/post condition checks).
 }
 \examples{
 
