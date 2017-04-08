@@ -134,6 +134,7 @@ replyr_moveValuesToRows <- function(data,
 #' @param sep character, if not null build composite column names as COLsepVALUE, use new columns names are just VALUE.
 #' @param maxcols maximum number of values to expand to columns
 #' @param eagerCompute if TRUE call compute on intermediate results
+#' @param dosummarize logical, if TRUE finish the moveValuesToColumns by summarizing rows.
 #' @return data item
 #'
 #' @examples
@@ -163,7 +164,8 @@ replyr_moveValuesToColumns <- function(data,
                                        fill= NA,
                                        sep= NULL,
                                        maxcols= 100,
-                                       eagerCompute= TRUE) {
+                                       eagerCompute= TRUE,
+                                       dosummarize= TRUE) {
   if(length(rowKeyColumns)>0) {
     if((!is.character(rowKeyColumns))||(length(rowKeyColumns)!=1)||
      (nchar(rowKeyColumns)<1)) {
@@ -252,18 +254,20 @@ replyr_moveValuesToColumns <- function(data,
   copyCols <- c(setdiff(cnames, mcols), newCols)
   data %>%
     dplyr::select(dplyr::one_of(copyCols)) -> data
-  if(length(rowKeyColumns)<=0) {
-    data %>%
-      dplyr::summarize_all(max) -> data
-  } else {
-    # Right now this only works with single key column
-    KEYCOLS <- NULL # declare not unbound
-    wrapr::let(
-      c(KEYCOLS= rowKeyColumns),
+  if(dosummarize) {
+    if(length(rowKeyColumns)<=0) {
       data %>%
-        dplyr::group_by(KEYCOLS) %>%
         dplyr::summarize_all("max") -> data
-    )
+    } else {
+      # Right now this only works with single key column
+      KEYCOLS <- NULL # declare not unbound
+      wrapr::let(
+        c(KEYCOLS= rowKeyColumns),
+        data %>%
+          dplyr::group_by(KEYCOLS) %>%
+          dplyr::summarize_all("max") -> data
+      )
+    }
   }
   # replace sentinel with NA
   for(ci in newCols) {

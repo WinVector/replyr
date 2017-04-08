@@ -6,7 +6,7 @@
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
   rowKeyColumns, fill = NA, sep = NULL, maxcols = 100,
-  eagerCompute = TRUE)
+  eagerCompute = TRUE, dosummarize = TRUE)
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -24,6 +24,8 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 \item{maxcols}{maximum number of values to expand to columns}
 
 \item{eagerCompute}{if TRUE call compute on intermediate results}
+
+\item{dosummarize}{logical, if TRUE finish the moveValuesToColumns by summarizing rows.}
 }
 \value{
 data item
