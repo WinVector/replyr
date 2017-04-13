@@ -26,5 +26,3 @@ Suggests: testthat,
     babynames,
     magrittr
 VignetteBuilder: knitr
-Remotes:
-  WinVector/wrapr
