@@ -10,7 +10,7 @@ Submitting in response to "CRAN packages maintained by you" note on missing imag
  * R version 3.3.3
  * win-builder (devel and release) 
 
-## R CMD check --as-cran replyr_0.2.4.tar.gz 
+## R CMD check --as-cran replyr_0.2.5.tar.gz 
 
 * using R version 3.3.3 (2017-03-06)
 * using platform: x86_64-apple-darwin13.4.0 (64-bit)
@@ -22,7 +22,7 @@ Status: OK
 
 ## Downstream dependencies
 
-No declared reverse dependencies:
+All declared dependencies check.
 
   devtools::revdep('replyr')
-  character(0)
+  [1] "cdata"   "WVPlots"
