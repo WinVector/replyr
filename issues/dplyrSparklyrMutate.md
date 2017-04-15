@@ -24,32 +24,11 @@ library("dplyr")
 library("nycflights13")
 sc <- spark_connect(version='2.0.0', master = "local")
 flts <- dplyr::copy_to(sc, flights)
-```
-
-``` r
-packageVersion("sparklyr")
-```
-
-    ## [1] '0.5.3.9005'
-
-``` r
-packageVersion("dplyr")
-```
-
-    ## [1] '0.5.0.9002'
-
-``` r
-packageVersion("DBI")
-```
-
-    ## [1] '0.6.1'
-
-``` r
 flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
 ```
 
-    ## Source:     lazy query [?? x 20]
-    ## Database:   spark_connection
+    ## Source:   query [3.368e+05 x 20]
+    ## Database: spark connection master=local[4] app=sparklyr local=TRUE
     ## 
     ##     year month   day dep_time sched_dep_time dep_delay arr_time
     ##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
@@ -76,10 +55,41 @@ flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
 ```
 
 ``` r
+packageVersion("sparklyr")
+```
+
+    ## [1] '0.5.3'
+
+``` r
+packageVersion("dplyr")
+```
+
+    ## [1] '0.5.0'
+
+``` r
+packageVersion("DBI")
+```
+
+    ## [1] '0.6.1'
+
+``` r
 rm(list=ls())
 gc()
 ```
 
     ##           used (Mb) gc trigger  (Mb) max used  (Mb)
-    ## Ncells  564135 30.2    1731918  92.5  2107719 112.6
-    ## Vcells 6243249 47.7   18183908 138.8 18823014 143.7
+    ## Ncells  515197 27.6    1770749  94.6  1770749  94.6
+    ## Vcells 6207754 47.4   18828670 143.7 18790944 143.4
+
+Can only use dev/dev or CRAN/CRAN (can't seem to mix) right now:
+
+With the dev version of dplyr installed (4/15/2017, 0.5.0.9002 commit d7d2f10) the CRAN version of sparklyr (4/15/2017, 0.5.3 ) will not load:
+
+``` r
+library("sparklyr")
+# Error : object 'sql_build' not found whilst loading namespace 'sparklyr'
+# Error: package or namespace load failed for ‘sparklyr’
+Problem goes away with dev-version of sparklyr (4/15/2017, 0.5.3-9005 commit 58fcd949d7709b4be44e2789a1c5355a6bd148f3).
+```
+
+<https://github.com/rstudio/sparklyr/issues/623> <https://github.com/tidyverse/dplyr/issues/2670>

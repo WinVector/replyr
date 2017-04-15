@@ -17,12 +17,6 @@ library("dplyr")
 library("nycflights13")
 sc <- spark_connect(version='2.0.0', master = "local")
 flts <- dplyr::copy_to(sc, flights)
-```
-
-```{r versions}
-packageVersion("sparklyr")
-packageVersion("dplyr")
-packageVersion("DBI")
 flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
 # used to fail 
 #  https://github.com/tidyverse/dplyr/issues/2495
@@ -30,9 +24,27 @@ flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
 #  https://github.com/rstudio/sparklyr/issues/577 
 ```
 
+```{r versions}
+packageVersion("sparklyr")
+packageVersion("dplyr")
+packageVersion("DBI")
+```
+
 ```{r clean}
 rm(list=ls())
 gc()
 ```
 
+Can only use dev/dev or CRAN/CRAN (can't seem to mix) right now:
 
+With the dev version of dplyr installed (4/15/2017, 0.5.0.9002 commit d7d2f10) the CRAN version of sparklyr (4/15/2017, 0.5.3 ) will not load:
+
+```r
+library("sparklyr")
+# Error : object 'sql_build' not found whilst loading namespace 'sparklyr'
+# Error: package or namespace load failed for ‘sparklyr’
+Problem goes away with dev-version of sparklyr (4/15/2017, 0.5.3-9005 commit 58fcd949d7709b4be44e2789a1c5355a6bd148f3).
+```
+
+https://github.com/rstudio/sparklyr/issues/623
+https://github.com/tidyverse/dplyr/issues/2670
