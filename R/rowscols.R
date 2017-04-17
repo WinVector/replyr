@@ -59,6 +59,7 @@ replyr_moveValuesToRows <- function(data,
   if(nameForNewKeyColumn==nameForNewValueColumn) {
     stop('replyr_moveValuesToRows nameForNewValueColumn must not equal nameForNewKeyColumn')
   }
+  data <- dplyr::ungroup(data)
   cnames <- colnames(data)
   if(!all(columnsToTakeFrom %in% cnames)) {
     stop('replyr_moveValuesToRows columnsToTakeFrom must all be data column names')
@@ -183,6 +184,7 @@ replyr_moveValuesToColumns <- function(data,
   if(columnToTakeKeysFrom==columnToTakeValuesFrom) {
     stop('replyr_moveValuesToColumns rowKeyColumns,columnToTakeKeysFrom,columnToTakeValuesFrom must all be distinct')
   }
+  data <- dplyr::ungroup(data)
   cnames <- colnames(data)
   if(!(columnToTakeKeysFrom %in% cnames)) {
     stop('replyr_moveValuesToColumns columnToTakeKeysFrom must be a data column name')
