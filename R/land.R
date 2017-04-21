@@ -72,6 +72,9 @@ isValidAndUnreservedName <- function(string) {
 #' @export
 #' @rdname grapes-land-grapes
 `%->_%` <- function(value, name) {
+  if(is.name(name)) {
+    name <- as.character(name)
+  }
   if((length(name)!=1)||(!is.character(name))||
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%->_%` name argument must be a valid potential variable name")
@@ -90,6 +93,9 @@ isValidAndUnreservedName <- function(string) {
 #' @export
 #' @rdname grapes-land-grapes
 `%land_%` <- function(value, name) {
+  if(is.name(name)) {
+    name <- as.character(name)
+  }
   if((length(name)!=1)||(!is.character(name))||
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%land_%` name argument must be a valid potential variable name")
