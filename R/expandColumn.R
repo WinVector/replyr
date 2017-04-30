@@ -36,9 +36,9 @@ expandItem <- function(vi, rowidDest, rowId, valDest, idxDest) {
 #' @param data data.frame to work with.
 #' @param colName character name of column to expand.
 #' @param ... force later arguments to be bound by name
-#' @param rowidSource optional character name of column to take row indices from.
-#' @param rowidDest optional character name of column to write row indices to.
-#' @param idxDest optional character name of column to write value indices to.
+#' @param rowidSource optional character name of column to take row indices from (rowidDest must be NULL to use this).
+#' @param rowidDest optional character name of column to write row indices to (must not be an existing column name, rowidSource must be NULL to use this).
+#' @param idxDest optional character name of column to write value indices to (must not be an existing column name).
 #' @return expanded data frame where each value of colName column is in a new row.
 #'
 #' @examples
@@ -60,6 +60,45 @@ expandColumn <- function(data, colName, ...,
   if(length(list(...))>0) {
     stop("replyr::expandColumn unexpected arguments")
   }
+  if((length(colName)!=1)||(!is.character(colName))) {
+    stop("replyr::expandColumn colName must be a string")
+  }
+  if( (length(rowidSource)!=0) &&
+      ((length(rowidSource)!=1)||(!is.character(rowidSource)))) {
+    stop("replyr::expandColumn rowidSource must be a string")
+  }
+  if( (length(rowidDest)!=0) &&
+      ((length(rowidDest)!=1)||(!is.character(rowidDest)))) {
+    stop("replyr::expandColumn rowidDest must be a string")
+  }
+  if( (length(idxDest)!=0) &&
+      ((length(idxDest)!=1)||(!is.character(idxDest)))) {
+    stop("replyr::expandColumn idxDest must be a string")
+  }
+  if( (length(rowidSource)>0) && (length(rowidDest)>0) ) {
+    stop("replyr::expandColumn you can specify at most of one of rowidSource and rowidDest")
+  }
+  data <- dplyr::ungroup(data)
+  ndrow <- replyr::replyr_nrow(data)
+  if(ndrow<=0) {
+    return(data)
+  }
+  dnames <- colnames(data)
+  if(!(colName %in% dnames)) {
+    stop("replyr::expandColumn colName must be the name of a column")
+  }
+  if( (length(rowidSource)!=0) &&
+      (!(rowidSource %in% dnames)) ) {
+    stop("replyr::expandColumn rowidSource must be the name of a column")
+  }
+  if( (length(rowidDest)!=0) &&
+      (rowidDest %in% dnames) ) {
+    stop("replyr::expandColumn rowidDest must not match an existing column")
+  }
+  if( (length(idxDest)!=0) &&
+      (idxDest %in% dnames) ) {
+    stop("replyr::expandColumn idxDest must not match an existing column")
+  }
   needToDropProducedRowID <- FALSE
   if(is.null(rowidSource)) {
     if(is.null(rowidDest)) {
@@ -71,7 +110,7 @@ expandColumn <- function(data, colName, ...,
     CDATAROWIDCOL <- NULL # declare not an unbound ref
     wrapr::let(
       c(CDATAROWIDCOL = rowidSource),
-      data <- dplyr::mutate(data, CDATAROWIDCOL = seq_len(nrow(data)))
+      data <- dplyr::mutate(data, CDATAROWIDCOL = seq_len(ndrow))
     )
   }
   CDATAKEYCOLUMN <- NULL # declare not an unbound ref

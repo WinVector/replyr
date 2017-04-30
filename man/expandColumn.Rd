@@ -14,11 +14,11 @@ expandColumn(data, colName, ..., rowidSource = NULL, rowidDest = NULL,
 
 \item{...}{force later arguments to be bound by name}
 
-\item{rowidSource}{optional character name of column to take row indices from.}
+\item{rowidSource}{optional character name of column to take row indices from (rowidDest must be NULL to use this).}
 
-\item{rowidDest}{optional character name of column to write row indices to.}
+\item{rowidDest}{optional character name of column to write row indices to (must not be an existing column name, rowidSource must be NULL to use this).}
 
-\item{idxDest}{optional character name of column to write value indices to.}
+\item{idxDest}{optional character name of column to write value indices to (must not be an existing column name).}
 }
 \value{
 expanded data frame where each value of colName column is in a new row.
