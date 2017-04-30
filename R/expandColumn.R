@@ -110,7 +110,12 @@ expandColumn <- function(data, colName, ...,
     CDATAROWIDCOL <- NULL # declare not an unbound ref
     wrapr::let(
       c(CDATAROWIDCOL = rowidSource),
-      data <- dplyr::mutate(data, CDATAROWIDCOL = seq_len(ndrow))
+      # can't add in a vector see issue
+      # https://github.com/tidyverse/dplyr/issues/2723
+      data <- data %>%
+        dplyr::mutate(CDATAROWIDCOL = 1) %>%
+        dplyr::mutate(CDATAROWIDCOL = cumsum(CDATAROWIDCOL)) %>%
+        dplyr::compute()
     )
   }
   CDATAKEYCOLUMN <- NULL # declare not an unbound ref
@@ -135,7 +140,9 @@ expandColumn <- function(data, colName, ...,
                                           valDest= colName,
                                           idxDest= idxDest)
                          di <- dplyr::select(di, one_of(copyCols))
-                         dplyr::inner_join(di, vx, by= rowidSource)
+                         dplyr::inner_join(di, vx,
+                                           by= rowidSource,
+                                           copy= TRUE)
                        }
                      )
                    }
