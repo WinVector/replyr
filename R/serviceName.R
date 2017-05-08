@@ -2,7 +2,8 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' return a cannonical name of the data service hosting a given data object
+#' Return a cannonical name of the data service hosting a given data object.
+#'
 #'
 #' @param df data object
 #' @param expectedNames some names to canonicalize to.
@@ -15,7 +16,8 @@
 #'
 #' @export
 replyr_dataServiceName <- function(df,
-  expectedNames=c('src_sqlite','spark_connection','src_spark', 'src_mysql', 'src_postgres')) {
+  expectedNames=c('src_sqlite','spark_connection','src_spark',
+                  'src_mysql', 'src_postgres')) {
   cls <- class(df)
   if(length(cls)<=1) {
     return(cls)  # "data.frame" case
@@ -38,6 +40,8 @@ replyr_dataServiceName <- function(df,
 }
 
 #' Get the "remote data source" where a data.frame like object lives.
+#'
+#' NOT TESTED YET!
 #'
 #' @param df data.frame style object
 #' @return source (string if data.frame, tlb, or data.table, NULL if unknown, remote source otherwise)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/serviceName.R
 \name{replyr_dataServiceName}
 \alias{replyr_dataServiceName}
-\title{return a cannonical name of the data service hosting a given data object}
+\title{Return a cannonical name of the data service hosting a given data object.}
 \usage{
 replyr_dataServiceName(df, expectedNames = c("src_sqlite", "spark_connection",
   "src_spark", "src_mysql", "src_postgres"))
@@ -16,7 +16,7 @@ replyr_dataServiceName(df, expectedNames = c("src_sqlite", "spark_connection",
 cannonical service name (lenght 1 character array)
 }
 \description{
-return a cannonical name of the data service hosting a given data object
+Return a cannonical name of the data service hosting a given data object.
 }
 \examples{
 
