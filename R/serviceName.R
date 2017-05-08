@@ -36,3 +36,43 @@ replyr_dataServiceName <- function(df,
   # give up
   return(paste(sort(srvcls),collapse=' '))
 }
+
+#' Get the "remote data source" where a data.frame like object lives.
+#'
+#' @param df data.frame style object
+#' @return source (string if data.frame, tlb, or data.table, NULL if unknown, remote source otherwise)
+#'
+#' @examples
+#'
+#' replyr_get_src(data.frame(x=1:2))
+#'
+#' @export
+replyr_get_src <- function(df) {
+  cls <- class(df)
+  if(!('data.frame' %in% cls)) {
+    stop("replyr::get_src called on non data.frame")
+  }
+  if(length(cls)<=1) {
+    return('data.frame')
+  }
+  if(all(cls %in% c('tbl', 'tbl_df', 'data.frame'))) {
+    return("tbl")
+  }
+  if(all(cls %in% c('data.table', 'data.frame'))) {
+    return("data.table")
+  }
+  if(any(c('tbl_spark') %in% cls)) {
+    if(requireNamespace('sparklyr', quietly = TRUE)) {
+      sc <- sparklyr::spark_connection(df)
+      if(!is.null(sc)) {
+        return(sc)
+      }
+    }
+  }
+  # fall back to common slots
+  if('src' %in% names(df)) {
+    return(df$src)
+  }
+  # unknown
+  return(NULL)
+}
