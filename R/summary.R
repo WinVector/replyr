@@ -37,7 +37,10 @@ replyr_summary <- function(x,
   }
   cmap <- seq_len(length(cnames))
   names(cmap) <- cnames
-  numericCols <- cnames[replyr_testCols(x,is.numeric)]
+  numericCols <- cnames[replyr_testCols(x, is.numeric)]
+  logicalCols <- cnames[replyr_testCols(x, is.logical)]
+  listCols <-  cnames[replyr_testCols(x, is.list)]
+  otherCols <- setdiff(cnames, c(numericCols, logicalCols, listCols))
   cclass <- replyr_colClasses(x)
   names(cclass) <- cnames
   # from http://stackoverflow.com/questions/34594641/dplyr-summary-table-for-multiple-variables
@@ -85,7 +88,65 @@ replyr_summary <- function(x,
                                         stringsAsFactors = FALSE)
                       si
                     })
-   oSums <- lapply(setdiff(cnames,numericCols),
+   logSums <- lapply(logicalCols,
+                     function(ci) {
+                       WCOL <- NULL # declare this is not a free binding
+                       let(alias=list(WCOL=ci),
+                           expr={
+                             x %>% dplyr::select(WCOL) %>%
+                               dplyr::filter(!is.na(WCOL)) -> xsub
+                           })
+                       ngood <- replyr_nrow(xsub)
+                       xsub %>% dplyr::summarise_each(dplyr::funs(min = min,
+                                                                  # q25 = quantile(., 0.25),  # MySQL can't do this
+                                                                  # median = median,          # MySQL can't do this
+                                                                  # q75 = quantile(., 0.75),  # MySQL can't do this
+                                                                  max = max,
+                                                                  mean = mean,
+                                                                  sd = sd)) %>%
+                         dplyr::collect() %>% as.data.frame() -> si
+                       # dplyr::summarize_each has sd=0 for single row SQLite examples
+                       # please see here: https://github.com/WinVector/replyr/blob/master/issues/SQLitesd.md
+                       if(ngood<=1) {
+                         si$sd <- NA
+                       }
+                       nunique = NA
+                       if(countUniqueNum) {
+                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
+                       }
+                       si <-  data.frame(column=ci,
+                                         index=0,
+                                         class='',
+                                         nrows = nrows,
+                                         nna = nrows - ngood,
+                                         nunique = nunique,
+                                         min = si$min,
+                                         max = si$max,
+                                         mean = si$mean,
+                                         sd = si$sd,
+                                         lexmin = NA_character_,
+                                         lexmax = NA_character_,
+                                         stringsAsFactors = FALSE)
+                       si
+                     })
+   listSums <- lapply(listCols,
+                     function(ci) {
+                       si <-  data.frame(column=ci,
+                                         index=0,
+                                         class='list',
+                                         nrows = nrows,
+                                         nna = NA,
+                                         nunique = NA,
+                                         min = NA,
+                                         max = NA,
+                                         mean = NA,
+                                         sd = NA,
+                                         lexmin = NA_character_,
+                                         lexmax = NA_character_,
+                                         stringsAsFactors = FALSE)
+                       si
+                     })
+   oSums <- lapply(otherCols,
                     function(ci) {
                       WCOL <- NULL # declare this is not a free binding
                       let(alias=list(WCOL=ci),
@@ -140,7 +201,7 @@ replyr_summary <- function(x,
                       si
                     })
   })
-  res <- replyr_bind_rows(c(numSums,oSums))
+  res <- replyr_bind_rows(c(numSums, logSums, oSums, listSums))
   res$index <- cmap[res$column]
   classtr <- lapply(cclass,function(vi) {
     paste(vi,collapse=', ')

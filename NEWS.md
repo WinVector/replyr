@@ -1,8 +1,9 @@
 
-'replyr' 0.2.6 2017-04-30
+'replyr' 0.2.6 2017-05-08
 
  * use dplyr::ungroup a few places.
  * add replyr::expandColumn.
+ * deal with logical and list columns in summary.
  
 'replyr' 0.2.5 2017-04-14
 
