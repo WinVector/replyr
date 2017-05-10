@@ -6,7 +6,7 @@
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
   rowKeyColumns, fill = NA, sep = NULL, maxcols = 100,
-  eagerCompute = TRUE, dosummarize = TRUE)
+  dosummarize = TRUE)
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -22,8 +22,6 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 \item{sep}{character, if not null build composite column names as COLsepVALUE, use new columns names are just VALUE.}
 
 \item{maxcols}{maximum number of values to expand to columns}
-
-\item{eagerCompute}{if TRUE call compute on intermediate results}
 
 \item{dosummarize}{logical, if TRUE finish the moveValuesToColumns by summarizing rows.}
 }

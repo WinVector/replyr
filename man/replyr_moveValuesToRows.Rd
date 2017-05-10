@@ -5,7 +5,7 @@
 \title{Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
-  columnsToTakeFrom, na.rm = FALSE, eagerCompute = FALSE)
+  columnsToTakeFrom, na.rm = FALSE)
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -17,8 +17,6 @@ replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
 \item{columnsToTakeFrom}{character array names of columns to take values from.}
 
 \item{na.rm}{logical if TRUE remove rows with NA in nameForNewValueColumn.}
-
-\item{eagerCompute}{if TRUE call compute on intermediate results}
 }
 \value{
 data item

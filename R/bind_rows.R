@@ -5,20 +5,18 @@
 NULL
 
 # list length>=1 no null entries
-r_replyr_bind_rows <- function(lst, colnames, eagerCompute) {
+r_replyr_bind_rows <- function(lst, colnames) {
   n <- length(lst)
   if(n<=1) {
     res <- lst[[1]]
-    if(eagerCompute) {
-      res <- dplyr::compute(res)
-    }
+    res <- dplyr::compute(res)
     return(res)
   }
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- r_replyr_bind_rows(lst[leftSeq], colnames, eagerCompute)
-  right <- r_replyr_bind_rows(lst[rightSeq], colnames, eagerCompute)
+  left <- r_replyr_bind_rows(lst[leftSeq], colnames)
+  right <- r_replyr_bind_rows(lst[rightSeq], colnames)
   # ideas from https://github.com/rstudio/sparklyr/issues/76
   # would like to use union_all, but seems to have problems with Spark 2.0.0
   # (spread example from basicChecksSpark200.Rmd)
@@ -31,9 +29,7 @@ r_replyr_bind_rows <- function(lst, colnames, eagerCompute) {
   } else {
     res <- dplyr::union_all(left,right)
   }
-  if(eagerCompute) {
-    res <- dplyr::compute(res)
-  }
+  res <- dplyr::compute(res)
   res
 }
 
@@ -41,7 +37,7 @@ r_replyr_bind_rows <- function(lst, colnames, eagerCompute) {
 #' bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources)
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
-#' @param eagerCompute if TRUE call compute on intermediate results
+#' @param ... force other arguments to be used by name
 #' @return single data item
 #'
 #' @examples
@@ -50,7 +46,11 @@ r_replyr_bind_rows <- function(lst, colnames, eagerCompute) {
 #' replyr_bind_rows(list(d,d,d))
 #'
 #' @export
-replyr_bind_rows <- function(lst, eagerCompute= TRUE) {
+replyr_bind_rows <- function(lst,
+                             ...) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_bind_rows unexpected arguments")
+  }
   if(("NULL" %in% class(lst))||(length(lst)<=0)) {
     return(NULL)
   }
@@ -64,5 +64,5 @@ replyr_bind_rows <- function(lst, eagerCompute= TRUE) {
   if(length(colnames)<=0) {
     return(NULL)
   }
-  r_replyr_bind_rows(lst, colnames, eagerCompute)
+  r_replyr_bind_rows(lst, colnames)
 }

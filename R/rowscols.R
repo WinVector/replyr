@@ -18,7 +18,6 @@ NULL
 #' @param nameForNewValueColumn character name of column to write new values in.
 #' @param columnsToTakeFrom character array names of columns to take values from.
 #' @param na.rm logical if TRUE remove rows with NA in nameForNewValueColumn.
-#' @param eagerCompute if TRUE call compute on intermediate results
 #' @return data item
 #'
 #' @examples
@@ -43,8 +42,7 @@ replyr_moveValuesToRows <- function(data,
                                     nameForNewKeyColumn,
                                     nameForNewValueColumn,
                                     columnsToTakeFrom,
-                                    na.rm= FALSE,
-                                    eagerCompute= FALSE) {
+                                    na.rm= FALSE) {
   if((!is.character(columnsToTakeFrom))||(length(columnsToTakeFrom)<1)) {
     stop('replyr_moveValuesToRows columnsToTakeFrom must be a non-NA non-empty character vector')
   }
@@ -106,7 +104,7 @@ replyr_moveValuesToRows <- function(data,
                     dtmp %>% dplyr::compute() -> dtmp
                     dtmp
                   })
-  res <- replyr_bind_rows(rlist, eagerCompute=eagerCompute)
+  res <- replyr_bind_rows(rlist)
   if(na.rm) {
     NEWCOL <- NULL  # declare not unbound
     let(
@@ -134,7 +132,6 @@ replyr_moveValuesToRows <- function(data,
 #' @param fill value to fill in missing values from original (both those that are originally explicitly NA, and those not present as rows).
 #' @param sep character, if not null build composite column names as COLsepVALUE, use new columns names are just VALUE.
 #' @param maxcols maximum number of values to expand to columns
-#' @param eagerCompute if TRUE call compute on intermediate results
 #' @param dosummarize logical, if TRUE finish the moveValuesToColumns by summarizing rows.
 #' @return data item
 #'
@@ -165,7 +162,6 @@ replyr_moveValuesToColumns <- function(data,
                                        fill= NA,
                                        sep= NULL,
                                        maxcols= 100,
-                                       eagerCompute= TRUE,
                                        dosummarize= TRUE) {
   if(length(rowKeyColumns)>0) {
     if((!is.character(rowKeyColumns))||(length(rowKeyColumns)!=1)||
@@ -281,9 +277,6 @@ replyr_moveValuesToColumns <- function(data,
     # Must call compute here or ci value changing changes mutate.
     # See issues/TrailingRefIssue.Rmd
     data <- compute(data)
-  }
-  if(eagerCompute) {
-    data <- dplyr::compute(data)
   }
   data
 }
