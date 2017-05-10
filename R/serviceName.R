@@ -53,10 +53,7 @@ replyr_dataServiceName <- function(df,
 #' @export
 replyr_get_src <- function(df) {
   cls <- class(df)
-  if(!('data.frame' %in% cls)) {
-    stop("replyr::get_src called on non data.frame")
-  }
-  if(length(cls)<=1) {
+  if((length(cls)<=1) && ('data.frame' %in% cls)) {
     return('data.frame')
   }
   if(all(cls %in% c('tbl', 'tbl_df', 'data.frame'))) {
