@@ -30,7 +30,7 @@ list of data items
 \description{
 Partitions from by values in grouping column, and returns list.  Only advised for a
 moderate number of groups and better if grouping column is an index.
-This plus lapply and replyr::bind_rows is powerfull
+This plus lapply and replyr::bind_rows is powerful
 enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 https://www.jstatsoft.org/article/view/v040i01
 }

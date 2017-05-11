@@ -12,7 +12,9 @@ NULL
 #' @param x tbl or item that can be coerced into such.
 #' @param cname name of the column to test values of.
 #' @param values set of values to check set membership of.
+#' @param ... force later arguments to bind by name.
 #' @param verbose logical if TRUE echo warnings
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return new tbl with only rows where cname value is in values set.
 #'
 #' @examples
@@ -23,7 +25,13 @@ NULL
 #' replyr_filter(d,'x',values)
 #'
 #' @export
-replyr_filter <- function(x,cname,values,verbose=TRUE) {
+replyr_filter <- function(x,cname,values,
+                          ...,
+                          verbose=TRUE,
+                          tempNameGenerator= makeTempNameGenerator("replyr_filter")) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_filter unexpected arguments.")
+  }
   if((!is.character(cname))||(length(cname)!=1)||(cname[[1]]=='n')) {
     stop('replyr_filter cname must be a single string not equal to "n"')
   }
@@ -46,7 +54,7 @@ replyr_filter <- function(x,cname,values,verbose=TRUE) {
   good <- FALSE
   tryCatch({
     x %>% dplyr::inner_join(jtab,by=byClause,copy=TRUE) %>%
-      dplyr::compute() -> res;
+      dplyr::compute(name= tempNameGenerator()) -> res;
     good <- TRUE},
     error = function(x) {
       if(verbose) {
@@ -60,7 +68,7 @@ replyr_filter <- function(x,cname,values,verbose=TRUE) {
     tmpnam <- paste('replyr_filter_tmp',sample.int(1000000000,1),sep='_')
     tmp <- replyr_copy_to(cn,jtab,tmpnam)
     x %>% dplyr::inner_join(tmp,by=byClause) %>%
-      dplyr::compute() -> res
+      dplyr::compute(name= tempNameGenerator()) -> res
     dplyr::db_drop_table(cn,tmpnam)
   }
   res

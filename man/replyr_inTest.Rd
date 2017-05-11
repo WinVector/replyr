@@ -4,7 +4,9 @@
 \alias{replyr_inTest}
 \title{Product a column noting if another columns values are in a given set.}
 \usage{
-replyr_inTest(x, cname, values, nname, verbose = TRUE)
+replyr_inTest(x, cname, values, nname, ...,
+  tempNameGenerator = makeTempNameGenerator("replyr_inTest"),
+  verbose = TRUE)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
@@ -14,6 +16,10 @@ replyr_inTest(x, cname, values, nname, verbose = TRUE)
 \item{values}{set of values to check set membership of.}
 
 \item{nname}{name for new column}
+
+\item{...}{force later parameters to bind by name}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 
 \item{verbose}{logical if TRUE echo warnings}
 }

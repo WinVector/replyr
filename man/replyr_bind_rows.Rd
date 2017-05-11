@@ -4,12 +4,15 @@
 \alias{replyr_bind_rows}
 \title{bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources)}
 \usage{
-replyr_bind_rows(lst, ...)
+replyr_bind_rows(lst, ...,
+  tempNameGenerator = makeTempNameGenerator("replyr_bind_rows"))
 }
 \arguments{
 \item{lst}{list of items to combine, must be all in same dplyr data service}
 
 \item{...}{force other arguments to be used by name}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 single data item

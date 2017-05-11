@@ -9,6 +9,7 @@ test_that("test_replyr_check_ranks.R", {
     Species = 'setosa',
     rank = c(1, 2)
   )
-  replyr_check_ranks(d, 'Species', 'Sepal_Length', 'rank', TRUE)
+  replyr_check_ranks(d, 'Species', 'Sepal_Length', 'rank',
+                     decreasing=TRUE)
 
 })

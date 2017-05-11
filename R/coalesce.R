@@ -10,6 +10,7 @@
 #' @param fills list default values to fill in columns
 #' @param newRowColumn character if not null name to use for new row indicator
 #' @param copy logical sets copy during dplyr::anti_join
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return augmented data
 #'
 #' @examples
@@ -45,7 +46,8 @@ replyr_coalesce <- function(data, support,
                             ...,
                             fills= NULL,
                             newRowColumn= NULL,
-                            copy= TRUE) {
+                            copy= TRUE,
+                            tempNameGenerator= makeTempNameGenerator("replyr_coalesce")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_coalesce unexpected arugments")
   }
@@ -106,7 +108,8 @@ replyr_coalesce <- function(data, support,
       }
       # force calculation as chaning of replyr_private_name_vi was chaning previously assigned columns!
       # needed to work around this: https://github.com/WinVector/replyr/blob/master/issues/TrailingRefIssue.md
-      replyr_private_name_additions <- compute(replyr_private_name_additions)
+      replyr_private_name_additions <- dplyr::compute(replyr_private_name_additions,
+                                                      name= tempNameGenerator())
     }
   }
   if(!is.null(newRowColumn)) {
@@ -115,6 +118,7 @@ replyr_coalesce <- function(data, support,
     )
   }
   # Can't use dplyr::bind_rows see https://github.com/WinVector/replyr/blob/master/issues/BindIssue.md
-  res <- replyr::replyr_bind_rows(list(data, replyr_private_name_additions))
+  res <- replyr::replyr_bind_rows(list(data, replyr_private_name_additions),
+                                  tempNameGenerator=tempNameGenerator)
   res
 }

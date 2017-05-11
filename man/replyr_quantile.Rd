@@ -4,7 +4,8 @@
 \alias{replyr_quantile}
 \title{Compute quantiles on remote column (NA's filtered out).}
 \usage{
-replyr_quantile(x, cname, probs = seq(0, 1, 0.25))
+replyr_quantile(x, cname, probs = seq(0, 1, 0.25), ...,
+  tempNameGenerator = makeTempNameGenerator("replyr_quantile"))
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
@@ -12,6 +13,10 @@ replyr_quantile(x, cname, probs = seq(0, 1, 0.25))
 \item{cname}{column name to compute over}
 
 \item{probs}{numeric vector of probabilities with values in [0,1].}
+
+\item{...}{force later arguments to be bound by name.}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \description{
 NA's filtered out and does not break ties the same as stats::quantile.

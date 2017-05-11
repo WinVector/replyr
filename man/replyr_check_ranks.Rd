@@ -4,8 +4,9 @@
 \alias{replyr_check_ranks}
 \title{confirm data has good ranked groups}
 \usage{
-replyr_check_ranks(x, GroupColumnName, ValueColumnName, RankColumnName,
-  decreasing = FALSE)
+replyr_check_ranks(x, GroupColumnName, ValueColumnName, RankColumnName, ...,
+  decreasing = FALSE,
+  tempNameGenerator = makeTempNameGenerator("replyr_check_ranks"))
 }
 \arguments{
 \item{x}{data item to work with}
@@ -16,7 +17,11 @@ replyr_check_ranks(x, GroupColumnName, ValueColumnName, RankColumnName,
 
 \item{RankColumnName}{column having proposed rank (function of order)}
 
+\item{...}{force later arguments to bind by name}
+
 \item{decreasing}{if true make order decreasing instead of increasing.}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 summary of quality of ranking.
@@ -28,6 +33,6 @@ confirm data has good ranked groups
 
 d <- data.frame(Sepal_Length=c(5.8,5.7),Sepal_Width=c(4.0,4.4),
                 Species='setosa',rank=c(1,2))
-replyr_check_ranks(d,'Species','Sepal_Length','rank',TRUE)
+replyr_check_ranks(d,'Species','Sepal_Length','rank',  decreasing=TRUE)
 
 }

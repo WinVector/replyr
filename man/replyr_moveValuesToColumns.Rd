@@ -5,8 +5,9 @@
 \title{Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
-  rowKeyColumns, fill = NA, sep = NULL, maxcols = 100,
-  dosummarize = TRUE)
+  rowKeyColumns, ..., fill = NA, sep = NULL, maxcols = 100,
+  dosummarize = TRUE,
+  tempNameGenerator = makeTempNameGenerator("replyr_moveValuesToColumns"))
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -17,6 +18,8 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 
 \item{rowKeyColumns}{character array names columns that should be table keys.}
 
+\item{...}{force later arguments to bind by name}
+
 \item{fill}{value to fill in missing values from original (both those that are originally explicitly NA, and those not present as rows).}
 
 \item{sep}{character, if not null build composite column names as COLsepVALUE, use new columns names are just VALUE.}
@@ -24,6 +27,8 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 \item{maxcols}{maximum number of values to expand to columns}
 
 \item{dosummarize}{logical, if TRUE finish the moveValuesToColumns by summarizing rows.}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 data item

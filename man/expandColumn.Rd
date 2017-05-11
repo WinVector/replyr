@@ -5,7 +5,8 @@
 \title{Expand a column of vectors into one row per value of each vector.}
 \usage{
 expandColumn(data, colName, ..., rowidSource = NULL, rowidDest = NULL,
-  idxDest = NULL)
+  idxDest = NULL,
+  tempNameGenerator = makeTempNameGenerator("replyr_expandColumn"))
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -19,6 +20,8 @@ expandColumn(data, colName, ..., rowidSource = NULL, rowidDest = NULL,
 \item{rowidDest}{optional character name of column to write row indices to (must not be an existing column name, rowidSource must be NULL to use this).}
 
 \item{idxDest}{optional character name of column to write value indices to (must not be an existing column name).}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 expanded data frame where each value of colName column is in a new row.

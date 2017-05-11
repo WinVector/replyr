@@ -6,7 +6,8 @@
 \usage{
 gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
   partitionMethod = "split", bindrows = TRUE, maxgroups = 100,
-  eagerCompute = FALSE)
+  eagerCompute = FALSE,
+  tempNameGenerator = makeTempNameGenerator("replyr_gapply"))
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -28,6 +29,8 @@ gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 \item{maxgroups}{maximum number of groups to work over (intentionally not enforced if partitionMethod=='group_by')}
 
 \item{eagerCompute}{if TRUE call compute on split results}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 transformed frame

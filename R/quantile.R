@@ -39,6 +39,8 @@ qsearch <- function(f,fLeft,fRight,ui) {
 #' @param x tbl or item that can be coerced into such.
 #' @param cname column name to compute over
 #' @param probs	numeric vector of probabilities with values in [0,1].
+#' @param ... force later arguments to be bound by name.
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #'
 #' @examples
 #'
@@ -46,7 +48,13 @@ qsearch <- function(f,fLeft,fRight,ui) {
 #' replyr_quantile(d,'xvals')
 #'
 #' @export
-replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
+replyr_quantile <- function(x,cname,
+                            probs = seq(0, 1, 0.25),
+                            ...,
+                            tempNameGenerator= makeTempNameGenerator("replyr_quantile")) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_quantile unexpected arguments")
+  }
   if((!is.character(cname))||(length(cname)!=1)) {
     stop('replyr_quantile cname must be a single string')
   }
@@ -83,7 +91,9 @@ replyr_quantile <- function(x,cname,probs = seq(0, 1, 0.25)) {
     x %>% dplyr::filter(x>v) -> xup
     rv <- max(lims)
     if(count<nrows) {
-      x %>% dplyr::filter(x>v) %>% dplyr::summarise(xmin=min(x)) %>%
+      x %>%
+        dplyr::filter(x>v) %>%
+        dplyr::summarise(xmin=min(x)) %>%
         dplyr::collect() %>% as.data.frame() %>% as.numeric() -> rv
     }
     data.frame(v=v,count=count,lv=lv,rv=rv)
@@ -125,6 +135,8 @@ polishQ <- function(nrows,marks,probs) {
 #' @param x tbl or item that can be coerced into such.
 #' @param cname column name to compute over (not 'n' or 'csum')
 #' @param probs	numeric vector of probabilities with values in [0,1].
+#' @param ... force later arguments to bind by name.
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #'
 #' @examples
 #'
@@ -132,7 +144,12 @@ polishQ <- function(nrows,marks,probs) {
 #' replyr_quantilec(d,'xvals')
 #'
 #' @export
-replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25)) {
+replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25),
+                             ...,
+                             tempNameGenerator= makeTempNameGenerator("replyr_quantilec")) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_quantilec unexpected arguments.")
+  }
   if((!is.character(cname))||(length(cname)!=1)) {
     stop('replyr_quantilec cname must be a single string')
   }
@@ -158,7 +175,8 @@ replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25)) {
   x %>% dplyr::mutate(const=1) %>%
     dplyr::arrange(x) %>%
     dplyr::mutate(s=cumsum(const)) %>%
-    replyr_filter('s',targets) %>%
+    replyr_filter('s',targets,
+                  tempNameGenerator=tempNameGenerator) %>%
     dplyr::collect() %>%
     as.data.frame() -> marks
   polishQ(nrows,marks,probs)

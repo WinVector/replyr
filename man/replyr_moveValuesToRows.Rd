@@ -5,7 +5,8 @@
 \title{Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
-  columnsToTakeFrom, na.rm = FALSE)
+  columnsToTakeFrom, ..., na.rm = FALSE,
+  tempNameGenerator = makeTempNameGenerator("replyr_moveValuesToRows"))
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -16,7 +17,11 @@ replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
 
 \item{columnsToTakeFrom}{character array names of columns to take values from.}
 
+\item{...}{force later columns to bind by name.}
+
 \item{na.rm}{logical if TRUE remove rows with NA in nameForNewValueColumn.}
+
+\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 data item

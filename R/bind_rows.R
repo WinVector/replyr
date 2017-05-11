@@ -5,18 +5,19 @@
 NULL
 
 # list length>=1 no null entries
-r_replyr_bind_rows <- function(lst, colnames) {
+r_replyr_bind_rows <- function(lst, colnames, tempNameGenerator) {
   n <- length(lst)
   if(n<=1) {
     res <- lst[[1]]
-    res <- dplyr::compute(res)
+    res <- dplyr::compute(res,
+                          name= tempNameGenerator())
     return(res)
   }
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- r_replyr_bind_rows(lst[leftSeq], colnames)
-  right <- r_replyr_bind_rows(lst[rightSeq], colnames)
+  left <- r_replyr_bind_rows(lst[leftSeq], colnames, tempNameGenerator)
+  right <- r_replyr_bind_rows(lst[rightSeq], colnames, tempNameGenerator)
   # ideas from https://github.com/rstudio/sparklyr/issues/76
   # would like to use union_all, but seems to have problems with Spark 2.0.0
   # (spread example from basicChecksSpark200.Rmd)
@@ -29,7 +30,8 @@ r_replyr_bind_rows <- function(lst, colnames) {
   } else {
     res <- dplyr::union_all(left,right)
   }
-  res <- dplyr::compute(res)
+  res <- dplyr::compute(res,
+                        name= tempNameGenerator())
   res
 }
 
@@ -38,6 +40,7 @@ r_replyr_bind_rows <- function(lst, colnames) {
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @param ... force other arguments to be used by name
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
 #'
 #' @examples
@@ -47,7 +50,8 @@ r_replyr_bind_rows <- function(lst, colnames) {
 #'
 #' @export
 replyr_bind_rows <- function(lst,
-                             ...) {
+                             ...,
+                             tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_bind_rows unexpected arguments")
   }
@@ -64,5 +68,5 @@ replyr_bind_rows <- function(lst,
   if(length(colnames)<=0) {
     return(NULL)
   }
-  r_replyr_bind_rows(lst, colnames)
+  r_replyr_bind_rows(lst, colnames, tempNameGenerator)
 }

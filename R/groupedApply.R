@@ -32,6 +32,7 @@ NULL
 #' @param bindrows if TRUE bind the rows back into a data item, else return split list
 #' @param maxgroups maximum number of groups to work over (intentionally not enforced if partitionMethod=='group_by')
 #' @param eagerCompute if TRUE call compute on split results
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return transformed frame
 #'
 #' @examples
@@ -68,7 +69,8 @@ gapply <- function(df,gcolumn,f,
                    partitionMethod='split',
                    bindrows=TRUE,
                    maxgroups=100,
-                   eagerCompute=FALSE) {
+                   eagerCompute=FALSE,
+                   tempNameGenerator= makeTempNameGenerator("replyr_gapply")) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
     stop('replyr::gapply gcolumn must be a single non-empty string')
   }
@@ -115,7 +117,8 @@ gapply <- function(df,gcolumn,f,
       res <- lapply(res,f)
     }
     if(bindrows) {
-      res <- replyr_bind_rows(res)
+      res <- replyr_bind_rows(res,
+                              tempNameGenerator=tempNameGenerator)
     }
     return(res)
   }
@@ -124,7 +127,9 @@ gapply <- function(df,gcolumn,f,
       replyr_copy_from(maxrow=maxgroups) -> groups
     res <- lapply(groups[[gcolumn]],
                   function(gi) {
-                    df %>% replyr_filter(cname=gcolumn,values=gi,verbose=FALSE) -> gsubi
+                    df %>% replyr_filter(cname=gcolumn,values=gi,
+                                         verbose=FALSE,
+                                         tempNameGenerator=tempNameGenerator) -> gsubi
                     if(!is.null(ocolumn)) {
                       gsubi <- replyr_arrange(gsubi,ocolumn,decreasing)
                     }
@@ -132,13 +137,15 @@ gapply <- function(df,gcolumn,f,
                       gsubi <- f(gsubi)
                     }
                     if(eagerCompute) {
-                      gsubi <- dplyr::compute(gsubi) # this may lose ordering, see issues/arrangecompute.Rmd
+                      gsubi <- dplyr::compute(gsubi,
+                                              name= tempNameGenerator()) # this may lose ordering, see issues/arrangecompute.Rmd
                     }
                     gsubi
                   })
     names(res) <- as.character(groups[[gcolumn]])
     if(bindrows) {
-      res <- replyr_bind_rows(res)
+      res <- replyr_bind_rows(res,
+                              tempNameGenerator=tempNameGenerator)
     }
     return(res)
   }
@@ -150,7 +157,7 @@ gapply <- function(df,gcolumn,f,
 #'
 #' Partitions from by values in grouping column, and returns list.  Only advised for a
 #' moderate number of groups and better if grouping column is an index.
-#' This plus lapply and replyr::bind_rows is powerfull
+#' This plus lapply and replyr::bind_rows is powerful
 #' enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 #' https://www.jstatsoft.org/article/view/v040i01
 #'

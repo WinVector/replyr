@@ -39,6 +39,7 @@ expandItem <- function(vi, rowidDest, rowId, valDest, idxDest) {
 #' @param rowidSource optional character name of column to take row indices from (rowidDest must be NULL to use this).
 #' @param rowidDest optional character name of column to write row indices to (must not be an existing column name, rowidSource must be NULL to use this).
 #' @param idxDest optional character name of column to write value indices to (must not be an existing column name).
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return expanded data frame where each value of colName column is in a new row.
 #'
 #' @examples
@@ -53,10 +54,12 @@ expandItem <- function(vi, rowidDest, rowId, valDest, idxDest) {
 #'
 #' @export
 #'
-expandColumn <- function(data, colName, ...,
+expandColumn <- function(data, colName,
+                         ...,
                          rowidSource= NULL,
                          rowidDest= NULL,
-                         idxDest= NULL) {
+                         idxDest= NULL,
+                         tempNameGenerator= makeTempNameGenerator("replyr_expandColumn")) {
   if(length(list(...))>0) {
     stop("replyr::expandColumn unexpected arguments")
   }
@@ -115,7 +118,7 @@ expandColumn <- function(data, colName, ...,
       data <- data %>%
         dplyr::mutate(CDATAROWIDCOL = 1) %>%
         dplyr::mutate(CDATAROWIDCOL = cumsum(CDATAROWIDCOL)) %>%
-        dplyr::compute()
+        dplyr::compute(name=tempNameGenerator())
     )
   }
   CDATAKEYCOLUMN <- NULL # declare not an unbound ref
@@ -147,7 +150,8 @@ expandColumn <- function(data, colName, ...,
                      )
                    }
   )
-  dres <- replyr::replyr_bind_rows(merged)
+  dres <- replyr::replyr_bind_rows(merged,
+                                   tempNameGenerator=tempNameGenerator)
   if(needToDropProducedRowID) {
     keepCols <- setdiff(colnames(dres), rowidSource)
     dres <- dplyr::select(dres, one_of(keepCols))

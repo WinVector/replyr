@@ -14,9 +14,11 @@ localFrame <- function(d) {
 #' Compute usable summary of columns of tbl.
 #'
 #' @param x tbl or item that can be coerced into such.
+#' @param ... force additional arguments to be bound by name.
 #' @param countUniqueNum logical, if true include unique non-NA counts for numeric cols.
 #' @param countUniqueNonNum logical, if true include unique non-NA counts for non-numeric cols.
-#' @param cols if not nul set of columns to restrict to.
+#' @param cols if not NULL set of columns to restrict to.
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return summary of columns.
 #'
 #' @examples
@@ -27,9 +29,14 @@ localFrame <- function(d) {
 #'
 #' @export
 replyr_summary <- function(x,
+                           ...,
                            countUniqueNum= FALSE,
                            countUniqueNonNum= FALSE,
-                           cols= NULL) {
+                           cols= NULL,
+                           tempNameGenerator= makeTempNameGenerator("replyr_summary")) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_summary unexpected arguments")
+  }
   nrows <- replyr_nrow(x)
   cnames <- colnames(x)
   if(!is.null(cols)) {
@@ -201,7 +208,8 @@ replyr_summary <- function(x,
                       si
                     })
   })
-  res <- replyr_bind_rows(c(numSums, logSums, oSums, listSums))
+  res <- replyr_bind_rows(c(numSums, logSums, oSums, listSums),
+                          tempNameGenerator=tempNameGenerator)
   res$index <- cmap[res$column]
   classtr <- lapply(cclass,function(vi) {
     paste(vi,collapse=', ')

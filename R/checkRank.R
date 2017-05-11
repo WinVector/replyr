@@ -78,6 +78,8 @@ replyr_ranksummaries <- function(x,
 #' @param GroupColumnName column to group by
 #' @param ValueColumnName column determining order
 #' @param RankColumnName column having proposed rank (function of order)
+#' @param ... force later arguments to bind by name
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @param decreasing if true make order decreasing instead of increasing.
 #' @return summary of quality of ranking.
 #'
@@ -85,17 +87,24 @@ replyr_ranksummaries <- function(x,
 #'
 #' d <- data.frame(Sepal_Length=c(5.8,5.7),Sepal_Width=c(4.0,4.4),
 #'                 Species='setosa',rank=c(1,2))
-#' replyr_check_ranks(d,'Species','Sepal_Length','rank',TRUE)
+#' replyr_check_ranks(d,'Species','Sepal_Length','rank',  decreasing=TRUE)
 #'
 #' @export
 replyr_check_ranks <- function(x,
                                GroupColumnName,ValueColumnName,RankColumnName,
-                               decreasing=FALSE) {
+                               ...,
+                               decreasing= FALSE,
+                               tempNameGenerator= makeTempNameGenerator("replyr_check_ranks")) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_check_ranks unexpected arguments.")
+  }
   f <- function(xi) {  replyr_ranksummaries(xi,
                                             GroupColumnName=GroupColumnName,
                                             ValueColumnName=ValueColumnName,
                                             RankColumnName=RankColumnName,
                                             decreasing=decreasing) }
-  gapply(x,GroupColumnName,f,partitionMethod='extract',maxgroups=NULL)
+  gapply(x,GroupColumnName,f,partitionMethod='extract',
+         maxgroups=NULL,
+         tempNameGenerator=tempNameGenerator)
 }
 
