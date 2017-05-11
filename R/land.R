@@ -6,6 +6,15 @@ isValidAndUnreservedName <- function(string) {
     (make.names(string,unique = FALSE, allow_ = TRUE) == string)
 }
 
+toToMakeEager <- function(value) {
+  force(value)
+  if('tbl' %in% class(value)) {
+    # try to make eager
+    throwAway <- nrow(value)
+  }
+  value
+}
+
 #' Land a value to variable from a pipeline.
 #'
 #' \%land\% and \%->\% ("writearrow") copy a pipeline value to a variable on the
@@ -39,10 +48,7 @@ isValidAndUnreservedName <- function(string) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%land%` name argument must be a valid potential variable name")
   }
-  force(value)
-  if('tbl' %in% class(value)) {
-    value <- dplyr::compute(value)
-  }
+  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -58,10 +64,7 @@ isValidAndUnreservedName <- function(string) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%->%` name argument must be a valid potential variable name")
   }
-  force(value)
-  if('tbl' %in% class(value)) {
-    value <- dplyr::compute(value)
-  }
+  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -79,10 +82,7 @@ isValidAndUnreservedName <- function(string) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%->_%` name argument must be a valid potential variable name")
   }
-  force(value)
-  if('tbl' %in% class(value)) {
-    value <- dplyr::compute(value)
-  }
+  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -100,10 +100,7 @@ isValidAndUnreservedName <- function(string) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%land_%` name argument must be a valid potential variable name")
   }
-  force(value)
-  if('tbl' %in% class(value)) {
-    value <- dplyr::compute(value)
-  }
+  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
