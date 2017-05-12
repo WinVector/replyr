@@ -2,7 +2,7 @@
 % Please edit documentation in R/bind_rows.R
 \name{replyr_union_all}
 \alias{replyr_union_all}
-\title{Union two tables.  NOT TESTED.}
+\title{Union two tables.}
 \usage{
 replyr_union_all(tabA, tabB, ..., cols = NULL,
   tempNameGenerator = makeTempNameGenerator("replyr_union_all"))
@@ -22,7 +22,10 @@ replyr_union_all(tabA, tabB, ..., cols = NULL,
 table with all rows of tabA and tabB (union_all).
 }
 \description{
-Union two tables.  NOT TESTED.
+Spark 2* union_all has issues ( https://github.com/WinVector/replyr/blob/master/issues/UnionIssue.md ),
+and exponsed union_all semantics differ from data-source backend to backend.
+This is an attempt to provide a join-based replacement.
+NOT YET TESTED.
 }
 \examples{
 
