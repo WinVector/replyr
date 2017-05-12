@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
-Consider the problem of "parametric programming."  That i:s simply writing correct
+Consider the problem of "parametric programming."  That is: simply writing correct
 code before knowing some details, such as the names of the columns your
 procedure will have to be applied to in the future.
 
@@ -74,7 +74,7 @@ to be easily automated over).
 
 Using `dplyr`
 directly (when you know all the names) 
-is deliberately straightforward, but programming over `dplyr` can  become a challenge.
+is deliberately straightforward, but programming over `dplyr` (as of May 12, 2017, prior to `dplyr` `0.6*` and the conversion to [`rlang`/`tidyeval`]( https://CRAN.R-project.org/package=rlang) interfaces) can  become a challenge.
 
 ## Standard practice
 
