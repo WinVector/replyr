@@ -70,7 +70,7 @@ replyr_inTest <- function(x,cname,values,nname,
   # Try to fix it.
   if((!good) && ('tbl_spark' %in% class(x))) {
     cn <- dplyr_src_to_db_handle(x$src)
-    tmpnam <- paste('replyr_intest_tmp',sample.int(1000000000,1),sep='_')
+    tmpnam <- tempNameGenerator()
     tmp <- replyr_copy_to(cn,jtab,tmpnam)
     x %>% dplyr::left_join(tmp,by=byClause) %>%
       dplyr::compute(name= tempNameGenerator()) -> res
