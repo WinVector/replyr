@@ -69,7 +69,6 @@ replyr_filter <- function(x,cname,values,
     tmp <- replyr_copy_to(cn,jtab,tmpnam)
     x %>% dplyr::inner_join(tmp,by=byClause) %>%
       dplyr::compute(name= tempNameGenerator()) -> res
-    dplyr::db_drop_table(cn,tmpnam)
   }
   res
 }

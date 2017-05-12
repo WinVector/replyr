@@ -74,7 +74,6 @@ replyr_inTest <- function(x,cname,values,nname,
     tmp <- replyr_copy_to(cn,jtab,tmpnam)
     x %>% dplyr::left_join(tmp,by=byClause) %>%
       dplyr::compute(name= tempNameGenerator()) -> res
-    dplyr::db_drop_table(cn,tmpnam)
   }
   # replace NA with false
   RCOL <- NULL # declare no external binding
