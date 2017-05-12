@@ -2,7 +2,6 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 
-# tabA, tabB non-empty tables hosted on same source
 
 #' Union two tables.  NOT TESTED.
 #'
@@ -40,7 +39,7 @@ replyr_union_all <- function(tabA, tabB, ...,
   }
   sc <- replyr_get_src(tabA)
   if((is.null(sc))||(is.character(sc))) {
-    # local can use dplyr
+    # local, can use dplyr
     return(dplyr::bind_rows(select(tabA, one_of(cols)) ,
                             select(tabB, one_of(cols))))
   }
