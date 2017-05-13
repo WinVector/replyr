@@ -158,6 +158,7 @@ resBase <- runExample(noopCopy)
  #  23 2007     0    a
  #  24 2006     0    a
  #  [1] "split re-join"
+ #  [1] "gapply"
  #  [1] "replyr_moveValuesToColumns"
  #  [1] "replyr_moveValuesToRows"
 ```
@@ -310,6 +311,7 @@ resTbl <- runExample(tblCopy)
  #  10  2009     0     c
  #  # ... with 14 more rows
  #  [1] "split re-join"
+ #  [1] "gapply"
  #  [1] "replyr_moveValuesToColumns"
  #  [1] "replyr_moveValuesToRows"
 if(!listsOfSameData(resBase, resTbl)) {
@@ -488,6 +490,7 @@ resSQLite <- runExample(copyToRemote)
  #  10  2006     0     d
  #  # ... with more rows
  #  [1] "split re-join"
+ #  [1] "gapply"
  #  [1] "replyr_moveValuesToColumns"
  #  [1] "replyr_moveValuesToRows"
 if(!listsOfSameData(resBase, resSQLite)) {
@@ -495,8 +498,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  693420 37.1    1168576 62.5  1168576 62.5
- #  Vcells 1335996 10.2    2552219 19.5  2552219 19.5
+ #  Ncells  693651 37.1    1168576 62.5  1168576 62.5
+ #  Vcells 1337588 10.3    3142662 24.0  3084837 23.6
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -718,6 +721,7 @@ resSpark <- runExample(copyToRemote)
  #  10  2009     0     c
  #  # ... with 14 more rows
  #  [1] "split re-join"
+ #  [1] "gapply"
  #  [1] "replyr_moveValuesToColumns"
  #  [1] "replyr_moveValuesToRows"
 if(!listsOfSameData(resBase, resSpark)) {
@@ -725,8 +729,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  740707 39.6    1168576 62.5  1168576 62.5
- #  Vcells 1405764 10.8    2552219 19.5  2552219 19.5
+ #  Ncells  741526 39.7    1168576 62.5  1168576 62.5
+ #  Vcells 1408111 10.8    3142662 24.0  3084837 23.6
 ```
 
 ``` r
@@ -735,6 +739,6 @@ print("all done")
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  740079 39.6    1168576 62.5  1168576 62.5
- #  Vcells 1403831 10.8    2552219 19.5  2552219 19.5
+ #  Ncells  740774 39.6    1168576 62.5  1168576 62.5
+ #  Vcells 1405681 10.8    3142662 24.0  3084837 23.6
 ```

@@ -27,12 +27,13 @@ NULL
 #' @param f transform function or pipleline
 #' @param ... force later values to be bound by name
 #' @param ocolumn ordering column (optional)
-#' @param decreasing if TRUE sort in decreasing order by ocolumn
+#' @param decreasing logical, if TRUE sort in decreasing order by ocolumn
 #' @param partitionMethod method to partition the data, one of 'group_by' (depends on f being dplyr compatible), 'split' (only works over local data frames), or 'extract'
-#' @param bindrows if TRUE bind the rows back into a data item, else return split list
-#' @param maxgroups maximum number of groups to work over (intentionally not enforced if partitionMethod=='group_by')
-#' @param eagerCompute if TRUE call compute on split results
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param bindrows logical, if TRUE bind the rows back into a data item, else return split list
+#' @param maxgroups maximum number of groups to work over (intentionally not enforced if \code{partitionMethod=='group_by'})
+#' @param eagerCompute logical, if TRUE call compute on split results
+#' @param restoreGroup logical, if TRUE restore group column after apply when \code{partitionMethod \%in\% c('extract', 'split')}
+#' @param tempNameGenerator temp name generator produced by \code{replyr::makeTempNameGenerator}, used to record \code{dplyr::compute()} effects.
 #' @return transformed frame
 #'
 #' @examples
@@ -70,6 +71,7 @@ gapply <- function(df,gcolumn,f,
                    bindrows=TRUE,
                    maxgroups=100,
                    eagerCompute=FALSE,
+                   restoreGroup=FALSE,
                    tempNameGenerator= makeTempNameGenerator("replyr_gapply")) {
   if((!is.character(gcolumn))||(length(gcolumn)!=1)||(nchar(gcolumn)<1)) {
     stop('replyr::gapply gcolumn must be a single non-empty string')
@@ -116,6 +118,17 @@ gapply <- function(df,gcolumn,f,
     if(!is.null(f)) {
       res <- lapply(res,f)
     }
+    if(restoreGroup) {
+      res <- lapply(names(res),
+                    function(gi) {
+                      ri <- res[[gi]]
+                      res[[gi]] <- wrapr::let(
+                        c(GROUPCOL=gcolumn),
+                        dplyr::mutate(ri, GROUPCOL=gi)
+                      )
+                    }
+      )
+    }
     if(bindrows) {
       res <- replyr_bind_rows(res,
                               tempNameGenerator=tempNameGenerator)
@@ -135,6 +148,12 @@ gapply <- function(df,gcolumn,f,
                     }
                     if(!is.null(f)) {
                       gsubi <- f(gsubi)
+                    }
+                    if(restoreGroup) {
+                      wrapr::let(
+                        c(GROUPCOL=gcolumn),
+                        gsubi <- dplyr::mutate(gsubi, GROUPCOL=gi)
+                      )
                     }
                     if(eagerCompute) {
                       gsubi <- dplyr::compute(gsubi,

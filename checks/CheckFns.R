@@ -192,8 +192,18 @@ runExample <- function(copyToRemote) {
   parts <- replyr::replyr_split(data, 'year', partitionMethod = "extract")
   recovered <- dplyr::arrange(replyr::replyr_bind_rows(parts), year)
 
-  # TODO: add this
-  #  print("gapply")
+  print("gapply")
+  dga <- copyToRemote(data.frame(group=c(1,1,2,2,2),
+                                 order=c(.1,.2,.3,.4,.5),
+                                 values=c(10,20,2,4,8)),
+                      'dga')
+  fn <- function(.) {
+    dplyr::summarize(., cv=max(values)) }
+  dgar <- dplyr::arrange(replyr::gapply(dga, 'group', fn, ocolumn='order',
+                                        partitionMethod='extract',
+                                        restoreGroup=TRUE),
+                         group)
+
 
   print("replyr_moveValuesToColumns")
   dmvtc <- copyToRemote(data.frame(
@@ -233,6 +243,7 @@ runExample <- function(copyToRemote) {
                     filled,
                     filled2,
                     recovered,
+                    dgar,
                     dmvtcr,
                     dmvtrr)
 

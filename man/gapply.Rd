@@ -6,7 +6,7 @@
 \usage{
 gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
   partitionMethod = "split", bindrows = TRUE, maxgroups = 100,
-  eagerCompute = FALSE,
+  eagerCompute = FALSE, restoreGroup = FALSE,
   tempNameGenerator = makeTempNameGenerator("replyr_gapply"))
 }
 \arguments{
@@ -20,17 +20,19 @@ gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{ocolumn}{ordering column (optional)}
 
-\item{decreasing}{if TRUE sort in decreasing order by ocolumn}
+\item{decreasing}{logical, if TRUE sort in decreasing order by ocolumn}
 
 \item{partitionMethod}{method to partition the data, one of 'group_by' (depends on f being dplyr compatible), 'split' (only works over local data frames), or 'extract'}
 
-\item{bindrows}{if TRUE bind the rows back into a data item, else return split list}
+\item{bindrows}{logical, if TRUE bind the rows back into a data item, else return split list}
 
-\item{maxgroups}{maximum number of groups to work over (intentionally not enforced if partitionMethod=='group_by')}
+\item{maxgroups}{maximum number of groups to work over (intentionally not enforced if \code{partitionMethod=='group_by'})}
 
-\item{eagerCompute}{if TRUE call compute on split results}
+\item{eagerCompute}{logical, if TRUE call compute on split results}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{restoreGroup}{logical, if TRUE restore group column after apply when \code{partitionMethod \%in\% c('extract', 'split')}}
+
+\item{tempNameGenerator}{temp name generator produced by \code{replyr::makeTempNameGenerator}, used to record \code{dplyr::compute()} effects.}
 }
 \value{
 transformed frame
