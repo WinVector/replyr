@@ -108,6 +108,22 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
 
+Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`.
+Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
+
+```{r RPostgres, eval=FALSE}
+my_db <- DBI::dbConnect(RPostgres::Postgres(),
+  host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
+class(my_db)
+copyToRemote <- remoteCopy(my_db)
+resPostgreSQL <- runExample(copyToRemote)
+if(!listsOfSameData(resBase, resPostgreSQL)) {
+  stop("RPostgres result differs")
+}
+rm(list=c('my_db','copyToRemote')); gc() # disconnect
+```
+
+
 Spark 2.0.0. example (lowest version of Spark we are supporting).
 
 ```{r Spark200example}
