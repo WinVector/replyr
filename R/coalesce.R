@@ -83,28 +83,15 @@ replyr_coalesce <- function(data, support,
   for(ci in dataCols) {
     if(!(ci %in% joinCols)) {
       if(ci %in% names(fills)) {
-        replyr_private_name_vi <- fills[[ci]]
-        # PostgresSQL and Spark1.6.2 don't like blank character values
-        # hope dplyr lazyeval carries the cast over to the database
-        # And MySQL can't accept the SQL dplyr emits with character cast
-        sname <- replyr_dataServiceName(replyr_private_name_additions)
-        useCharCast <- is.character(replyr_private_name_vi) && (!("src_mysql" %in% sname))
-        if(useCharCast) {
-          let(list(COLI=ci),
-              replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions,
-                                                             COLI=as.character(replyr_private_name_vi))
-          )
-          } else {
-            let(list(COLI=ci),
-                replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions,
-                                                               COLI=replyr_private_name_vi)
-            )
-          }
+        replyr_private_name_additions <-
+          addConstantColumn(replyr_private_name_additions,
+                            ci, fills[[ci]],
+                            tempNameGenerator)
       } else {
-        let(list(COLI=ci),
-            replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions,
-                                                           COLI=NA)
-        )
+        replyr_private_name_additions <-
+          addConstantColumn(replyr_private_name_additions,
+                            ci, NA,
+                            tempNameGenerator)
       }
       # force calculation as chaning of replyr_private_name_vi was chaning previously assigned columns!
       # needed to work around this: https://github.com/WinVector/replyr/blob/master/issues/TrailingRefIssue.md

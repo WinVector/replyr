@@ -2,6 +2,32 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 
+# add constant to table
+addConstantColumn <- function(d, colName, val, tempNameGenerator) {
+  # PostgresSQL and Spark1.6.2 don't like blank character values
+  # hope dplyr lazyeval carries the cast over to the database
+  # And MySQL can't accept the SQL dplyr emits with character cast
+  force(d)
+  force(colName)
+  force(val)
+  sname <- replyr_dataServiceName(d)
+  useCharCast <- is.character(val) && (!("src_mysql" %in% sname))
+  if(useCharCast) {
+    let(list(REPLYRCOLNAME=colName),
+        dm <- dplyr::mutate(d, REPLYRCOLNAME=as.character(val))
+    )
+  } else {
+    dm <- let(list(REPLYRCOLNAME=colName),
+              dm <- dplyr::mutate(d, REPLYRCOLNAME=val)
+    )
+  }
+  # force calculation as chaning of replyr_private_name_vi was chaning previously assigned columns!
+  # needed to work around this: https://github.com/WinVector/replyr/blob/master/issues/TrailingRefIssue.md
+  dm <- dplyr::compute(dm, name= tempNameGenerator())
+  throwAway <- nrow(dm) # make sure calc is forced
+  dm
+}
+
 
 #' Union two tables.
 #'
@@ -61,10 +87,10 @@ replyr_union_all <- function(tabA, tabB, ...,
   # decorate left and right tables for the merge
   tabA <- tabA %>%
     select(one_of(cols)) %>%
-    mutate(replyrunioncol= 'a')
+    addConstantColumn(mergeColName, 'a', tempNameGenerator)
   tabB <- tabB %>%
     select(one_of(cols)) %>%
-    mutate(replyrunioncol= 'b')
+    addConstantColumn(mergeColName, 'b', tempNameGenerator)
   # do the merges
   joined <- controlTable %>%
     left_join(tabA, by=mergeColName) %>%

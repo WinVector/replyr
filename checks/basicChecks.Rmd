@@ -65,7 +65,7 @@ rm(list=c('my_db','copyToRemote')); gc() # disconnect
 MySQL example ("docker start mysql").  Kind of poor as at least the adapted MySql 
 has a hard time with `NA`.
 
-```{r MySQLexample, eval=FALSE}
+```{r MySQLexample}
 my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
@@ -97,7 +97,7 @@ rm(list=c('my_db','copyToRemote')); gc() # disconnect
 PostgreSQL example ("docker start pg").
 Commented out for now as we are having trouble re-installing `RPostgreSQL`.
 
-```{r PostgreSQLexample, eval=FALSE}
+```{r PostgreSQLexample}
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
@@ -121,6 +121,7 @@ resSpark <- runExample(copyToRemote)
 if(!listsOfSameData(resBase, resSpark)) {
   stop("Spark result differs")
 }
+spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
 

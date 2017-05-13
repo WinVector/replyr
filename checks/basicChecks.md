@@ -498,8 +498,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  693663 37.1    1168576 62.5  1168576 62.5
- #  Vcells 1337580 10.3    3142662 24.0  3084829 23.6
+ #  Ncells  693956 37.1    1168576 62.5  1168576 62.5
+ #  Vcells 1338363 10.3    2552219 19.5  2552083 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -507,8 +507,205 @@ MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql
 ``` r
 my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
 class(my_db)
+ #  [1] "src_mysql" "src_sql"   "src"
 copyToRemote <- remoteCopy(my_db)
 resMySQL <- runExample(copyToRemote)
+ #  [1] "tbl_mysql" "tbl_sql"   "tbl_lazy"  "tbl"      
+ #  [1] "src_mysql"
+ #  Source:   query [?? x 2]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #        x     y
+ #    <dbl> <chr>
+ #  1     1     a
+ #  2     2     b
+ #  
+ #  d1 %>% replyr::replyr_colClasses() 
+ #  $x
+ #  [1] "numeric"
+ #  
+ #  $y
+ #  [1] "character"
+ #  
+ #  
+ #  d1 %>% replyr::replyr_testCols(is.numeric) 
+ #      x     y 
+ #   TRUE FALSE 
+ #  
+ #  d1 %>% replyr::replyr_dim() 
+ #  [1] 2 2
+ #  
+ #  d1 %>% replyr::replyr_nrow() 
+ #  [1] 2
+ #  
+ #  d1 %>% replyr::replyr_str() 
+ #  nrows: 2
+ #  Observations: NA
+ #  Variables: 2
+ #  $ src <S3: src_mysql> 1, 2
+ #  $ ops <S3: op_base_remote> "a", "b"NULL
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #        x     y     z
+ #    <dbl> <dbl> <chr>
+ #  1     1     3     a
+ #  2     2     5     a
+ #  3     3     0     z
+ #  
+ #  d2 %>% replyr::replyr_quantile("x") 
+ #     0 0.25  0.5 0.75    1 
+ #  1.00 1.00 1.75 2.75 3.00 
+ #  
+ #  d2 %>% replyr::replyr_summary() 
+ #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0      NA   1   3 2.000000 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   0      NA   0   5 2.666667 2.516611   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA       NA       NA      a      z
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #        x     y     z
+ #    <dbl> <dbl> <chr>
+ #  1     1     3     a
+ #  2     2     5     a
+ #  3     3     0     z
+ #  
+ #  d2b %>% replyr::replyr_quantile("x") 
+ #     0 0.25  0.5 0.75    1 
+ #  1.00 1.00 1.75 2.75 3.00 
+ #  
+ #  d2b %>% replyr::replyr_summary() 
+ #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0      NA   1   3 2.000000 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   0      NA   0   5 2.666667 2.516611   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA       NA       NA      a      z
+ #  Source:   query [?? x 2]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #        x     y
+ #    <chr> <int>
+ #  1     a     1
+ #  2     a     2
+ #  3     b     3
+ #  4     b     4
+ #  5     c     5
+ #  6     c     6
+ #  [1] "a" "c"
+ #  
+ #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
+ #  Source:   query [?? x 2]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #        x     y
+ #    <chr> <int>
+ #  1     a     1
+ #  2     a     2
+ #  3     c     5
+ #  4     c     6
+ #  
+ #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #        x     y match
+ #    <chr> <int> <int>
+ #  1     a     1     1
+ #  2     a     2     1
+ #  3     c     5     1
+ #  4     c     6     1
+ #  5     b     3     0
+ #  6     b     4     0
+ #  Source:   query [?? x 1]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #        x
+ #    <dbl>
+ #  1     1
+ #  2     2
+ #  3     3
+ #  4     3
+ #  
+ #  d4 %>% replyr::replyr_uniqueValues("x") 
+ #  Source:   query [?? x 2]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     2                      1
+ #  3     3                      2
+ #  [1] "let example"
+ #  Source:   query [?? x 4]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>   <chr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "coalesce example 1"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2006     0      
+ #  2  2008     0      
+ #  3  2009     0      
+ #  4  2005     6     a
+ #  5  2007     1     b
+ #  6  2010     0     c
+ #  [1] "coalesce example 2"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  Source:   query [?? x 3]
+ #  Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+ #  
+ #      year count  name
+ #     <dbl> <dbl> <chr>
+ #  1   2005     6     a
+ #  2   2007     1     b
+ #  3   2010     0     c
+ #  4   2006     0     b
+ #  5   2008     0     b
+ #  6   2009     0     b
+ #  7   2010     0     b
+ #  8   2005     0     c
+ #  9   2006     0     c
+ #  10  2007     0     c
+ #  # ... with more rows
+ #  [1] "split re-join"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  [1] "gapply"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  [1] "replyr_moveValuesToColumns"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  [1] "replyr_moveValuesToRows"
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
 failures <- failingFrameIndices(resBase, resMySQL) 
 retrykeys <- list()
 retrykeys[[2]] <- c('x', 'z')
@@ -530,7 +727,16 @@ for(i in failures) {
     print(paste("different result for example", i))
   }
 }
+ #  [1] "MySQL result differs 2  explained by left NAs:  TRUE"
+ #  [1] "MySQL result differs 3  explained by left NAs:  TRUE"
+ #  [1] "MySQL result differs 7  explained by left NAs:  TRUE"
+ #  [1] "MySQL result differs 8  explained by left NAs:  TRUE"
+ #  [1] "MySQL result differs 9  explained by left NAs:  TRUE"
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
+ #  Auto-disconnecting mysql connection (0, 0)
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  733024 39.2    1168576 62.5  1168576 62.5
+ #  Vcells 1382926 10.6    2552219 19.5  2552219 19.5
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -538,12 +744,183 @@ PostgreSQL example ("docker start pg"). Commented out for now as we are having t
 ``` r
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 class(my_db)
+ #  [1] "src_postgres" "src_sql"      "src"
 copyToRemote <- remoteCopy(my_db)
 resPostgreSQL <- runExample(copyToRemote)
+ #  [1] "tbl_postgres" "tbl_sql"      "tbl_lazy"     "tbl"         
+ #  [1] "src_postgres"
+ #  Source:   query [?? x 2]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x     y
+ #    <dbl> <chr>
+ #  1     1     a
+ #  2     2     b
+ #  
+ #  d1 %>% replyr::replyr_colClasses() 
+ #  $x
+ #  [1] "numeric"
+ #  
+ #  $y
+ #  [1] "character"
+ #  
+ #  
+ #  d1 %>% replyr::replyr_testCols(is.numeric) 
+ #      x     y 
+ #   TRUE FALSE 
+ #  
+ #  d1 %>% replyr::replyr_dim() 
+ #  [1] 2 2
+ #  
+ #  d1 %>% replyr::replyr_nrow() 
+ #  [1] 2
+ #  
+ #  d1 %>% replyr::replyr_str() 
+ #  nrows: 2
+ #  Observations: NA
+ #  Variables: 2
+ #  $ src <S3: src_postgres> 1, 2
+ #  $ ops <S3: op_base_remote> "a", "b"NULL
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x     y     z
+ #    <dbl> <dbl> <chr>
+ #  1     1     3     a
+ #  2     2     5     a
+ #  3     3    NA     z
+ #  
+ #  d2 %>% replyr::replyr_quantile("x") 
+ #     0 0.25  0.5 0.75    1 
+ #  1.00 1.00 1.75 2.75 3.00 
+ #  
+ #  d2 %>% replyr::replyr_summary() 
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x     y     z
+ #    <dbl> <dbl> <chr>
+ #  1     1     3     a
+ #  2     2     5     a
+ #  3     3    NA     z
+ #  
+ #  d2b %>% replyr::replyr_quantile("x") 
+ #     0 0.25  0.5 0.75    1 
+ #  1.00 1.00 1.75 2.75 3.00 
+ #  
+ #  d2b %>% replyr::replyr_summary() 
+ #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
+ #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
+ #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
+ #  3      z     3 character     3   0      NA  NA  NA   NA       NA      a      z
+ #  Source:   query [?? x 2]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x     y
+ #    <chr> <int>
+ #  1     a     1
+ #  2     a     2
+ #  3     b     3
+ #  4     b     4
+ #  5     c     5
+ #  6     c     6
+ #  [1] "a" "c"
+ #  
+ #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
+ #  Source:   query [?? x 2]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x     y
+ #    <chr> <int>
+ #  1     a     1
+ #  2     a     2
+ #  3     c     5
+ #  4     c     6
+ #  
+ #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x     y match
+ #    <chr> <int> <lgl>
+ #  1     a     1  TRUE
+ #  2     a     2  TRUE
+ #  3     b     3 FALSE
+ #  4     b     4 FALSE
+ #  5     c     5  TRUE
+ #  6     c     6  TRUE
+ #  Source:   query [?? x 1]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x
+ #    <dbl>
+ #  1     1
+ #  2     2
+ #  3     3
+ #  4     3
+ #  
+ #  d4 %>% replyr::replyr_uniqueValues("x") 
+ #  Source:   query [?? x 2]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #        x replyr_private_value_n
+ #    <dbl>                  <dbl>
+ #  1     1                      1
+ #  2     3                      2
+ #  3     2                      1
+ #  [1] "let example"
+ #  Source:   query [?? x 4]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #    Sepal_Length Sepal_Width Species  rank
+ #           <dbl>       <dbl>   <chr> <dbl>
+ #  1          5.8         4.0  setosa     0
+ #  2          5.7         4.4  setosa     1
+ #  [1] "coalesce example 1"
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010    NA     c
+ #  4  2009     0      
+ #  5  2008     0      
+ #  6  2006     0      
+ #  [1] "coalesce example 2"
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #      year count  name
+ #     <dbl> <dbl> <chr>
+ #  1   2005     6     a
+ #  2   2007     1     b
+ #  3   2010    NA     c
+ #  4   2010     0     d
+ #  5   2009     0     d
+ #  6   2008     0     d
+ #  7   2007     0     d
+ #  8   2006     0     d
+ #  9   2005     0     d
+ #  10  2009     0     c
+ #  # ... with more rows
+ #  [1] "split re-join"
+ #  [1] "gapply"
+ #  [1] "replyr_moveValuesToColumns"
+ #  [1] "replyr_moveValuesToRows"
 if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
+ #  Auto-disconnecting postgres connection (40152, 0)
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  768709 41.1    1442291 77.1  1442291 77.1
+ #  Vcells 1421505 10.9    2552219 19.5  2552219 19.5
 ```
 
 Spark 2.0.0. example (lowest version of Spark we are supporting).
@@ -727,10 +1104,11 @@ resSpark <- runExample(copyToRemote)
 if(!listsOfSameData(resBase, resSpark)) {
   stop("Spark result differs")
 }
+spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  741081 39.6    1168576 62.5  1168576 62.5
- #  Vcells 1406662 10.8    3142662 24.0  3084829 23.6
+ #  Ncells  815710 43.6    1442291 77.1  1442291 77.1
+ #  Vcells 1488521 11.4    2552219 19.5  2552219 19.5
 ```
 
 ``` r
@@ -739,6 +1117,6 @@ print("all done")
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  740338 39.6    1168576 62.5  1168576 62.5
- #  Vcells 1404247 10.8    3142662 24.0  3084829 23.6
+ #  Ncells  814447 43.5    1442291 77.1  1442291 77.1
+ #  Vcells 1484136 11.4    2552219 19.5  2552219 19.5
 ```
