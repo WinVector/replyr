@@ -498,8 +498,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  693651 37.1    1168576 62.5  1168576 62.5
- #  Vcells 1337588 10.3    3142662 24.0  3084837 23.6
+ #  Ncells  693663 37.1    1168576 62.5  1168576 62.5
+ #  Vcells 1337580 10.3    3142662 24.0  3084829 23.6
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -729,8 +729,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  741526 39.7    1168576 62.5  1168576 62.5
- #  Vcells 1408111 10.8    3142662 24.0  3084837 23.6
+ #  Ncells  741081 39.6    1168576 62.5  1168576 62.5
+ #  Vcells 1406662 10.8    3142662 24.0  3084829 23.6
 ```
 
 ``` r
@@ -739,6 +739,6 @@ print("all done")
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  740774 39.6    1168576 62.5  1168576 62.5
- #  Vcells 1405681 10.8    3142662 24.0  3084837 23.6
+ #  Ncells  740338 39.6    1168576 62.5  1168576 62.5
+ #  Vcells 1404247 10.8    3142662 24.0  3084829 23.6
 ```
