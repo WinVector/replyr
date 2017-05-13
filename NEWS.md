@@ -1,4 +1,9 @@
 
+'replyr' 0.3.01 2017-05-13
+
+ * much better tracking of temp-handle names.
+ * more tests/checks.
+ 
 'replyr' 0.2.6 2017-05-08
 
  * use dplyr::ungroup a few places.
