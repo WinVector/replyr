@@ -45,7 +45,7 @@ tblCopy <- function(df,name) {
 }
 resTbl <- runExample(tblCopy)
 if(!listsOfSameData(resBase, resTbl)) {
-  stop("tbl res differs")
+  stop("tbl result differs")
 }
 ```
 
@@ -57,7 +57,7 @@ class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resSQLite <- runExample(copyToRemote)
 if(!listsOfSameData(resBase, resSQLite)) {
-  stop("SQLite res differs")
+  stop("SQLite result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
@@ -65,7 +65,7 @@ rm(list=c('my_db','copyToRemote')); gc() # disconnect
 MySQL example ("docker start mysql").  Kind of poor as at least the adapted MySql 
 has a hard time with `NA`.
 
-```{r MySQLexample}
+```{r MySQLexample, eval=FALSE}
 my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
@@ -76,10 +76,11 @@ retrykeys[[2]] <- c('x', 'z')
 retrykeys[[3]] <- c('x', 'z')
 retrykeys[[7]] <- c('year', 'name')
 retrykeys[[8]] <- c('year', 'name')
+retrykeys[[9]] <- c('year')
 for(i in failures) {
   explained <- sameData(resBase[[i]], resMySQL[[i]],
                        ingoreLeftNAs= TRUE, keySet=retrykeys[[i]])
-  print(paste("MySQL res differs",i,
+  print(paste("MySQL result differs",i,
               " explained by left NAs: ",
               explained))
   if(!explained) {
@@ -90,14 +91,15 @@ rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
 
 PostgreSQL example ("docker start pg").
+Commented out for now as we are having trouble re-installing `RPostgreSQL`.
 
-```{r PostgreSQLexample}
+```{r PostgreSQLexample, eval=FALSE}
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resPostgreSQL <- runExample(copyToRemote)
 if(!listsOfSameData(resBase, resPostgreSQL)) {
-  stop("PostgreSQL res differs")
+  stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
@@ -113,7 +115,7 @@ my_db$spark_home
 copyToRemote <- remoteCopy(my_db)
 resSpark <- runExample(copyToRemote)
 if(!listsOfSameData(resBase, resSpark)) {
-  stop("Spark res differs")
+  stop("Spark result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```

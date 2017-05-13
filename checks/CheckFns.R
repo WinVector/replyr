@@ -186,6 +186,18 @@ runExample <- function(copyToRemote) {
                             fills=list(count=0))
   print(filled2)
 
+
+
+  print("split re-join")
+  parts <- replyr::replyr_split(data, 'year', partitionMethod = "extract")
+  recovered <- dplyr::arrange(replyr::replyr_bind_rows(parts), year)
+
+  # TODO: add this
+  #  print("gapply")
+
+  # TODO: add replyr_moveValuesToColumns and replyr_moveValuesToRows
+
+  # pack up results for comparison
   resFrames <- list(d1,
                     d2,
                     d2b,
@@ -193,7 +205,8 @@ runExample <- function(copyToRemote) {
                     d4,
                     dletres,
                     filled,
-                    filled2)
+                    filled2,
+                    recovered)
   resFrames <- lapply(resFrames, replyr::replyr_copy_from)
   resFrames
 }
