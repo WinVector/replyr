@@ -1,0 +1,43 @@
+---
+title: "split/apply/combine on Spark"
+output: html_document
+---
+
+```{r}
+library('dplyr')
+library('sparklyr')
+library('replyr')
+
+sc <- sparklyr::spark_connect(version='2.0.0', 
+                              master = "local")
+
+d <- copy_to(sc, 
+             data.frame(x=1:7, group=floor((1:7)/3)),
+             name= 'd')
+
+print(d)
+
+pieces <- replyr_split(d, 'group', partitionMethod = 'extract')
+print(pieces)
+
+f <- function(pi) {
+  ni <- nrow(pi)
+  mutate(pi, n=ni)
+}
+
+pieces <- lapply(pieces, f)
+print(pieces)
+
+recovered <- replyr_bind_rows(pieces) %>%
+  arrange(x)
+print(recovered)
+
+r2 <- d %>%
+  gapply('group', f, partitionMethod = 'extract') %>%
+  arrange(x)
+print(r2)
+
+spark_disconnect(sc)
+rm(list=ls()); gc() # disconnect
+```
+
