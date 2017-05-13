@@ -158,6 +158,8 @@ resBase <- runExample(noopCopy)
  #  23 2007     0    a
  #  24 2006     0    a
  #  [1] "split re-join"
+ #  [1] "replyr_moveValuesToColumns"
+ #  [1] "replyr_moveValuesToRows"
 ```
 
 Local `tbl` example.
@@ -308,6 +310,8 @@ resTbl <- runExample(tblCopy)
  #  10  2009     0     c
  #  # ... with 14 more rows
  #  [1] "split re-join"
+ #  [1] "replyr_moveValuesToColumns"
+ #  [1] "replyr_moveValuesToRows"
 if(!listsOfSameData(resBase, resTbl)) {
   stop("tbl result differs")
 }
@@ -484,13 +488,15 @@ resSQLite <- runExample(copyToRemote)
  #  10  2006     0     d
  #  # ... with more rows
  #  [1] "split re-join"
+ #  [1] "replyr_moveValuesToColumns"
+ #  [1] "replyr_moveValuesToRows"
 if(!listsOfSameData(resBase, resSQLite)) {
   stop("SQLite result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  689057 36.8    1168576 62.5  1168576 62.5
- #  Vcells 1324236 10.2    2552219 19.5  2552219 19.5
+ #  Ncells  693420 37.1    1168576 62.5  1168576 62.5
+ #  Vcells 1335996 10.2    2552219 19.5  2552219 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -508,13 +514,17 @@ retrykeys[[7]] <- c('year', 'name')
 retrykeys[[8]] <- c('year', 'name')
 retrykeys[[9]] <- c('year')
 for(i in failures) {
-  explained <- sameData(resBase[[i]], resMySQL[[i]],
-                       ingoreLeftNAs= TRUE, keySet=retrykeys[[i]])
-  print(paste("MySQL result differs",i,
-              " explained by left NAs: ",
-              explained))
-  if(!explained) {
-    stop("MySQL non NA differnce")
+  if(i<=length(retrykeys)) {
+    explained <- sameData(resBase[[i]], resMySQL[[i]],
+                          ingoreLeftNAs= TRUE, keySet=retrykeys[[i]])
+    print(paste("MySQL result differs",i,
+                " explained by left NAs: ",
+                explained))
+    if(!explained) {
+      print("MySQL non NA differnce")
+    }
+  } else {
+    print(paste("different result for example", i))
   }
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
@@ -708,13 +718,15 @@ resSpark <- runExample(copyToRemote)
  #  10  2009     0     c
  #  # ... with 14 more rows
  #  [1] "split re-join"
+ #  [1] "replyr_moveValuesToColumns"
+ #  [1] "replyr_moveValuesToRows"
 if(!listsOfSameData(resBase, resSpark)) {
   stop("Spark result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  735995 39.4    1168576 62.5  1168576 62.5
- #  Vcells 1394696 10.7    2552219 19.5  2552219 19.5
+ #  Ncells  740707 39.6    1168576 62.5  1168576 62.5
+ #  Vcells 1405764 10.8    2552219 19.5  2552219 19.5
 ```
 
 ``` r
@@ -723,6 +735,6 @@ print("all done")
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  735285 39.3    1168576 62.5  1168576 62.5
- #  Vcells 1392122 10.7    2552219 19.5  2552219 19.5
+ #  Ncells  740079 39.6    1168576 62.5  1168576 62.5
+ #  Vcells 1403831 10.8    2552219 19.5  2552219 19.5
 ```

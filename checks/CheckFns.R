@@ -195,7 +195,33 @@ runExample <- function(copyToRemote) {
   # TODO: add this
   #  print("gapply")
 
-  # TODO: add replyr_moveValuesToColumns and replyr_moveValuesToRows
+  print("replyr_moveValuesToColumns")
+  dmvtc <- copyToRemote(data.frame(
+    index = c(1, 2, 3, 1, 2, 3),
+    meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
+    meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
+    stringsAsFactors = FALSE),
+    'mvtc')
+  dmvtcr <- dplyr::arrange(replyr::replyr_moveValuesToColumns(dmvtc,
+                                       columnToTakeKeysFrom= 'meastype',
+                                       columnToTakeValuesFrom= 'meas',
+                                       rowKeyColumns= 'index',
+                                       sep= '_'),
+                           index)
+
+  print("replyr_moveValuesToRows")
+  dmvtr <- copyToRemote(data.frame(
+    index = c(1, 2, 3),
+    info = c('a', 'b', 'c'),
+    meas1 = c('m1_1', 'm1_2', 'm1_3'),
+    meas2 = c('m2_1', 'm2_2', 'm2_3'),
+    stringsAsFactors = FALSE),
+    'mvtr')
+  dmvtrr <- dplyr::arrange(replyr::replyr_moveValuesToRows(dmvtr,
+                          nameForNewKeyColumn= 'meastype',
+                          nameForNewValueColumn= 'meas',
+                          columnsToTakeFrom= c('meas1','meas2')),
+                          index, meastype)
 
   # pack up results for comparison
   resFrames <- list(d1,
@@ -206,7 +232,10 @@ runExample <- function(copyToRemote) {
                     dletres,
                     filled,
                     filled2,
-                    recovered)
+                    recovered,
+                    dmvtcr,
+                    dmvtrr)
+
   resFrames <- lapply(resFrames, replyr::replyr_copy_from)
   resFrames
 }
