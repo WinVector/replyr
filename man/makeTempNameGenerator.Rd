@@ -4,10 +4,12 @@
 \alias{makeTempNameGenerator}
 \title{Produce a temp name generator with a given prefix.}
 \usage{
-makeTempNameGenerator(prefix)
+makeTempNameGenerator(prefix, suffix = NULL)
 }
 \arguments{
 \item{prefix}{character, string to prefix temp names with.}
+
+\item{suffix}{character, optional additional disambiguating breaking string.}
 }
 \value{
 name generator function.
