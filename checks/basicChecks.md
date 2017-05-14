@@ -498,8 +498,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  693996 37.1    1168576 62.5  1168576 62.5
- #  Vcells 1338591 10.3    2552219 19.5  2551988 19.5
+ #  Ncells  694404 37.1    1168576 62.5  1168576 62.5
+ #  Vcells 1340680 10.3    3142662 24.0  3104190 23.7
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -734,8 +734,8 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  733180 39.2    1168576 62.5  1168576 62.5
- #  Vcells 1383566 10.6    2552219 19.5  2552219 19.5
+ #  Ncells  733591 39.2    1168576 62.5  1168576 62.5
+ #  Vcells 1385665 10.6    3142662 24.0  3140994 24.0
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -916,10 +916,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
- #  Auto-disconnecting postgres connection (45114, 0)
+ #  Auto-disconnecting postgres connection (47991, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  768761 41.1    1442291 77.1  1442291 77.1
- #  Vcells 1421718 10.9    2552219 19.5  2552219 19.5
+ #  Ncells  769164 41.1    1442291 77.1  1168576 62.5
+ #  Vcells 1423812 10.9    3142662 24.0  3140994 24.0
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -936,16 +936,16 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
 
-Spark 2.0.0. example (lowest version of Spark we are supporting).
+Spark 2. example (lowest version of Spark we are supporting).
 
 ``` r
 # Can't easilly override Spark version once it is up.
-my_db <- sparklyr::spark_connect(version='2.0.0', 
+my_db <- sparklyr::spark_connect(version='2.0.2', 
    master = "local")
 class(my_db)
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
 my_db$spark_home
- #  [1] "/Users/johnmount/Library/Caches/spark/spark-2.0.0-bin-hadoop2.7"
+ #  [1] "/Users/johnmount/Library/Caches/spark/spark-2.0.2-bin-hadoop2.7"
 copyToRemote <- remoteCopy(my_db)
 resSpark <- runExample(copyToRemote)
  #  [1] "tbl_spark" "tbl_sql"   "tbl_lazy"  "tbl"      
@@ -1120,8 +1120,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  815617 43.6    1442291 77.1  1442291 77.1
- #  Vcells 1488104 11.4    2552219 19.5  2552219 19.5
+ #  Ncells  814352 43.5    1442291 77.1  1442291 77.1
+ #  Vcells 1488639 11.4    3142662 24.0  3140994 24.0
 ```
 
 ``` r
@@ -1130,6 +1130,6 @@ print("all done")
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  814503 43.5    1442291 77.1  1442291 77.1
- #  Vcells 1484387 11.4    2552219 19.5  2552219 19.5
+ #  Ncells  813356 43.5    1442291 77.1  1442291 77.1
+ #  Vcells 1485533 11.4    3142662 24.0  3140994 24.0
 ```

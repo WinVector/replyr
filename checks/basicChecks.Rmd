@@ -127,11 +127,11 @@ rm(list=c('my_db','copyToRemote')); gc() # disconnect
 ```
 
 
-Spark 2.0.0. example (lowest version of Spark we are supporting).
+Spark 2. example (lowest version of Spark we are supporting).
 
-```{r Spark200example}
+```{r Spark2example}
 # Can't easilly override Spark version once it is up.
-my_db <- sparklyr::spark_connect(version='2.0.0', 
+my_db <- sparklyr::spark_connect(version='2.0.2', 
    master = "local")
 class(my_db)
 my_db$spark_home
