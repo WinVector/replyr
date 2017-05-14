@@ -1,0 +1,47 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+## Rename fails in Sparlyr
+
+Renaim fails in Sparklyr, think it depends on verison of dplyr.  Definitely seeing it in the dev version of dplyr as of 5-14-2017.
+
+Submitted as [`Sparklyr` issue ]() and [`dplyr` issue ]().
+
+```{r example, error = TRUE}
+# devtools::install_github("tidyverse/dplyr")
+# devtools::install_github('tidyverse/dbplyr')
+suppressPackageStartupMessages(library('dplyr'))
+packageVersion("dplyr")
+library('sparklyr')
+packageVersion("sparklyr")
+if(requireNamespace("dbplyr", quietly = TRUE)) {
+  packageVersion("dbplyr")
+}
+R.Version()$version.string
+
+dLocal <- data.frame(x = 1:2,
+                     origCol = c('a', 'b'),
+                     stringsAsFactors = FALSE)
+
+sc <- sparklyr::spark_connect(version='2.0.2', 
+   master = "local")
+
+d <- copy_to(sc, dLocal, 'd')
+
+# works
+rename(dLocal, x2 = x, origCol2 = origCol)
+
+# throws
+rename(d, x2 = x, origCol2 = origCol)
+```
+
+```{r cleanup}
+spark_disconnect(sc)
+rm(list=ls())
+gc(verbose = FALSE)
+```
