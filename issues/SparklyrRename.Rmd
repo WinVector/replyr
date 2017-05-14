@@ -6,11 +6,11 @@ output:
 
 <!-- Generated from .Rmd. Please edit that file -->
 
-## Rename fails in Sparlyr
+## Sparklyr rename fails with dev version of dplyr
 
 Renaim fails in Sparklyr, think it depends on verison of dplyr.  Definitely seeing it in the dev version of dplyr as of 5-14-2017.
 
-Submitted as [`Sparklyr` issue ]() and [`dplyr` issue ]().
+Submitted as [`Sparklyr` issue 678](https://github.com/rstudio/sparklyr/issues/678) and [`dplyr` issue 2776](https://github.com/tidyverse/dplyr/issues/2776).
 
 ```{r example, error = TRUE}
 # devtools::install_github("tidyverse/dplyr")

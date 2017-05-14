@@ -1,10 +1,10 @@
 <!-- Generated from .Rmd. Please edit that file -->
-Rename fails in Sparlyr
------------------------
+Sparklyr rename fails with dev version of dplyr
+-----------------------------------------------
 
 Renaim fails in Sparklyr, think it depends on verison of dplyr. Definitely seeing it in the dev version of dplyr as of 5-14-2017.
 
-Submitted as [`Sparklyr` issue]() and [`dplyr` issue]().
+Submitted as [`Sparklyr` issue 678](https://github.com/rstudio/sparklyr/issues/678) and [`dplyr` issue 2776](https://github.com/tidyverse/dplyr/issues/2776).
 
 ``` r
 # devtools::install_github("tidyverse/dplyr")
@@ -71,5 +71,5 @@ gc(verbose = FALSE)
 ```
 
     ##           used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells  673129 36.0    1168576 62.5   940480 50.3
-    ## Vcells 1157434  8.9    2060183 15.8  1364755 10.5
+    ## Ncells  673122 36.0    1168576 62.5   940480 50.3
+    ## Vcells 1157466  8.9    2060183 15.8  1364787 10.5
