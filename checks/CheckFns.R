@@ -23,8 +23,10 @@ sameData <- function(df1, df2,
   if(is.null(keySet)) {
     keySet = c1
   }
-  ds1 <- dplyr::arrange_(df1, .dots= keySet)
-  ds2 <- dplyr::arrange_(df2, .dots= keySet)
+  ds1COMPOSITEKEY <- do.call(paste,df1[, keySet, drop=FALSE])
+  ds2COMPOSITEKEY <- do.call(paste,df2[, keySet, drop=FALSE])
+  ds1 <- df1[order(ds1COMPOSITEKEY), , drop=FALSE]
+  ds2 <- df1[order(ds2COMPOSITEKEY), , drop=FALSE]
   for(ci in c1) {
     v1 <- ds1[[ci]]
     v2 <- ds2[[ci]]
@@ -169,7 +171,8 @@ runExample <- function(copyToRemote) {
   support <- copyToRemote(data.frame(year=2005:2010),
                           'support')
   filled <-  replyr::replyr_coalesce(dcoalesce, support,
-                            fills=list(count= 0, name= ''))
+                            fills=list(count= 0, name= '')) %>%
+    arrange(year, name)
   print(filled)
 
   print("coalesce example 2")
@@ -183,7 +186,8 @@ runExample <- function(copyToRemote) {
                                       stringsAsFactors = FALSE),
                           'support2')
   filled2 <-  replyr::replyr_coalesce(data, support,
-                            fills=list(count=0))
+                            fills=list(count=0)) %>%
+    arrange(year, name)
   print(filled2)
 
 

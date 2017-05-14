@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = " # "
 )
-options(width =100)
+options(width = 100)
 ```
 
 Example trying most of the `replyr` functions on a few data sources.

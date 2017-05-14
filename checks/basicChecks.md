@@ -126,37 +126,37 @@ resBase <- runExample(noopCopy)
  #  [1] "coalesce example 1"
  #    year count name
  #  1 2005     6    a
- #  2 2007     1    b
- #  3 2010    NA    c
- #  4 2009     0     
- #  5 2008     0     
- #  6 2006     0     
+ #  2 2006     0     
+ #  3 2007     1    b
+ #  4 2008     0     
+ #  5 2009     0     
+ #  6 2010    NA    c
  #  [1] "coalesce example 2"
  #     year count name
  #  1  2005     6    a
- #  2  2007     1    b
- #  3  2010    NA    c
- #  4  2010     0    d
- #  5  2009     0    d
- #  6  2008     0    d
- #  7  2007     0    d
+ #  2  2005     0    b
+ #  3  2005     0    c
+ #  4  2005     0    d
+ #  5  2006     0    a
+ #  6  2006     0    b
+ #  7  2006     0    c
  #  8  2006     0    d
- #  9  2005     0    d
- #  10 2009     0    c
- #  11 2008     0    c
- #  12 2007     0    c
- #  13 2006     0    c
- #  14 2005     0    c
- #  15 2010     0    b
- #  16 2009     0    b
- #  17 2008     0    b
- #  18 2006     0    b
- #  19 2005     0    b
- #  20 2010     0    a
- #  21 2009     0    a
- #  22 2008     0    a
- #  23 2007     0    a
- #  24 2006     0    a
+ #  9  2007     0    a
+ #  10 2007     1    b
+ #  11 2007     0    c
+ #  12 2007     0    d
+ #  13 2008     0    a
+ #  14 2008     0    b
+ #  15 2008     0    c
+ #  16 2008     0    d
+ #  17 2009     0    a
+ #  18 2009     0    b
+ #  19 2009     0    c
+ #  20 2009     0    d
+ #  21 2010     0    a
+ #  22 2010     0    b
+ #  23 2010    NA    c
+ #  24 2010     0    d
  #  [1] "split re-join"
  #  [1] "gapply"
  #  [1] "replyr_moveValuesToColumns"
@@ -290,25 +290,25 @@ resTbl <- runExample(tblCopy)
  #     year count  name
  #    <dbl> <dbl> <chr>
  #  1  2005     6     a
- #  2  2007     1     b
- #  3  2010    NA     c
- #  4  2009     0      
- #  5  2008     0      
- #  6  2006     0      
+ #  2  2006     0      
+ #  3  2007     1     b
+ #  4  2008     0      
+ #  5  2009     0      
+ #  6  2010    NA     c
  #  [1] "coalesce example 2"
  #  # A tibble: 24 × 3
  #      year count  name
  #     <dbl> <dbl> <chr>
  #  1   2005     6     a
- #  2   2007     1     b
- #  3   2010    NA     c
- #  4   2010     0     d
- #  5   2009     0     d
- #  6   2008     0     d
- #  7   2007     0     d
+ #  2   2005     0     b
+ #  3   2005     0     c
+ #  4   2005     0     d
+ #  5   2006     0     a
+ #  6   2006     0     b
+ #  7   2006     0     c
  #  8   2006     0     d
- #  9   2005     0     d
- #  10  2009     0     c
+ #  9   2007     0     a
+ #  10  2007     1     b
  #  # ... with 14 more rows
  #  [1] "split re-join"
  #  [1] "gapply"
@@ -467,11 +467,11 @@ resSQLite <- runExample(copyToRemote)
  #     year count  name
  #    <dbl> <dbl> <chr>
  #  1  2005     6     a
- #  2  2007     1     b
- #  3  2010    NA     c
- #  4  2006     0      
- #  5  2008     0      
- #  6  2009     0      
+ #  2  2006     0      
+ #  3  2007     1     b
+ #  4  2008     0      
+ #  5  2009     0      
+ #  6  2010    NA     c
  #  [1] "coalesce example 2"
  #  Source:   query [?? x 3]
  #  Database: sqlite 3.11.1 [:memory:]
@@ -479,15 +479,15 @@ resSQLite <- runExample(copyToRemote)
  #      year count  name
  #     <dbl> <dbl> <chr>
  #  1   2005     6     a
- #  2   2007     1     b
- #  3   2010    NA     c
- #  4   2005     0     b
- #  5   2005     0     c
- #  6   2005     0     d
- #  7   2006     0     a
- #  8   2006     0     b
- #  9   2006     0     c
- #  10  2006     0     d
+ #  2   2005     0     b
+ #  3   2005     0     c
+ #  4   2005     0     d
+ #  5   2006     0     a
+ #  6   2006     0     b
+ #  7   2006     0     c
+ #  8   2006     0     d
+ #  9   2007     0     a
+ #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
  #  [1] "gapply"
@@ -498,8 +498,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  693997 37.1    1168576 62.5  1168576 62.5
- #  Vcells 1338578 10.3    2552219 19.5  2552219 19.5
+ #  Ncells  693996 37.1    1168576 62.5  1168576 62.5
+ #  Vcells 1338591 10.3    2552219 19.5  2551988 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -660,11 +660,11 @@ resMySQL <- runExample(copyToRemote)
  #  
  #     year count  name
  #    <dbl> <dbl> <chr>
- #  1  2006     0      
- #  2  2008     0      
- #  3  2009     0      
- #  4  2005     6     a
- #  5  2007     1     b
+ #  1  2005     6     a
+ #  2  2006     0      
+ #  3  2007     1     b
+ #  4  2008     0      
+ #  5  2009     0      
  #  6  2010     0     c
  #  [1] "coalesce example 2"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
@@ -678,15 +678,15 @@ resMySQL <- runExample(copyToRemote)
  #      year count  name
  #     <dbl> <dbl> <chr>
  #  1   2005     6     a
- #  2   2007     1     b
- #  3   2010     0     c
- #  4   2009     0     c
- #  5   2005     0     d
- #  6   2006     0     a
- #  7   2006     0     d
- #  8   2007     0     a
- #  9   2007     0     d
- #  10  2008     0     a
+ #  2   2005     0     b
+ #  3   2005     0     c
+ #  4   2005     0     d
+ #  5   2006     0     a
+ #  6   2006     0     b
+ #  7   2006     0     c
+ #  8   2006     0     d
+ #  9   2007     0     a
+ #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
@@ -730,16 +730,12 @@ for(i in failures) {
     stop(paste("different result for example", i))
   }
 }
- #  [1] "MySQL result differs 2  explained by left NAs:  TRUE"
- #  [1] "MySQL result differs 3  explained by left NAs:  TRUE"
- #  [1] "MySQL result differs 7  explained by left NAs:  TRUE"
  #  [1] "MySQL result differs 8  explained by left NAs:  TRUE"
- #  [1] "MySQL result differs 9  explained by left NAs:  TRUE"
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  733154 39.2    1168576 62.5  1168576 62.5
- #  Vcells 1383540 10.6    2552219 19.5  2552219 19.5
+ #  Ncells  733180 39.2    1168576 62.5  1168576 62.5
+ #  Vcells 1383566 10.6    2552219 19.5  2552219 19.5
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -890,11 +886,11 @@ resPostgreSQL <- runExample(copyToRemote)
  #     year count  name
  #    <dbl> <dbl> <chr>
  #  1  2005     6     a
- #  2  2007     1     b
- #  3  2010    NA     c
- #  4  2009     0      
- #  5  2008     0      
- #  6  2006     0      
+ #  2  2006     0      
+ #  3  2007     1     b
+ #  4  2008     0      
+ #  5  2009     0      
+ #  6  2010    NA     c
  #  [1] "coalesce example 2"
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
@@ -902,15 +898,15 @@ resPostgreSQL <- runExample(copyToRemote)
  #      year count  name
  #     <dbl> <dbl> <chr>
  #  1   2005     6     a
- #  2   2007     1     b
- #  3   2010    NA     c
- #  4   2010     0     d
- #  5   2009     0     d
- #  6   2008     0     d
- #  7   2007     0     d
+ #  2   2005     0     b
+ #  3   2005     0     c
+ #  4   2005     0     d
+ #  5   2006     0     a
+ #  6   2006     0     b
+ #  7   2006     0     c
  #  8   2006     0     d
- #  9   2005     0     d
- #  10  2009     0     c
+ #  9   2007     0     a
+ #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
  #  [1] "gapply"
@@ -920,10 +916,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
- #  Auto-disconnecting postgres connection (43088, 0)
+ #  Auto-disconnecting postgres connection (45114, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  768762 41.1    1442291 77.1  1442291 77.1
- #  Vcells 1421739 10.9    3142662 24.0  3142662 24.0
+ #  Ncells  768761 41.1    1442291 77.1  1442291 77.1
+ #  Vcells 1421718 10.9    2552219 19.5  2552219 19.5
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -1091,28 +1087,28 @@ resSpark <- runExample(copyToRemote)
  #  
  #     year count  name
  #    <dbl> <dbl> <chr>
- #  1  2010   NaN     c
- #  2  2007     1     b
- #  3  2005     6     a
- #  4  2009     0      
- #  5  2008     0      
- #  6  2006     0      
+ #  1  2005     6     a
+ #  2  2006     0      
+ #  3  2007     1     b
+ #  4  2008     0      
+ #  5  2009     0      
+ #  6  2010   NaN     c
  #  [1] "coalesce example 2"
  #  Source:   query [24 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
  #      year count  name
  #     <dbl> <dbl> <chr>
- #  1   2010   NaN     c
- #  2   2007     1     b
- #  3   2005     6     a
- #  4   2010     0     d
- #  5   2009     0     d
- #  6   2008     0     d
- #  7   2007     0     d
+ #  1   2005     6     a
+ #  2   2005     0     b
+ #  3   2005     0     c
+ #  4   2005     0     d
+ #  5   2006     0     a
+ #  6   2006     0     b
+ #  7   2006     0     c
  #  8   2006     0     d
- #  9   2005     0     d
- #  10  2009     0     c
+ #  9   2007     0     a
+ #  10  2007     1     b
  #  # ... with 14 more rows
  #  [1] "split re-join"
  #  [1] "gapply"
@@ -1124,8 +1120,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  815658 43.6    1442291 77.1  1442291 77.1
- #  Vcells 1488287 11.4    3142662 24.0  3142662 24.0
+ #  Ncells  815617 43.6    1442291 77.1  1442291 77.1
+ #  Vcells 1488104 11.4    2552219 19.5  2552219 19.5
 ```
 
 ``` r
@@ -1134,6 +1130,6 @@ print("all done")
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  814494 43.5    1442291 77.1  1442291 77.1
- #  Vcells 1484407 11.4    3142662 24.0  3142662 24.0
+ #  Ncells  814503 43.5    1442291 77.1  1442291 77.1
+ #  Vcells 1484387 11.4    2552219 19.5  2552219 19.5
 ```
