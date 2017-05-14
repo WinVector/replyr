@@ -20,6 +20,8 @@ if(requireNamespace("dbplyr", quietly = TRUE)) {
 }
 R.Version()$version.string
  #  [1] "R version 3.4.0 (2017-04-21)"
+packageVersion("replyr")
+ #  [1] '0.3.2'
 source('CheckFns.R')
 ```
 
@@ -527,8 +529,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  706066 37.8    1168576 62.5  1168576 62.5
- #  Vcells 1350535 10.4    2552219 19.5  2552155 19.5
+ #  Ncells  706080 37.8    1168576 62.5  1168576 62.5
+ #  Vcells 1350552 10.4    2552219 19.5  2552130 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -779,8 +781,8 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  745242 39.9    1168576 62.5  1168576 62.5
- #  Vcells 1395535 10.7    2552219 19.5  2552219 19.5
+ #  Ncells  745253 39.9    1168576 62.5  1168576 62.5
+ #  Vcells 1395546 10.7    2552219 19.5  2552219 19.5
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -975,10 +977,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
- #  Auto-disconnecting postgres connection (55635, 0)
+ #  Auto-disconnecting postgres connection (55878, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  780844 41.8    1442291 77.1  1442291 77.1
- #  Vcells 1433768 11.0    3142662 24.0  3131498 23.9
+ #  Ncells  780852 41.8    1442291 77.1  1442291 77.1
+ #  Vcells 1433779 11.0    3142662 24.0  3131419 23.9
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -1193,8 +1195,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  825973 44.2    1442291 77.1  1442291 77.1
- #  Vcells 1498517 11.5    3142662 24.0  3131498 23.9
+ #  Ncells  825977 44.2    1442291 77.1  1442291 77.1
+ #  Vcells 1498528 11.5    3142662 24.0  3131419 23.9
 ```
 
 ``` r
@@ -1203,6 +1205,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  824942 44.1    1442291 77.1  1442291 77.1
- #  Vcells 1495211 11.5    3142662 24.0  3131498 23.9
+ #  Ncells  824946 44.1    1442291 77.1  1442291 77.1
+ #  Vcells 1495222 11.5    3142662 24.0  3131419 23.9
 ```

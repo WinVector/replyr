@@ -22,7 +22,7 @@ Let's first start up an `R` instance.
 base::date()
 ```
 
-    ## [1] "Sun May 14 16:27:38 2017"
+    ## [1] "Sun May 14 16:36:22 2017"
 
 ``` r
 suppressPackageStartupMessages(library("dplyr"))
@@ -41,6 +41,12 @@ packageVersion("sparklyr")
 if(requireNamespace("dbplyr", quietly = TRUE)) {
   packageVersion("dbplyr")
 }
+packageVersion("replyr")
+```
+
+    ## [1] '0.3.2'
+
+``` r
 R.Version()$version.string
 ```
 
@@ -342,12 +348,12 @@ print(dRC)
     ## Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
 
     ## Error in .local(conn, statement, ...): could not run statement: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TEXT) AS `newCol`
-    ## FROM `d`) `xmwglbujqn`
+    ## FROM `d`) `pjipgfrpzb`
     ## LIMIT 10' at line 2
 
 We could say "don't use `MySQL`", but many clients have significant data in `MySQL` databases and `dplyr 0.5.0` explicitly mentions `MySQL` as an important target (at least as of 2016-06-23):
 
-> ["Currently dplyr supports the three most popular open source databases (SQLite, mysql and PostgreSQL), and google’s bigquery."](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)
+> ["Currently dplyr supports the three most popular open source databases (sqlite, mysql and postgresql), and google’s bigquery."](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)
 
 The way we work with around this in the development version of [`replyr`](https://github.com/WinVector/replyr) is: swallow our pride, inspect the database name and run different code depending on the database. That looks like the following:
 
