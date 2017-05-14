@@ -1,4 +1,11 @@
 <!-- Generated from .Rmd. Please edit that file -->
+Duplicate columns not allowed in join
+-------------------------------------
+
+Instead of adding suffixes join fails with duplicate column message. I think this depends on the version of dplyr used. Seeing the failure with the dev-version of dplyr '0.5.0.9004' as of 5-14-2017.
+
+Submitted as [`Sparklyr` issue 677](https://github.com/rstudio/sparklyr/issues/677) and [`dplyr` issue 2774](https://github.com/tidyverse/dplyr/issues/2774).
+
 ``` r
 # devtools::install_github("tidyverse/dplyr")
 # devtools::install_github('tidyverse/dbplyr')
@@ -51,5 +58,5 @@ gc(verbose = FALSE)
 ```
 
     ##           used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells  673702 36.0    1168576 62.5  1168576 62.5
-    ## Vcells 1160569  8.9    2060183 15.8  1372134 10.5
+    ## Ncells  673696 36.0    1168576 62.5  1168576 62.5
+    ## Vcells 1160680  8.9    2060183 15.8  1372249 10.5
