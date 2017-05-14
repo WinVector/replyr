@@ -77,6 +77,9 @@ retrykeys[[3]] <- c('x', 'z')
 retrykeys[[7]] <- c('year', 'name')
 retrykeys[[8]] <- c('year', 'name')
 retrykeys[[9]] <- c('year')
+retrykeys[[10]] <- c('group')
+retrykeys[[11]] <- c('index')
+retrykeys[[12]] <- c('index','meastype')
 for(i in failures) {
   if(i<=length(retrykeys)) {
     explained <- sameData(resBase[[i]], resMySQL[[i]],
@@ -85,10 +88,10 @@ for(i in failures) {
                 " explained by left NAs: ",
                 explained))
     if(!explained) {
-      print("MySQL non NA differnce")
+      stop("MySQL non NA differnce")
     }
   } else {
-    print(paste("different result for example", i))
+    stop(paste("different result for example", i))
   }
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect

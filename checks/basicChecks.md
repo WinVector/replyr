@@ -498,8 +498,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  693981 37.1    1168576 62.5  1168576 62.5
- #  Vcells 1338553 10.3    2552219 19.5  2552219 19.5
+ #  Ncells  693997 37.1    1168576 62.5  1168576 62.5
+ #  Vcells 1338578 10.3    2552219 19.5  2552219 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -680,13 +680,13 @@ resMySQL <- runExample(copyToRemote)
  #  1   2005     6     a
  #  2   2007     1     b
  #  3   2010     0     c
- #  4   2008     0     a
- #  5   2008     0     d
- #  6   2009     0     a
- #  7   2009     0     d
- #  8   2010     0     a
- #  9   2010     0     d
- #  10  2005     0     b
+ #  4   2009     0     c
+ #  5   2005     0     d
+ #  6   2006     0     a
+ #  7   2006     0     d
+ #  8   2007     0     a
+ #  9   2007     0     d
+ #  10  2008     0     a
  #  # ... with more rows
  #  [1] "split re-join"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
@@ -713,6 +713,9 @@ retrykeys[[3]] <- c('x', 'z')
 retrykeys[[7]] <- c('year', 'name')
 retrykeys[[8]] <- c('year', 'name')
 retrykeys[[9]] <- c('year')
+retrykeys[[10]] <- c('group')
+retrykeys[[11]] <- c('index')
+retrykeys[[12]] <- c('index','meastype')
 for(i in failures) {
   if(i<=length(retrykeys)) {
     explained <- sameData(resBase[[i]], resMySQL[[i]],
@@ -721,10 +724,10 @@ for(i in failures) {
                 " explained by left NAs: ",
                 explained))
     if(!explained) {
-      print("MySQL non NA differnce")
+      stop("MySQL non NA differnce")
     }
   } else {
-    print(paste("different result for example", i))
+    stop(paste("different result for example", i))
   }
 }
  #  [1] "MySQL result differs 2  explained by left NAs:  TRUE"
@@ -735,8 +738,8 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  733049 39.2    1168576 62.5  1168576 62.5
- #  Vcells 1383116 10.6    2552219 19.5  2552219 19.5
+ #  Ncells  733154 39.2    1168576 62.5  1168576 62.5
+ #  Vcells 1383540 10.6    2552219 19.5  2552219 19.5
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -917,10 +920,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
- #  Auto-disconnecting postgres connection (41016, 0)
+ #  Auto-disconnecting postgres connection (43088, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  768734 41.1    1442291 77.1  1442291 77.1
- #  Vcells 1421695 10.9    2552219 19.5  2552219 19.5
+ #  Ncells  768762 41.1    1442291 77.1  1442291 77.1
+ #  Vcells 1421739 10.9    3142662 24.0  3142662 24.0
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -1121,8 +1124,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc() # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  815654 43.6    1442291 77.1  1442291 77.1
- #  Vcells 1488460 11.4    2552219 19.5  2552219 19.5
+ #  Ncells  815658 43.6    1442291 77.1  1442291 77.1
+ #  Vcells 1488287 11.4    3142662 24.0  3142662 24.0
 ```
 
 ``` r
@@ -1131,6 +1134,6 @@ print("all done")
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  814455 43.5    1442291 77.1  1442291 77.1
- #  Vcells 1484370 11.4    2552219 19.5  2552219 19.5
+ #  Ncells  814494 43.5    1442291 77.1  1442291 77.1
+ #  Vcells 1484407 11.4    3142662 24.0  3142662 24.0
 ```
