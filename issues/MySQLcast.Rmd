@@ -1,0 +1,43 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+## Problem with MySQL cast
+
+Simple cast emits `SQL` not accepted by `MySQL`.
+
+Submitted as [`dplyr` issue 2775](https://github.com/tidyverse/dplyr/issues/2775) as `dbplyr` currently asks that issues be filed there.
+
+```{r example, error = TRUE}
+# devtools::install_github("tidyverse/dplyr")
+# devtools::install_github('tidyverse/dbplyr')
+suppressPackageStartupMessages(library('dplyr'))
+packageVersion("dplyr")
+if(requireNamespace("dbplyr", quietly = TRUE)) {
+  packageVersion("dbplyr")
+}
+R.Version()$version.string
+
+sc <- dplyr::src_mysql('mysql', 
+                       '127.0.0.1', 
+                       3306, 
+                       'root', 'passwd')
+d1 <- copy_to(sc, data.frame(x=1:3), 'd1')
+
+# works, Note PostgreSQL needs this form 
+# or it doesn't know type of newCol
+mutate(d1, newCol= 'a')
+
+# throws
+mutate(d1, newCol= as.character('a'))
+
+```
+
+```{r cleanup}
+rm(list=ls())
+gc(verbose = FALSE)
+```
