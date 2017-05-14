@@ -28,4 +28,7 @@ constant column to a table.
 }
 \examples{
 
+d <- data.frame(x= c(1:3))
+addConstantColumn(d, 'newCol', 'newVal')
+
 }

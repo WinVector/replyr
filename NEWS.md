@@ -1,4 +1,9 @@
 
+'replyr' 0.3.02 2017-05-14
+
+ * better detection of service.
+ * prepare for dplyr 0.6*
+ 
 'replyr' 0.3.01 2017-05-13
 
  * much better tracking of temp-handle names.

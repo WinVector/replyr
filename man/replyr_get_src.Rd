@@ -13,7 +13,7 @@ replyr_get_src(df)
 source (string if data.frame, tlb, or data.table, NULL if unknown, remote source otherwise)
 }
 \description{
-NOT TESTED YET!
+Get the "remote data source" where a data.frame like object lives.
 }
 \examples{
 

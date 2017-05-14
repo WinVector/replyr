@@ -8,7 +8,6 @@
 #' Spark 2* union_all has issues ( https://github.com/WinVector/replyr/blob/master/issues/UnionIssue.md ),
 #' and exponsed union_all semantics differ from data-source backend to backend.
 #' This is an attempt to provide a join-based replacement.
-#' NOT YET TESTED.
 #'
 #' @param tabA table with at least 1 row.
 #' @param tabB table with at least on same data source as tabA and commmon columns.
@@ -42,12 +41,12 @@ replyr_union_all <- function(tabA, tabB, ...,
   if(length(cols)<=0) {
     stop("replyr::replyr_union_all empty column list")
   }
-  sc <- replyr_get_src(tabA)
-  if((is.null(sc))||(is.character(sc))) {
+  if(replyr_is_local_data(tabA)) {
     # local, can use dplyr
     return(dplyr::bind_rows(select(tabA, one_of(cols)) ,
                             select(tabB, one_of(cols))))
   }
+  sc <- replyr_get_src(tabA)
   mergeColName <- 'replyrunioncol'
   if(mergeColName %in% cols) {
     stop(paste0("replyr::replyr_union_all sorry can't work with ",

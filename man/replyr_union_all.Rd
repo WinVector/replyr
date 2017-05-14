@@ -25,7 +25,6 @@ table with all rows of tabA and tabB (union_all).
 Spark 2* union_all has issues ( https://github.com/WinVector/replyr/blob/master/issues/UnionIssue.md ),
 and exponsed union_all semantics differ from data-source backend to backend.
 This is an attempt to provide a join-based replacement.
-NOT YET TESTED.
 }
 \examples{
 

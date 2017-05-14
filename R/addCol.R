@@ -16,6 +16,9 @@
 #'
 #' @examples
 #'
+#' d <- data.frame(x= c(1:3))
+#' addConstantColumn(d, 'newCol', 'newVal')
+#'
 #' @export
 addConstantColumn <- function(d,
                               colName, val,
@@ -30,8 +33,8 @@ addConstantColumn <- function(d,
   if((length(val)!=1)||(is.list(val))) {
     stop("replyr::addConstantColumn val non-nul length 1 vector")
   }
-  sname <- replyr_dataServiceName(d)
-  useCharCast <- is.character(val) && (!("src_mysql" %in% sname))
+  isMySQL <- replyr_is_MySQL_data(d)
+  useCharCast <- is.character(val) && (!isMySQL)
   if(useCharCast) {
     let(list(REPLYRCOLNAME=colName),
         dm <- dplyr::mutate(d, REPLYRCOLNAME=as.character(val))

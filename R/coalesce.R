@@ -51,8 +51,6 @@ replyr_coalesce <- function(data, support,
   if(length(list(...))>0) {
     stop("replyr::replyr_coalesce unexpected arugments")
   }
-  sname <- replyr_dataServiceName(data)
-  sname <- replyr_dataServiceName(support)
   dataCols <- colnames(data)
   joinCols <- colnames(support)
   if(length(joinCols)<=0) {

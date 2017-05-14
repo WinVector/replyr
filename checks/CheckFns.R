@@ -85,9 +85,13 @@ remoteCopy <- function(my_db) {
 runExample <- function(copyToRemote) {
   force(copyToRemote)
   d1 <- copyToRemote(data.frame(x=c(1,2),y=c('a','b')),'d1')
+
   print(class(d1))
-  print(replyr::replyr_dataServiceName(d1))
+  print(class(replyr::replyr_get_src(d1)))
   print(d1)
+  print(paste('local:', replyr::replyr_is_local_data(d1)))
+  print(paste('MySQL:', replyr::replyr_is_MySQL_data(d1)))
+  print(paste('Spark:', replyr::replyr_is_Spark_data(d1)))
 
   cat('\nd1 %>% replyr::replyr_colClasses() \n')
   print(d1 %>% replyr::replyr_colClasses())

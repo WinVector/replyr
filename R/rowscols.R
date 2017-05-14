@@ -76,7 +76,8 @@ replyr_moveValuesToRows <- function(data,
     stop('replyr_moveValuesToRows nameForNewValueColumn must not be a data column name')
   }
   useAsChar <- TRUE
-  if(length(intersect(c("src_mysql"),replyr_dataServiceName(data)))>0) {
+  isMySQL <- replyr_is_MySQL_data(data)
+  if(isMySQL) {
     useAsChar <- FALSE
   }
   dcols <- setdiff(cnames,columnsToTakeFrom)
@@ -204,7 +205,8 @@ replyr_moveValuesToColumns <- function(data,
     stop('replyr_moveValuesToColumns columnToTakeValuesFrom must be a data column name')
   }
   useAsChar <- TRUE
-  if(length(intersect(c("src_mysql"),replyr_dataServiceName(data)))>0) {
+  isMySQL <- replyr_is_MySQL_data(data)
+  if(isMySQL) {
     useAsChar <- FALSE
   }
   data %>%

@@ -12,16 +12,14 @@
 #'
 #' @export
 replyr_add_ids <- function(df, idColName) {
-  src <- replyr_get_src(df)
-  if(is.null((src))) {
+  if(replyr_is_local_data(df)) {
     # some source of local frame
     df[[idColName]] <- seq_len(nrow(df))
-    df
+    return(df)
   }
-  # Spark try
-  if(any(c("spark_connection", "spark_shell_connection") %in% class(src))) {
+  if(replyr_is_Spark_data(df)) {
     if(requireNamespace('sparklyr', quietly = TRUE)) {
-      sparklyr::sdf_with_unique_id(df, id = idColName)
+      return(sparklyr::sdf_with_unique_id(df, id = idColName))
     }
   }
   # SQL-style try
