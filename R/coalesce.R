@@ -86,12 +86,12 @@ replyr_coalesce <- function(data, support,
         replyr_private_name_additions <-
           addConstantColumn(replyr_private_name_additions,
                             ci, fills[[ci]],
-                            tempNameGenerator)
+                            tempNameGenerator=tempNameGenerator)
       } else {
         replyr_private_name_additions <-
           addConstantColumn(replyr_private_name_additions,
                             ci, NA,
-                            tempNameGenerator)
+                            tempNameGenerator=tempNameGenerator)
       }
       # force calculation as chaning of replyr_private_name_vi was chaning previously assigned columns!
       # needed to work around this: https://github.com/WinVector/replyr/blob/master/issues/TrailingRefIssue.md
