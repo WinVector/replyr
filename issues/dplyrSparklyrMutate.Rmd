@@ -15,7 +15,7 @@ output:
 library("sparklyr")
 library("dplyr")
 library("nycflights13")
-sc <- spark_connect(version='2.0.0', master = "local")
+sc <- spark_connect(version='2.0.2', master = "local")
 flts <- dplyr::copy_to(sc, flights)
 flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
 # used to fail 

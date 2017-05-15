@@ -22,7 +22,7 @@ library("dplyr")
 
 ``` r
 library("nycflights13")
-sc <- spark_connect(version='2.0.0', master = "local")
+sc <- spark_connect(version='2.0.2', master = "local")
 flts <- dplyr::copy_to(sc, flights)
 flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
 ```
@@ -30,17 +30,18 @@ flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
     ## Source:   query [3.368e+05 x 20]
     ## Database: spark connection master=local[4] app=sparklyr local=TRUE
     ## 
+    ## # A tibble: 3.368e+05 x 20
     ##     year month   day dep_time sched_dep_time dep_delay arr_time
     ##    <int> <int> <int>    <int>          <int>     <dbl>    <int>
-    ## 1   2013     1     1      517            515         2      830
-    ## 2   2013     1     1      533            529         4      850
-    ## 3   2013     1     1      542            540         2      923
-    ## 4   2013     1     1      544            545        -1     1004
-    ## 5   2013     1     1      554            600        -6      812
-    ## 6   2013     1     1      554            558        -4      740
-    ## 7   2013     1     1      555            600        -5      913
-    ## 8   2013     1     1      557            600        -3      709
-    ## 9   2013     1     1      557            600        -3      838
+    ##  1  2013     1     1      517            515         2      830
+    ##  2  2013     1     1      533            529         4      850
+    ##  3  2013     1     1      542            540         2      923
+    ##  4  2013     1     1      544            545        -1     1004
+    ##  5  2013     1     1      554            600        -6      812
+    ##  6  2013     1     1      554            558        -4      740
+    ##  7  2013     1     1      555            600        -5      913
+    ##  8  2013     1     1      557            600        -3      709
+    ##  9  2013     1     1      557            600        -3      838
     ## 10  2013     1     1      558            600        -2      753
     ## # ... with 3.368e+05 more rows, and 13 more variables:
     ## #   sched_arr_time <int>, arr_delay <dbl>, carrier <chr>, flight <int>,
@@ -58,7 +59,7 @@ flts %>% mutate(zzz=1)  # works with dev version of Sparklyr
 packageVersion("sparklyr")
 ```
 
-    ## [1] '0.5.3'
+    ## [1] '0.5.4'
 
 ``` r
 packageVersion("dplyr")
@@ -78,8 +79,8 @@ gc()
 ```
 
     ##           used (Mb) gc trigger  (Mb) max used  (Mb)
-    ## Ncells  515197 27.6    1770749  94.6  1770749  94.6
-    ## Vcells 6207754 47.4   18828670 143.7 18790944 143.4
+    ## Ncells  663972 35.5    1770749  94.6  1770749  94.6
+    ## Vcells 6650547 50.8   19425893 148.3 19376030 147.9
 
 Can only use dev/dev or CRAN/CRAN (can't seem to mix) right now:
 

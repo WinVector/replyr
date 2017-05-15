@@ -7,7 +7,7 @@ output:
 `NA` issue while using `sparklyr`, `Spark2`, and `dplyr`.  It also looks like several places
 `NA` and `""` are confused and reversed.
 
-It thank `NA`'s can be represented in Spark2, they are definitely behaving
+I think `NA`'s can be represented in Spark2, they are definitely behaving
 as something different than a blank string.  They are also erroring-out.
 
 <!-- Generated from .Rmd. Please edit that file -->
