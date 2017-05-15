@@ -8,7 +8,7 @@ output:
 
 ## Duplicate columns not allowed in join
 
-Instead of adding suffixes join fails with duplicate column message.  I think this depends on the version of dplyr used.  Seeing the failure with the dev-version of dplyr '0.5.0.9004' as of 5-14-2017.
+Instead of adding suffixes join fails with duplicate column message.  I think this depends on the version of dplyr used.  Seeing the failure with the dev-version of dplyr '0.5.0.9004' as of 5-14-2017.  Confirmed it works properly for dplyr 0.5.0.
 
 Submitted as [`Sparklyr` issue 677](https://github.com/rstudio/sparklyr/issues/677) and [`dplyr` issue 2774](https://github.com/tidyverse/dplyr/issues/2774).
 
