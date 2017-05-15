@@ -1,0 +1,42 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+## MySQL fails on self-join
+
+
+Submitted as [`dplyr` issue 2777](https://github.com/tidyverse/dplyr/issues/2777).
+
+```{r setup}
+# devtools::install_github("tidyverse/dplyr")
+# devtools::install_github('tidyverse/dbplyr')
+if(requireNamespace("dbplyr", quietly = TRUE)) {
+  packageVersion("dbplyr")
+}
+packageVersion("RMySQL")
+packageVersion("dplyr")
+R.Version()$version.string
+```
+
+```{r example, error=TRUE}
+suppressPackageStartupMessages(library('dplyr'))
+sc <- src_mysql('mysql', '127.0.0.1', 3306,
+                'root', '')
+d <- copy_to(sc, data.frame(x=1:3), 'd')
+
+# copy
+d2 <- d %>% 
+  filter(TRUE) %>% 
+  compute()
+
+# works
+left_join(d, d2, by='x')
+
+# throws
+left_join(d, d, by='x')
+```
+
