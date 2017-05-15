@@ -8,7 +8,7 @@ output:
 
 ## Sparklyr rename fails with dev version of dplyr
 
-Renaim fails in Sparklyr, think it depends on verison of dplyr.  Definitely seeing it in the dev version of dplyr as of 5-14-2017.
+Rename fails in Sparklyr, think it depends on verison of dplyr.  Definitely seeing it in the dev version of dplyr as of 5-14-2017.  Confirmed it works properly for dplyr 0.5.0.
 
 Submitted as [`Sparklyr` issue 678](https://github.com/rstudio/sparklyr/issues/678) and [`dplyr` issue 2776](https://github.com/tidyverse/dplyr/issues/2776).
 
