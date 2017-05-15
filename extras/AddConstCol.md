@@ -22,7 +22,7 @@ Let's first start up an `R` instance.
 base::date()
 ```
 
-    ## [1] "Sun May 14 16:36:22 2017"
+    ## [1] "Sun May 14 23:56:03 2017"
 
 ``` r
 suppressPackageStartupMessages(library("dplyr"))
@@ -287,7 +287,7 @@ It has multiple problems. The first is `MySQL` (at least through the `dplyr`) ad
 sc <- dplyr::src_mysql('mysql', 
                        '127.0.0.1', 
                        3306, 
-                       'root', 'passwd')
+                       'root', '')
 d <- copy_to(sc, dLocal, 'd')
 
 # call our function on table
@@ -296,7 +296,7 @@ print(dR)
 ```
 
     ## Source:   query [?? x 3]
-    ## Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+    ## Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
     ## 
     ## # A tibble: ?? x 3
     ##       x origCol newCol
@@ -310,7 +310,7 @@ fJoin(dR, dR)
 ```
 
     ## Source:   query [?? x 6]
-    ## Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+    ## Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
 
     ## Error in .local(conn, statement, ...): could not run statement: Can't reopen table: 'd'
 
@@ -328,7 +328,7 @@ fJoin(dR, dR2)
 ```
 
     ## Source:   query [?? x 6]
-    ## Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+    ## Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
     ## 
     ## # A tibble: ?? x 6
     ##     x.x origCol.x newCol.x   x.y origCol.y newCol.y
@@ -345,10 +345,10 @@ print(dRC)
 ```
 
     ## Source:   query [?? x 3]
-    ## Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+    ## Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
 
-    ## Error in .local(conn, statement, ...): could not run statement: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TEXT) AS `newCol`
-    ## FROM `d`) `pjipgfrpzb`
+    ## Error in .local(conn, statement, ...): could not run statement: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'TEXT) AS `newCol`
+    ## FROM `d`) `tlmsrcjfze`
     ## LIMIT 10' at line 2
 
 We could say "don't use `MySQL`", but many clients have significant data in `MySQL` databases and `dplyr 0.5.0` explicitly mentions `MySQL` as an important target (at least as of 2016-06-23):
@@ -371,7 +371,7 @@ fJoin(dR, dR2)
 ```
 
     ## Source:   query [?? x 6]
-    ## Database: mysql 5.6.34 [root@127.0.0.1:/mysql]
+    ## Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
     ## 
     ## # A tibble: ?? x 6
     ##     x.x origCol.x newCol.x   x.y origCol.y newCol.y
@@ -383,9 +383,9 @@ The idea is unlike `f()` and `fCast()` the function `replyr::addConstantColumn()
 
 #### `Spark`
 
-An inceasingly important system is `Spark`
+`Spark` is becoming a very important system for `R` users due to its ability to work at scale and be scripted throught the `SparkR` or `SparklyR` interfaces.
 
-Spark 2.0.2 example.
+Notice in this `Spark 2.0.2` example we can use the same code as the original example (we are only using `replyr::addConstantColumn()` as a choice).
 
 ``` r
 sc <- sparklyr::spark_connect(version= '2.0.2', 

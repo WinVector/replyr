@@ -187,7 +187,7 @@ It has multiple problems.  The first is `MySQL` (at least through the `dplyr`) a
 sc <- dplyr::src_mysql('mysql', 
                        '127.0.0.1', 
                        3306, 
-                       'root', 'passwd')
+                       'root', '')
 d <- copy_to(sc, dLocal, 'd')
 
 # call our function on table
@@ -249,9 +249,9 @@ rm(list=c('sc', 'd', 'dR', 'dR2', 'dRC')); gc(verbose = FALSE)
 
 #### `Spark`
 
-An inceasingly important system is `Spark`
+`Spark` is becoming a very important system for `R` users due to its ability to work at scale and be scripted throught the `SparkR` or `SparklyR` interfaces.
 
-Spark 2.0.2 example.
+Notice in this `Spark 2.0.2` example we can use the same code as the original example (we are only using `replyr::addConstantColumn()` as a choice).
 
 ```{r Sparkexample}
 sc <- sparklyr::spark_connect(version= '2.0.2', 
