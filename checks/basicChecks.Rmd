@@ -73,7 +73,7 @@ MySQL example ("docker start mysql").  Kind of poor as at least the adapted MySq
 has a hard time with `NA`.
 
 ```{r MySQLexample}
-my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','passwd')
+my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
 

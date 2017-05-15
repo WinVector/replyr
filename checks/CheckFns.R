@@ -23,6 +23,7 @@ sameData <- function(df1, df2,
   if(is.null(keySet)) {
     keySet = c1
   }
+  # sorting this way can fail with NA/NaN differences and so on
   ds1COMPOSITEKEY <- do.call(paste,df1[, keySet, drop=FALSE])
   ds2COMPOSITEKEY <- do.call(paste,df2[, keySet, drop=FALSE])
   ds1 <- df1[order(ds1COMPOSITEKEY), , drop=FALSE]
@@ -84,7 +85,11 @@ remoteCopy <- function(my_db) {
 
 runExample <- function(copyToRemote) {
   force(copyToRemote)
-  d1 <- copyToRemote(data.frame(x=c(1,2),y=c('a','b')),'d1')
+  d1 <- copyToRemote(data.frame(x=c(1,2),
+                                y=c('a','b'),
+                                z=c(TRUE,FALSE),
+                                a=c(NA,NA)),
+                     'd1')
 
   print(class(d1))
   print(class(replyr::replyr_get_src(d1)))
@@ -92,6 +97,7 @@ runExample <- function(copyToRemote) {
   print(paste('local:', replyr::replyr_is_local_data(d1)))
   print(paste('MySQL:', replyr::replyr_is_MySQL_data(d1)))
   print(paste('Spark:', replyr::replyr_is_Spark_data(d1)))
+  print(replyr::replyr_summary(d1))
 
   cat('\nd1 %>% replyr::replyr_colClasses() \n')
   print(d1 %>% replyr::replyr_colClasses())
@@ -104,9 +110,6 @@ runExample <- function(copyToRemote) {
 
   cat('\nd1 %>% replyr::replyr_nrow() \n')
   print(d1 %>% replyr::replyr_nrow())
-
-  cat('\nd1 %>% replyr::replyr_str() \n')
-  print(d1 %>% replyr::replyr_str())
 
   # mysql crashes on copyToRemote with NA values in string constants
   # https://github.com/hadley/dplyr/issues/2259

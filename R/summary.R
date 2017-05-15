@@ -101,7 +101,8 @@ replyr_summary <- function(x,
                        let(alias=list(WCOL=ci),
                            expr={
                              x %>% dplyr::select(WCOL) %>%
-                               dplyr::filter(!is.na(WCOL)) -> xsub
+                               dplyr::filter(!is.na(WCOL)) %>%
+                               dplyr::mutate(WCOL= ifelse(WCOL,1,0)) -> xsub
                            })
                        ngood <- replyr_nrow(xsub)
                        xsub %>% dplyr::summarise_each(dplyr::funs(min = min,
