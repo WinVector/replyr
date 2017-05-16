@@ -7,9 +7,7 @@
 #' @importFrom utils capture.output head
 NULL
 
-localFrame <- function(d) {
-  all(class(d) %in% c("tbl_df","tbl","data.frame"))
-}
+
 
 #' Compute usable summary of columns of tbl.
 #'
@@ -18,13 +16,17 @@ localFrame <- function(d) {
 #' @param countUniqueNum logical, if true include unique non-NA counts for numeric cols.
 #' @param countUniqueNonNum logical, if true include unique non-NA counts for non-numeric cols.
 #' @param cols if not NULL set of columns to restrict to.
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return summary of columns.
 #'
 #' @examples
 #'
-#' d <- data.frame(x=c(NA,2,3),y=factor(c(3,5,NA)),z=c('a',NA,'z'),
+#' d <- data.frame(p= c(TRUE, FALSE, NA),
+#'                 w= 1:3,
+#'                 x=c(NA,2,3),
+#'                 y=factor(c(3,5,NA)),
+#'                 z=c('a',NA,'z'),
 #'                 stringsAsFactors=FALSE)
+#' d$q <- list(1,2,3)
 #' replyr_summary(d)
 #'
 #' @export
@@ -32,24 +34,32 @@ replyr_summary <- function(x,
                            ...,
                            countUniqueNum= FALSE,
                            countUniqueNonNum= FALSE,
-                           cols= NULL,
-                           tempNameGenerator= makeTempNameGenerator("replyr_summary")) {
+                           cols= NULL) {
   if(length(list(...))>0) {
     stop("replyr::replyr_summary unexpected arguments")
   }
-  nrows <- replyr_nrow(x)
+  localSample <- x %>%
+    head() %>%
+    collect() %>%
+    as.data.frame()
   cnames <- colnames(x)
   if(!is.null(cols)) {
     cnames <- intersect(cnames, cols)
   }
+  nrows <- 0
+  if(nrow(localSample)>0) {
+    nrows <- nrow(x)
+  }
   cmap <- seq_len(length(cnames))
   names(cmap) <- cnames
-  numericCols <- cnames[replyr_testCols(x, is.numeric)]
-  logicalCols <- cnames[replyr_testCols(x, is.logical)]
-  listCols <-  cnames[replyr_testCols(x, is.list)]
-  otherCols <- setdiff(cnames, c(numericCols, logicalCols, listCols))
-  cclass <- replyr_colClasses(x)
-  names(cclass) <- cnames
+  numericCols <- cnames[vapply(localSample, is.numeric, logical(1))]
+  logicalCols <- cnames[vapply(localSample, is.logical, logical(1))]
+  charCols <- cnames[vapply(localSample,
+                            function(ci) { is.character(ci) || is.factor(ci) },
+                            logical(1))]
+  exoticCols <- setdiff(cnames, c(numericCols, logicalCols, charCols))
+  cclass <- lapply(localSample, class)
+  names(cclass) <- colnames(localSample)
   # from http://stackoverflow.com/questions/34594641/dplyr-summary-table-for-multiple-variables
   # but the values as columns are not convenient.
   # see also http://stackoverflow.com/questions/26492280/non-standard-evaluation-nse-in-dplyrs-filter-pulling-data-from-mysql
@@ -137,11 +147,11 @@ replyr_summary <- function(x,
                                          stringsAsFactors = FALSE)
                        si
                      })
-   listSums <- lapply(listCols,
+   exoticSums <- lapply(exoticCols,
                      function(ci) {
                        si <-  data.frame(column=ci,
                                          index=0,
-                                         class='list',
+                                         class='',
                                          nrows = nrows,
                                          nna = NA,
                                          nunique = NA,
@@ -154,7 +164,7 @@ replyr_summary <- function(x,
                                          stringsAsFactors = FALSE)
                        si
                      })
-   oSums <- lapply(otherCols,
+   charSums <- lapply(charCols,
                     function(ci) {
                       WCOL <- NULL # declare this is not a free binding
                       let(alias=list(WCOL=ci),
@@ -163,7 +173,7 @@ replyr_summary <- function(x,
                               dplyr::filter(!is.na(WCOL)) -> xsub
                           })
                       ngood <- replyr_nrow(xsub)
-                      # min/max don't work local data.frames for factors, but do for strings.
+                      # min/max don't work on local data.frames for factors, but do for strings.
                       si <- data.frame(lexmin = NA_character_,
                                        lexmax = NA_character_,
                                        stringsAsFactors = FALSE)
@@ -180,10 +190,10 @@ replyr_summary <- function(x,
                         },
                         error = function(x) NULL
                       )
-                      if((!good)&&(localFrame(xsub))) {
+                      if((!good)&&(replyr_is_local_data(xsub))) {
                         suppressWarnings(
                           xsub %>%
-                            dplyr::collect() %>% as.data.frame() -> xsublocal
+                            as.data.frame() -> xsublocal
                         )
                         si <- data.frame(lexmin = min(as.character(xsublocal[[ci]])),
                                          lexmax = max(as.character(xsublocal[[ci]])),
@@ -209,8 +219,7 @@ replyr_summary <- function(x,
                       si
                     })
   })
-  res <- replyr_bind_rows(c(numSums, logSums, oSums, listSums),
-                          tempNameGenerator=tempNameGenerator)
+  res <- dplyr::bind_rows(c(numSums, logSums, charSums, exoticSums))
   res$index <- cmap[res$column]
   classtr <- lapply(cclass,function(vi) {
     paste(vi,collapse=', ')

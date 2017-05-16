@@ -5,7 +5,7 @@
 \title{Compute usable summary of columns of tbl.}
 \usage{
 replyr_summary(x, ..., countUniqueNum = FALSE, countUniqueNonNum = FALSE,
-  cols = NULL, tempNameGenerator = makeTempNameGenerator("replyr_summary"))
+  cols = NULL)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
@@ -17,8 +17,6 @@ replyr_summary(x, ..., countUniqueNum = FALSE, countUniqueNonNum = FALSE,
 \item{countUniqueNonNum}{logical, if true include unique non-NA counts for non-numeric cols.}
 
 \item{cols}{if not NULL set of columns to restrict to.}
-
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 summary of columns.
@@ -28,8 +26,13 @@ Compute usable summary of columns of tbl.
 }
 \examples{
 
-d <- data.frame(x=c(NA,2,3),y=factor(c(3,5,NA)),z=c('a',NA,'z'),
+d <- data.frame(p= c(TRUE, FALSE, NA),
+                w= 1:3,
+                x=c(NA,2,3),
+                y=factor(c(3,5,NA)),
+                z=c('a',NA,'z'),
                 stringsAsFactors=FALSE)
+d$q <- list(1,2,3)
 replyr_summary(d)
 
 }
