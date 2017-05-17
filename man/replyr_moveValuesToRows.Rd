@@ -5,7 +5,7 @@
 \title{Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
-  columnsToTakeFrom, ..., na.rm = FALSE,
+  columnsToTakeFrom, ..., na.rm = FALSE, nameForNewClassColumn = NULL,
   tempNameGenerator = makeTempNameGenerator("replyr_moveValuesToRows"))
 }
 \arguments{
@@ -20,6 +20,8 @@ replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
 \item{...}{force later columns to bind by name.}
 
 \item{na.rm}{logical if TRUE remove rows with NA in nameForNewValueColumn.}
+
+\item{nameForNewClassColumn}{optional name to land original cell classes to.}
 
 \item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
@@ -37,15 +39,17 @@ d <- data.frame(
   index = c(1, 2, 3),
   info = c('a', 'b', 'c'),
   meas1 = c('m1_1', 'm1_2', 'm1_3'),
-  meas2 = c('m2_1', 'm2_2', 'm2_3'),
+  meas2 = c(2.1, 2.2, 2.3),
   stringsAsFactors = FALSE)
 replyr_moveValuesToRows(d,
               nameForNewKeyColumn= 'meastype',
               nameForNewValueColumn= 'meas',
-              columnsToTakeFrom= c('meas1','meas2'))
+              columnsToTakeFrom= c('meas1','meas2'),
+              nameForNewClassColumn= 'origMeasurementClass')
 # cdata::moveValuesToRows(d,
-#               nameForNewKeyColumn= 'meastype',
-#               nameForNewValueColumn= 'meas',
-#               columnsToTakeFrom= c('meas1','meas2'))
+#                         nameForNewKeyColumn= 'meastype',
+#                         nameForNewValueColumn= 'meas',
+#                         columnsToTakeFrom= c('meas1','meas2'),
+#                         nameForNewClassColumn= 'origMeasurementClass')
 
 }

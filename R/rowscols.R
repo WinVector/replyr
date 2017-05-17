@@ -19,6 +19,7 @@ NULL
 #' @param columnsToTakeFrom character array names of columns to take values from.
 #' @param ... force later columns to bind by name.
 #' @param na.rm logical if TRUE remove rows with NA in nameForNewValueColumn.
+#' @param nameForNewClassColumn optional name to land original cell classes to.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return data item
 #'
@@ -28,16 +29,18 @@ NULL
 #'   index = c(1, 2, 3),
 #'   info = c('a', 'b', 'c'),
 #'   meas1 = c('m1_1', 'm1_2', 'm1_3'),
-#'   meas2 = c('m2_1', 'm2_2', 'm2_3'),
+#'   meas2 = c(2.1, 2.2, 2.3),
 #'   stringsAsFactors = FALSE)
 #' replyr_moveValuesToRows(d,
 #'               nameForNewKeyColumn= 'meastype',
 #'               nameForNewValueColumn= 'meas',
-#'               columnsToTakeFrom= c('meas1','meas2'))
+#'               columnsToTakeFrom= c('meas1','meas2'),
+#'               nameForNewClassColumn= 'origMeasurementClass')
 #' # cdata::moveValuesToRows(d,
-#' #               nameForNewKeyColumn= 'meastype',
-#' #               nameForNewValueColumn= 'meas',
-#' #               columnsToTakeFrom= c('meas1','meas2'))
+#' #                         nameForNewKeyColumn= 'meastype',
+#' #                         nameForNewValueColumn= 'meas',
+#' #                         columnsToTakeFrom= c('meas1','meas2'),
+#' #                         nameForNewClassColumn= 'origMeasurementClass')
 #'
 #' @export
 replyr_moveValuesToRows <- function(data,
@@ -46,6 +49,7 @@ replyr_moveValuesToRows <- function(data,
                                     columnsToTakeFrom,
                                     ...,
                                     na.rm= FALSE,
+                                    nameForNewClassColumn= NULL,
                                     tempNameGenerator= makeTempNameGenerator("replyr_moveValuesToRows")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_moveValuesToRows unexpected arguments")
@@ -64,6 +68,11 @@ replyr_moveValuesToRows <- function(data,
   if(nameForNewKeyColumn==nameForNewValueColumn) {
     stop('replyr_moveValuesToRows nameForNewValueColumn must not equal nameForNewKeyColumn')
   }
+  if(length(nameForNewClassColumn)!=0) {
+    if((length(nameForNewClassColumn)!=1) || (!is.character(nameForNewClassColumn))) {
+      stop("replyr::replyr_moveValuesToRows nameForNewClassColumn must be length 1 character")
+    }
+  }
   data <- dplyr::ungroup(data)
   cnames <- colnames(data)
   if(!all(columnsToTakeFrom %in% cnames)) {
@@ -80,6 +89,15 @@ replyr_moveValuesToRows <- function(data,
   if(isMySQL) {
     useAsChar <- FALSE
   }
+  localSample <- data %>%
+    head() %>%
+    collect() %>%
+    as.data.frame()
+  classMap <- data.frame(colName= colnames(localSample),
+                         className = vapply(localSample, class, character(1)),
+                         stringsAsFactors = FALSE)
+  heterogeniousValues <- length(unique(classMap$className[classMap$colName %in% columnsToTakeFrom]))>1
+  colnames(classMap) <- c(nameForNewKeyColumn, nameForNewClassColumn)
   dcols <- setdiff(cnames,columnsToTakeFrom)
   rlist <- lapply(columnsToTakeFrom,
                   function(di) {
@@ -107,6 +125,12 @@ replyr_moveValuesToRows <- function(data,
                         dplyr::mutate(NEWCOL= OLDCOL) %>%
                         dplyr::select(dplyr::one_of(targetsB)) -> dtmp
                     )
+                    if(heterogeniousValues) {
+                      wrapr::let(
+                        c(NEWCOL=nameForNewValueColumn),
+                        dtmp %>% mutate(NEWCOL = as.character(NEWCOL)) -> dtmp
+                      )
+                    }
                     # worry about drifting ref issue
                     # See issues/TrailingRefIssue.Rmd
                     dtmp %>% dplyr::compute(name= tempNameGenerator()) -> dtmp
@@ -120,6 +144,12 @@ replyr_moveValuesToRows <- function(data,
       c(NEWCOL=nameForNewValueColumn),
       res <- dplyr::filter(res, !is.na(NEWCOL))
     )
+  }
+  if(!is.null(nameForNewClassColumn)) {
+    if(!replyr_is_local_data(data)) {
+      classMap <- dplyr::copy_to(replyr_get_src(data), classMap, tempNameGenerator())
+    }
+    res <- dplyr::left_join(res, classMap, by=nameForNewKeyColumn)
   }
   res
 }

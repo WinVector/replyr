@@ -1,8 +1,10 @@
 
-'replyr' 0.3.02 2017-05-14
+'replyr' 0.3.02 2017-05-17
 
  * better detection of service.
  * prepare for dplyr 0.6*
+ * Add optional class annotation when moving values to rows.
+
  
 'replyr' 0.3.01 2017-05-13
 

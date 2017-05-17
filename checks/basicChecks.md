@@ -642,8 +642,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  706316 37.8    1168576 62.5  1168576 62.5
- #  Vcells 1352321 10.4    2552219 19.5  2552219 19.5
+ #  Ncells  707842 37.9    1168576 62.5  1168576 62.5
+ #  Vcells 1358752 10.4    2552219 19.5  2552216 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -941,8 +941,8 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  745497 39.9    1168576 62.5  1168576 62.5
- #  Vcells 1397595 10.7    2552219 19.5  2552219 19.5
+ #  Ncells  747020 39.9    1168576 62.5  1168576 62.5
+ #  Vcells 1404021 10.8    2552219 19.5  2552216 19.5
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -1184,10 +1184,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
- #  Auto-disconnecting postgres connection (2644, 0)
+ #  Auto-disconnecting postgres connection (6996, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  781071 41.8    1442291 77.1  1442291 77.1
- #  Vcells 1436109 11.0    2552219 19.5  2552219 19.5
+ #  Ncells  782597 41.8    1442291 77.1  1442291 77.1
+ #  Vcells 1442540 11.1    3142662 24.0  2809359 21.5
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -1449,8 +1449,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  826390 44.2    1442291 77.1  1442291 77.1
- #  Vcells 1501832 11.5    2552219 19.5  2552219 19.5
+ #  Ncells  827711 44.3    1442291 77.1  1442291 77.1
+ #  Vcells 1507179 11.5    3142662 24.0  2809359 21.5
 ```
 
 ``` r
@@ -1459,6 +1459,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  825162 44.1    1442291 77.1  1442291 77.1
- #  Vcells 1497212 11.5    2552219 19.5  2552219 19.5
+ #  Ncells  826670 44.2    1442291 77.1  1442291 77.1
+ #  Vcells 1503624 11.5    3142662 24.0  2809359 21.5
 ```
