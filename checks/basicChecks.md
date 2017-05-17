@@ -37,19 +37,27 @@ noopCopy <- function(df,name) {
 resBase <- runExample(noopCopy)
  #  [1] "data.frame"
  #  [1] "character"
- #    x y     z  a
- #  1 1 a  TRUE NA
- #  2 2 b FALSE NA
+ #        p w  x  y z
+ #  1  TRUE 1 NA  3 a
+ #  2 FALSE 2  2  5 b
+ #  3    NA 3  3 hi z
  #  [1] "local: TRUE"
  #  [1] "MySQL: FALSE"
  #  [1] "Spark: FALSE"
- #    column index   class nrows nna nunique min  max mean        sd lexmin lexmax
- #  1      x     1 numeric     2   0      NA   1    2  1.5 0.7071068   <NA>   <NA>
- #  2      y     2  factor     2   0      NA  NA   NA   NA        NA      a      b
- #  3      z     3 logical     2   0      NA   0    1  0.5 0.7071068   <NA>   <NA>
- #  4      a     4 logical     2   2      NA Inf -Inf  NaN        NA   <NA>   <NA>
+ #    column index     class nrows nna nunique min max mean        sd lexmin lexmax
+ #  1      p     1   logical     3   1      NA   0   1  0.5 0.7071068   <NA>   <NA>
+ #  2      w     2   integer     3   0      NA   1   3  2.0 1.0000000   <NA>   <NA>
+ #  3      x     3   numeric     3   1      NA   2   3  2.5 0.7071068   <NA>   <NA>
+ #  4      y     4    factor     3   0      NA  NA  NA   NA        NA      3     hi
+ #  5      z     5 character     3   0      NA  NA  NA   NA        NA      a      z
  #  
  #  d1 %>% replyr::replyr_colClasses() 
+ #  $p
+ #  [1] "logical"
+ #  
+ #  $w
+ #  [1] "integer"
+ #  
  #  $x
  #  [1] "numeric"
  #  
@@ -57,21 +65,18 @@ resBase <- runExample(noopCopy)
  #  [1] "factor"
  #  
  #  $z
- #  [1] "logical"
- #  
- #  $a
- #  [1] "logical"
+ #  [1] "character"
  #  
  #  
  #  d1 %>% replyr::replyr_testCols(is.numeric) 
- #      x     y     z     a 
- #   TRUE FALSE FALSE FALSE 
+ #      p     w     x     y     z 
+ #  FALSE  TRUE  TRUE FALSE FALSE 
  #  
  #  d1 %>% replyr::replyr_dim() 
- #  [1] 2 4
+ #  [1] 3 5
  #  
  #  d1 %>% replyr::replyr_nrow() 
- #  [1] 2
+ #  [1] 3
  #    x  y z
  #  1 1  3 a
  #  2 2  5 a
@@ -190,21 +195,29 @@ tblCopy <- function(df,name) {
 resTbl <- runExample(tblCopy)
  #  [1] "tbl_df"     "tbl"        "data.frame"
  #  [1] "character"
- #  # A tibble: 2 x 4
- #        x      y     z     a
- #    <dbl> <fctr> <lgl> <lgl>
- #  1     1      a  TRUE    NA
- #  2     2      b FALSE    NA
+ #  # A tibble: 3 x 5
+ #        p     w     x      y     z
+ #    <lgl> <int> <dbl> <fctr> <chr>
+ #  1  TRUE     1    NA      3     a
+ #  2 FALSE     2     2      5     b
+ #  3    NA     3     3     hi     z
  #  [1] "local: TRUE"
  #  [1] "MySQL: FALSE"
  #  [1] "Spark: FALSE"
- #    column index   class nrows nna nunique min  max mean        sd lexmin lexmax
- #  1      x     1 numeric     2   0      NA   1    2  1.5 0.7071068   <NA>   <NA>
- #  2      y     2  factor     2   0      NA  NA   NA   NA        NA      a      b
- #  3      z     3 logical     2   0      NA   0    1  0.5 0.7071068   <NA>   <NA>
- #  4      a     4 logical     2   2      NA Inf -Inf  NaN        NA   <NA>   <NA>
+ #    column index     class nrows nna nunique min max mean        sd lexmin lexmax
+ #  1      p     1   logical     3   1      NA   0   1  0.5 0.7071068   <NA>   <NA>
+ #  2      w     2   integer     3   0      NA   1   3  2.0 1.0000000   <NA>   <NA>
+ #  3      x     3   numeric     3   1      NA   2   3  2.5 0.7071068   <NA>   <NA>
+ #  4      y     4    factor     3   0      NA  NA  NA   NA        NA      3     hi
+ #  5      z     5 character     3   0      NA  NA  NA   NA        NA      a      z
  #  
  #  d1 %>% replyr::replyr_colClasses() 
+ #  $p
+ #  [1] "logical"
+ #  
+ #  $w
+ #  [1] "integer"
+ #  
  #  $x
  #  [1] "numeric"
  #  
@@ -212,21 +225,18 @@ resTbl <- runExample(tblCopy)
  #  [1] "factor"
  #  
  #  $z
- #  [1] "logical"
- #  
- #  $a
- #  [1] "logical"
+ #  [1] "character"
  #  
  #  
  #  d1 %>% replyr::replyr_testCols(is.numeric) 
- #      x     y     z     a 
- #   TRUE FALSE FALSE FALSE 
+ #      p     w     x     y     z 
+ #  FALSE  TRUE  TRUE FALSE FALSE 
  #  
  #  d1 %>% replyr::replyr_dim() 
- #  [1] 2 4
+ #  [1] 3 5
  #  
  #  d1 %>% replyr::replyr_nrow() 
- #  [1] 2
+ #  [1] 3
  #  # A tibble: 3 x 3
  #        x     y      z
  #    <dbl> <dbl> <fctr>
@@ -354,24 +364,32 @@ copyToRemote <- remoteCopy(my_db)
 resSQLite <- runExample(copyToRemote)
  #  [1] "tbl_sqlite" "tbl_sql"    "tbl_lazy"   "tbl"       
  #  [1] "src_sqlite" "src_sql"    "src"       
- #  Source:   query [?? x 4]
+ #  Source:   query [?? x 5]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
- #  # A tibble: ?? x 4
- #        x     y     z     a
- #    <dbl> <chr> <int> <int>
- #  1     1     a     1    NA
- #  2     2     b     0    NA
+ #  # A tibble: ?? x 5
+ #        p     w     x     y     z
+ #    <int> <int> <dbl> <chr> <chr>
+ #  1     1     1    NA     3     a
+ #  2     0     2     2     5     b
+ #  3    NA     3     3    hi     z
  #  [1] "local: FALSE"
  #  [1] "MySQL: FALSE"
  #  [1] "Spark: FALSE"
  #    column index     class nrows nna nunique min max mean        sd lexmin lexmax
- #  1      x     1   numeric    NA  NA      NA   1   2  1.5 0.7071068   <NA>   <NA>
- #  2      y     2 character    NA  NA      NA  NA  NA   NA        NA      a      b
- #  3      z     3   integer    NA  NA      NA   0   1  0.5 0.7071068   <NA>   <NA>
- #  4      a     4   integer    NA  NA      NA  NA  NA   NA        NA   <NA>   <NA>
+ #  1      p     1   integer    NA  NA      NA   0   1  0.5 0.7071068   <NA>   <NA>
+ #  2      w     2   integer    NA  NA      NA   1   3  2.0 1.0000000   <NA>   <NA>
+ #  3      x     3   numeric    NA  NA      NA   2   3  2.5 0.7071068   <NA>   <NA>
+ #  4      y     4 character    NA  NA      NA  NA  NA   NA        NA      3     hi
+ #  5      z     5 character    NA  NA      NA  NA  NA   NA        NA      a      z
  #  
  #  d1 %>% replyr::replyr_colClasses() 
+ #  $p
+ #  [1] "integer"
+ #  
+ #  $w
+ #  [1] "integer"
+ #  
  #  $x
  #  [1] "numeric"
  #  
@@ -379,21 +397,18 @@ resSQLite <- runExample(copyToRemote)
  #  [1] "character"
  #  
  #  $z
- #  [1] "integer"
- #  
- #  $a
- #  [1] "integer"
+ #  [1] "character"
  #  
  #  
  #  d1 %>% replyr::replyr_testCols(is.numeric) 
- #      x     y     z     a 
- #   TRUE FALSE  TRUE  TRUE 
+ #      p     w     x     y     z 
+ #   TRUE  TRUE  TRUE FALSE FALSE 
  #  
  #  d1 %>% replyr::replyr_dim() 
- #  [1] 2 4
+ #  [1] 3 5
  #  
  #  d1 %>% replyr::replyr_nrow() 
- #  [1] 2
+ #  [1] 3
  #  Source:   query [?? x 3]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
@@ -536,13 +551,15 @@ resSQLite <- runExample(copyToRemote)
  #  [1] "gapply"
  #  [1] "replyr_moveValuesToColumns"
  #  [1] "replyr_moveValuesToRows"
+failingFrameIndices(resBase, resSQLite)
+ #  integer(0)
 if(!listsOfSameData(resBase, resSQLite)) {
   stop("SQLite result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  706483 37.8    1168576 62.5  1168576 62.5
- #  Vcells 1352196 10.4    2552219 19.5  2552063 19.5
+ #  Ncells  707200 37.8    1168576 62.5  1168576 62.5
+ #  Vcells 1354479 10.4    2552219 19.5  2552217 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -556,24 +573,32 @@ copyToRemote <- remoteCopy(my_db)
 resMySQL <- runExample(copyToRemote)
  #  [1] "tbl_mysql" "tbl_sql"   "tbl_lazy"  "tbl"      
  #  [1] "src_mysql" "src_sql"   "src"      
- #  Source:   query [?? x 4]
+ #  Source:   query [?? x 5]
  #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
  #  
- #  # A tibble: ?? x 4
- #        x     y     z     a
- #    <dbl> <chr> <int> <int>
- #  1     1     a     0     0
- #  2     2     b     0     0
+ #  # A tibble: ?? x 5
+ #        p     w     x     y     z
+ #    <int> <int> <dbl> <chr> <chr>
+ #  1     0     1     0     3     a
+ #  2     0     2     2     5     b
+ #  3     0     3     3    hi     z
  #  [1] "local: FALSE"
  #  [1] "MySQL: TRUE"
  #  [1] "Spark: FALSE"
- #    column index     class nrows nna nunique min max mean        sd lexmin lexmax
- #  1      x     1   numeric    NA  NA      NA   1   2  1.5 0.7071068   <NA>   <NA>
- #  2      y     2 character    NA  NA      NA  NA  NA   NA        NA      a      b
- #  3      z     3   integer    NA  NA      NA   0   0  0.0 0.0000000   <NA>   <NA>
- #  4      a     4   integer    NA  NA      NA   0   0  0.0 0.0000000   <NA>   <NA>
+ #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
+ #  1      p     1   integer    NA  NA      NA   0   0 0.000000 0.000000   <NA>   <NA>
+ #  2      w     2   integer    NA  NA      NA   1   3 2.000000 1.000000   <NA>   <NA>
+ #  3      x     3   numeric    NA  NA      NA   0   3 1.666667 1.527525   <NA>   <NA>
+ #  4      y     4 character    NA  NA      NA  NA  NA       NA       NA      3     hi
+ #  5      z     5 character    NA  NA      NA  NA  NA       NA       NA      a      z
  #  
  #  d1 %>% replyr::replyr_colClasses() 
+ #  $p
+ #  [1] "integer"
+ #  
+ #  $w
+ #  [1] "integer"
+ #  
  #  $x
  #  [1] "numeric"
  #  
@@ -581,21 +606,18 @@ resMySQL <- runExample(copyToRemote)
  #  [1] "character"
  #  
  #  $z
- #  [1] "integer"
- #  
- #  $a
- #  [1] "integer"
+ #  [1] "character"
  #  
  #  
  #  d1 %>% replyr::replyr_testCols(is.numeric) 
- #      x     y     z     a 
- #   TRUE FALSE  TRUE  TRUE 
+ #      p     w     x     y     z 
+ #   TRUE  TRUE  TRUE FALSE FALSE 
  #  
  #  d1 %>% replyr::replyr_dim() 
- #  [1] 2 4
+ #  [1] 3 5
  #  
  #  d1 %>% replyr::replyr_nrow() 
- #  [1] 2
+ #  [1] 3
  #  Source:   query [?? x 3]
  #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
  #  
@@ -797,8 +819,8 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  745626 39.9    1168576 62.5  1168576 62.5
- #  Vcells 1397164 10.7    2552219 19.5  2552219 19.5
+ #  Ncells  746380 39.9    1168576 62.5  1168576 62.5
+ #  Vcells 1399610 10.7    2552219 19.5  2552217 19.5
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -811,24 +833,32 @@ copyToRemote <- remoteCopy(my_db)
 resPostgreSQL <- runExample(copyToRemote)
  #  [1] "tbl_postgres" "tbl_sql"      "tbl_lazy"     "tbl"         
  #  [1] "src_postgres" "src_sql"      "src"         
- #  Source:   query [?? x 4]
+ #  Source:   query [?? x 5]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
- #  # A tibble: ?? x 4
- #        x     y     z     a
- #    <dbl> <chr> <lgl> <lgl>
- #  1     1     a  TRUE    NA
- #  2     2     b FALSE    NA
+ #  # A tibble: ?? x 5
+ #        p     w     x     y     z
+ #    <lgl> <int> <dbl> <chr> <chr>
+ #  1  TRUE     1    NA     3     a
+ #  2 FALSE     2     2     5     b
+ #  3    NA     3     3    hi     z
  #  [1] "local: FALSE"
  #  [1] "MySQL: FALSE"
  #  [1] "Spark: FALSE"
  #    column index     class nrows nna nunique min max mean        sd lexmin lexmax
- #  1      x     1   numeric    NA  NA      NA   1   2  1.5 0.7071068   <NA>   <NA>
- #  2      y     2 character    NA  NA      NA  NA  NA   NA        NA      a      b
- #  3      z     3   logical    NA  NA      NA   0   1  0.5 0.7071068   <NA>   <NA>
- #  4      a     4   logical    NA  NA      NA  NA  NA   NA        NA   <NA>   <NA>
+ #  1      p     1   logical    NA  NA      NA   0   1  0.5 0.7071068   <NA>   <NA>
+ #  2      w     2   integer    NA  NA      NA   1   3  2.0 1.0000000   <NA>   <NA>
+ #  3      x     3   numeric    NA  NA      NA   2   3  2.5 0.7071068   <NA>   <NA>
+ #  4      y     4 character    NA  NA      NA  NA  NA   NA        NA      3     hi
+ #  5      z     5 character    NA  NA      NA  NA  NA   NA        NA      a      z
  #  
  #  d1 %>% replyr::replyr_colClasses() 
+ #  $p
+ #  [1] "logical"
+ #  
+ #  $w
+ #  [1] "integer"
+ #  
  #  $x
  #  [1] "numeric"
  #  
@@ -836,21 +866,18 @@ resPostgreSQL <- runExample(copyToRemote)
  #  [1] "character"
  #  
  #  $z
- #  [1] "logical"
- #  
- #  $a
- #  [1] "logical"
+ #  [1] "character"
  #  
  #  
  #  d1 %>% replyr::replyr_testCols(is.numeric) 
- #      x     y     z     a 
- #   TRUE FALSE FALSE FALSE 
+ #      p     w     x     y     z 
+ #  FALSE  TRUE  TRUE FALSE FALSE 
  #  
  #  d1 %>% replyr::replyr_dim() 
- #  [1] 2 4
+ #  [1] 3 5
  #  
  #  d1 %>% replyr::replyr_nrow() 
- #  [1] 2
+ #  [1] 3
  #  Source:   query [?? x 3]
  #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  
@@ -997,10 +1024,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
- #  Auto-disconnecting postgres connection (14493, 0)
+ #  Auto-disconnecting postgres connection (2168, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  781193 41.8    1442291 77.1  1442291 77.1
- #  Vcells 1435402 11.0    2552219 19.5  2552219 19.5
+ #  Ncells  781967 41.8    1442291 77.1  1168576 62.5
+ #  Vcells 1437992 11.0    2552219 19.5  2552219 19.5
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -1031,24 +1058,32 @@ copyToRemote <- remoteCopy(my_db)
 resSpark <- runExample(copyToRemote)
  #  [1] "tbl_spark" "tbl_sql"   "tbl_lazy"  "tbl"      
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"         
- #  Source:   query [2 x 4]
+ #  Source:   query [3 x 5]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
- #  # A tibble: 2 x 4
- #        x     y     z     a
- #    <dbl> <chr> <lgl> <lgl>
- #  1     1     a  TRUE FALSE
- #  2     2     b FALSE FALSE
+ #  # A tibble: 3 x 5
+ #        p     w     x     y     z
+ #    <lgl> <int> <dbl> <chr> <chr>
+ #  1  TRUE     1   NaN     3     a
+ #  2 FALSE     2     2     5     b
+ #  3 FALSE     3     3    hi     z
  #  [1] "local: FALSE"
  #  [1] "MySQL: FALSE"
  #  [1] "Spark: TRUE"
  #    column index     class nrows nna nunique min max mean        sd lexmin lexmax
- #  1      x     1   numeric     2   0      NA   1   2  1.5 0.7071068   <NA>   <NA>
- #  2      y     2 character     2   0      NA  NA  NA   NA        NA      a      b
- #  3      z     3   logical     2   0      NA   0   1  0.5 0.7071068   <NA>   <NA>
- #  4      a     4   logical     2   2      NA NaN NaN  NaN        NA   <NA>   <NA>
+ #  1      p     1   logical     3   1      NA   0   1  0.5 0.7071068   <NA>   <NA>
+ #  2      w     2   integer     3   0      NA   1   3  2.0 1.0000000   <NA>   <NA>
+ #  3      x     3   numeric     3   1      NA   2   3  2.5 0.7071068   <NA>   <NA>
+ #  4      y     4 character     3   0      NA  NA  NA   NA        NA      3     hi
+ #  5      z     5 character     3   0      NA  NA  NA   NA        NA      a      z
  #  
  #  d1 %>% replyr::replyr_colClasses() 
+ #  $p
+ #  [1] "logical"
+ #  
+ #  $w
+ #  [1] "integer"
+ #  
  #  $x
  #  [1] "numeric"
  #  
@@ -1056,21 +1091,18 @@ resSpark <- runExample(copyToRemote)
  #  [1] "character"
  #  
  #  $z
- #  [1] "logical"
- #  
- #  $a
- #  [1] "logical"
+ #  [1] "character"
  #  
  #  
  #  d1 %>% replyr::replyr_testCols(is.numeric) 
- #      x     y     z     a 
- #   TRUE FALSE FALSE FALSE 
+ #      p     w     x     y     z 
+ #  FALSE  TRUE  TRUE FALSE FALSE 
  #  
  #  d1 %>% replyr::replyr_dim() 
- #  [1] 2 4
+ #  [1] 3 5
  #  
  #  d1 %>% replyr::replyr_nrow() 
- #  [1] 2
+ #  [1] 3
  #  Source:   query [3 x 3]
  #  Database: spark connection master=local[4] app=sparklyr local=TRUE
  #  
@@ -1219,8 +1251,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  826390 44.2    1442291 77.1  1442291 77.1
- #  Vcells 1500647 11.5    2552219 19.5  2552219 19.5
+ #  Ncells  826999 44.2    1442291 77.1  1442291 77.1
+ #  Vcells 1502375 11.5    2552219 19.5  2552219 19.5
 ```
 
 ``` r
@@ -1229,6 +1261,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  825275 44.1    1442291 77.1  1442291 77.1
- #  Vcells 1496848 11.5    2552219 19.5  2552219 19.5
+ #  Ncells  825977 44.2    1442291 77.1  1442291 77.1
+ #  Vcells 1498908 11.5    2552219 19.5  2552219 19.5
 ```

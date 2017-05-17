@@ -85,11 +85,15 @@ remoteCopy <- function(my_db) {
 
 runExample <- function(copyToRemote) {
   force(copyToRemote)
-  d1 <- copyToRemote(data.frame(x=c(1,2),
-                                y=c('a','b'),
-                                z=c(TRUE,FALSE),
-                                a=c(NA,NA)),
-                     'd1')
+  dS <- data.frame(p= c(TRUE, FALSE, NA),
+                  # s = NA,
+                  w= 1:3,
+                  x=c(NA,2,3),
+                  y=factor(c(3,5,'hi')), # MySQL can't take a NA in this column
+                  z=c('a','b','z'),      # MySQL can't take a NA in this column
+                  stringsAsFactors=FALSE)
+  # dS$q <- list(1,2,3) # can't send lists to many remote data sources (even though some produce them)
+  d1 <- copyToRemote(dS, 'd1')
 
   print(class(d1))
   print(class(replyr::replyr_get_src(d1)))
@@ -97,7 +101,8 @@ runExample <- function(copyToRemote) {
   print(paste('local:', replyr::replyr_is_local_data(d1)))
   print(paste('MySQL:', replyr::replyr_is_MySQL_data(d1)))
   print(paste('Spark:', replyr::replyr_is_Spark_data(d1)))
-  print(replyr::replyr_summary(d1))
+  d1s <- replyr::replyr_summary(d1)
+  print(d1s)
 
   cat('\nd1 %>% replyr::replyr_colClasses() \n')
   print(d1 %>% replyr::replyr_colClasses())
@@ -245,7 +250,7 @@ runExample <- function(copyToRemote) {
                           index, meastype)
 
   # pack up results for comparison
-  resFrames <- list(d1,
+  resFrames <- list(d1s,
                     d2,
                     d2b,
                     d3,

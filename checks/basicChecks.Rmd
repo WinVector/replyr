@@ -63,6 +63,7 @@ my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resSQLite <- runExample(copyToRemote)
+failingFrameIndices(resBase, resSQLite)
 if(!listsOfSameData(resBase, resSQLite)) {
   stop("SQLite result differs")
 }
