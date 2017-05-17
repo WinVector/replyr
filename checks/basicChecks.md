@@ -181,9 +181,29 @@ resBase <- runExample(noopCopy)
  #  23 2010    NA    c
  #  24 2010     0    d
  #  [1] "split re-join"
+ #    year count name
+ #  1 2005     6    a
+ #  2 2007     1    b
+ #  3 2010    NA    c
  #  [1] "gapply"
+ #    cv group
+ #  1 20     1
+ #  2  8     2
  #  [1] "replyr_moveValuesToColumns"
+ #  # A tibble: 3 x 3
+ #    index meastype_meas1 meastype_meas2
+ #    <dbl>          <chr>          <chr>
+ #  1     1           m1_1           m2_1
+ #  2     2           m1_2           m2_2
+ #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
+ #    index info meastype meas
+ #  1     1    a    meas1 m1_1
+ #  2     1    a    meas2 m2_1
+ #  3     2    b    meas1 m1_2
+ #  4     2    b    meas2 m2_2
+ #  5     3    c    meas1 m1_3
+ #  6     3    c    meas2 m2_3
 ```
 
 Local `tbl` example.
@@ -346,9 +366,35 @@ resTbl <- runExample(tblCopy)
  #  10  2007     1     b
  #  # ... with 14 more rows
  #  [1] "split re-join"
+ #  # A tibble: 3 x 3
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010    NA     c
  #  [1] "gapply"
+ #  # A tibble: 2 x 2
+ #       cv group
+ #    <dbl> <dbl>
+ #  1    20     1
+ #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
+ #  # A tibble: 3 x 3
+ #    index meastype_meas1 meastype_meas2
+ #    <dbl>          <chr>          <chr>
+ #  1     1           m1_1           m2_1
+ #  2     2           m1_2           m2_2
+ #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
+ #  # A tibble: 6 x 4
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     1     a    meas2  m2_1
+ #  3     2     b    meas1  m1_2
+ #  4     2     b    meas2  m2_2
+ #  5     3     c    meas1  m1_3
+ #  6     3     c    meas2  m2_3
 if(!listsOfSameData(resBase, resTbl)) {
   stop("tbl result differs")
 }
@@ -548,9 +594,47 @@ resSQLite <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
+ #  Source:   query [?? x 3]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #  # A tibble: ?? x 3
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010    NA     c
  #  [1] "gapply"
+ #  Source:   query [?? x 2]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #  # A tibble: ?? x 2
+ #       cv group
+ #    <dbl> <dbl>
+ #  1    20     1
+ #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
+ #  Source:   query [?? x 3]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #  # A tibble: ?? x 3
+ #    index meastype_meas1 meastype_meas2
+ #    <dbl>          <chr>          <chr>
+ #  1     1           m1_1           m2_1
+ #  2     2           m1_2           m2_2
+ #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
+ #  Source:   query [?? x 4]
+ #  Database: sqlite 3.11.1 [:memory:]
+ #  
+ #  # A tibble: ?? x 4
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     1     a    meas2  m2_1
+ #  3     2     b    meas1  m1_2
+ #  4     2     b    meas2  m2_2
+ #  5     3     c    meas1  m1_3
+ #  6     3     c    meas2  m2_3
 failingFrameIndices(resBase, resSQLite)
  #  integer(0)
 if(!listsOfSameData(resBase, resSQLite)) {
@@ -558,8 +642,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  707200 37.8    1168576 62.5  1168576 62.5
- #  Vcells 1354479 10.4    2552219 19.5  2552217 19.5
+ #  Ncells  706316 37.8    1168576 62.5  1168576 62.5
+ #  Vcells 1352321 10.4    2552219 19.5  2552219 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -774,6 +858,15 @@ resMySQL <- runExample(copyToRemote)
  #  # ... with more rows
  #  [1] "split re-join"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  Source:   query [?? x 3]
+ #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  
+ #  # A tibble: ?? x 3
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2010     0     c
+ #  2  2007     1     b
+ #  3  2005     6     a
  #  [1] "gapply"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
 
@@ -786,9 +879,38 @@ resMySQL <- runExample(copyToRemote)
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
 
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  Source:   query [?? x 2]
+ #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  # A tibble: ?? x 2
+ #       cv group
+ #    <dbl> <dbl>
+ #  1     8     2
+ #  2    20     1
  #  [1] "replyr_moveValuesToColumns"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
+ #  Source:   query [?? x 3]
+ #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  
+ #  # A tibble: ?? x 3
+ #    index meastype_meas1 meastype_meas2
+ #    <dbl>          <chr>          <chr>
+ #  1     1           m1_1           m2_1
+ #  2     2           m1_2           m2_2
+ #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
+ #  Source:   query [?? x 4]
+ #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  
+ #  # A tibble: ?? x 4
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas2  m2_1
+ #  2     2     b    meas2  m2_2
+ #  3     3     c    meas2  m2_3
+ #  4     1     a    meas1  m1_1
+ #  5     2     b    meas1  m1_2
+ #  6     3     c    meas1  m1_3
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
 
 failures <- failingFrameIndices(resBase, resMySQL) 
@@ -819,8 +941,8 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  746380 39.9    1168576 62.5  1168576 62.5
- #  Vcells 1399610 10.7    2552219 19.5  2552217 19.5
+ #  Ncells  745497 39.9    1168576 62.5  1168576 62.5
+ #  Vcells 1397595 10.7    2552219 19.5  2552219 19.5
 ```
 
 PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
@@ -1017,17 +1139,55 @@ resPostgreSQL <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #  # A tibble: ?? x 3
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010    NA     c
  #  [1] "gapply"
+ #  Source:   query [?? x 2]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #  # A tibble: ?? x 2
+ #       cv group
+ #    <dbl> <dbl>
+ #  1    20     1
+ #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
+ #  Source:   query [?? x 3]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #  # A tibble: ?? x 3
+ #    index meastype_meas1 meastype_meas2
+ #    <dbl>          <chr>          <chr>
+ #  1     1           m1_1           m2_1
+ #  2     2           m1_2           m2_2
+ #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
+ #  Source:   query [?? x 4]
+ #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  
+ #  # A tibble: ?? x 4
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     1     a    meas2  m2_1
+ #  3     2     b    meas1  m1_2
+ #  4     2     b    meas2  m2_2
+ #  5     3     c    meas1  m1_3
+ #  6     3     c    meas2  m2_3
 if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
- #  Auto-disconnecting postgres connection (2168, 0)
+ #  Auto-disconnecting postgres connection (2644, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  781967 41.8    1442291 77.1  1168576 62.5
- #  Vcells 1437992 11.0    2552219 19.5  2552219 19.5
+ #  Ncells  781071 41.8    1442291 77.1  1442291 77.1
+ #  Vcells 1436109 11.0    2552219 19.5  2552219 19.5
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -1242,17 +1402,55 @@ resSpark <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with 14 more rows
  #  [1] "split re-join"
+ #  Source:   query [3 x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #  # A tibble: 3 x 3
+ #     year count  name
+ #    <dbl> <dbl> <chr>
+ #  1  2005     6     a
+ #  2  2007     1     b
+ #  3  2010   NaN     c
  #  [1] "gapply"
+ #  Source:   query [2 x 2]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #  # A tibble: 2 x 2
+ #       cv group
+ #    <dbl> <dbl>
+ #  1    20     1
+ #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
+ #  Source:   query [3 x 3]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #  # A tibble: 3 x 3
+ #    index meastype_meas1 meastype_meas2
+ #    <dbl>          <chr>          <chr>
+ #  1     1           m1_1           m2_1
+ #  2     2           m1_2           m2_2
+ #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
+ #  Source:   query [6 x 4]
+ #  Database: spark connection master=local[4] app=sparklyr local=TRUE
+ #  
+ #  # A tibble: 6 x 4
+ #    index  info meastype  meas
+ #    <dbl> <chr>    <chr> <chr>
+ #  1     1     a    meas1  m1_1
+ #  2     1     a    meas2  m2_1
+ #  3     2     b    meas1  m1_2
+ #  4     2     b    meas2  m2_2
+ #  5     3     c    meas1  m1_3
+ #  6     3     c    meas2  m2_3
 if(!listsOfSameData(resBase, resSpark)) {
   stop("Spark result differs")
 }
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  826999 44.2    1442291 77.1  1442291 77.1
- #  Vcells 1502375 11.5    2552219 19.5  2552219 19.5
+ #  Ncells  826390 44.2    1442291 77.1  1442291 77.1
+ #  Vcells 1501832 11.5    2552219 19.5  2552219 19.5
 ```
 
 ``` r
@@ -1261,6 +1459,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  825977 44.2    1442291 77.1  1442291 77.1
- #  Vcells 1498908 11.5    2552219 19.5  2552219 19.5
+ #  Ncells  825162 44.1    1442291 77.1  1442291 77.1
+ #  Vcells 1497212 11.5    2552219 19.5  2552219 19.5
 ```

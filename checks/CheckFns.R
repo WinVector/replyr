@@ -207,6 +207,7 @@ runExample <- function(copyToRemote) {
   print("split re-join")
   parts <- replyr::replyr_split(data, 'year', partitionMethod = "extract")
   recovered <- dplyr::arrange(replyr::replyr_bind_rows(parts), year)
+  print(recovered)
 
   print("gapply")
   dga <- copyToRemote(data.frame(group=c(1,1,2,2,2),
@@ -219,7 +220,7 @@ runExample <- function(copyToRemote) {
                                         partitionMethod='extract',
                                         restoreGroup=TRUE),
                          group)
-
+  print(dgar)
 
   print("replyr_moveValuesToColumns")
   dmvtc <- copyToRemote(data.frame(
@@ -234,6 +235,7 @@ runExample <- function(copyToRemote) {
                                        rowKeyColumns= 'index',
                                        sep= '_'),
                            index)
+  print(dmvtcr)
 
   print("replyr_moveValuesToRows")
   dmvtr <- copyToRemote(data.frame(
@@ -248,6 +250,7 @@ runExample <- function(copyToRemote) {
                           nameForNewValueColumn= 'meas',
                           columnsToTakeFrom= c('meas1','meas2')),
                           index, meastype)
+  print(dmvtrr)
 
   # pack up results for comparison
   resFrames <- list(d1s,
