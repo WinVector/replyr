@@ -1,16 +1,19 @@
-#' replyr: Fluid Use of Big Data in R
+#' replyr: Diligent Use of Big Data for R
 #'
-#' Methods to get a grip on working with remote data sources ('SQL' databases,
-#' sparklyr' 'Spark' 2.0.0 and above) through 'dplyr'.  Adds convenience functions to make such tasks more like
-#' working with an in-memory 'data.frame'.  Results do depend on which 'dplyr' data service you use.
+#' Methods to diligently use 'dplyr' remote data sources in R ('SQL' databases,
+#' 'Spark' 2.0.0 and above). REmote PLYing of big data for R.
+#' Adds convenience functions to make such tasks more like
+#' working with an in-memory R 'data.frame'.
+#' Results do depend on which 'dplyr' data service provider used.
 #'
 #' \code{replyr} helps with the following:
 #'
 #' \itemize{
+#' \item Summarize remote data (via \code{replyr_summarize}).
+#' \item Facilitate writing "source generic" code that works similarly on multiple 'dplyr' data sources.
+#' \item Provide big data versions of functions for splitting data, binding rows, pivoting, adding row-ids, ranking, and completing experimental designs.
 #' \item Package common data manipulation tasks into operators  such as the \code{\link{gapply}} function.
-#' \item Provide "remote data" (SQL, Spark) replacements for functions commonly used on in-memory data frames.
-#' \item Provide bug-fixes and work-arounds for various data services.
-#' \item Collect and document clever dplyr tricks.
+#' \item Provide support code for common Spark tasks, such as tracking temporary handle IDs.
 #' }
 #'
 #' To learn more about replyr, please start with the vignette:
