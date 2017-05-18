@@ -642,8 +642,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  707842 37.9    1168576 62.5  1168576 62.5
- #  Vcells 1358752 10.4    2552219 19.5  2552216 19.5
+ #  Ncells  708155 37.9    1168576 62.5  1168576 62.5
+ #  Vcells 1359554 10.4    2552219 19.5  2552219 19.5
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -658,7 +658,7 @@ resMySQL <- runExample(copyToRemote)
  #  [1] "tbl_mysql" "tbl_sql"   "tbl_lazy"  "tbl"      
  #  [1] "src_mysql" "src_sql"   "src"      
  #  Source:   query [?? x 5]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 5
  #        p     w     x     y     z
@@ -703,7 +703,7 @@ resMySQL <- runExample(copyToRemote)
  #  d1 %>% replyr::replyr_nrow() 
  #  [1] 3
  #  Source:   query [?? x 3]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 3
  #        x     y     z
@@ -722,7 +722,7 @@ resMySQL <- runExample(copyToRemote)
  #  2      y     2   numeric    NA  NA      NA   0   5 2.666667 2.516611   <NA>   <NA>
  #  3      z     3 character    NA  NA      NA  NA  NA       NA       NA      a      z
  #  Source:   query [?? x 3]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 3
  #        x     y     z
@@ -741,7 +741,7 @@ resMySQL <- runExample(copyToRemote)
  #  2      y     2   numeric    NA  NA      NA   0   5 2.666667 2.516611   <NA>   <NA>
  #  3      z     3 character    NA  NA      NA  NA  NA       NA       NA      a      z
  #  Source:   query [?? x 2]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 2
  #        x     y
@@ -756,7 +756,7 @@ resMySQL <- runExample(copyToRemote)
  #  
  #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
  #  Source:   query [?? x 2]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 2
  #        x     y
@@ -768,7 +768,7 @@ resMySQL <- runExample(copyToRemote)
  #  
  #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
  #  Source:   query [?? x 3]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 3
  #        x     y match
@@ -780,7 +780,7 @@ resMySQL <- runExample(copyToRemote)
  #  5     b     3     0
  #  6     b     4     0
  #  Source:   query [?? x 1]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 1
  #        x
@@ -792,7 +792,7 @@ resMySQL <- runExample(copyToRemote)
  #  
  #  d4 %>% replyr::replyr_uniqueValues("x") 
  #  Source:   query [?? x 2]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  # A tibble: ?? x 2
  #        x replyr_private_value_n
@@ -802,7 +802,7 @@ resMySQL <- runExample(copyToRemote)
  #  3     3                      2
  #  [1] "let example"
  #  Source:   query [?? x 4]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 4
  #    Sepal_Length Sepal_Width Species  rank
@@ -822,16 +822,16 @@ resMySQL <- runExample(copyToRemote)
 
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  Source:   query [?? x 3]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 3
  #     year count  name
  #    <dbl> <dbl> <chr>
- #  1  2006     0      
- #  2  2008     0      
- #  3  2009     0      
- #  4  2005     6     a
- #  5  2007     1     b
+ #  1  2005     6     a
+ #  2  2006     0      
+ #  3  2007     1     b
+ #  4  2008     0      
+ #  5  2009     0      
  #  6  2010     0     c
  #  [1] "coalesce example 2"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
@@ -840,33 +840,33 @@ resMySQL <- runExample(copyToRemote)
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 2 imported as numeric
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  Source:   query [?? x 3]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 3
  #      year count  name
  #     <dbl> <dbl> <chr>
- #   1  2006     0     a
- #   2  2007     0     a
- #   3  2008     0     a
- #   4  2009     0     a
- #   5  2010     0     a
- #   6  2005     0     b
- #   7  2006     0     b
- #   8  2008     0     b
- #   9  2009     0     b
- #  10  2010     0     b
+ #   1  2005     6     a
+ #   2  2005     0     b
+ #   3  2005     0     c
+ #   4  2005     0     d
+ #   5  2006     0     a
+ #   6  2006     0     b
+ #   7  2006     0     c
+ #   8  2006     0     d
+ #   9  2007     0     a
+ #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  Source:   query [?? x 3]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 3
  #     year count  name
  #    <dbl> <dbl> <chr>
- #  1  2010     0     c
+ #  1  2005     6     a
  #  2  2007     1     b
- #  3  2005     6     a
+ #  3  2010     0     c
  #  [1] "gapply"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
 
@@ -880,17 +880,17 @@ resMySQL <- runExample(copyToRemote)
 
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  Source:   query [?? x 2]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  # A tibble: ?? x 2
  #       cv group
  #    <dbl> <dbl>
- #  1     8     2
- #  2    20     1
+ #  1    20     1
+ #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
  #  Source:   query [?? x 3]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 3
  #    index meastype_meas1 meastype_meas2
@@ -900,17 +900,17 @@ resMySQL <- runExample(copyToRemote)
  #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
  #  Source:   query [?? x 4]
- #  Database: mysql 10.1.23-MariaDB [root@127.0.0.1:/mysql]
+ #  Database: mysql 5.7.18 [root@127.0.0.1:/mysql]
  #  
  #  # A tibble: ?? x 4
  #    index  info meastype  meas
  #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas2  m2_1
- #  2     2     b    meas2  m2_2
- #  3     3     c    meas2  m2_3
- #  4     1     a    meas1  m1_1
- #  5     2     b    meas1  m1_2
- #  6     3     c    meas1  m1_3
+ #  1     1     a    meas1  m1_1
+ #  2     1     a    meas2  m2_1
+ #  3     2     b    meas1  m1_2
+ #  4     2     b    meas2  m2_2
+ #  5     3     c    meas1  m1_3
+ #  6     3     c    meas2  m2_3
  #  Warning in .local(conn, statement, ...): Decimal MySQL column 1 imported as numeric
 
 failures <- failingFrameIndices(resBase, resMySQL) 
@@ -941,11 +941,11 @@ for(i in failures) {
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #  Auto-disconnecting mysql connection (0, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  747020 39.9    1168576 62.5  1168576 62.5
- #  Vcells 1404021 10.8    2552219 19.5  2552216 19.5
+ #  Ncells  747333 40.0    1168576 62.5  1168576 62.5
+ #  Vcells 1404807 10.8    2552219 19.5  2552219 19.5
 ```
 
-PostgreSQL example ("docker start pg"). Commented out for now as we are having trouble re-installing `RPostgreSQL`.
+PostgreSQL example ("docker start pg").
 
 ``` r
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
@@ -1184,10 +1184,10 @@ if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
- #  Auto-disconnecting postgres connection (6996, 0)
+ #  Auto-disconnecting postgres connection (71651, 0)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  782597 41.8    1442291 77.1  1442291 77.1
- #  Vcells 1442540 11.1    3142662 24.0  2809359 21.5
+ #  Ncells  782910 41.9    1442291 77.1  1442291 77.1
+ #  Vcells 1443326 11.1    3142662 24.0  2810073 21.5
 ```
 
 Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`. Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
@@ -1449,8 +1449,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  827711 44.3    1442291 77.1  1442291 77.1
- #  Vcells 1507179 11.5    3142662 24.0  2809359 21.5
+ #  Ncells  828261 44.3    1442291 77.1  1442291 77.1
+ #  Vcells 1508444 11.6    3142662 24.0  2810073 21.5
 ```
 
 ``` r
@@ -1459,6 +1459,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  826670 44.2    1442291 77.1  1442291 77.1
- #  Vcells 1503624 11.5    3142662 24.0  2809359 21.5
+ #  Ncells  827220 44.2    1442291 77.1  1442291 77.1
+ #  Vcells 1504889 11.5    3142662 24.0  2810073 21.5
 ```
