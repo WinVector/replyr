@@ -32,7 +32,7 @@ qsearch <- function(f,fLeft,fRight,ui) {
   }
 }
 
-#' Compute quantiles on remote column (NA's filtered out).
+#' Compute quantiles on remote column (NA's filtered out) using binary search.
 #'
 #' NA's filtered out and does not break ties the same as stats::quantile.
 #'

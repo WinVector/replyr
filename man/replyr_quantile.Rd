@@ -2,7 +2,7 @@
 % Please edit documentation in R/quantile.R
 \name{replyr_quantile}
 \alias{replyr_quantile}
-\title{Compute quantiles on remote column (NA's filtered out).}
+\title{Compute quantiles on remote column (NA's filtered out) using binary search.}
 \usage{
 replyr_quantile(x, cname, probs = seq(0, 1, 0.25), ...,
   tempNameGenerator = makeTempNameGenerator("replyr_quantile"))
