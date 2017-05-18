@@ -35,6 +35,8 @@ replyr_union_all <- function(tabA, tabB, ...,
   if(replyr_nrow(tabB)<1) {
     return(tabA)
   }
+  tabA <- dplyr::ungroup(tabA)
+  tabB <- dplyr::ungroup(tabB)
   if(is.null(cols)) {
     cols <- intersect(colnames(tabA), colnames(tabB))
   }
@@ -141,5 +143,6 @@ replyr_bind_rows <- function(lst,
   if(length(colnames)<=0) {
     return(NULL)
   }
+  lst <- lapply(lst, dplyr::ungroup)
   r_replyr_bind_rows(lst, colnames, tempNameGenerator)
 }

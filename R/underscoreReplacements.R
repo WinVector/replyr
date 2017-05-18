@@ -82,6 +82,7 @@ replyr_arrange <- function(.data, colname, descending = FALSE) {
 #' @export
 #'
 replyr_group_by <- function(.data, colname) {
+  .data <- dplyr::ungroup(.data) # make sure no other grouping
   REPLYR_PRIVATE_NEWNAME <- NULL # declare not an unbound name
   wrapr::let(
     c(REPLYR_PRIVATE_NEWNAME=colname),

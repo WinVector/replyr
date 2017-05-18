@@ -51,6 +51,7 @@ replyr_coalesce <- function(data, support,
   if(length(list(...))>0) {
     stop("replyr::replyr_coalesce unexpected arugments")
   }
+  data <- dplyr::ungroup(data)
   dataCols <- colnames(data)
   joinCols <- colnames(support)
   if(length(joinCols)<=0) {

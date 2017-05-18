@@ -100,7 +100,7 @@ replyr_quantile <- function(x,cname,
   }
   fLeft <- f(min(lims))
   fRight <- f(max(lims))
-  # could do more precise polishin by adpating below to polishQ
+  # could do more precise polishing by adpating below to polishQ
   #marks <- dplyr::bind_rows(lapply(probs*nrows,function(ti) qsearch(f,fLeft,fRight,ti)))
   r <- vapply(probs*nrows,
               function(ti) {

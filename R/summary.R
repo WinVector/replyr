@@ -39,6 +39,7 @@ replyr_summary <- function(x,
   if(length(list(...))>0) {
     stop("replyr::replyr_summary unexpected arguments")
   }
+  x <- dplyr::ungroup(x)
   localSample <- x %>%
     head() %>%
     collect() %>%

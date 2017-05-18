@@ -108,7 +108,6 @@ rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
 PostgreSQL example ("docker start pg").
-Commented out for now as we are having trouble re-installing `RPostgreSQL`.
 
 ```{r PostgreSQLexample}
 my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
