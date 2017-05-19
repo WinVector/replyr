@@ -8,10 +8,9 @@ output:
 
 ## `dplyr` and `sparklyr`
 
-Run CRAN version of `dplyr` and CRAN `sparklyr` as of 5-14-2017.
+Run DEV version of `dplyr` (appears to be CRAN release candidate) and DEV `sparklyr` as of 5-19-2017.
 
 ```{r CRANdplyr}
-# devtools::install_github("tidyverse/dplyr")
 # devtools::install_github('tidyverse/dbplyr')
 # devtools::install_github('rstudio/sparklyr')
 suppressPackageStartupMessages(library('dplyr'))

@@ -2,29 +2,33 @@
 `dplyr` and `sparklyr`
 ----------------------
 
-Run CRAN version of `dplyr` and CRAN `sparklyr` as of 5-14-2017.
+Run DEV version of `dplyr` (appears to be CRAN release candidate) and DEV `sparklyr` as of 5-19-2017.
 
 ``` r
-# devtools::install_github("tidyverse/dplyr")
 # devtools::install_github('tidyverse/dbplyr')
 # devtools::install_github('rstudio/sparklyr')
 suppressPackageStartupMessages(library('dplyr'))
 packageVersion("dplyr")
 ```
 
-    ## [1] '0.5.0'
+    ## [1] '0.6.0'
 
 ``` r
 library('sparklyr')
 packageVersion("sparklyr")
 ```
 
-    ## [1] '0.5.4'
+    ## [1] '0.5.4.9003'
 
 ``` r
 if(requireNamespace("dbplyr", quietly = TRUE)) {
   packageVersion("dbplyr")
 }
+```
+
+    ## [1] '0.0.0.9001'
+
+``` r
 R.Version()$version.string
 ```
 
@@ -34,7 +38,7 @@ R.Version()$version.string
 base::date()
 ```
 
-    ## [1] "Mon May 15 15:14:01 2017"
+    ## [1] "Fri May 19 13:04:39 2017"
 
 ``` r
 sc <- sparklyr::spark_connect(version='2.0.2', 
@@ -50,10 +54,8 @@ d2 <- copy_to(sc, data.frame(x=1:3, y=7:9), 'd2',
 left_join(d1, d2, by='x')
 ```
 
-    ## Source:   query [3 x 3]
-    ## Database: spark connection master=local[4] app=sparklyr local=TRUE
-    ## 
-    ## # A tibble: 3 x 3
+    ## # Source:   lazy query [?? x 3]
+    ## # Database: spark_connection
     ##       x   y.x   y.y
     ##   <int> <int> <int>
     ## 1     1     4     7
@@ -81,14 +83,7 @@ rename(dLocal, x2 = x, origCol2 = origCol)
 rename(d, x2 = x, origCol2 = origCol)
 ```
 
-    ## Source:   query [2 x 2]
-    ## Database: spark connection master=local[4] app=sparklyr local=TRUE
-    ## 
-    ## # A tibble: 2 x 2
-    ##      x2 origCol2
-    ##   <int>    <chr>
-    ## 1     1        a
-    ## 2     2        b
+    ## Error in names(select)[match(old_vars, vars)] <- new_vars: NAs are not allowed in subscripted assignments
 
 ``` r
 spark_disconnect(sc)
@@ -97,5 +92,5 @@ gc(verbose = FALSE)
 ```
 
     ##           used (Mb) gc trigger (Mb) max used (Mb)
-    ## Ncells  669821 35.8    1168576 62.5  1168576 62.5
-    ## Vcells 1163675  8.9    2060183 15.8  1395946 10.7
+    ## Ncells  710275 38.0    1168576 62.5  1168576 62.5
+    ## Vcells 1208556  9.3    2060183 15.8  1511861 11.6
