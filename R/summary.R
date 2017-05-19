@@ -2,7 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr %>% ungroup summarize transmute summarise_each funs
+#' @importFrom dplyr %>% ungroup summarize transmute summarise_all funs
 #' @importFrom stats sd
 #' @importFrom utils capture.output head
 NULL
@@ -75,7 +75,7 @@ replyr_summary <- function(x,
                               dplyr::filter(!is.na(WCOL)) -> xsub
                           })
                       ngood <- replyr_nrow(xsub)
-                      xsub %>% dplyr::summarise_each(dplyr::funs(min = min,
+                      xsub %>% dplyr::summarise_all(dplyr::funs(min = min,
                                             # q25 = quantile(., 0.25),  # MySQL can't do this
                                             # median = median,          # MySQL can't do this
                                             # q75 = quantile(., 0.75),  # MySQL can't do this
@@ -117,7 +117,7 @@ replyr_summary <- function(x,
                                dplyr::mutate(WCOL= ifelse(WCOL,1,0)) -> xsub
                            })
                        ngood <- replyr_nrow(xsub)
-                       xsub %>% dplyr::summarise_each(dplyr::funs(min = min,
+                       xsub %>% dplyr::summarise_all(dplyr::funs(min = min,
                                                                   # q25 = quantile(., 0.25),  # MySQL can't do this
                                                                   # median = median,          # MySQL can't do this
                                                                   # q75 = quantile(., 0.75),  # MySQL can't do this
@@ -182,7 +182,7 @@ replyr_summary <- function(x,
                       good <- FALSE
                       tryCatch(
                         {
-                        xsub %>% dplyr::summarise_each(dplyr::funs(lexmin = min,
+                        xsub %>% dplyr::summarise_all(dplyr::funs(lexmin = min,
                                                                    lexmax = max)) %>%
                             dplyr::collect() %>% as.data.frame() -> si;
                         si <- data.frame(lexmin = as.character(si$lexmin),
