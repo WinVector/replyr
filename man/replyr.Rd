@@ -8,7 +8,7 @@
 \description{
 Methods to diligently use 'dplyr' remote data sources in R ('SQL' databases,
 'Spark' 2.0.0 and above). REmote PLYing of big data for R.
-Adds convenience functions to make such tasks more like
+Adds convenience functions to make big data tasks more like
 working with an in-memory R 'data.frame'.
 Results do depend on which 'dplyr' data service provider used.
 }
@@ -16,11 +16,11 @@ Results do depend on which 'dplyr' data service provider used.
 \code{replyr} helps with the following:
 
 \itemize{
-\item Summarize remote data (via \code{replyr_summarize}).
-\item Facilitate writing "source generic" code that works similarly on multiple 'dplyr' data sources.
-\item Provide big data versions of functions for splitting data, binding rows, pivoting, adding row-ids, ranking, and completing experimental designs.
-\item Package common data manipulation tasks into operators  such as the \code{\link{gapply}} function.
-\item Provide support code for common Spark tasks, such as tracking temporary handle IDs.
+\item Summarizing remote data (via \code{replyr_summarize}).
+\item Facilitating writing "source generic" code that works similarly on multiple 'dplyr' data sources.
+\item Providing big data versions of functions for splitting data, binding rows, pivoting, adding row-ids, ranking, and completing experimental designs.
+\item Packaging common data manipulation tasks into operators  such as the \code{\link{gapply}} function.
+\item Providing support code for common \code{SparklyR} tasks, such as tracking temporary handle IDs.
 }
 
 To learn more about replyr, please start with the vignette:
