@@ -38,7 +38,7 @@ It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
-`replyr` uniformly uses standard or paremtric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
+`replyr` uniformly uses standard or parametric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
 
 Primary `replyr` services include:
 
@@ -121,7 +121,7 @@ assign('RankColumn',quote(rank),envir = env)
 # assign('RankColumn',as.name('rank'),envir = env)
 # assign('RankColumn',rank,envir = env)
 # assign('RankColumn','rank',envir = env)
-with(env,d %>% mutate(RankColumn=RankColumn-1))
+with(env, d %>% mutate(RankColumn=RankColumn-1))
 ```
 
 Whereas `wrapr::let` works and is succinct.
@@ -134,6 +134,39 @@ wrapr::let(
 ```
 
 `wrapr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
+
+## `replyr::replyr_apply_f_mapped`
+
+`wrapr::let` was only the secondary proposal in my original [2016 "Parametric variable names" article](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/).  What I really wanted was a stack of view so the data pretended to have names that matched the code (i.e., re-mapping the data, not the code).  
+
+With a bit of thought we can achieve this if we associate the data re-mapping with a function environment instead of with the data.  So a re-mapping is active as long as a given controlling function is in control.  In our case that function is `replyr::replyr_apply_f_mapped()` and works as follows:
+
+Suppose the operation we wish to use is a rank-reducing function that has been supplied as function from somewhere else that we do not have control of (such as a package).  The function could be simple such as the following, but we are going to assume we want to use it without alteration (including the without the small alteration of introducing `wrapr::let()`).
+
+```{r rankfn}
+# an external function with hard-coded column names
+DecreaseRankColumnByOne <- function(d) {
+  d$RankColumn <- d$RankColumn - 1
+  d
+}
+```
+
+To apply this function to `d` (which doesn't have the expected column names!) we use  `replyr::replyr_apply_f_mapped()` as follows:
+
+```{r replyrmapf}
+# map our data to expected column names so we can use function
+nmap <- c(GroupColumn='Species',
+          ValueColumn='Sepal_Length',
+          RankColumn='rank')
+print(nmap)
+
+dF <- replyr::replyr_apply_f_mapped(d, DecreaseRankColumnByOne, nmap,
+                                    restrictMapIn = FALSE, 
+                                    restrictMapOut = FALSE)
+print(dF)
+```
+
+`replyr::replyr_apply_f_mapped()` renames the columns to the names expected by `DecreaseRankColumnByOne` (the mapping specified in `nmap`), applies `DecreaseRankColumnByOne`, and then inverts the mapping before returning the value.
 
 
 ## `replyr::gapply`
@@ -188,10 +221,10 @@ This is a *very* new package with no guarantees or claims of fitness for purpose
 We will probably only ever cover:
 
  * Native `data.frame`s (and `tbl`/`tibble`)
- * `RMySQL`
+ * `sparklyr` (`Spark` 2.0.0 or greater)
  * `RPostgreSQL`
  * `SQLite`
- * `sparklyr` (`Spark` 2.0.0 or greater)
+ * `RMySQL` (limited support in some cases)
  
 
 ## Additional functions
@@ -203,7 +236,7 @@ library('dplyr')
 ```
 ```{r filter}
 values <- c(2)
-dRemote %>% replyr::replyr_filter('x',values)
+dRemote %>% replyr::replyr_filter('x', values)
 ```
 
 

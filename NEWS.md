@@ -1,9 +1,11 @@
 
-'replyr' 0.3.02 2017-05-17
+'replyr' 0.3.02 2017-05-20
 
- * better detection of service.
- * prepare for dplyr 0.6*
+ * Introduce replyr::replyr_apply_f_mapped.
+ * better detection of data service providers.
+ * Documentation corrections and improvements.
  * Add optional class annotation when moving values to rows.
+ * prepare for dplyr 0.6*
 
  
 'replyr' 0.3.01 2017-05-13

@@ -18,9 +18,14 @@
 #' @export
 #'
 replyr_rename <- function(.data, newName, oldName) {
-  REPLYR_PRIVATE_NEWNAME <- NULL # declare not an unbound name
-  REPLYR_PRIVATE_OLDNAME <- NULL # declare not an unbound name
+  newName <- as.character(newName)
+  oldName <- as.character(oldName)
+  if((length(newName)!=1)||(length(oldName)!=1)) {
+    stop("replyr::replyr_rename newName and oldName must be length 1 character vectors")
+  }
   if(newName!=oldName) {
+    REPLYR_PRIVATE_NEWNAME <- NULL # declare not an unbound name
+    REPLYR_PRIVATE_OLDNAME <- NULL # declare not an unbound name
     wrapr::let(
       c(REPLYR_PRIVATE_NEWNAME=newName,
         REPLYR_PRIVATE_OLDNAME=oldName),
