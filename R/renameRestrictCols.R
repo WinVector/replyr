@@ -69,13 +69,13 @@ replyr_mapRestrictCols <- function(x,nmap,
     nmap <- as.list(invmap)
   }
   if(length(unique(as.character(nmap)))!=length(nmap)) {
-    stop("replyr::replyr_mapRestrictCols duplicate destination columns in replyr_mapRestrictCols")
+    stop("replyr::replyr_mapRestrictCols duplicate source columns (nmap values) in replyr_mapRestrictCols")
   }
   if(length(unique(names(nmap)))!=length(nmap)) {
-    stop("replyr::replyr_mapRestrictCols duplicate source columns in replyr_mapRestrictCols")
+    stop("replyr::replyr_mapRestrictCols duplicate destination columns (nmap keys) in replyr_mapRestrictCols")
   }
   if(length(setdiff(as.character(nmap), colnames(x)))>0) {
-    stop("replyr::replyr_mapRestrictCols all nmap values must be column names of x")
+    stop("replyr::replyr_mapRestrictCols all source columns (nmap values) must be column names of x")
   }
   for(ni in names(nmap)) {
     if(is.null(ni)) {
@@ -106,9 +106,6 @@ replyr_mapRestrictCols <- function(x,nmap,
     ti <- as.character(ti)
     if(nchar(ti)<=0) {
       stop('replyr::replyr_mapRestrictCols nmap values must not be empty strings')
-    }
-    if(!isValidAndUnreservedName(ti)) {
-      stop(paste('replyr:replyr_mapRestrictCols nmap value not a valid name: "',ti,'"'))
     }
     if(ti!=ni) {
       if(ti %in% names(nmap)) {
