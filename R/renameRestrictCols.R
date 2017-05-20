@@ -222,7 +222,7 @@ replyr_apply_f_mapped <- function(d,
                                   nmap,
                                   ...,
                                   restrictMapIn = TRUE,
-                                  rmap = replyr_reverseMap(nmap),
+                                  rmap = replyr::replyr_reverseMap(nmap),
                                   restrictMapOut = TRUE) {
   dMapped <- replyr_mapRestrictCols(d, nmap,
                                     restrict = restrictMapIn)
