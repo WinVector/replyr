@@ -20,7 +20,9 @@ NULL
 #'
 #' @param x data item to work on
 #' @param nmap named list mapping desired column names to column names in x. Doesn't support permutations of names.
-#' @param reverse logical if true apply the inverse of nmap intead of nmap.
+#' @param ... force later arguments to bind by name
+#' @param restrict logical if TRUE restrict to columns mentioned in nmap.
+#' @param reverse logical if TRUE apply the inverse of nmap intead of nmap.
 #' @return data item with columns limited down to those named as nmap values, and re-named from their orignal names (nmap values) to desired names (nmap keys).
 #'
 #' @examples
@@ -53,18 +55,27 @@ NULL
 #' replyr_mapRestrictCols(dm, nmap, reverse=TRUE)
 #'
 #' @export
-replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
+replyr_mapRestrictCols <- function(x,nmap,
+                                   ...,
+                                   restrict= TRUE,
+                                   reverse= FALSE) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_mapRestrictCols unexpected argument")
+  }
   nmap <- as.list(nmap)
   if(reverse) {
     invmap <- names(nmap)
     names(invmap) <- as.character(nmap)
     nmap <- as.list(invmap)
   }
-  if(length(unique(nmap))!=length(nmap)) {
+  if(length(unique(as.character(nmap)))!=length(nmap)) {
     stop("replyr::replyr_mapRestrictCols duplicate destination columns in replyr_mapRestrictCols")
   }
   if(length(unique(names(nmap)))!=length(nmap)) {
     stop("replyr::replyr_mapRestrictCols duplicate source columns in replyr_mapRestrictCols")
+  }
+  if(length(setdiff(as.character(nmap), colnames(x)))>0) {
+    stop("replyr::replyr_mapRestrictCols all nmap values must be column names of x")
   }
   for(ni in names(nmap)) {
     if(is.null(ni)) {
@@ -74,7 +85,7 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
       stop('replyr::replyr_mapRestrictCols nmap keys must be strings')
     }
     if(length(ni)!=1) {
-      stop('replyr::replyr_mapRestrictCols nmap keys must be strings')
+      stop('replyr::replyr_mapRestrictCols nmap keys must be scalars')
     }
     if(nchar(ni)<=0) {
       stop('replyr::replyr_mapRestrictCols nmap keys must not be empty strings')
@@ -86,12 +97,13 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
     if(is.null(ti)) {
       stop('replyr::replyr_mapRestrictCols nmap values must not be null')
     }
-    if(!is.character(ti)) {
-      stop('replyr::replyr_mapRestrictCols nmap values must be strings')
+    if((!is.character(ti))&&(!is.name(ti))) {
+      stop('replyr::replyr_mapRestrictCols nmap values must be strings or quote')
     }
     if(length(ti)!=1) {
-      stop('replyr::replyr_mapRestrictCols nmap values must be strings')
+      stop('replyr::replyr_mapRestrictCols nmap values must be scalars')
     }
+    ti <- as.character(ti)
     if(nchar(ti)<=0) {
       stop('replyr::replyr_mapRestrictCols nmap values must not be empty strings')
     }
@@ -104,11 +116,13 @@ replyr_mapRestrictCols <- function(x,nmap,reverse=FALSE) {
       }
     }
   }
-  # limit down to only names we are mapping
-  x %>% dplyr::select(dplyr::one_of(as.character(nmap))) -> x
+  if(restrict) {
+    # limit down to only names we are mapping
+    x %>% dplyr::select(dplyr::one_of(as.character(nmap))) -> x
+  }
   # re-map names
   for(ni in names(nmap)) {
-    ti <- nmap[[ni]]
+    ti <- as.character(nmap[[ni]])
     if(ti!=ni) {
       x <- replyr_rename(x, newName= ni, oldName= ti)
     }

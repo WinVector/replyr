@@ -4,14 +4,18 @@
 \alias{replyr_mapRestrictCols}
 \title{Map names of columns to known values and drop other columns.}
 \usage{
-replyr_mapRestrictCols(x, nmap, reverse = FALSE)
+replyr_mapRestrictCols(x, nmap, ..., restrict = TRUE, reverse = FALSE)
 }
 \arguments{
 \item{x}{data item to work on}
 
 \item{nmap}{named list mapping desired column names to column names in x. Doesn't support permutations of names.}
 
-\item{reverse}{logical if true apply the inverse of nmap intead of nmap.}
+\item{...}{force later arguments to bind by name}
+
+\item{restrict}{logical if TRUE restrict to columns mentioned in nmap.}
+
+\item{reverse}{logical if TRUE apply the inverse of nmap intead of nmap.}
 }
 \value{
 data item with columns limited down to those named as nmap values, and re-named from their orignal names (nmap values) to desired names (nmap keys).
