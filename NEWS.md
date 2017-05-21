@@ -1,5 +1,5 @@
 
-'replyr' 0.3.02 2017-05-20
+'replyr' 0.3.902 2017-05-20
 
  * Introduce replyr::replyr_apply_f_mapped.
  * better detection of data service providers.
