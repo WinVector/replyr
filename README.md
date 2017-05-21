@@ -4,18 +4,24 @@ This document describes `replyr`, an [R](https://cran.r-project.org) package ava
 Introduction
 ------------
 
-It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances.
+It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances to make code perform similarly on local or remote (big) data.
 
-<img src="vignettes/replyrs.png">
+![](tools/replyrs.png)
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
-`replyr` uniformly uses standard or paremtric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
+`replyr` uniformly uses standard or parametric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
 
 Primary `replyr` services include:
 
 -   `wrapr::let`
+-   `replyr::replyr_apply_f_mapped`
+-   `replyr::replyr_split`
+-   `replyr::replyr_bind_rows`
 -   `replyr::gapply`
+-   `replyr::replyr_summary`
+-   `replyr::replyr_moveValuesToRows`
+-   `replyr::replyr_moveValuesToColumns`
 -   `replyr::replyr_*`
 
 `wrapr::let`
@@ -40,12 +46,12 @@ ComputeRatioOfColumns <- function(d,NumeratorColumnName,DenominatorColumnName,Re
       # (pretend) large block of code written with concrete column names.
       # due to the let wrapper in this function it will behave as if it was
       # using the specified paremetric column names.
-      d %>% mutate(ResultColumn=NumeratorColumn/DenominatorColumn)
+      d %>% mutate(ResultColumn = NumeratorColumn/DenominatorColumn)
     })
 }
 
 # example data
-d <- data.frame(a=1:5,b=3:7)
+d <- data.frame(a=1:5, b=3:7)
 
 # example application
 d %>% ComputeRatioOfColumns('a','b','c')
@@ -59,107 +65,89 @@ d %>% ComputeRatioOfColumns('a','b','c')
 
 `wrapr::let` makes construction of abstract functions over `dplyr` controlled data much easier. It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
 
-Note that `base::substitute` is not powerful enough to remap both names and values without some helper notation (see [here](http://stackoverflow.com/questions/22005419/dplyr-without-hard-coding-the-variable-names) for an using substitute. What we mean by this is show below:
+`wrapr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
+
+`replyr::replyr_apply_f_mapped`
+-------------------------------
+
+`wrapr::let` was only the secondary proposal in the original [2016 "Parametric variable names" article](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/). What we really wanted was a stack of view so the data pretended to have names that matched the code (i.e., re-mapping the data, not the code).
+
+With a bit of thought we can achieve this if we associate the data re-mapping with a function environment instead of with the data. So a re-mapping is active as long as a given controlling function is in control. In our case that function is `replyr::replyr_apply_f_mapped()` and works as follows:
+
+Suppose the operation we wish to use is a rank-reducing function that has been supplied as function from somewhere else that we do not have control of (such as a package). The function could be simple such as the following, but we are going to assume we want to use it without alteration (including the without the small alteration of introducing `wrapr::let()`).
 
 ``` r
-library('dplyr')
+# an external function with hard-coded column names
+DecreaseRankColumnByOne <- function(d) {
+  d$RankColumn <- d$RankColumn - 1
+  d
+}
 ```
 
-Substitute with `quote` notation.
+To apply this function to `d` (which doesn't have the expected column names!) we use `replyr::replyr_apply_f_mapped()` as follows:
 
 ``` r
-d <- data.frame(Sepal_Length=c(5.8,5.7),
-                Sepal_Width=c(4.0,4.4),
-                Species='setosa',
-                rank=c(1,2))
-eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
-                list(RankColumn=quote(rank))))
- #    Sepal_Length Sepal_Width Species rank RankColumn
- #  1          5.8         4.0  setosa    1          0
- #  2          5.7         4.4  setosa    2          1
-```
+d <- data.frame(Sepal_Length = c(5.8,5.7),
+                Sepal_Width = c(4.0,4.4),
+                Species = 'setosa',
+                rank = c(1,2))
 
-Substitute with `as.name` notation.
+# map our data to expected column names so we can use function
+nmap <- c(GroupColumn='Species',
+          ValueColumn='Sepal_Length',
+          RankColumn='rank')
+print(nmap)
+ #     GroupColumn    ValueColumn     RankColumn 
+ #       "Species" "Sepal_Length"         "rank"
 
-``` r
-eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
-                list(RankColumn=as.name('rank'))))
- #    Sepal_Length Sepal_Width Species rank RankColumn
- #  1          5.8         4.0  setosa    1          0
- #  2          5.7         4.4  setosa    2          1
-```
-
-Substitute without extra notation (errors-out).
-
-``` r
-eval(substitute(d %>% mutate(RankColumn=RankColumn-1),
-                list(RankColumn='rank')))
- #  Error in eval(expr, envir, enclos): non-numeric argument to binary operator
-```
-
-Notice in both working cases the `dplyr::mutate` result landed in a column named `RankColumn` and not in the desired column `rank`. The `wrapr::let` form is concise and works correctly.
-
-Similarly `base::with` can not perform the needed name remapping, none of the following variations simulate a name to name substitution.
-
-``` r
-# rank <- NULL # hide binding of rank to function
-env <- new.env()
-assign('RankColumn',quote(rank),envir = env)
-# assign('RankColumn',as.name('rank'),envir = env)
-# assign('RankColumn',rank,envir = env)
-# assign('RankColumn','rank',envir = env)
-with(env,d %>% mutate(RankColumn=RankColumn-1))
-```
-
-Whereas `wrapr::let` works and is succinct.
-
-``` r
-wrapr::let(
-  alias=list(RankColumn='rank'),
-  d %>% mutate(RankColumn=RankColumn-1)
-)
+dF <- replyr::replyr_apply_f_mapped(d, DecreaseRankColumnByOne, nmap,
+                                    restrictMapIn = FALSE, 
+                                    restrictMapOut = FALSE)
+print(dF)
  #    Sepal_Length Sepal_Width Species rank
  #  1          5.8         4.0  setosa    0
  #  2          5.7         4.4  setosa    1
 ```
 
-Note `wrapr::let` only controls name bindings in the the scope of the `expr={}` block, and not inside functions called in the block. To be clear `wrapr::let` is re-writing function arguments (which is how we use `dplyr::mutate` in the above example), but it is not re-writing data (which is why deeper in functions don't see re-namings). This means one can not parameterize a function from the outside. For example the following function can only be used parametrically if we re-map the data frame, or if `dplyr` itself (or a data adapter) implemented something like the view stack proposal found [here](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/).
+`replyr::replyr_apply_f_mapped()` renames the columns to the names expected by `DecreaseRankColumnByOne` (the mapping specified in `nmap`), applies `DecreaseRankColumnByOne`, and then inverts the mapping before returning the value.
+
+`replyr::replyr_split`
+----------------------
+
+`replyr::replyr_split` and `replyr::replyr_bind_rows` work over many remote data types including `Spark`. This allows code like the following:
 
 ``` r
-library('dplyr')
+suppressPackageStartupMessages(library("dplyr"))
+library("replyr")
+sc <- sparklyr::spark_connect(version='2.0.2', 
+                              master = "local")
+                              
+diris <- copy_to(sc, iris, 'diris')
+
+f2 <- . %>% 
+  arrange(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width) %>%
+  head(2)
+
+diris %>% 
+  replyr_split('Species') %>%
+  lapply(f2) %>%
+  replyr_bind_rows()
+
+## Source:   query [6 x 5]
+## Database: spark connection master=local[4] app=sparklyr local=TRUE
+## 
+## # A tibble: 6 x 5
+##      Species Sepal_Length Sepal_Width Petal_Length Petal_Width
+##        <chr>        <dbl>       <dbl>        <dbl>       <dbl>
+## 1 versicolor          5.0         2.0          3.5         1.0
+## 2 versicolor          4.9         2.4          3.3         1.0
+## 3     setosa          4.3         3.0          1.1         0.1
+## 4     setosa          4.4         2.9          1.4         0.2
+## 5  virginica          4.9         2.5          4.5         1.7
+## 6  virginica          5.6         2.8          4.9         2.0
+
+sparklyr::spark_disconnect(sc)
 ```
-
-``` r
-# example data
-d <- data.frame(a=1:5,b=3:7)
-
-# original function we do not have control of
-ComputeRatioOfColumnsHardCoded <- function(d) {
-  d %>% mutate(ResultColumn=NumeratorColumn/DenominatorColumn)
-}
-
-# wrapper to make function look parametric
-ComputeRatioOfColumnsWrapped <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
-  d %>% replyr::replyr_mapRestrictCols(list(NumeratorColumn='a',
-                                            DenominatorColumn='b')) %>%
-    
-    ComputeRatioOfColumnsHardCoded() %>%
-    replyr::replyr_mapRestrictCols(list(a='NumeratorColumn',
-                                        b='DenominatorColumn',
-                                        c='ResultColumn'))
-}
-
-# example application
-d %>% ComputeRatioOfColumnsWrapped('a','b','c')
- #    a b         c
- #  1 1 3 0.3333333
- #  2 2 4 0.5000000
- #  3 3 5 0.6000000
- #  4 4 6 0.6666667
- #  5 5 7 0.7142857
-```
-
-`wrapr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
 
 `replyr::gapply`
 ----------------
@@ -177,7 +165,7 @@ d <- data.frame(group=c(1,1,2,2,2),
                 order=c(.1,.2,.3,.4,.5))
 rank_in_group <- . %>% mutate(constcol=1) %>%
           mutate(rank=cumsum(constcol)) %>% select(-constcol)
-d %>% replyr::gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE)
+d %>% replyr::gapply('group', rank_in_group, ocolumn='order', decreasing=TRUE)
  #    group order rank
  #  1     1   0.2    1
  #  2     1   0.1    2
@@ -213,9 +201,9 @@ summary(dRemote)
 
 replyr::replyr_summary(dRemote)
  #    column index     class nrows nna nunique min max     mean        sd lexmin lexmax
- #  1      x     1   numeric     3   0      NA   1   2 1.666667 0.5773503   <NA>   <NA>
- #  2      y     2   numeric     3   1      NA   3   5 4.000000 1.4142136   <NA>   <NA>
- #  3      z     3 character     3   1      NA  NA  NA       NA        NA      a      b
+ #  1      x     1   numeric    NA  NA      NA   1   2 1.666667 0.5773503   <NA>   <NA>
+ #  2      y     2   numeric    NA  NA      NA   3   5 4.000000 1.4142136   <NA>   <NA>
+ #  3      z     3 character    NA  NA      NA  NA  NA       NA        NA      a      b
 ```
 
 Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of `replyr` is to provide at least some convenient version of typical functions such as: `summary`, `nrow`, unique values, and filter rows by values in a set.
@@ -228,15 +216,20 @@ This is a *very* new package with no guarantees or claims of fitness for purpose
 We will probably only ever cover:
 
 -   Native `data.frame`s (and `tbl`/`tibble`)
--   `RMySQL`
+-   `sparklyr` (`Spark` 2.0.0 or greater)
 -   `RPostgreSQL`
 -   `SQLite`
--   `sparklyr` (`Spark` 2.0.0 or greater)
+-   `RMySQL` (limited support in some cases)
 
 Additional functions
 --------------------
 
-Additional `replyr` functions include: `replyr::replyr_filter` and `replyr::replyr_inTest`. These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:
+Additional `replyr` functions include:
+
+-   `replyr::replyr_filter`
+-   `replyr::replyr_inTest`
+
+These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:
 
 ``` r
 library('dplyr')
@@ -244,10 +237,11 @@ library('dplyr')
 
 ``` r
 values <- c(2)
-dRemote %>% replyr::replyr_filter('x',values)
+dRemote %>% replyr::replyr_filter('x', values)
  #  Source:   query [?? x 3]
  #  Database: sqlite 3.11.1 [:memory:]
  #  
+ #  # A tibble: ?? x 3
  #        x     y     z
  #    <dbl> <dbl> <chr>
  #  1     2     5     a
@@ -275,18 +269,14 @@ Good code should fill one important gap and work on a variety of `dplyr` back en
 -   Basic summary info: `replyr_nrow`, `replyr_dim`, and `replyr_summary`.
 -   Random row sampling (like `dplyr::sample_n`, but working with more service providers). Some of this functionality is provided by `replyr_filter` and `replyr_inTest`.
 -   Emulating [The Split-Apply-Combine Strategy](https://www.jstatsoft.org/article/view/v040i01), which is the purpose `gapply`, `replyr_split`, and `replyr_bind_rows`.
+-   Emulating `tidyr` gather/spread (or pivoting and anti-pivoting).
 -   Patching around differences in `dplyr` services providers (and documenting the reasons for the patches).
--   Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable). Note: this functionality is now imported from `wrapr`.
--   Emulating `tidyr` `gather`/`spread` (or pivoting and anti-pivoting, but using interfaces similar to the `cdata` package).
+-   Making use of "parameterized names" much easier (that is: writing code does not know the name of the column it is expected to work over, but instead takes the column name from a user supplied variable).
 
 Additional desired capabilities of interest include:
 
--   `cumsum`, ranking, or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
+-   `cumsum` or row numbering (interestingly enough if you have row numbering you can implement cumulative sum in log-n rounds using joins to implement pointer chasing/jumping ideas, but that is unlikely to be practical, `lag` is enough to generate next pointers, which can be boosted to row-numberings).
 -   Inserting random values (or even better random unique values) in a remote column. Most service providers have a pseudo-random source you can use.
--   `choice` function (picking up to `k` from each group arbitrarily).
--   Window functions (pick min/max example from each group).
--   `dfapply` like `lapply` bind all results together into a single `data.frame`.
--   `dflatten` like flatten recursive- but stop at `data.frame`s, turns arbitrarily nested lists into a single `data.frame`.
 
 Conclusion
 ----------
@@ -299,7 +289,7 @@ Clean up
 ``` r
 rm(list=ls())
 gc()
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 487334 26.1     940480 50.3   940480 50.3
- #  Vcells 766936  5.9    1785636 13.7  1777566 13.6
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  637255 34.1    1168576 62.5   940480 50.3
+ #  Vcells 1242909  9.5    2060183 15.8  1934258 14.8
 ```
