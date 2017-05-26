@@ -2,7 +2,7 @@
 % Please edit documentation in R/addIds.R
 \name{replyr_add_ids}
 \alias{replyr_add_ids}
-\title{Add unique ids to rows.}
+\title{Add unique ids to rows.  Note: re-arranges rows in many cases.}
 \usage{
 replyr_add_ids(df, idColName)
 }
@@ -12,7 +12,7 @@ replyr_add_ids(df, idColName)
 \item{idColName}{name of column to add}
 }
 \description{
-NOT TESTED YET!
+Add unique ids to rows.  Note: re-arranges rows in many cases.
 }
 \examples{
 

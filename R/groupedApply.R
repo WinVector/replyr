@@ -101,6 +101,9 @@ gapply <- function(df,gcolumn,f,
     return(df)
   }
   if(partitionMethod=='split') {
+    if(!replyr_is_local_data(df)) {
+      stop("replyr::gapply(partitionMethod='split') can only be used on local data frames")
+    }
     # only works on local data frames
     if(!is.null(maxgroups)) {
       df %>% replyr_uniqueValues(gcolumn) %>% replyr_nrow() -> ngroups
