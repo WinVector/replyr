@@ -9,7 +9,7 @@
 #' @param ... not used, force later arguments to bind by name
 #' @param fills list default values to fill in columns
 #' @param newRowColumn character if not null name to use for new row indicator
-#' @param copy logical sets copy during dplyr::anti_join
+#' @param copy logical if TRUE copy support to data's source
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return augmented data
 #'
@@ -66,8 +66,12 @@ replyr_coalesce <- function(data, support,
   if(length(intersect(names(fills), joinCols))>0) {
     stop("replyr::replyr_coalesce fill columns must not overlap key columns")
   }
+  if(copy && (!replyr_is_local_data(data)) && (replyr_is_local_data(support))) {
+    cn <- replyr_get_src(data)
+    support <- replyr_copy_to(cn, support, tempNameGenerator())
+  }
   replyr_private_name_additions <- dplyr::anti_join(support, data,
-                                                    by=joinCols, copy= copy)
+                                                    by=joinCols)
   if( (replyr_nrow(data)+replyr_nrow(replyr_private_name_additions)) != replyr_nrow(support)) {
     stop("replyr::replyr_coalesce support is not a unique set of keys for data")
   }

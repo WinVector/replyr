@@ -134,9 +134,12 @@ expandColumn <- function(data, colName,
                                           valDest= colName,
                                           idxDest= idxDest)
                          di <- dplyr::select(di, one_of(copyCols))
+                         if((!replyr_is_local_data(di)) && (replyr_is_local_data(vx))) {
+                           cn <- replyr_get_src(di)
+                           vx <- replyr_copy_to(cn, vx, tempNameGenerator())
+                         }
                          dplyr::inner_join(di, vx,
-                                           by= rowidSource,
-                                           copy= TRUE)
+                                           by= rowidSource)
                        }
                      )
                    }

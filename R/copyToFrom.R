@@ -76,6 +76,8 @@ replyr_drop_table_name <- function(dest, name) {
 #' @param name name for new remote table
 #' @param ... force later values to be bound by name
 #' @param rowNumberColumn if not null name to add row numbers to
+#' @param temporary logical, if TRUE try to create a temporary table
+#' @param overwrite logical, if TRUE try to overwrite
 #' @return remote handle
 #'
 #' @examples
@@ -88,9 +90,12 @@ replyr_drop_table_name <- function(dest, name) {
 #' }
 #'
 #' @export
-replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
+replyr_copy_to <- function(dest,
+                           df, name = deparse(substitute(df)),
                            ...,
-                           rowNumberColumn=NULL) {
+                           rowNumberColumn= NULL,
+                           temporary= FALSE,
+                           overwrite= TRUE) {
   # try to force any errors early, and try to fail prior to side-effects
   if(length(list(...))>0) {
     stop('replyr::replyr_copy_to unexpected arguments')
@@ -120,8 +125,8 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
     df[[rowNumberColumn]] <- seq_len(replyr_nrow(df))
   }
   dplyr::copy_to(dest, df, name,
-                 temporary=FALSE,
-                 overwrite=TRUE)
+                 temporary=temporary,
+                 overwrite=overwrite)
 }
 
 #' Bring remote data back as a local data frame tbl.
@@ -141,7 +146,7 @@ replyr_copy_to <- function(dest, df, name = deparse(substitute(df)),
 #' }
 #'
 #' @export
-replyr_copy_from <- function(d,maxrow=1000000) {
+replyr_copy_from <- function(d, maxrow=1000000) {
   if(!is.null(maxrow)) {
     n <- replyr_nrow(d)
     if(n>maxrow) {

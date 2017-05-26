@@ -7,7 +7,6 @@ NULL
 
 #' Product a column noting if another columns values are in a given set.
 #'
-#' #' Note: if temp tables can't be used a regular table is created and destroyed (which may not be safe if there is another replyr_inTest running at the same time).
 #'
 #' @param x tbl or item that can be coerced into such.
 #' @param cname name of the column to test values of.
@@ -50,6 +49,10 @@ replyr_inTest <- function(x,cname,values,nname,
   colnames(vtbl) <- newname
   vtbl[[nname]] <- TRUE
   jtab <- dplyr::as.tbl(vtbl)
+  if(!replyr_is_local_data(x)) {
+    cn <- replyr_get_src(x)
+    jtab <- replyr_copy_to(cn, jtab, tempNameGenerator())
+  }
   # dplyr::*_join(jtab,by=cname,copy=TRUE) has been bombing out with:
   #   "CREATE TEMPORARY TABLE is not supported" (spark 2.0.0, hadoop 2.7)
   #   spark 1.6.2 can't join tables with matching names (even as the join condition).
@@ -57,24 +60,8 @@ replyr_inTest <- function(x,cname,values,nname,
   # Try it the right way first (this way works well on good stacks).
   res <- NULL
   good <- FALSE
-  tryCatch({
-    x %>% dplyr::left_join(jtab,by=byClause,copy=TRUE) %>%
-      dplyr::compute(name= tempNameGenerator()) -> res;
-    good <- TRUE},
-    error = function(x)  {
-      if(verbose) {
-        warning(paste("[replyr::replyr_inTest working around]",x))
-      }
-      NULL }
-  )
-  # Try to fix it.
-  if((!good) && ('tbl_spark' %in% class(x))) {
-    cn <- dplyr_src_to_db_handle(x$src)
-    tmpnam <- tempNameGenerator()
-    tmp <- replyr_copy_to(cn,jtab,tmpnam)
-    x %>% dplyr::left_join(tmp,by=byClause) %>%
-      dplyr::compute(name= tempNameGenerator()) -> res
-  }
+  x %>% dplyr::left_join(jtab,by=byClause) %>%
+    dplyr::compute(name= tempNameGenerator()) -> res
   # replace NA with false
   RCOL <- NULL # declare no external binding
   let(

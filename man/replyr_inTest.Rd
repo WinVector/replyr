@@ -27,7 +27,7 @@ replyr_inTest(x, cname, values, nname, ...,
 table with membership indications.
 }
 \description{
-#' Note: if temp tables can't be used a regular table is created and destroyed (which may not be safe if there is another replyr_inTest running at the same time).
+Product a column noting if another columns values are in a given set.
 }
 \examples{
 

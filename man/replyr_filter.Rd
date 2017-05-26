@@ -24,7 +24,7 @@ replyr_filter(x, cname, values, ..., verbose = TRUE,
 new tbl with only rows where cname value is in values set.
 }
 \description{
-Note: if temp tables can't be used a regular table is created and destroyed (which may not be safe if there is another replyr_filter running at the same time).
+Filter a tbl on a column having values in a given set.
 }
 \examples{
 

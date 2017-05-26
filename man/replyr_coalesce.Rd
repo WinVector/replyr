@@ -18,7 +18,7 @@ replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL,
 
 \item{newRowColumn}{character if not null name to use for new row indicator}
 
-\item{copy}{logical sets copy during dplyr::anti_join}
+\item{copy}{logical if TRUE copy support to data's source}
 
 \item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
