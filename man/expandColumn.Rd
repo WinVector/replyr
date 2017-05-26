@@ -27,7 +27,7 @@ expandColumn(data, colName, ..., rowidSource = NULL, rowidDest = NULL,
 expanded data frame where each value of colName column is in a new row.
 }
 \description{
-Similar to \code{tidyr::unnest} but explicit allows ragged input, lands rowids and value ids, and can work on remote data sources. Fairly expensive per-row operation, not suitable for big data.
+Similar to \code{tidyr::unnest} but lands rowids and value ids, and can work on remote data sources. Fairly expensive per-row operation, not suitable for big data.
 }
 \examples{
 

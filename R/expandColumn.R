@@ -31,7 +31,7 @@ expandItem <- function(vi, rowidDest, rowId, valDest, idxDest) {
 
 #' Expand a column of vectors into one row per value of each vector.
 #'
-#' Similar to \code{tidyr::unnest} but explicit allows ragged input, lands rowids and value ids, and can work on remote data sources. Fairly expensive per-row operation, not suitable for big data.
+#' Similar to \code{tidyr::unnest} but lands rowids and value ids, and can work on remote data sources. Fairly expensive per-row operation, not suitable for big data.
 #'
 #' @param data data.frame to work with.
 #' @param colName character name of column to expand.
