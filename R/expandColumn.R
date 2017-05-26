@@ -110,16 +110,7 @@ expandColumn <- function(data, colName,
     } else {
       rowidSource <- rowidDest
     }
-    CDATAROWIDCOL <- NULL # declare not an unbound ref
-    wrapr::let(
-      c(CDATAROWIDCOL = rowidSource),
-      # can't add in a vector see issue
-      # https://github.com/tidyverse/dplyr/issues/2723
-      data <- data %>%
-        dplyr::mutate(CDATAROWIDCOL = 1) %>%
-        dplyr::mutate(CDATAROWIDCOL = cumsum(CDATAROWIDCOL)) %>%
-        dplyr::compute(name=tempNameGenerator())
-    )
+    data <- replyr_add_ids(data, rowidSource)
   }
   CDATAKEYCOLUMN <- NULL # declare not an unbound ref
   wrapr::let(
