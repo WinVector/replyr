@@ -1,0 +1,111 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- Generated from .Rmd. Please edit that file -->
+
+Check complex join results.
+
+```{r setup}
+suppressPackageStartupMessages(library('dplyr'))
+
+runJoinExperiment <- function(prefix, sc, eagerCompute, uniqueColumns) {
+  names <- paste('t', prefix, 1:10, sep= '_')
+  joined <- NULL
+  for(ni in names) {
+    di <- data.frame(k= 1:3, 
+                     v= paste(ni, 1:3, sep= '_'))
+    if(uniqueColumns) {
+      colnames(di)[[2]] <- paste('y', ni, sep= '_')
+    }
+    if(!is.null(sc)) {
+      ti <- copy_to(sc, di, ni)
+    } else {
+      ti <- di
+    }
+    if('NULL' %in% class(joined)) {
+      joined <- ti
+    } else {
+      joined <- left_join(joined, ti, by= 'k')
+      if(eagerCompute) {
+        joined <- compute(joined)
+      }
+    }
+  }
+  compute(joined)
+}
+
+# works as expected
+runJoinExperiment('inmem', NULL, FALSE, FALSE)
+```
+
+Using `RSQLite` through `dplyr` loses columns.  This has been submitted as [RSQLite issue 214](https://github.com/rstats-db/RSQLite/issues/214) and [dplyr issue 2823](https://github.com/tidyverse/dplyr/issues/2823).
+
+```{r sqlite}
+sc <- src_sqlite(":memory:", create = TRUE)
+
+# throws
+tryCatch(
+  runJoinExperiment('sqlitea', sc, FALSE, FALSE),
+  error = function(e) print(e)
+)
+
+# incorrect result (missing columns)
+runJoinExperiment('sqliteb', sc, TRUE, FALSE)
+```
+
+Using `Spark` through `sparklyr`/`dplyr` doesn't disambiguate columns as the local process does.
+
+```{r sparksetup}
+sc <- sparklyr::spark_connect(version='2.0.2', 
+   master = "local")
+```
+
+```{r spark1}
+# throws
+tryCatch(
+  runJoinExperiment('sparka', sc, FALSE, FALSE),
+  error = function(e) print(e)
+)
+
+# throws
+tryCatch(
+  runJoinExperiment('sparkb', sc, TRUE, FALSE),
+   error = function(e) print(e)
+)
+```
+
+We can try this again with unambiguous columns, which works.  I am assuming that this is [dplyr issue 2773](https://github.com/tidyverse/dplyr/issues/2774), [sparklyr issue 677 ](https://github.com/rstudio/sparklyr/issues/677).
+
+```{r spark2}
+# throws
+runJoinExperiment('spark2a', sc, FALSE, TRUE)
+
+runJoinExperiment('spark2b', sc, TRUE, TRUE)
+```
+
+```{r sparkcleanup}
+sparklyr::spark_disconnect(sc)
+```
+
+
+```{r versioninfo}
+packageVersion("dplyr")
+packageVersion("sparklyr")
+if(requireNamespace("dbplyr", quietly = TRUE)) {
+  packageVersion("dbplyr")
+}
+if(requireNamespace("RSQLite", quietly = TRUE)) {
+  packageVersion("RSQLite")
+}
+R.Version()$version.string
+```
+
+```{r cleanup}
+rm(list=ls())
+gc()
+```
+
+
