@@ -58,7 +58,9 @@ replyr_union_all <- function(tabA, tabB, ...,
   # build a 2-row table to control the union
   controlTable <- data.frame(replyrunioncol= c('a', 'b'),
                              stringsAsFactors = FALSE)
-  controlTable <- dplyr::copy_to(sc, controlTable, name=tempNameGenerator())
+  controlTable <- replyr_copy_to(sc, controlTable,
+                                 name=tempNameGenerator(),
+                                 temporary=TRUE)
   # decorate left and right tables for the merge
   tabA <- tabA %>%
     select(one_of(cols)) %>%

@@ -6,16 +6,6 @@
 NULL
 
 
-# get the db handle from a dplyr src
-# Spark2 handles are DBIConnection s
-# SQLite are not
-# this distinciton is going away post dplyr 0.5.0
-dplyr_src_to_db_handle <- function(dplyr_src) {
-  if("DBIConnection" %in% class(dplyr_src)) {
-    return(dplyr_src)
-  }
-  return(dplyr_src$con)
-}
 
 #' Drop a table from a source
 #'
@@ -78,6 +68,7 @@ replyr_drop_table_name <- function(dest, name) {
 #' @param rowNumberColumn if not null name to add row numbers to
 #' @param temporary logical, if TRUE try to create a temporary table
 #' @param overwrite logical, if TRUE try to overwrite
+#' @param maxrow max rows to allow in a remote to remote copy.
 #' @return remote handle
 #'
 #' @examples
@@ -95,15 +86,25 @@ replyr_copy_to <- function(dest,
                            ...,
                            rowNumberColumn= NULL,
                            temporary= FALSE,
-                           overwrite= TRUE) {
+                           overwrite= TRUE,
+                           maxrow= 1000000) {
   # try to force any errors early, and try to fail prior to side-effects
   if(length(list(...))>0) {
     stop('replyr::replyr_copy_to unexpected arguments')
   }
   force(dest)
+  force(df)
+  force(name)
+  if(!replyr_is_local_data(df)) {
+    warning("replyr::replyr_copy_to called on non-local table")
+    df <- replyr_copy_from(df, maxrow = maxrow)
+  }
   if("NULL" %in% class(dest)) {
     # special "no destination" case
     return(df)
+  }
+  if("NULL" %in% class(df)) {
+    stop("NULL df to replyr::replyr_copy_to")
   }
   if('tbl' %in% class(dest)) {
     # dest was actually another data object, get its source
@@ -111,11 +112,6 @@ replyr_copy_to <- function(dest,
     if("NULL" %in% class(dest)) {
       stop("replyr::replyr_copy_to unexpected dest")
     }
-  }
-  force(df)
-  force(name)
-  if("NULL" %in% class(df)) {
-    stop("NULL df to replyr::replyr_copy_to")
   }
   if((!is.character(name))||(length(name)!=1)||(nchar(name)<1)) {
     stop('replyr::replyr_copy_to name must be a single non-empty string')
@@ -146,7 +142,7 @@ replyr_copy_to <- function(dest,
 #' }
 #'
 #' @export
-replyr_copy_from <- function(d, maxrow=1000000) {
+replyr_copy_from <- function(d, maxrow= 1000000) {
   if(!is.null(maxrow)) {
     n <- replyr_nrow(d)
     if(n>maxrow) {

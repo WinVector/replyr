@@ -5,7 +5,8 @@
 \title{Copy data to remote service.}
 \usage{
 replyr_copy_to(dest, df, name = deparse(substitute(df)), ...,
-  rowNumberColumn = NULL, temporary = FALSE, overwrite = TRUE)
+  rowNumberColumn = NULL, temporary = FALSE, overwrite = TRUE,
+  maxrow = 1e+06)
 }
 \arguments{
 \item{dest}{remote data source}
@@ -21,6 +22,8 @@ replyr_copy_to(dest, df, name = deparse(substitute(df)), ...,
 \item{temporary}{logical, if TRUE try to create a temporary table}
 
 \item{overwrite}{logical, if TRUE try to overwrite}
+
+\item{maxrow}{max rows to allow in a remote to remote copy.}
 }
 \value{
 remote handle

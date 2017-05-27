@@ -3,6 +3,18 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 
+# get the db handle from a dplyr src
+# Spark2 handles are DBIConnection s
+# SQLite are not
+# this distinciton is going away post dplyr 0.5.0
+dplyr_src_to_db_handle <- function(dplyr_src) {
+  if("DBIConnection" %in% class(dplyr_src)) {
+    return(dplyr_src)
+  }
+  return(dplyr_src$con)
+}
+
+
 #' Get the "remote data source" where a data.frame like object lives.
 #'
 #'

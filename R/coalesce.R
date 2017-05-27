@@ -68,7 +68,8 @@ replyr_coalesce <- function(data, support,
   }
   if(copy && (!replyr_is_local_data(data)) && (replyr_is_local_data(support))) {
     cn <- replyr_get_src(data)
-    support <- replyr_copy_to(cn, support, tempNameGenerator())
+    support <- replyr_copy_to(cn, support, tempNameGenerator(),
+                              temporary = TRUE)
   }
   replyr_private_name_additions <- dplyr::anti_join(support, data,
                                                     by=joinCols)

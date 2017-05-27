@@ -147,7 +147,9 @@ replyr_moveValuesToRows <- function(data,
   }
   if(!is.null(nameForNewClassColumn)) {
     if(!replyr_is_local_data(data)) {
-      classMap <- dplyr::copy_to(replyr_get_src(data), classMap, tempNameGenerator())
+      classMap <- replyr_copy_to(replyr_get_src(data),
+                                 classMap, tempNameGenerator(),
+                                 temporary = TRUE)
     }
     res <- dplyr::left_join(res, classMap, by=nameForNewKeyColumn)
   }
