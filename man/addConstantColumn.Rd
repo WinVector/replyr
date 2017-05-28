@@ -24,7 +24,8 @@ table with new column added.
 \description{
 Work around different treatment of character types accross remote
 data soures when adding a
-constant column to a table.
+constant column to a table.  Deals with issues such as Postgresql
+requiring a charcater-cast and MySQL not allowing such.
 }
 \examples{
 
