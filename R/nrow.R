@@ -25,7 +25,7 @@ replyr_nrow <- function(x) {
   # x %>% dplyr::ungroup()  %>% dplyr::summarize(count=sum(1)) %>%
   #   as.data.frame() -> tmp
   # Code below does.
-  if("NULL" %in% class(x)) {
+  if(is.null(x)) {
     return(0)
   }
   tmp <- NULL

@@ -64,7 +64,7 @@ replyr_get_src <- function(df) {
 #'
 #' @export
 replyr_is_local_data <- function(d) {
-  if("NULL" %in% class(d)) {
+  if(is.null(d)) {
     return(TRUE)
   }
   sc <- replyr_get_src(d)
@@ -85,7 +85,7 @@ replyr_is_local_data <- function(d) {
 #'
 #' @export
 replyr_is_Spark_data <- function(d) {
-  if("NULL" %in% class(d)) {
+  if(is.null(d)) {
     return(FALSE)
   }
   sc <- replyr_get_src(d)
@@ -112,7 +112,7 @@ replyr_is_Spark_data <- function(d) {
 #'
 #' @export
 replyr_is_MySQL_data <- function(d) {
-  if("NULL" %in% class(d)) {
+  if(is.null(d)) {
     return(FALSE)
   }
   sc <- replyr_get_src(d)

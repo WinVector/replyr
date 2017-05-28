@@ -132,7 +132,7 @@ replyr_bind_rows <- function(lst,
   if(length(list(...))>0) {
     stop("replyr::replyr_bind_rows unexpected arguments")
   }
-  if(("NULL" %in% class(lst))||(length(lst)<=0)) {
+  if(length(lst)<=0) {
     return(NULL)
   }
   # remove any nulls or trivial data items.

@@ -31,14 +31,14 @@ replyr_drop_table_name <- function(dest, name) {
     stop('replyr::replyr_drop_table_name name must be a single non-empty string')
   }
   force(dest)
-  if("NULL" %in% class(dest)) {
+  if(is.null(dest)) {
     # special "no destination" case
     return(FALSE)
   }
   if('tbl' %in% class(dest)) {
     # dest was actually another data object, get its source
     dest <- dest$src
-    if("NULL" %in% class(dest)) {
+    if(is.null(dest)) {
       stop("replyr::replyr_drop_table_name unexpected dest")
     }
   }
@@ -47,7 +47,7 @@ replyr_drop_table_name <- function(dest, name) {
   found = FALSE
   tryCatch({
     cn <- dplyr_src_to_db_handle(dest)
-    if(!("NULL" %in% class(cn))) {
+    if(!(is.null(cn))) {
       if(name %in% dplyr::db_list_tables(cn)) {
         found = TRUE
         dplyr::db_drop_table(cn, name)
@@ -99,17 +99,17 @@ replyr_copy_to <- function(dest,
     warning("replyr::replyr_copy_to called on non-local table")
     df <- replyr_copy_from(df, maxrow = maxrow)
   }
-  if("NULL" %in% class(dest)) {
+  if(is.null(dest)) {
     # special "no destination" case
     return(df)
   }
-  if("NULL" %in% class(df)) {
+  if(is.null(df)) {
     stop("NULL df to replyr::replyr_copy_to")
   }
   if('tbl' %in% class(dest)) {
     # dest was actually another data object, get its source
     dest <- dest$src
-    if("NULL" %in% class(dest)) {
+    if(is.null(dest)) {
       stop("replyr::replyr_copy_to unexpected dest")
     }
   }
