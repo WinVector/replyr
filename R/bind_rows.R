@@ -146,13 +146,19 @@ replyr_bind_rows <- function(lst,
   if(length(list(...))>0) {
     stop("replyr::replyr_bind_rows unexpected arguments")
   }
-  if(length(lst)<=0) {
-    return(NULL)
+  if(length(lst)<=1) {
+    if(length(lst)<=0) {
+      return(NULL)
+    }
+    return(lst[[1]])
   }
   # remove any nulls or trivial data items.
   lst <- Filter(function(ri) { replyr_nrow(ri)>0 }, lst)
-  if(length(lst)<=0) {
-    return(NULL)
+  if(length(lst)<=1) {
+    if(length(lst)<=0) {
+      return(NULL)
+    }
+    return(lst[[1]])
   }
   names(lst) <- NULL
   colnames <- Reduce(intersect, lapply(lst, colnames))
