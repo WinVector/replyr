@@ -8,9 +8,9 @@ replyr_union_all(tabA, tabB, ..., cols = NULL,
   tempNameGenerator = makeTempNameGenerator("replyr_union_all"))
 }
 \arguments{
-\item{tabA}{table with at least 1 row.}
+\item{tabA}{not-NULL table with at least 1 row.}
 
-\item{tabB}{table with at least on same data source as tabA and commmon columns.}
+\item{tabB}{not-NULL table with at least on same data source as tabA and commmon columns.}
 
 \item{...}{force later arguments to be bound by name.}
 

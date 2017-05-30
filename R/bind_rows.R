@@ -9,8 +9,8 @@
 #' and exponsed union_all semantics differ from data-source backend to backend.
 #' This is an attempt to provide a join-based replacement.
 #'
-#' @param tabA table with at least 1 row.
-#' @param tabB table with at least on same data source as tabA and commmon columns.
+#' @param tabA not-NULL table with at least 1 row.
+#' @param tabB not-NULL table with at least on same data source as tabA and commmon columns.
 #' @param ... force later arguments to be bound by name.
 #' @param cols list of column names to limit to (defaults to intersection), must be non-empty and contained in intersection.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
@@ -29,14 +29,25 @@ replyr_union_all <- function(tabA, tabB, ...,
   if(length(list(...))>0) {
     stop("replyr::replyr_union_all unexpected arguments.")
   }
+  if(!is.null(tabA)) {
+    tabA <- dplyr::ungroup(tabA)
+  }
+  if(!is.null(tabB)) {
+    tabB <- dplyr::ungroup(tabB)
+  }
+  # work on some corners cases (being a bit more generous than the documentation)
   if(replyr_nrow(tabA)<1) {
+    if(!is.null(cols)) {
+      return(tabB %>% select(one_of(cols)))
+    }
     return(tabB)
   }
   if(replyr_nrow(tabB)<1) {
+    if(!is.null(cols)) {
+      return(tabA %>% select(one_of(cols)))
+    }
     return(tabA)
   }
-  tabA <- dplyr::ungroup(tabA)
-  tabB <- dplyr::ungroup(tabB)
   if(is.null(cols)) {
     cols <- intersect(colnames(tabA), colnames(tabB))
   }
@@ -97,6 +108,9 @@ replyr_union_all <- function(tabA, tabB, ...,
 r_replyr_bind_rows <- function(lst, colnames, tempNameGenerator) {
   n <- length(lst)
   if(n<=1) {
+    if(n<=0) {
+      stop("replyr:::r_replyr_bind_rows called with empty list")
+    }
     res <- lst[[1]]
     res <- dplyr::compute(res,
                           name= tempNameGenerator())
