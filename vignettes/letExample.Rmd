@@ -36,7 +36,7 @@ one row per group containing:
 
 The `dplyr` expression for such a table is easy when the column names
 are known, but complicated when they are not. We use `wrapr::let` to write such a
-function without the use of `lazyeval`.
+function without the use of `lazyeval` or `rlang`/`tidyeval`.
 
 ```{r sumstat_intervals}
 sumstat_intervals = function(dframe, colname, groupcolname=NULL) {

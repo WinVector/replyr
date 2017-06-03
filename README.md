@@ -27,7 +27,7 @@ Primary `replyr` services include:
 `wrapr::let`
 ------------
 
-`wrapr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute` or `base::with`). This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms" (and the direct use of `lazyeval::interp` and `.dots=stats::setNames` to use the `dplyr` "underbar forms").
+`wrapr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute` or `base::with`). This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms" (and the direct use of `lazyeval::interp`, `.dots=stats::setNames`, or `rlang`/`tidyeval`).
 
 Example:
 
@@ -290,6 +290,6 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  637255 34.1    1168576 62.5   940480 50.3
- #  Vcells 1242909  9.5    2060183 15.8  1934258 14.8
+ #  Ncells  640384 34.3    1168576 62.5   940480 50.3
+ #  Vcells 1255452  9.6    2060183 15.8  2028110 15.5
 ```

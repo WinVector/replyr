@@ -88,80 +88,13 @@ one of:
  * A formula
  * Using `quote()`
  * A string
- 
+ * Using `rlang`/`tidyeval` `quosures`
+
 (source: `dplyr` Non-standard evaluation vignette "nse", for additional theory and upcoming official solutions please see [here](https://rpubs.com/hadley/lazyeval)).
 
 Let us try a few of these to try and emphasize we are proposing a new solution, not because
 we do not know of the current solutions, but instead because we are familiar with the current solutions.
 
-### Formula interface
-
-Formula interface is a nice option as it is `R`'s common way for holding names
-unevaluated.  The code looks like the following (using `lazyeval::interp` to execute):
- 
-```{r}
-if  (requireNamespace("lazyeval")) {
-  print(d %>%
-    mutate_(.dots = stats::setNames(list(
-      lazyeval::interp(~ is.na(VAR),
-                       VAR = as.name(cname))), rname)))
-}
-```
-
-The extra layer of `list()`-wrapping seems to be needed to successfully control
-both the name of the input and result (please see [here]( http://www.win-vector.com/blog/2017/02/my-recent-barug-talk-parametric-programming-in-r-with-replyr/#comment-66488) for the original solution).
-
-Currently `mutate_` does not take "two-sided formulas" so we can not write:
-
-
-```{r, error=TRUE}
-if  (requireNamespace("lazyeval")) {
-  print(d %>% mutate_(RCOL = lazyeval::interp(RES ~ is.na(VAR),
-                                              VAR= as.name(cname),
-                                              RES= as.name(rname))))
-}
-```
-
-
-### Trying `quote()` / `substitute()`
-
-`quote()` can delay evaluation, but isn't the right tool for parameterizing
-(what the linked NSE reference called "mixing constants and variable").  We can
-use the related `substitute()` method as shown below (notice `mutate_` ingores
-our first attempt to name the result and we have to guess/reconstruct what
-name `mutate_` ends up using).
-
-```{r}
-d %>% mutate_(.dots =
-    stats::setNames(list(substitute(is.na(XVAR),list(XVAR=cname))),
-                    rname))
-```
-
-My point is: even if this is something that *you* know how to accomplish, 
-this is evidence we are really trying to swim upstream with this notation.
-
-### String solutions 
-
-String based solutions can involve using `paste` to get parameter values
-into the strings.  Here is an example:
-
-```{r}
-# dplyr mutate_ paste stats::setNames solution
-d %>% mutate_(.dots =
-                stats::setNames(paste0('is.na(', cname, ')'),
-                rname))
-```
-
-Or just using strings as an interface to control `lazyeval::interp` (without the formula interface):
-
-```{r}
-# dplyr mutate_ lazyeval::interp solution
-if  (requireNamespace("lazyeval")) {
-  print(d %>% mutate_(.dots =
-                        stats::setNames(list(lazyeval::interp("is.na(cname)",
-                                         cname = as.name(cname))), rname)))
-}
-```
 
 ## Our advice
 

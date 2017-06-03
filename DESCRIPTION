@@ -24,7 +24,6 @@ Suggests: testthat,
     RSQLite,
     sparklyr,
     ggplot2,
-    lazyeval,
     babynames,
     magrittr
 VignetteBuilder: knitr
