@@ -59,7 +59,6 @@ replyr_union_all <- function(tabA, tabB, ...,
     return(dplyr::bind_rows(select(tabA, one_of(cols)) ,
                             select(tabB, one_of(cols))))
   }
-  sc <- replyr_get_src(tabA)
   mergeColName <- 'replyrunioncol'
   if(mergeColName %in% cols) {
     stop(paste0("replyr::replyr_union_all sorry can't work with ",
@@ -69,9 +68,12 @@ replyr_union_all <- function(tabA, tabB, ...,
   # build a 2-row table to control the union
   controlTable <- data.frame(replyrunioncol= c('a', 'b'),
                              stringsAsFactors = FALSE)
-  controlTable <- replyr_copy_to(sc, controlTable,
-                                 name=tempNameGenerator(),
-                                 temporary=TRUE)
+  if(!replyr_is_local_data(tabA)) {
+    sc <- replyr_get_src(tabA)
+    controlTable <- replyr_copy_to(sc, controlTable,
+                                   name=tempNameGenerator(),
+                                   temporary=TRUE)
+  }
   # decorate left and right tables for the merge
   tabA <- tabA %>%
     select(one_of(cols)) %>%
