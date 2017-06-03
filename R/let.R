@@ -59,7 +59,8 @@ letp <- function(., alias, expr,
   # (. %>% mutate(rank=rank-1)) roughly always behaves like a function,
   #  even if "." already has a value (so "." in this context is always treated
   #  as a free variable.)
-  `_reply_reserved_name` <- wrapr::letprep(alias, body, strict)
+  `_reply_reserved_name` <- wrapr::letprep(alias, body,
+                                           strict=strict)
   rm(list=setdiff(ls(all.names=TRUE),list('.','_reply_reserved_name')))
   # eval in new environment
   eenv <- new.env(parent=parent.frame())
