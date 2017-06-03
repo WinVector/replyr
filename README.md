@@ -6,7 +6,7 @@ Introduction
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances to make code perform similarly on local or remote (big) data.
 
-![](tools/replyrs.png)
+![](replyrs.png)
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 
@@ -37,7 +37,10 @@ library('dplyr')
 
 ``` r
 # nice parametric function we write
-ComputeRatioOfColumns <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
+ComputeRatioOfColumns <- function(d,
+                                  NumeratorColumnName,
+                                  DenominatorColumnName,
+                                  ResultColumnName) {
   wrapr::let(
     alias=list(NumeratorColumn=NumeratorColumnName,
                DenominatorColumn=DenominatorColumnName,
@@ -84,25 +87,26 @@ DecreaseRankColumnByOne <- function(d) {
 }
 ```
 
-To apply this function to `d` (which doesn't have the expected column names!) we use `replyr::replyr_apply_f_mapped()` as follows:
+To apply this function to `d` (which doesn't have the expected column names!) we use `replyr::replyr_apply_f_mapped()` to create a new parametrized adapter as follows:
 
 ``` r
+# our data
 d <- data.frame(Sepal_Length = c(5.8,5.7),
                 Sepal_Width = c(4.0,4.4),
                 Species = 'setosa',
                 rank = c(1,2))
 
-# map our data to expected column names so we can use function
-nmap <- c(GroupColumn='Species',
-          ValueColumn='Sepal_Length',
-          RankColumn='rank')
-print(nmap)
- #     GroupColumn    ValueColumn     RankColumn 
- #       "Species" "Sepal_Length"         "rank"
+# a wrapper to introduce parameters
+DecreaseRankColumnByOneNamed <- function(d, ColName) {
+  replyr::replyr_apply_f_mapped(d, 
+                                f = DecreaseRankColumnByOne, 
+                                nmap = c(RankColumn = ColName),
+                                restrictMapIn = FALSE, 
+                                restrictMapOut = FALSE)
+}
 
-dF <- replyr::replyr_apply_f_mapped(d, DecreaseRankColumnByOne, nmap,
-                                    restrictMapIn = FALSE, 
-                                    restrictMapOut = FALSE)
+# use
+dF <- DecreaseRankColumnByOneNamed(d, 'rank')
 print(dF)
  #    Sepal_Length Sepal_Width Species rank
  #  1          5.8         4.0  setosa    0
@@ -290,6 +294,6 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  640384 34.3    1168576 62.5   940480 50.3
- #  Vcells 1255452  9.6    2060183 15.8  2028110 15.5
+ #  Ncells  640377 34.2    1168576 62.5   940480 50.3
+ #  Vcells 1255500  9.6    2060183 15.8  2014883 15.4
 ```

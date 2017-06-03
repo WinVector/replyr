@@ -54,7 +54,10 @@ library('dplyr')
 ```
 ```{r letexample}
 # nice parametric function we write
-ComputeRatioOfColumns <- function(d,NumeratorColumnName,DenominatorColumnName,ResultColumnName) {
+ComputeRatioOfColumns <- function(d,
+                                  NumeratorColumnName,
+                                  DenominatorColumnName,
+                                  ResultColumnName) {
   wrapr::let(
     alias=list(NumeratorColumn=NumeratorColumnName,
                DenominatorColumn=DenominatorColumnName,
@@ -94,23 +97,26 @@ DecreaseRankColumnByOne <- function(d) {
 }
 ```
 
-To apply this function to `d` (which doesn't have the expected column names!) we use  `replyr::replyr_apply_f_mapped()` as follows:
+To apply this function to `d` (which doesn't have the expected column names!) we use  `replyr::replyr_apply_f_mapped()` to create a new parametrized adapter as follows:
 
 ```{r replyrmapf}
+# our data
 d <- data.frame(Sepal_Length = c(5.8,5.7),
                 Sepal_Width = c(4.0,4.4),
                 Species = 'setosa',
                 rank = c(1,2))
 
-# map our data to expected column names so we can use function
-nmap <- c(GroupColumn='Species',
-          ValueColumn='Sepal_Length',
-          RankColumn='rank')
-print(nmap)
+# a wrapper to introduce parameters
+DecreaseRankColumnByOneNamed <- function(d, ColName) {
+  replyr::replyr_apply_f_mapped(d, 
+                                f = DecreaseRankColumnByOne, 
+                                nmap = c(RankColumn = ColName),
+                                restrictMapIn = FALSE, 
+                                restrictMapOut = FALSE)
+}
 
-dF <- replyr::replyr_apply_f_mapped(d, DecreaseRankColumnByOne, nmap,
-                                    restrictMapIn = FALSE, 
-                                    restrictMapOut = FALSE)
+# use
+dF <- DecreaseRankColumnByOneNamed(d, 'rank')
 print(dF)
 ```
 
