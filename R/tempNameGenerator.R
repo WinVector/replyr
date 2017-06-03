@@ -37,7 +37,7 @@ makeTempNameGenerator <- function(prefix,
       nameList <<- c()
       return(v)
     }
-    nm <- paste(prefix, suffix, sprintf('%05d',count), sep='_')
+    nm <- paste(prefix, suffix, sprintf('%010d',count), sep='_')
     nameList <<- c(nameList, nm)
     count <<- count + 1
     nm
