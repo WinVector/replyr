@@ -113,11 +113,12 @@ replyr_group_by <- function(.data, colname) {
 #' @export
 #'
 replyr_select <- function(.data, colnames) {
-  dname <- deparse(substitute(.data))
-  expr <- paste0('dplyr::select( ', dname, ', ',
-                 paste(colnames, collapse = ', '),
-                 ' )')
-  eval(parse(text=expr),
-       envir=parent.frame(),
-       enclos=parent.frame())
+  dplyr::select(.data, one_of(colnames))
+  # dname <- deparse(substitute(.data))
+  # expr <- paste0('dplyr::select( ', dname, ', ',
+  #                paste(colnames, collapse = ', '),
+  #                ' )')
+  # eval(parse(text=expr),
+  #      envir=parent.frame(),
+  #      enclos=parent.frame())
 }

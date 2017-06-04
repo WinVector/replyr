@@ -4,8 +4,8 @@
 \alias{replyr_apply_f_mapped}
 \title{Apply a function to a re-mapped data frame.}
 \usage{
-replyr_apply_f_mapped(d, f, nmap, ..., restrictMapIn = TRUE,
-  rmap = replyr::replyr_reverseMap(nmap), restrictMapOut = TRUE)
+replyr_apply_f_mapped(d, f, nmap, ..., restrictMapIn = FALSE,
+  rmap = replyr::replyr_reverseMap(nmap), restrictMapOut = FALSE)
 }
 \arguments{
 \item{d}{data.frame to work on}

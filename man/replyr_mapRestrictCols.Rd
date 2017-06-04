@@ -4,7 +4,7 @@
 \alias{replyr_mapRestrictCols}
 \title{Map names of columns to known values and drop other columns.}
 \usage{
-replyr_mapRestrictCols(x, nmap, ..., restrict = TRUE, reverse = FALSE)
+replyr_mapRestrictCols(x, nmap, ..., restrict = FALSE, reverse = FALSE)
 }
 \arguments{
 \item{x}{data item to work on}

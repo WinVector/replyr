@@ -94,7 +94,7 @@ replyr_reverseMap <- function(nmap) {
 #' @export
 replyr_mapRestrictCols <- function(x, nmap,
                                    ...,
-                                   restrict= TRUE,
+                                   restrict= FALSE,
                                    reverse= FALSE) {
   if(length(list(...))>0) {
     stop("replyr::replyr_mapRestrictCols unexpected argument")
@@ -171,7 +171,9 @@ replyr_mapRestrictCols <- function(x, nmap,
   for(mi in list(map1, map2)) {
     for(ni in names(mi)) {
       ti <- mi[[ni]]
-      x <- replyr_rename(x, newName= ni, oldName= ti)
+      if(ni!=ti) {
+        x <- replyr_rename(x, newName= ni, oldName= ti)
+      }
     }
   }
   x
@@ -221,9 +223,9 @@ replyr_apply_f_mapped <- function(d,
                                   f,
                                   nmap,
                                   ...,
-                                  restrictMapIn = TRUE,
+                                  restrictMapIn = FALSE,
                                   rmap = replyr::replyr_reverseMap(nmap),
-                                  restrictMapOut = TRUE) {
+                                  restrictMapOut = FALSE) {
   dMapped <- replyr_mapRestrictCols(d, nmap,
                                     restrict = restrictMapIn)
   dF <- f(dMapped)
