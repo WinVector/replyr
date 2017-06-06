@@ -119,16 +119,6 @@ a useful separation of concerns, the mapping code is a wrapper completely outsid
 pipeline (the two are no longer commingled). For complicated
 tasks the ratio of `wrapr::let` boilerplate to actual useful work goes down quickly.
 
-We also have a varation for piping into (though to save such pipes for later you use 
-`wrapr::let`, not `replyr::letp`):
-
-```{r}
-# replyr::letp solution
-d %>% replyr::letp(alias = list(cname = cname, rname = rname),
-                   expr  = {
-                   . %>% mutate(rname = is.na(cname))
-                   })
-```
 
 The alias map is deliberately only allowed to be a string to string map (no environments, `as.name`, `formula`, expressions, or values) so `wrapr::let` *itself* is easy to use in automation or program over. 
 I'll repeat that for emphasis: externally `wrapr::let` is completely controllable through standard
