@@ -41,8 +41,8 @@ addConstantColumn <- function(d,
         dm <- dplyr::mutate(d, REPLYRCOLNAME=as.character(val))
     )
   } else {
-    dm <- let(list(REPLYRCOLNAME=colName),
-              dm <- dplyr::mutate(d, REPLYRCOLNAME=val)
+    let(list(REPLYRCOLNAME=colName),
+        dm <- dplyr::mutate(d, REPLYRCOLNAME=val)
     )
   }
   # force calculation as chaning of replyr_private_name_vi was chaning previously assigned columns!

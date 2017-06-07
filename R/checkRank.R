@@ -27,14 +27,14 @@ replyr_ranksummaries <- function(x,
       n <- replyr::replyr_nrow(x)
       x %>% dplyr::filter(!(RankColumn %in% 1:n)) %>%
         replyr::replyr_nrow() -> nBadRanks
-      x %>% replyr::replyr_uniqueValues('RankColumn') %>%
+      x %>% replyr::replyr_uniqueValues(RankColumnName) %>%
         replyr::replyr_nrow() -> nUniqueRanks
       # had problems with head(n=1) on sparklyr
       # https://github.com/WinVector/replyr/blob/master/issues/HeadIssue.md
-      x %>% replyr::replyr_uniqueValues('GroupColumn') %>%
+      x %>% replyr::replyr_uniqueValues(GroupColumnName) %>%
         head() %>% replyr::replyr_copy_from() %>% head(n=1) -> tmp
       groupID <- tmp$GroupColumn[[1]]
-      x %>% replyr::replyr_uniqueValues('GroupColumn') %>%
+      x %>% replyr::replyr_uniqueValues(GroupColumnName) %>%
         replyr::replyr_nrow() -> nGroups
       # work around sparklyr Spark 1.6.2 join issue by minimizing and renaming columns
       # https://github.com/rstudio/sparklyr/issues/338
