@@ -32,13 +32,11 @@ tDesc <- rbind(tableDesription('d1', d1),
 # declare keys (and give them consitent names)
 tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
-# build the column join plan
+# build the join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
-# decide we don't want the width column
-columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
-# double check our plan
-if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
-  stop("bad join plan")
-}
+# damage the plan
+columnJoinPlan$sourceColumn[columnJoinPlan$sourceColumn=='width'] <- 'wd'
+# find a problem
+inspectDescrAndJoinPlan(tDesc, columnJoinPlan)
 
 }

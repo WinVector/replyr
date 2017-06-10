@@ -65,46 +65,59 @@ tableDesription <- function(tableName,
 
 
 
-
+# type unstable: return data.frame if okay, character if problem
 inspectAndLimitJoinPlan <- function(columnJoinPlan) {
   resultColumn <- NULL # declare not an unbound ref
   abstractKeyName <- NULL # declare not an unbound ref
   tableName <- NULL # declare not an unbound ref
   # sanity check
   if(any(nchar(columnJoinPlan$tableName)<=0)) {
-    stop("replyr::inspectAndLimitJoinPlan empty table name(s) in columnJoinPlan")
+    return("empty table name(s) in columnJoinPlan")
   }
   keyIdxs <- which(nchar(columnJoinPlan$abstractKeyName)>0)
   if(!all(columnJoinPlan$resultColumn[keyIdxs]==columnJoinPlan$abstractKeyName[keyIdxs])) {
-    stop("replyr::inspectAndLimitJoinPlan non-empty columnJoinPlan abstract keys must equal resultColumn")
+    return("non-empty columnJoinPlan abstract keys must equal resultColumn")
   }
   tableIndColNames <- makeTableIndMap(columnJoinPlan$tableName)
   if(length(intersect(tableIndColNames,
                       c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn)))>0) {
-    stop("executeLeftJoinPlan: column mappings intersect intended table label columns")
+    return("executeLeftJoinPlan: column mappings intersect intended table label columns")
   }
   # limit down to things we are using
   columnJoinPlan <- columnJoinPlan %>%
     dplyr::filter((nchar(resultColumn)>0) | (nchar(abstractKeyName)>0))
   if(any(nchar(columnJoinPlan$sourceColumn)<=0)) {
-    stop("replyr::inspectAndLimitJoinPlan empty source column names")
+    return("empty source column names")
   }
   tabsC <- unique(columnJoinPlan$tableName)
   # check a few desired invarients of the plan
   valCols <- columnJoinPlan$resultColumn[nchar(columnJoinPlan$abstractKeyName)<=0]
   if(length(unique(valCols))!=length(valCols)) {
-    stop("replyr::inspectAndLimitJoinPlan non-unique value columns")
+    return("non-unique value columns")
   }
   keyCols <- unique(columnJoinPlan$abstractKeyName[nchar(columnJoinPlan$abstractKeyName)>0])
   if(length(intersect(keyCols, valCols))>0) {
-    stop("replyr::inspectAndLimitJoinPlan key columns and value columns intersect non-trivially")
+    return("key columns and value columns intersect non-trivially")
   }
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
+  prevCI <- NULL
   for(tabnam in tabs) {
     ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
     if(!any(nchar(ci$abstractKeyName)>0)) {
-      stop(paste("replyr::inspectAndLimitJoinPlan no keys for table:", tabnam))
+      return(paste("no keys for table:", tabnam))
     }
+    keyCols <- ci$abstractKeyName[nchar(ci$abstractKeyName)>0]
+    resCols <- ci$resultColumn[nchar(ci$resultColumn)>0]
+    if(length(setdiff(keyCols,resCols))>0) {
+      return(paste("key cols not contained in result cols for table:", tabnam))
+    }
+    if(!is.null(prevCI)) {
+      prevRes <- prevCI$resultColumn[nchar(prevCI$resultColumn)>0]
+      if(length(setdiff(keyCols,prevRes))>0) {
+        return(paste("key cols not contained in result cols of previous table for table:", tabnam))
+      }
+    }
+    prevCI <- ci
   }
   columnJoinPlan
 }
@@ -130,14 +143,12 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
 #' # declare keys (and give them consitent names)
 #' tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 #' tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
-#' # build the column join plan
+#' # build the join plan
 #' columnJoinPlan <- buildJoinPlan(tDesc)
-#' # decide we don't want the width column
-#' columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
-#' # double check our plan
-#' if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
-#'   stop("bad join plan")
-#' }
+#' # damage the plan
+#' columnJoinPlan$sourceColumn[columnJoinPlan$sourceColumn=='width'] <- 'wd'
+#' # find a problem
+#' inspectDescrAndJoinPlan(tDesc, columnJoinPlan)
 #'
 #' @export
 #'
@@ -201,13 +212,11 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan) {
                    tnam, "uses a source that is not a column"))
     }
   }
-  # just in case
-  caughtmsg <- NULL
-  tryCatch(
-    columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan),
-    error = function(e) { caughtmsg <<- e }
-  )
-  return(caughtmsg)
+  res <- inspectAndLimitJoinPlan(columnJoinPlan)
+  if(is.character(res)) {
+    return(res)
+  }
+  return(NULL) # okay!
 }
 
 
@@ -363,6 +372,9 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 tempNameGenerator= makeTempNameGenerator("executeLeftJoinPlan")) {
   # sanity check (if there is an obvious config problem fail before doing potentially expensive work)
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan)
+  if(is.character(columnJoinPlan)) {
+    stop(paste("replyr::executeLeftJoinPlan", columnJoinPlan))
+  }
   if(length(unique(tDesc$tableName))!=length(tDesc$tableName)) {
     stop("replyr::executeLeftJoinPlan duplicate table names in tDesc")
   }
