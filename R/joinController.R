@@ -1,7 +1,22 @@
 
 
+uniqueInOrder <- function(names) {
+  name <- NULL # declare not unbound reference
+  rowid <- NULL # declare not unbound reference
+  dn <- data.frame(name= names,
+                   rowid= seq_len(length(names)),
+                   stringsAsFactors = FALSE)
+  dn <- dn %>%
+    dplyr::group_by(name) %>%
+    dplyr::summarize(rowid=min(rowid)) %>%
+    dplyr::arrange(rowid)
+  dn$name
+}
+
+
+
 makeTableIndMap <- function(tableNameSeq) {
-  tableNameSeq <- unique(tableNameSeq)
+  tableNameSeq <- uniqueInOrder(tableNameSeq)
   tableIndColNames <- paste('table',
                             gsub("[^a-zA-Z0-9]+", '_', tableNameSeq),
                             'present', sep= '_')
@@ -30,6 +45,9 @@ makeTableIndMap <- function(tableNameSeq) {
 #'
 tableDesription <- function(tableName,
                             handle) {
+  if(length(nchar(tableName))<=0) {
+    stop("replyr::tableDesription empty name")
+  }
   sample <- dplyr::collect(head(handle))
   cols <- colnames(sample)
   keys <- cols
@@ -41,8 +59,8 @@ tableDesription <- function(tableName,
   dplyr::data_frame(tableName= tableName,
                     handle= list(handle),
                     columns= list(cols),
-                    keys= list(keys))
-
+                    keys= list(keys),
+                    isEmpty= nrow(sample)<=0)
 }
 
 
@@ -81,7 +99,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
   if(length(intersect(keyCols, valCols))>0) {
     stop("replyr::inspectAndLimitJoinPlan key columns and value columns intersect non-trivially")
   }
-  tabs <- unique(columnJoinPlan$tableName)
+  tabs <- uniqueInOrder(columnJoinPlan$tableName)
   for(tabnam in tabs) {
     ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
     if(!any(nchar(ci$abstractKeyName)>0)) {
@@ -296,19 +314,6 @@ buildJoinPlan <- function(tDesc) {
 }
 
 
-uniqueInOrder <- function(names) {
-  name <- NULL # declare not unbound reference
-  rowid <- NULL # declare not unbound reference
-  dn <- data.frame(name= names,
-                   rowid= seq_len(length(names)),
-                   stringsAsFactors = FALSE)
-  dn <- dn %>%
-    dplyr::group_by(name) %>%
-    dplyr::summarize(rowid=min(rowid)) %>%
-    dplyr::arrange(rowid)
-  dn$name
-}
-
 
 
 #' Execute an ordered sequence of left joins.
@@ -316,7 +321,8 @@ uniqueInOrder <- function(names) {
 #' @param tDesc description of tables, from \code{\link{tableDesription}} only used to map table names to data.
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @param ... force later arguments to bind by name.
-#' @param eagerCompute logical if TRUE compute eager.
+#' @param checkColumns logical if TURE confirm column names before starting joins.
+#' @param eagerCompute logical if TRUE materialize intermediate results with \code{dplyr::compute}.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return joined table
 #'
@@ -352,6 +358,7 @@ uniqueInOrder <- function(names) {
 #'
 executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 ...,
+                                checkColumns= TRUE,
                                 eagerCompute= TRUE,
                                 tempNameGenerator= makeTempNameGenerator("executeLeftJoinPlan")) {
   # sanity check (if there is an obvious config problem fail before doing potentially expensive work)
@@ -362,7 +369,6 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
   if(!all(columnJoinPlan$tableName %in% tDesc$tableName)) {
     stop("replyr::executeLeftJoinPlan some needed columnJoinPlan table(s) not in tDesc")
   }
-  # start joining
   # get the names of tables in columnJoinPlan order
   tableNameSeq <- uniqueInOrder(columnJoinPlan$tableName)
   tableIndColNames <- makeTableIndMap(tableNameSeq)
@@ -370,6 +376,33 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                       c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn)))>0) {
     stop("executeLeftJoinPlan: column mappings intersect intended table label columns")
   }
+  if(checkColumns) {
+    for(tabnam in tableNameSeq) {
+      handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]
+      newdesc <- tableDesription(tabnam, handlei)
+      tabcols <- newdesc$columns[[1]]
+      tableIndCol <- tableIndColNames[[tabnam]]
+      if(tableIndCol %in% tabcols) {
+        stop(paste("replyr::executeLeftJoinPlan column",
+                   tableIndCol, "already in table",
+                   tabnam))
+      }
+      keyRows <- which((columnJoinPlan$tableName==tabnam) &
+                         (nchar(columnJoinPlan$abstractKeyName)>0))
+      valRows <- which((columnJoinPlan$tableName==tabnam) &
+                         (nchar(columnJoinPlan$abstractKeyName)<=0) &
+                         (nchar(columnJoinPlan$resultColumn)>0))
+      needs <- c(columnJoinPlan$sourceColumn[keyRows],
+                columnJoinPlan$sourceColumn[valRows])
+      missing <- setdiff(needs, tabcols)
+      if(length(missing)>0) {
+        stop(paste("replyr::executeLeftJoinPlan table",
+                   tabnam, "misisng needed columns",
+                   paste(missing, collapse = ', ')))
+      }
+    }
+  }
+  # start joining
   res <- NULL
   for(tabnam in tableNameSeq) {
     handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]

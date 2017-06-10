@@ -4,7 +4,8 @@
 \alias{executeLeftJoinPlan}
 \title{Execute an ordered sequence of left joins.}
 \usage{
-executeLeftJoinPlan(tDesc, columnJoinPlan, ..., eagerCompute = TRUE,
+executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = TRUE,
+  eagerCompute = TRUE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
 }
 \arguments{
@@ -14,7 +15,9 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., eagerCompute = TRUE,
 
 \item{...}{force later arguments to bind by name.}
 
-\item{eagerCompute}{logical if TRUE compute eager.}
+\item{checkColumns}{logical if TURE confirm column names before starting joins.}
+
+\item{eagerCompute}{logical if TRUE materialize intermediate results with \code{dplyr::compute}.}
 
 \item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
