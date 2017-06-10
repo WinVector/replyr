@@ -118,7 +118,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     stop("replyr::executeJoinPlan tDesc does not have all the needed tables to join")
   }
   tDesc <- tDesc %>%
-    filter(tableName %in% tabs)
+    dplyr::filter(tableName %in% tabs)
   ntab <- nrow(tDesc)
   if(ntab<=0) {
     stop("replyr::executeJoinPlan no tables selected")
@@ -146,7 +146,8 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     if(is.null(res)) {
       res <- ti
     } else {
-      res <- dplyr::left_join(res, ti)
+      rightKeys <- columnJoinPlan$resultColumn[keyRows]
+      res <- dplyr::left_join(res, ti, by= rightKeys)
       if(eagerCompute) {
         res <- dplyr::compute(res, name=tempNameGenerator())
       }
