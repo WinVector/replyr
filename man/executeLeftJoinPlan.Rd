@@ -10,7 +10,7 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., eagerCompute = TRUE,
 \arguments{
 \item{tDesc}{description of tables, from \code{\link{tableDesription}} only used to map table names to data.}
 
-\item{columnJoinPlan}{columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).}
+\item{columnJoinPlan}{columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
 
 \item{...}{force later arguments to bind by name.}
 
