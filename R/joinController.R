@@ -81,6 +81,13 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
   if(length(intersect(keyCols, valCols))>0) {
     stop("replyr::inspectAndLimitJoinPlan key columns and value columns intersect non-trivially")
   }
+  tabs <- unique(columnJoinPlan$tableName)
+  for(tabnam in tabs) {
+    ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
+    if(!any(nchar(ci$abstractKeyName)>0)) {
+      stop(paste("replyr::inspectAndLimitJoinPlan no keys for table:", tabnam))
+    }
+  }
   columnJoinPlan
 }
 
@@ -177,8 +184,12 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan) {
     }
   }
   # just in case
-  columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan)
-  return(NULL) # okay
+  caughtmsg <- NULL
+  tryCatch(
+    columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan),
+    error = function(e) { caughtmsg <<- e }
+  )
+  return(caughtmsg)
 }
 
 
