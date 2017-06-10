@@ -64,8 +64,7 @@ buildJoinPlan <- function(tDesc) {
     pi <- dplyr::data_frame(tableName= tnam,
                             sourceColumn= cols,
                             resultColumn= resultColumn,
-                            abstractKeyName= abstractKeyName,
-                            defaultValue= NA)
+                            abstractKeyName= abstractKeyName)
     plans[[i]] <- pi
   }
   plans <- dplyr::bind_rows(plans)
@@ -98,9 +97,10 @@ buildJoinPlan <- function(tDesc) {
 #'
 #' @examples
 #'
-#' d <- data.frame(id=1:3, weight= c(200, 140, 98))
-#' tDesc <- rbind(tableDesription('d1', d),
-#'                tableDesription('d2', d))
+#' d1 <- data.frame(id=1:3, weight= c(200, 140, 98))
+#' d2 <- data.frame(id=2:3, weight= c(130, 110))
+#' tDesc <- rbind(tableDesription('d1', d1),
+#'                tableDesription('d2', d2))
 #' tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 #' tDesc$keys[[2]] <- list(PrimaryKey= 'id')
 #' columnJoinPlan <- buildJoinPlan(tDesc)
@@ -148,6 +148,11 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     } else {
       rightKeys <- columnJoinPlan$resultColumn[keyRows]
       res <- dplyr::left_join(res, ti, by= rightKeys)
+      REPLYR_TABLE_PRESENT_COL <- NULL # signal not an unbound variable
+      wrapr::let(
+        c(REPLYR_TABLE_PRESENT_COL= tableIndCol),
+        res <- dplyr::mutate(res, REPLYR_TABLE_PRESENT_COL = ifelse(is.na(REPLYR_TABLE_PRESENT_COL), 0, 1))
+      )
       if(eagerCompute) {
         res <- dplyr::compute(res, name=tempNameGenerator())
       }

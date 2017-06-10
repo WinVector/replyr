@@ -26,9 +26,10 @@ Execute a sequence of left joins.
 }
 \examples{
 
-d <- data.frame(id=1:3, weight= c(200, 140, 98))
-tDesc <- rbind(tableDesription('d1', d),
-               tableDesription('d2', d))
+d1 <- data.frame(id=1:3, weight= c(200, 140, 98))
+d2 <- data.frame(id=2:3, weight= c(130, 110))
+tDesc <- rbind(tableDesription('d1', d1),
+               tableDesription('d2', d2))
 tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 tDesc$keys[[2]] <- list(PrimaryKey= 'id')
 columnJoinPlan <- buildJoinPlan(tDesc)
