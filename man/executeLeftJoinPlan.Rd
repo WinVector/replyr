@@ -2,7 +2,7 @@
 % Please edit documentation in R/joinController.R
 \name{executeLeftJoinPlan}
 \alias{executeLeftJoinPlan}
-\title{Execute a sequence of left joins.}
+\title{Execute an ordered sequence of left joins.}
 \usage{
 executeLeftJoinPlan(tDesc, columnJoinPlan, ..., eagerCompute = TRUE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
@@ -22,17 +22,29 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., eagerCompute = TRUE,
 joined table
 }
 \description{
-Execute a sequence of left joins.
+Execute an ordered sequence of left joins.
 }
 \examples{
 
-d1 <- data.frame(id=1:3, weight= c(200, 140, 98))
-d2 <- data.frame(id=2:3, weight= c(130, 110))
+
+# example data
+d1 <- data.frame(id= 1:3,
+                 weight= c(200, 140, 98),
+                 height= c(60, 24, 12))
+d2 <- data.frame(pid= 2:3,
+                 weight= c(130, 110),
+                 width= 1)
+# get the initial description of table defs
 tDesc <- rbind(tableDesription('d1', d1),
                tableDesription('d2', d2))
+# declare keys (and give them consitent names)
 tDesc$keys[[1]] <- list(PrimaryKey= 'id')
-tDesc$keys[[2]] <- list(PrimaryKey= 'id')
+tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
+# build the column join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
+# decide we don't want the width column
+columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
+# execute the left joins
 executeLeftJoinPlan(tDesc, columnJoinPlan)
 
 }
