@@ -50,34 +50,46 @@ The data is given below:
 my_db <- dplyr::src_sqlite(":memory:", 
                            create = TRUE)
 # example data
-meas1 <- replyr_copy_to(my_db,
-                        data.frame(id= c(1,1,2,2),
-                                   date= c(1,2,1,2),
-                                   weight= c(200, 180, 98, 120),
-                                   height= c(60, 54, 12, 14)),
-                        'meas1')
-names <- replyr_copy_to(my_db,
-                        data.frame(id= seq_len(length(letters)),
-                                   name= letters,
-                                   stringsAsFactors=FALSE),
-                        'names')
-meas2 <- replyr_copy_to(my_db,
-                        data.frame(pid= c(2,3),
-                                   date= c(2,2),
-                                   weight= c(105, 110),
-                                   width= 1),
-                        'meas2')
+replyr_copy_to(my_db,
+               data.frame(id= c(1,1,2,2),
+                          date= c(1,2,1,2),
+                          weight= c(200, 180, 98, 120),
+                          height= c(60, 54, 12, 14)),
+               'meas1_train')
+replyr_copy_to(my_db,
+               data.frame(id= seq_len(length(letters)),
+                          name= letters,
+                          stringsAsFactors=FALSE),
+               'names_facts')
+replyr_copy_to(my_db,
+               data.frame(pid= c(2,3),
+                          date= c(2,2),
+                          weight= c(105, 110),
+                          width= 1),
+               'meas2_train')
 ```
 
 An important (and very neglected) step in data science tasks is documenting roles of tables, especially their key-structure (which we also call "stride" in the sense it describes how you move from row to row).  `replyr::tableDesription()` is a function that builds an initial description of the tables.
 
 ```{r defs}
+# map from abstract names to realized names
+tables <- list('meas1' = 'meas1_train',
+               'names' = 'names_facts',
+               'meas2' = 'meas2_train')
+
 # get the initial description of table defs
-tDesc <- rbind(tableDesription('meas1', meas1),
-               tableDesription('names', names),
-               tableDesription('meas2', meas2))
+got <- lapply(names(tables),
+              function(ni) {
+                # get table reference from source by concrete name
+                ti <- tbl(my_db, tables[[ni]])
+                # map abstract name to reference
+                tableDesription(ni, ti)
+              })
+tDesc <- bind_rows(got)
+
 print(tDesc, width = Inf)
 print(tDesc$columns)
+print(tDesc$colClass)
 print(tDesc$keys)
 ```
 
@@ -87,6 +99,8 @@ print(tDesc$keys)
  * `handle`: the actual data handle (either a `data.frame` or a handle to a remote data source such as `PostgreSQL` or `Spark`).  Notice in this case it is a "`tbl_dbi`".
  * `columns`: the list of columns in the table.
  * `keys`: a named list mapping abstract key names to table column names. The set of keys together is supposed to uniquely identify rows.
+ * colClasses: a vector of column classes of the underlying table.
+ * sourceClass: the declared class of the data source.
  * `isEmpty`: an advisory column indicating if any rows were present when we looked.
  
  The `tableName` is "abstract" in that it is not only used to discuss tables.  The data is actually found through the handle.  This is critical in processes where we may need to run the same set of joins twice on different sets of tables (such as building a machine learning model, and then latter applying the model to new data).
