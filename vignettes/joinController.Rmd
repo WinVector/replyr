@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-#### [`replyr`](https://github.com/WinVector/replyr) join controller
+#### [`replyr`](https://github.com/WinVector/replyr) Join Controller
 
 When working on real world predictive modeling tasks in production the ability to join data and document how you join data is paramount.  One of the reasons is there are very strong reasons to organize data in something resembling one of the [Codd normal forms](https://en.wikipedia.org/wiki/Database_normalization).  However, for machine learning we need a fully denormalized for (all columns populated into a single to ready to go row, no matter what their provenance, keying, or stride).
 
@@ -76,7 +76,7 @@ An important (and very neglected) step in data science tasks is documenting role
 tDesc <- rbind(tableDesription('meas1', meas1),
                tableDesription('names', names),
                tableDesription('meas2', meas2))
-print(tDesc)
+print(tDesc, width = Inf)
 print(tDesc$columns)
 print(tDesc$keys)
 ```
@@ -99,7 +99,7 @@ tDesc$keys[[1]] <- list(PatientID= 'id', MeasurementDate= 'date')
 tDesc$keys[[2]] <- list(PatientID= 'id')
 tDesc$keys[[3]] <- list(PatientID= 'pid', MeasurementDate= 'date')
 
-print(tDesc)
+print(tDesc, width = Inf)
 print(tDesc$keys)
 ```
 
@@ -142,7 +142,7 @@ if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
 print(columnJoinPlan)
 ```
 
-The join plan is neglected documentation that hurts many non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
+The join plan is the neglected (and often missing) documentation that hurts many non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
 
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()`:
 

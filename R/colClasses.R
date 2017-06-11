@@ -14,7 +14,11 @@
 #'
 #' @export
 replyr_colClasses <- function(x) {
-  x  %>% head() %>% dplyr::collect() %>% as.data.frame() -> topx
+  x  %>%
+    dplyr::ungroup() %>%
+    head() %>%
+    dplyr::collect() %>%
+    as.data.frame() -> topx
   classes <- lapply(topx,class)
   names(classes) <- colnames(topx)
   classes

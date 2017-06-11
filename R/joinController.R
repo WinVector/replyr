@@ -50,6 +50,18 @@ tableDesription <- function(tableName,
   }
   sample <- dplyr::collect(head(handle))
   cols <- colnames(sample)
+  classes <- vapply(cols,
+                    function(si) {
+                      paste(class(sample[[si]]),
+                                  collapse=', ')
+                    }, character(1))
+  source <- replyr_get_src(handle)
+  if(!is.character(source)) {
+    source <- class(source)
+  }
+  if(length(source)>1) {
+    source <- paste(source, collapse = ', ')
+  }
   keys <- cols
   names(keys) <- cols
   tableIndColNames <- makeTableIndMap(tableName)
@@ -60,6 +72,8 @@ tableDesription <- function(tableName,
                     handle= list(handle),
                     columns= list(cols),
                     keys= list(keys),
+                    colClass= list(classes),
+                    sourceClass= source,
                     isEmpty= nrow(sample)<=0)
 }
 
@@ -289,6 +303,7 @@ buildJoinPlan <- function(tDesc) {
     cols <- tDesc$columns[[i]]
     keys <- tDesc$keys[[i]]
     tnam <- tDesc$tableName[[i]]
+    classes <- tDesc$colClass[[i]]
     if(length(cols)<=0) {
       stop(paste("replyr::buildJoinPlan table",
                  tnam, "no columns"))
@@ -324,6 +339,7 @@ buildJoinPlan <- function(tDesc) {
     resultColumn[keyIndexes] <- names(keys)
     pi <- dplyr::data_frame(tableName= tnam,
                             sourceColumn= cols,
+                            sourceClass= classes,
                             resultColumn= resultColumn,
                             abstractKeyName= abstractKeyName)
     plans[[i]] <- pi
