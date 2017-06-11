@@ -111,7 +111,9 @@ It is worth confirming the keying as as expected (else some rows can reproduce i
 keysAreUnique(tDesc)
 ```
 
-Once we are satisfied with our description of tables we can build a join plan.  The join plan is an ordered sequence of left-joins (especially when encountering [star-schemas](https://en.wikipedia.org/wiki/Star_schema)).  It is a remarkable observation that in practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.
+Once we are satisfied with our description of tables we can build a join plan.  The join plan is an ordered sequence of left-joins (especially when encountering [star-schemas](https://en.wikipedia.org/wiki/Star_schema)).  
+
+It is a remarkable observation that in practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.  This is obviously not the only join pattern needed; but it is the common one that requires many tables.
 
 A join plan is first build from our table descriptions:
 

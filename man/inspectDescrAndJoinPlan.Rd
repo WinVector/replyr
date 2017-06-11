@@ -4,12 +4,16 @@
 \alias{inspectDescrAndJoinPlan}
 \title{check that a join plan is consistent with table descriptions}
 \usage{
-inspectDescrAndJoinPlan(tDesc, columnJoinPlan)
+inspectDescrAndJoinPlan(tDesc, columnJoinPlan, ..., checkColClasses = FALSE)
 }
 \arguments{
 \item{tDesc}{description of tables, from \code{\link{tableDesription}} (and likely altered by user).}
 
 \item{columnJoinPlan}{columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
+
+\item{...}{force later arguments to bind by name.}
+
+\item{checkColClasses}{logical if true check for exact class name matches}
 }
 \value{
 NULL if okay, else a string
@@ -34,9 +38,13 @@ tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
 # build the join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
+# confirm the plan
+inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
+                        checkColClasses= TRUE)
 # damage the plan
 columnJoinPlan$sourceColumn[columnJoinPlan$sourceColumn=='width'] <- 'wd'
 # find a problem
-inspectDescrAndJoinPlan(tDesc, columnJoinPlan)
+inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
+                        checkColClasses= TRUE)
 
 }

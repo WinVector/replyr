@@ -118,7 +118,7 @@ keysAreUnique <- function(tDesc) {
 }
 
 # type unstable: return data.frame if okay, character if problem
-inspectAndLimitJoinPlan <- function(columnJoinPlan) {
+inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
   resultColumn <- NULL # declare not an unbound ref
   abstractKeyName <- NULL # declare not an unbound ref
   tableName <- NULL # declare not an unbound ref
@@ -152,9 +152,11 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
     return("key columns and value columns intersect non-trivially")
   }
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
-  prevRes <- NULL
+  prevResColClasses <- list()
   for(tabnam in tabs) {
     ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
+    cMap <- ci$sourceClass
+    names(cMap) <- ci$resultColumn
     if(!any(nchar(ci$abstractKeyName)>0)) {
       return(paste("no keys for table:", tabnam))
     }
@@ -163,12 +165,23 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
     if(length(setdiff(keyCols,resCols))>0) {
       return(paste("key cols not contained in result cols for table:", tabnam))
     }
-    if(!is.null(prevRes)) {
-      if(length(setdiff(keyCols,prevRes))>0) {
+    if(length(prevResColClasses)>0) {
+      if(!all(keyCols %in% names(prevResColClasses))) {
         return(paste("key cols not contained in result cols of previous table(s) for table:", tabnam))
       }
     }
-    prevRes <- union(prevRes, resCols)
+    for(ki in resCols) {
+      prevClass <- prevResColClasses[[ki]]
+      curClass <- cMap[[ki]]
+      if((checkColClasses)&&(!is.null(prevClass))&&
+         (curClass!=prevClass)) {
+        return(paste("column",ki,"changed from",
+                     prevClass,"to",curClass,"at table",
+                     tabnam))
+
+      }
+      prevResColClasses[[ki]] <- curClass
+    }
   }
   columnJoinPlan
 }
@@ -177,6 +190,8 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
 #'
 #' @param tDesc description of tables, from \code{\link{tableDesription}} (and likely altered by user).
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
+#' @param ... force later arguments to bind by name.
+#' @param checkColClasses logical if true check for exact class name matches
 #' @return NULL if okay, else a string
 #'
 #' @examples
@@ -196,14 +211,20 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
 #' tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
 #' # build the join plan
 #' columnJoinPlan <- buildJoinPlan(tDesc)
+#' # confirm the plan
+#' inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
+#'                         checkColClasses= TRUE)
 #' # damage the plan
 #' columnJoinPlan$sourceColumn[columnJoinPlan$sourceColumn=='width'] <- 'wd'
 #' # find a problem
-#' inspectDescrAndJoinPlan(tDesc, columnJoinPlan)
+#' inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
+#'                         checkColClasses= TRUE)
 #'
 #' @export
 #'
-inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan) {
+inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
+                                    ...,
+                                    checkColClasses= FALSE) {
   resultColumn <- NULL # declare not an unbound ref
   abstractKeyName <- NULL # declare not an unbound ref
   tableName <- NULL # declare not an unbound ref
@@ -259,11 +280,14 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan) {
       dplyr::filter(tableName==tnam)
     # don't check tDesc$keys here, as it isn't used after join plan is constructed.
     if(!all(ci$sourceColumn %in% tDesc$columns[[i]])) {
-      return(paste("table",
-                   tnam, "uses a source that is not a column"))
+      probs <- paste(setdiff(ci$sourceColumn, tDesc$columns[[i]]),
+                     collapse = ', ')
+      return(paste("table description",
+                   tnam, "refers to non-column(s):",probs))
     }
   }
-  res <- inspectAndLimitJoinPlan(columnJoinPlan)
+  res <- inspectAndLimitJoinPlan(columnJoinPlan,
+                                 checkColClasses=checkColClasses)
   if(is.character(res)) {
     return(res)
   }
@@ -404,6 +428,7 @@ strMapToString <- function(m) {
 #' @param ... force later arguments to bind by name.
 #' @param checkColumns logical if TURE confirm column names before starting joins.
 #' @param eagerCompute logical if TRUE materialize intermediate results with \code{dplyr::compute}.
+#' @param checkColClasses logical if true check for exact class name matches
 #' @param verbose logical if TRUE print more.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return joined table
@@ -429,11 +454,13 @@ strMapToString <- function(m) {
 #' # decide we don't want the width column
 #' columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
 #' # double check our plan
-#' if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
+#' if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
+#'             checkColClasses= TRUE))) {
 #'   stop("bad join plan")
 #' }
 #' # execute the left joins
-#' executeLeftJoinPlan(tDesc, columnJoinPlan)
+#' executeLeftJoinPlan(tDesc, columnJoinPlan,
+#'                     checkColClasses= TRUE)
 #'
 #' @export
 #'
@@ -442,10 +469,12 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 ...,
                                 checkColumns= FALSE,
                                 eagerCompute= TRUE,
+                                checkColClasses= FALSE,
                                 verbose= FALSE,
                                 tempNameGenerator= makeTempNameGenerator("executeLeftJoinPlan")) {
   # sanity check (if there is an obvious config problem fail before doing potentially expensive work)
-  columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan)
+  columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan,
+                                            checkColClasses=checkColClasses)
   if(is.character(columnJoinPlan)) {
     stop(paste("replyr::executeLeftJoinPlan", columnJoinPlan))
   }

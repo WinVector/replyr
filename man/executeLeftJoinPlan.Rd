@@ -5,7 +5,7 @@
 \title{Execute an ordered sequence of left joins.}
 \usage{
 executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
-  eagerCompute = TRUE, verbose = FALSE,
+  eagerCompute = TRUE, checkColClasses = FALSE, verbose = FALSE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
 }
 \arguments{
@@ -18,6 +18,8 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
 \item{checkColumns}{logical if TURE confirm column names before starting joins.}
 
 \item{eagerCompute}{logical if TRUE materialize intermediate results with \code{dplyr::compute}.}
+
+\item{checkColClasses}{logical if true check for exact class name matches}
 
 \item{verbose}{logical if TRUE print more.}
 
@@ -50,10 +52,12 @@ columnJoinPlan <- buildJoinPlan(tDesc)
 # decide we don't want the width column
 columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
 # double check our plan
-if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
+if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
+            checkColClasses= TRUE))) {
   stop("bad join plan")
 }
 # execute the left joins
-executeLeftJoinPlan(tDesc, columnJoinPlan)
+executeLeftJoinPlan(tDesc, columnJoinPlan,
+                    checkColClasses= TRUE)
 
 }
