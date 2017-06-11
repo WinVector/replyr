@@ -64,6 +64,44 @@ tableDesription <- function(tableName,
 }
 
 
+#' Check uniqueness of rows with respect to keys.
+#'
+#' Can be an expensive operation.
+#'
+#' @param tDesc description of tables, from \code{\link{tableDesription}} (and likely altered by user).
+#' @return logical TRUE if keys are unique
+#'
+#' @examples
+#'
+#' d <- data.frame(x=c(1,1,2,2,3,3), y=c(1,2,1,2,1,2))
+#' tDesc1 <- tableDesription('d1', d)
+#' tDesc2 <- tableDesription('d2', d)
+#' tDesc <- rbind(tDesc1, tDesc2)
+#' tDesc$keys[[2]] <- c(x='x')
+#' keysAreUnique(tDesc)
+#'
+#' @export
+#'
+keysAreUnique <- function(tDesc) {
+  n <- function(...) {} # declare not  unbound
+  isunique <- vapply(seq_len(nrow(tDesc)),
+                     function(i) {
+                       gi <- tDesc$handle[[i]]
+                       nrow <- replyr::replyr_nrow(gi)
+                       if(nrow<=0) {
+                         return(TRUE)
+                       }
+                       keys <- tDesc$keys[[i]]
+                       nunique <- gi %>%
+                         replyr_group_by(keys) %>%
+                         dplyr::summarize(count = n()) %>%
+                         replyr::replyr_nrow()
+                       return(nunique==nrow)
+                     },
+                     logical(1))
+  names(isunique) <- tDesc$tableName
+  isunique
+}
 
 # type unstable: return data.frame if okay, character if problem
 inspectAndLimitJoinPlan <- function(columnJoinPlan) {
@@ -392,6 +430,10 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     for(tabnam in tableNameSeq) {
       handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]
       newdesc <- tableDesription(tabnam, handlei)
+      if(newdesc$isEmpty[[1]]) {
+        warning(paste("replyr::executeLeftJoinPlan table is empty:",
+                      tabnam))
+      }
       tabcols <- newdesc$columns[[1]]
       tableIndCol <- tableIndColNames[[tabnam]]
       if(tableIndCol %in% tabcols) {

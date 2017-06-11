@@ -2,17 +2,17 @@
 % Please edit documentation in R/underscoreReplacements.R
 \name{replyr_group_by}
 \alias{replyr_group_by}
-\title{group_by by a single column}
+\title{group_by columns}
 \usage{
-replyr_group_by(.data, colname)
+replyr_group_by(.data, colnames)
 }
 \arguments{
 \item{.data}{data object to work on}
 
-\item{colname}{character column name}
+\item{colnames}{character column name (can be a vector)}
 }
 \description{
-group_by by a single column
+See also: \url{https://gist.github.com/skranz/9681509}
 }
 \examples{
 
