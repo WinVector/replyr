@@ -1,5 +1,5 @@
 ---
-title: "Parametric Programming in R"
+title: "Join Controller"
 author: "John Mount"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -8,6 +8,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+#### [`replyr`](https://github.com/WinVector/replyr) join controller
 
 When working on real world predictive modeling tasks in production the ability to join data and document how you join data is paramount.  One of the reasons is there are very strong reasons to organize data in something resembling one of the [Codd normal forms](https://en.wikipedia.org/wiki/Database_normalization).  However, for machine learning we need a fully denormalized for (all columns populated into a single to ready to go row, no matter what their provenance, keying, or stride).
 
@@ -109,7 +111,7 @@ It is worth confirming the keying as as expected (else some rows can reproduce i
 keysAreUnique(tDesc)
 ```
 
-Once we are satisfied with our description of tables we can build a join plan.  The join plan is an ordered sequence of left-joins.  It is a remarkable observation that in practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.
+Once we are satisfied with our description of tables we can build a join plan.  The join plan is an ordered sequence of left-joins (especially when encountering [star-schemas](https://en.wikipedia.org/wiki/Star_schema)).  It is a remarkable observation that in practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.
 
 A join plan is first build from our table descriptions:
 
