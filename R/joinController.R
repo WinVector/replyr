@@ -377,18 +377,25 @@ buildJoinPlan <- function(tDesc) {
 #'
 #'
 #' # example data
-#' d1 <- data.frame(id= 1:3,
-#'                  weight= c(200, 140, 98),
-#'                  height= c(60, 24, 12))
-#' d2 <- data.frame(pid= 2:3,
-#'                  weight= c(130, 110),
-#'                  width= 1)
+#' meas1 <- data.frame(id= c(1,1,2,2),
+#'                     date= c(1,2,1,2),
+#'                     weight= c(200, 180, 98, 120),
+#'                     height= c(60, 54, 12, 14))
+#' names <- data.frame(id= 1:5,
+#'                     name= c('a',NA,'c','d','e'),
+#'                     stringsAsFactors=FALSE)
+#' meas2 <- data.frame(pid= c(2,3),
+#'                     date= c(2,2),
+#'                     weight= c(105, 110),
+#'                     width= 1)
 #' # get the initial description of table defs
-#' tDesc <- rbind(tableDesription('d1', d1),
-#'                tableDesription('d2', d2))
+#' tDesc <- rbind(tableDesription('meas1', meas1),
+#'                tableDesription('names', names),
+#'                tableDesription('meas2', meas2))
 #' # declare keys (and give them consitent names)
-#' tDesc$keys[[1]] <- list(PrimaryKey= 'id')
-#' tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
+#' tDesc$keys[[1]] <- list(PatientID= 'id')
+#' tDesc$keys[[2]] <- list(PatientID= 'id')
+#' tDesc$keys[[3]] <- list(PatientID= 'pid')
 #' # build the column join plan
 #' columnJoinPlan <- buildJoinPlan(tDesc)
 #' # decide we don't want the width column
@@ -405,7 +412,7 @@ buildJoinPlan <- function(tDesc) {
 #'
 executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 ...,
-                                checkColumns= TRUE,
+                                checkColumns= FALSE,
                                 eagerCompute= TRUE,
                                 tempNameGenerator= makeTempNameGenerator("executeLeftJoinPlan")) {
   # sanity check (if there is an obvious config problem fail before doing potentially expensive work)
@@ -477,6 +484,9 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     ti <- handlei %>%
       addConstantColumn(tableIndCol, 1) %>%
       replyr_mapRestrictCols(nmap, restrict=TRUE)
+    if(eagerCompute) {
+      ti <-  dplyr::compute(ti, name=tempNameGenerator())
+    }
     if(is.null(res)) {
       res <- ti
     } else {

@@ -1,0 +1,90 @@
+---
+title: "Parametric Programming in R"
+author: "John Mount"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Join Controller}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r init}
+# load packages
+suppressPackageStartupMessages(library("dplyr"))
+library("replyr")
+```
+
+```{r data}
+# load notional example data
+my_db <- dplyr::src_sqlite(":memory:", 
+                           create = TRUE)
+# example data
+meas1 <- replyr_copy_to(my_db,
+                        data.frame(id= c(1,1,2,2),
+                                   date= c(1,2,1,2),
+                                   weight= c(200, 180, 98, 120),
+                                   height= c(60, 54, 12, 14)),
+                        'meas1')
+names <- replyr_copy_to(my_db,
+                        data.frame(id= seq_len(length(letters)),
+                                   name= letters,
+                                   stringsAsFactors=FALSE),
+                        'names')
+meas2 <- replyr_copy_to(my_db,
+                        data.frame(pid= c(2,3),
+                                   date= c(2,2),
+                                   weight= c(105, 110),
+                                   width= 1),
+                        'meas2')
+```
+
+```{r defs}
+# get the initial description of table defs
+tDesc <- rbind(tableDesription('meas1', meas1),
+               tableDesription('names', names),
+               tableDesription('meas2', meas2))
+# declare keys (and give them consitent names)
+tDesc$keys[[1]] <- list(PatientID= 'id')
+tDesc$keys[[2]] <- list(PatientID= 'id')
+tDesc$keys[[3]] <- list(PatientID= 'pid')
+
+print(tDesc)
+print(tDesc$columns)
+print(tDesc$keys)
+```
+
+```{r plan}
+# build the column join plan
+columnJoinPlan <- buildJoinPlan(tDesc)
+# decide we don't want the width column
+columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
+# double check our plan
+if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
+  stop("bad join plan")
+}
+
+print(columnJoinPlan)
+```
+
+```{r run}
+# execute the left joins
+tempNameGenerator <- makeTempNameGenerator("extmps")
+results <- executeLeftJoinPlan(tDesc, columnJoinPlan, tempNameGenerator=tempNameGenerator)
+```
+
+```{r print}
+# print(xtable::xtable(collect(results), digits= 0), type='html') # set results='asis' to use this
+print(as.data.frame(results))
+```
+
+```{r cleanup}
+# cleanup
+temps <- tempNameGenerator(dumpList= TRUE)
+for(ti in temps) {
+  replyr_drop_table_name(my_db, ti)
+}
+rm(list=ls())
+gc(verbose= FALSE)
+```
+
