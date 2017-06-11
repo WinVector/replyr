@@ -69,6 +69,7 @@ replyr_drop_table_name <- function(dest, name) {
 #' @param temporary logical, if TRUE try to create a temporary table
 #' @param overwrite logical, if TRUE try to overwrite
 #' @param maxrow max rows to allow in a remote to remote copy.
+#' @param forceDelete logical, if TRUE try to delete table.
 #' @return remote handle
 #'
 #' @examples
@@ -87,7 +88,8 @@ replyr_copy_to <- function(dest,
                            rowNumberColumn= NULL,
                            temporary= FALSE,
                            overwrite= TRUE,
-                           maxrow= 1000000) {
+                           maxrow= 1000000,
+                           forceDelete= FALSE) {
   # try to force any errors early, and try to fail prior to side-effects
   if(length(list(...))>0) {
     stop('replyr::replyr_copy_to unexpected arguments')
@@ -116,7 +118,9 @@ replyr_copy_to <- function(dest,
   if((!is.character(name))||(length(name)!=1)||(nchar(name)<1)) {
     stop('replyr::replyr_copy_to name must be a single non-empty string')
   }
-  replyr_drop_table_name(dest, name)
+  if(forceDelete) {
+    replyr_drop_table_name(dest, name)
+  }
   if(!is.null(rowNumberColumn)) {
     df[[rowNumberColumn]] <- seq_len(replyr_nrow(df))
   }
