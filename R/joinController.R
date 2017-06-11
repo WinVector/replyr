@@ -138,7 +138,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
     return("key columns and value columns intersect non-trivially")
   }
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
-  prevCI <- NULL
+  prevRes <- NULL
   for(tabnam in tabs) {
     ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
     if(!any(nchar(ci$abstractKeyName)>0)) {
@@ -149,13 +149,12 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan) {
     if(length(setdiff(keyCols,resCols))>0) {
       return(paste("key cols not contained in result cols for table:", tabnam))
     }
-    if(!is.null(prevCI)) {
-      prevRes <- prevCI$resultColumn[nchar(prevCI$resultColumn)>0]
+    if(!is.null(prevRes)) {
       if(length(setdiff(keyCols,prevRes))>0) {
-        return(paste("key cols not contained in result cols of previous table for table:", tabnam))
+        return(paste("key cols not contained in result cols of previous table(s) for table:", tabnam))
       }
     }
-    prevCI <- ci
+    prevRes <- union(prevRes, resCols)
   }
   columnJoinPlan
 }
@@ -361,6 +360,25 @@ buildJoinPlan <- function(tDesc) {
 }
 
 
+charArrayToString <- function(v) {
+  vl <- vapply(v,
+         function(vi) {
+           paste0("'", vi, "'")
+         },
+         character(1))
+  vs <- paste(vl, collapse= ', ')
+  paste('c(', vs, ')')
+}
+
+strMapToString <- function(m) {
+  vl <- vapply(names(m),
+               function(ni) {
+                 paste0("'", ni, "'='",m[[ni]],"'")
+               },
+               character(1))
+  vs <- paste(vl, collapse= ', ')
+  paste('c(', vs, ')')
+}
 
 
 #' Execute an ordered sequence of left joins.
@@ -370,6 +388,7 @@ buildJoinPlan <- function(tDesc) {
 #' @param ... force later arguments to bind by name.
 #' @param checkColumns logical if TURE confirm column names before starting joins.
 #' @param eagerCompute logical if TRUE materialize intermediate results with \code{dplyr::compute}.
+#' @param verbose logical if TRUE print more.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return joined table
 #'
@@ -377,25 +396,18 @@ buildJoinPlan <- function(tDesc) {
 #'
 #'
 #' # example data
-#' meas1 <- data.frame(id= c(1,1,2,2),
-#'                     date= c(1,2,1,2),
-#'                     weight= c(200, 180, 98, 120),
-#'                     height= c(60, 54, 12, 14))
-#' names <- data.frame(id= 1:5,
-#'                     name= c('a',NA,'c','d','e'),
-#'                     stringsAsFactors=FALSE)
+#' meas1 <- data.frame(id= c(1,2),
+#'                     weight= c(200, 120),
+#'                     height= c(60, 14))
 #' meas2 <- data.frame(pid= c(2,3),
-#'                     date= c(2,2),
 #'                     weight= c(105, 110),
 #'                     width= 1)
 #' # get the initial description of table defs
 #' tDesc <- rbind(tableDesription('meas1', meas1),
-#'                tableDesription('names', names),
 #'                tableDesription('meas2', meas2))
 #' # declare keys (and give them consitent names)
 #' tDesc$keys[[1]] <- list(PatientID= 'id')
-#' tDesc$keys[[2]] <- list(PatientID= 'id')
-#' tDesc$keys[[3]] <- list(PatientID= 'pid')
+#' tDesc$keys[[2]] <- list(PatientID= 'pid')
 #' # build the column join plan
 #' columnJoinPlan <- buildJoinPlan(tDesc)
 #' # decide we don't want the width column
@@ -414,6 +426,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 ...,
                                 checkColumns= FALSE,
                                 eagerCompute= TRUE,
+                                verbose= FALSE,
                                 tempNameGenerator= makeTempNameGenerator("executeLeftJoinPlan")) {
   # sanity check (if there is an obvious config problem fail before doing potentially expensive work)
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan)
@@ -466,6 +479,9 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
   # start joining
   res <- NULL
   for(tabnam in tableNameSeq) {
+    if(verbose) {
+      print(paste('start',tabnam, base::date()))
+    }
     handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]
     keyRows <- which((columnJoinPlan$tableName==tabnam) &
       (nchar(columnJoinPlan$abstractKeyName)>0))
@@ -481,6 +497,13 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                      columnJoinPlan$resultColumn[valRows])
     # adding an indicator column lets us handle cases where we are taking
     # no values.
+    if(verbose) {
+      print(paste(" rename/restrict", tabnam))
+      #print(paste(" ",strMapToString(nmap)))
+      for(ni in names(nmap)) {
+        print(paste0("   '",ni,"' = '",nmap[[ni]],"'"))
+      }
+    }
     ti <- handlei %>%
       addConstantColumn(tableIndCol, 1) %>%
       replyr_mapRestrictCols(nmap, restrict=TRUE)
@@ -489,8 +512,16 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     }
     if(is.null(res)) {
       res <- ti
+      if(verbose) {
+        print(paste0(" res <- ", tabnam))
+      }
     } else {
       rightKeys <- columnJoinPlan$resultColumn[keyRows]
+      if(verbose) {
+        print(paste0(" res <- left_join(res, ", tabnam, ", by = ",
+                    charArrayToString(rightKeys),
+                    ")"))
+      }
       res <- dplyr::left_join(res, ti, by= rightKeys)
       REPLYR_TABLE_PRESENT_COL <- NULL # signal not an unbound variable
       wrapr::let(
@@ -501,6 +532,9 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
       if(eagerCompute) {
         res <- dplyr::compute(res, name=tempNameGenerator())
       }
+    }
+    if(verbose) {
+      print(paste('done',tabnam, base::date()))
     }
   }
   res

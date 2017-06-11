@@ -5,7 +5,7 @@
 \title{Execute an ordered sequence of left joins.}
 \usage{
 executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
-  eagerCompute = TRUE,
+  eagerCompute = TRUE, verbose = FALSE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
 }
 \arguments{
@@ -19,6 +19,8 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
 
 \item{eagerCompute}{logical if TRUE materialize intermediate results with \code{dplyr::compute}.}
 
+\item{verbose}{logical if TRUE print more.}
+
 \item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
@@ -31,25 +33,18 @@ Execute an ordered sequence of left joins.
 
 
 # example data
-meas1 <- data.frame(id= c(1,1,2,2),
-                    date= c(1,2,1,2),
-                    weight= c(200, 180, 98, 120),
-                    height= c(60, 54, 12, 14))
-names <- data.frame(id= 1:5,
-                    name= c('a',NA,'c','d','e'),
-                    stringsAsFactors=FALSE)
+meas1 <- data.frame(id= c(1,2),
+                    weight= c(200, 120),
+                    height= c(60, 14))
 meas2 <- data.frame(pid= c(2,3),
-                    date= c(2,2),
                     weight= c(105, 110),
                     width= 1)
 # get the initial description of table defs
 tDesc <- rbind(tableDesription('meas1', meas1),
-               tableDesription('names', names),
                tableDesription('meas2', meas2))
 # declare keys (and give them consitent names)
 tDesc$keys[[1]] <- list(PatientID= 'id')
-tDesc$keys[[2]] <- list(PatientID= 'id')
-tDesc$keys[[3]] <- list(PatientID= 'pid')
+tDesc$keys[[2]] <- list(PatientID= 'pid')
 # build the column join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
 # decide we don't want the width column

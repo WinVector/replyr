@@ -9,11 +9,39 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+When working on real world predictive modeling tasks in production the ability to join data and document how you join data is paramount.  One of the reasons is there are very strong reasons to organize data in something resembling one of the [Codd normal forms](https://en.wikipedia.org/wiki/Database_normalization).  However, for machine learning we need a fully denormalized for (all columns populated into a single to ready to go row, no matter what their provenance, keying, or stride).
+
+This is not an essential difficulty as in relational data systems moving between these forms can be done by joining, so data stores such as [PostgreSQL](https://www.postgresql.org) or [Apache Spark](https://spark.apache.org) as designed to provide powerful join capabilities.
+
+However there are some inessential (in that they can be avoided) but substantial difficulties in managing and documenting long join plans.  It is not uncommon to have to join 7 or more tables to get an analysis ready.  Doing this directly in [`R`](https://www.r-project.org) code leads to hard to manage, hard to inspect, and hard to share spaghetti code (even when using a high-level data abstraction such as [`dplyr`](https://CRAN.R-project.org/package=dplyr)). 
+
+The fix is applying the following observations:
+
+ * Anything long, repetitive, and tedious should not be done directly.
+ * Moving specification out of code and into data is of huge benefit.
+ 
+To supply such a solution the development version of [`replyr`](https://github.com/WinVector/replyr) now supplies a item called a "join controller" under the method `replyr::executeLeftJoinPlan()`. 
+
+This is easiest to explain through a concrete example, which is what we will do here.
+
+First let's load the needed packages.
+
+
 ```{r init}
 # load packages
 suppressPackageStartupMessages(library("dplyr"))
+packageVersion("dplyr")
 library("replyr")
+packageVersion("replyr")
 ```
+
+Now let's load some notional example data.  For our example we have:
+
+ * One primary table of measurements (called "`meas1`") keyed by `id` and `date`.
+ * A  fact table that maps `id`s to patient names (called "`names`", and keyed by `id`).
+ * A second table of additional measurements (called "`meas2`") That we consider "nice to have."
+
+The data is given below:
 
 ```{r data}
 # load notional example data
@@ -39,24 +67,69 @@ meas2 <- replyr_copy_to(my_db,
                         'meas2')
 ```
 
+An important (and very neglected) step in data science tasks is documenting roles of tables, especially their key-structure (which we also call "stride" in the sense it describes how you move from row to row).  `replyr::tableDesription()` is a function that builds an initial description of the tables.
+
 ```{r defs}
 # get the initial description of table defs
 tDesc <- rbind(tableDesription('meas1', meas1),
                tableDesription('names', names),
                tableDesription('meas2', meas2))
-# declare keys (and give them consitent names)
-tDesc$keys[[1]] <- list(PatientID= 'id')
-tDesc$keys[[2]] <- list(PatientID= 'id')
-tDesc$keys[[3]] <- list(PatientID= 'pid')
-
 print(tDesc)
 print(tDesc$columns)
 print(tDesc$keys)
 ```
 
+`tableDesription()` is a table that holds the following:
+
+ * `tableName`: the abstract name we wish to use for this table.
+ * `handle`: the actual data handle (either a `data.frame` or a handle to a remote data source such as `PostgreSQL` or `Spark`).  Notice in this case it is a "`tbl_dbi`".
+ * `columns`: the list of columns in the table.
+ * `keys`: a named list mapping abstract key names to table column names. The set of keys together is supposed to uniquely identify rows.
+ * `isEmpty`: an advisory column indicating if any rows were present when we looked.
+ 
+ The `tableName` is "abstract" in that it is not only used to discuss tables.  The data is actually found through the handle.  This is critical in processes where we may need to run the same set of joins twice on different sets of tables (such as building a machine learning model, and then latter applying the model to new data).
+
+In the above the `keys` column is wrong in that it claims every column of each table is a table key.  The intent is: the user should edit this table and share it (minus the `handle` column) with partners for criticism.  In our case we declare the primary of the measurement tables to be `PatientID` and `MeasurementDate`, and the primary key of the names table to be `PatientID`.  Notice we do this by specifying names lists or vectors mapping desired key names to names actually used in the tables.
+
+```{r keys}
+# declare keys (and give them consistent names)
+tDesc$keys[[1]] <- list(PatientID= 'id', MeasurementDate= 'date')
+tDesc$keys[[2]] <- list(PatientID= 'id')
+tDesc$keys[[3]] <- list(PatientID= 'pid', MeasurementDate= 'date')
+
+print(tDesc)
+print(tDesc$keys)
+```
+
+The above table could then be circulated to partners for comments and help.  Notice since this is not `R` code we can easily share it with non-`R` users.
+
+It is worth confirming the keying as as expected (else some rows can reproduce in bad ways during joining).  This is a potentially expensive operation, but it can be done as follows:
+
+```{r keycheck}
+keysAreUnique(tDesc)
+```
+
+Once we are satisfied with our description of tables we can build a join plan.  The join plan is an ordered sequence of left-joins.  It is a remarkable observation that in practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.
+
+A join plan is first build from our table descriptions:
+
 ```{r plan}
 # build the column join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
+print(columnJoinPlan)
+```
+
+Essentially the join plan is an unnest of the columns from the table descriptions.  This was anticipated in our article ["Managing Spark Data Handles"](http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/).
+
+We then alter the join plan to meet or needs (either through `R` commands or by exporting the plan to a spreadsheet and editing it there).  
+
+Only columns named in the join plan with a non-blank `resultColumn` entry are kept in the join.  This is very useful as systems of record often have very wide tables (with hundreds of columns) of which we only want a few columns for analysis.
+
+For example we could decide to exclude the `width` column by replacing its `resultColumn` entry with a blank string.
+
+Since we have edited the join plan it is a good idea to both look at it and also run it through the `inspectDescrAndJoinPlan()` to look for potential inconsistencies.
+
+```{r plan2}
 # decide we don't want the width column
 columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
 # double check our plan
@@ -67,16 +140,44 @@ if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
 print(columnJoinPlan)
 ```
 
+The join plan is neglected documentation that hurts many non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
+
+Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()`:
+
 ```{r run}
-# execute the left joins
+# manage the temp names as in:
+#  http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/
 tempNameGenerator <- makeTempNameGenerator("extmps")
-results <- executeLeftJoinPlan(tDesc, columnJoinPlan, tempNameGenerator=tempNameGenerator)
+
+# execute the left joins
+results <- executeLeftJoinPlan(tDesc, columnJoinPlan, 
+                               verbose= TRUE,
+                               tempNameGenerator= tempNameGenerator)
 ```
+
+`executeLeftJoinPlan()` takes both a table description table (`tDesc`, keyed by `tableName`) and the join plan (`columnJoinPlan`, keyed by `tableName` and `sourceColumn`).
+
+The separation of concerns is strong: all details about then intended left-join sequence are taking from the `columnJoinPlan`, and only the mapping from abstract table names to tables (or table references/handles) is taken from `tDesc`.  This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy.  `tDesc` is a runtime entity (as it binds names to live handles, so can't be serialized: you must save the code steps to produce it; note only the columns `tableName` and `handle` are used so there is no point re-editing the `keys` column after running `tableDesription()` on new tables) and `columnJoinPlan` is a durable entity (has only information, not handles).
+
+Basically you:
+
+ * Build simple procedures to build up `tDesc`.
+ * Work hard to get a good `columnJoinPlan`.
+ * Save `columnJoinPlan` in source control and re-load it (not re-build it) when you need it.
+ * Re-build new `tDesc` compatible with the saved `columnJoinPlan` later when you need to work with tables (note only the columns `tableName` and `handle` are used during join execution, so you only need to create those).
+ 
+As always: the proof is in the pudding.  We should look at results: 
 
 ```{r print}
 # print(xtable::xtable(collect(results), digits= 0), type='html') # set results='asis' to use this
 print(as.data.frame(results))
 ```
+
+Notice the joiner add extra columns of the form `table_*_present` to show which tables had needed rows.  This lets us tell different sorts of missingness apart (value `NA` as there was no row to join, versus value `NA` as a `NA` came from a row) and appropriately `coalesce` results easily.  These columns are also very good for collecting statistics on data coverage, and in business settings often are very useful data quality and data provenance features which can often be directly included in machine learning models.
+
+Also notice the join plan is very specific: every descision (such as what order to operate and how to disambiguate column names) is already explicitly set in the plan.  The executor is then allowed to simply move throught the tables left-joining in the order the table names first appear in the plan.
+
+"Having to join a bunch of tables" is a common step in data science.  Therefore you do not want this to be a difficult and undocumented task.  By using a join controller you essentially make the documentation the executable specification for the task.
 
 ```{r cleanup}
 # cleanup
