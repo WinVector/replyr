@@ -79,7 +79,8 @@ listsOfSameData <- function(l1, l2) {
 remoteCopy <- function(my_db) {
   force(my_db)
   function(df,name) {
-    replyr::replyr_copy_to(dest=my_db,df=df,name=name)
+    replyr::replyr_copy_to(dest=my_db, df=df, name=name,
+                           overwrite = TRUE, temporary = TRUE)
   }
 }
 
