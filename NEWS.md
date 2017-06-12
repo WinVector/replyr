@@ -1,5 +1,5 @@
 
-'replyr' 0.3.902 2017-06-10
+'replyr' 0.4.0 2017-06-12
 
  * Introduce executeLeftJoinPlan join controller.
  * Introduce replyr::replyr_apply_f_mapped.
