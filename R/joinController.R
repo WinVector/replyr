@@ -182,8 +182,11 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
     keyCols <- ci$resultColumn[ci$isKey]
     resCols <- ci$resultColumn[ci$want]
     if(length(prevResColClasses)>0) {
-      if(!all(keyCols %in% names(prevResColClasses))) {
-        return(paste("key cols not contained in result cols of previous table(s) for table:", tabnam))
+      missedKeys <- setdiff(keyCols, names(prevResColClasses))
+      if(length(missedKeys)>0) {
+        return(paste("key col(s) (",
+                     paste(missedKeys, collapse = ', '),
+                     ") not contained in result cols of previous table(s) for table:", tabnam))
       }
     }
     for(ki in resCols) {

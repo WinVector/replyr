@@ -11,6 +11,8 @@ vignette: >
 
 #### [`replyr`](https://github.com/WinVector/replyr) Join Controller
 
+This note describes a useful tool we call a "join controller" (and is part of our "[R and Big Data](http://www.win-vector.com/blog/tag/r-and-big-data/)" series, please see [here](http://www.win-vector.com/blog/2017/05/new-series-r-and-big-data-concentrating-on-spark-and-sparklyr/) for the introduction).
+
 When working on real world predictive modeling tasks in production the ability to join data and document how you join data is paramount.  One of the reasons is there are very strong reasons to organize data in something resembling one of the [Codd normal forms](https://en.wikipedia.org/wiki/Database_normalization).  However, for machine learning we need a fully denormalized for (all columns populated into a single to ready to go row, no matter what their provenance, keying, or stride).
 
 This is not an essential difficulty as in relational data systems moving between these forms can be done by joining, so data stores such as [PostgreSQL](https://www.postgresql.org) or [Apache Spark](https://spark.apache.org) as designed to provide powerful join capabilities.
@@ -23,6 +25,7 @@ The fix is applying the following observations:
 
  * Anything long, repetitive, and tedious should not be done directly.
  * Moving specification out of code and into data is of huge benefit.
+ * A common special case can be treated separately, as that documents intent.
  
 To supply such a solution the development version of [`replyr`](https://github.com/WinVector/replyr) now supplies a item called a "join controller" under the method `replyr::executeLeftJoinPlan()`. 
 
@@ -88,10 +91,18 @@ got <- lapply(names(tables),
                 tableDesription(ni, ti)
               })
 tDesc <- bind_rows(got)
+```
 
+`tDesc` is essentially a slighlty enriched version of the data handle concordance described in "[Managing Spark data handles in R](http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/)."  We can take a quick look at the stored simplified [summaries](http://www.win-vector.com/blog/2017/05/summarizing-big-data-in-r/):
+
+
+```{r lookdesc}
 print(tDesc, width = Inf)
 print(tDesc$columns)
 print(tDesc$colClass)
+
+# add names for printing
+names(tDesc$keys) <- tDesc$tableName
 print(tDesc$keys)
 ```
 
@@ -106,20 +117,30 @@ print(tDesc$keys)
  * `isEmpty`: an advisory column indicating if any rows were present when we looked.
  
  The `tableName` is "abstract" in that it is not only used to discuss tables (i.e., it is only ever used as row identifier in this table).  The data is actually found through the handle.  This is critical in processes where we may need to run the same set of joins twice on different sets of tables (such as building a machine learning model, and then latter applying the model to new data).
+ 
+The intent is to build a detailed join plan (describing order, column selection, and column re-naming) from the `tDesc` table.  We can try this with the supplied function `buildJoinPlan()`, which in this case tells us our table descriptions are not quite ready to specify a join plan:
 
-In the above the `keys` column is wrong in that it claims every column of each table is a table key.  The intent is: the user should edit this table and share it (minus the `handle` column) with partners for criticism.  In our case we declare the primary of the measurement tables to be `PatientID` and `MeasurementDate`, and the primary key of the names table to be `PatientID`.  Notice we do this by specifying names lists or vectors mapping desired key names to names actually used in the tables.
+```{r badjoinplan}
+tryCatch(
+  buildJoinPlan(tDesc),
+  error = function(e) {e}
+)
+```
+
+In the above the `keys` column is wrong in that it claims every column of each table is a table key.  The join plan builder noticed this is unsupportable in that when it comes time to join the "`names`" table not all of the columns that are claimed to be "`names`" keys are already known from previous tables.  That is: the "`names$name`" column is supposed to be a value coming *from* the "`names`" table, so there is no way we should expect to be able use this column as a join key (until after "`names`" itself has been joined).  We can't check everything, but the join controller tries to "front load" or encounter as many configuration inconsistencies early- before any expensive steps have been started.
+
+The intent is: the user should edit the "`tDesc`" keys column and share it with partners for criticism.  In our case we declare the primary of the measurement tables to be `PatientID` and `MeasurementDate`, and the primary key of the names table to be `PatientID`.  Notice we do this by specifying names lists or vectors mapping desired key names to names actually used in the tables.
 
 ```{r keys}
 # declare keys (and give them consistent names)
-tDesc$keys[[1]] <- list(PatientID= 'id', MeasurementDate= 'date')
-tDesc$keys[[2]] <- list(PatientID= 'id')
-tDesc$keys[[3]] <- list(PatientID= 'pid', MeasurementDate= 'date')
+tDesc$keys[[1]] <- c(PatientID= 'id', MeasurementDate= 'date')
+tDesc$keys[[2]] <- c(PatientID= 'id')
+tDesc$keys[[3]] <- c(PatientID= 'pid', MeasurementDate= 'date')
 
-print(tDesc, width = Inf)
 print(tDesc$keys)
 ```
 
-The above table could then be circulated to partners for comments and help.  Notice since this is not `R` code we can easily share it with non-`R` users.
+The above key mapping could then be circulated to partners for comments and help.  Notice since this is not `R` code we can easily share it with non-`R` users for comment and corrections.
 
 It is worth confirming the keying as as expected (else some rows can reproduce in bad ways during joining).  This is a potentially expensive operation, but it can be done as follows:
 
@@ -131,7 +152,7 @@ Once we are satisfied with our description of tables we can build a join plan.  
 
 In practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.  This is obviously not the only join pattern needed; but it is the common one that requires many tables.
 
-A join plan is first build from our table descriptions:
+A join plan is new built from our table descriptions:
 
 ```{r plan}
 # build the column join plan
@@ -162,7 +183,7 @@ print(columnJoinPlan)
 
 The join plan is the neglected (and often missing) documentation that hurts many non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
 
-Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()`:
+Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 
 ```{r run}
 # manage the temp names as in:
@@ -197,7 +218,7 @@ Notice the joiner add extra columns of the form `table_*_present` to show which 
 
 Also notice the join plan is very specific: every decision (such as what order to operate and how to disambiguate column names) is already explicitly set in the plan.  The executor is then allowed to simply move through the tables left-joining in the order the table names first appear in the plan.
 
-"Having to join a bunch of tables" is a common step in data science.  Therefore you do not want this to be a difficult and undocumented task.  By using a join controller you essentially make the documentation the executable specification for the task.
+"Having to join a bunch of tables to get the data into simple rows" is a common step in data science.  Therefore you do not want this to be a difficult and undocumented task.  By using a join controller you essentially make the documentation the executable specification for the task.
 
 ```{r cleanup}
 # cleanup
