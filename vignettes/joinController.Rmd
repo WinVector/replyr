@@ -105,7 +105,7 @@ print(tDesc$keys)
  * sourceClass: the declared class of the data source.
  * `isEmpty`: an advisory column indicating if any rows were present when we looked.
  
- The `tableName` is "abstract" in that it is not only used to discuss tables.  The data is actually found through the handle.  This is critical in processes where we may need to run the same set of joins twice on different sets of tables (such as building a machine learning model, and then latter applying the model to new data).
+ The `tableName` is "abstract" in that it is not only used to discuss tables (i.e., it is only ever used as row identifier in this table).  The data is actually found through the handle.  This is critical in processes where we may need to run the same set of joins twice on different sets of tables (such as building a machine learning model, and then latter applying the model to new data).
 
 In the above the `keys` column is wrong in that it claims every column of each table is a table key.  The intent is: the user should edit this table and share it (minus the `handle` column) with partners for criticism.  In our case we declare the primary of the measurement tables to be `PatientID` and `MeasurementDate`, and the primary key of the names table to be `PatientID`.  Notice we do this by specifying names lists or vectors mapping desired key names to names actually used in the tables.
 
