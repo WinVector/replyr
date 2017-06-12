@@ -127,7 +127,7 @@ keysAreUnique(tDesc)
 
 Once we are satisfied with our description of tables we can build a join plan.  The join plan is an ordered sequence of left-joins (especially when encountering [star-schemas](https://en.wikipedia.org/wiki/Star_schema)).  
 
-It is a remarkable observation that in practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.  This is obviously not the only join pattern needed; but it is the common one that requires many tables.
+In practice for preparing data for machine learning there is often a primary table that has exactly the set of rows you want to work over.  By starting joins from this table we can perform most of our transformations using only left-joins.  To keep things simple we have only supplied the join controller for this case.  This is obviously not the only join pattern needed; but it is the common one that requires many tables.
 
 A join plan is first build from our table descriptions:
 
@@ -143,13 +143,13 @@ We then alter the join plan to meet or needs (either through `R` commands or by 
 
 Only columns named in the join plan with a non-blank `resultColumn` entry are kept in the join.  This is very useful as systems of record often have very wide tables (with hundreds of columns) of which we only want a few columns for analysis.
 
-For example we could decide to exclude the `width` column by replacing its `resultColumn` entry with a blank string.
+For example we could decide to exclude the `width` column by either dropping the row or setting the row's `want` column to `FALSE`.
 
 Since we have edited the join plan it is a good idea to both look at it and also run it through the `inspectDescrAndJoinPlan()` to look for potential inconsistencies.
 
 ```{r plan2}
 # decide we don't want the width column
-columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
+columnJoinPlan$want[columnJoinPlan$resultColumn=='width'] <- FALSE
 # double check our plan
 if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
   stop("bad join plan")

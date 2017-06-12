@@ -50,7 +50,7 @@ tDesc$keys[[2]] <- list(PatientID= 'pid')
 # build the column join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
 # decide we don't want the width column
-columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
+columnJoinPlan$want[columnJoinPlan$resultColumn=='width'] <- FALSE
 # double check our plan
 if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
             checkColClasses= TRUE))) {
@@ -58,6 +58,7 @@ if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
 }
 # execute the left joins
 executeLeftJoinPlan(tDesc, columnJoinPlan,
-                    checkColClasses= TRUE)
+                    checkColClasses= TRUE,
+                    verbose= TRUE)
 
 }

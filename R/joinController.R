@@ -120,16 +120,14 @@ keysAreUnique <- function(tDesc) {
 # type unstable: return data.frame if okay, character if problem
 inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
   resultColumn <- NULL # declare not an unbound ref
-  abstractKeyName <- NULL # declare not an unbound ref
   tableName <- NULL # declare not an unbound ref
+  isKey <- NULL # declare not an unbound ref
+  want <- NULL # declare not an unbound ref
   # sanity check
   if(any(nchar(columnJoinPlan$tableName)<=0)) {
     return("empty table name(s) in columnJoinPlan")
   }
-  keyIdxs <- which(nchar(columnJoinPlan$abstractKeyName)>0)
-  if(!all(columnJoinPlan$resultColumn[keyIdxs]==columnJoinPlan$abstractKeyName[keyIdxs])) {
-    return("non-empty columnJoinPlan abstract keys must equal resultColumn")
-  }
+  keyIdxs <- which(columnJoinPlan$isKey)
   tableIndColNames <- makeTableIndMap(columnJoinPlan$tableName)
   if(length(intersect(tableIndColNames,
                       c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn)))>0) {
@@ -137,17 +135,23 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
   }
   # limit down to things we are using
   columnJoinPlan <- columnJoinPlan %>%
-    dplyr::filter((nchar(resultColumn)>0) | (nchar(abstractKeyName)>0))
+    dplyr::filter(want | isKey)
   if(any(nchar(columnJoinPlan$sourceColumn)<=0)) {
     return("empty source column names")
   }
+  if(any(nchar(columnJoinPlan$resultColumn)<=0)) {
+    return("empty result column names")
+  }
+  if(any(columnJoinPlan$isKey & (!columnJoinPlan$want))) {
+    return("want must be set if isKey is set")
+  }
   tabsC <- unique(columnJoinPlan$tableName)
   # check a few desired invarients of the plan
-  valCols <- columnJoinPlan$resultColumn[nchar(columnJoinPlan$abstractKeyName)<=0]
+  valCols <- columnJoinPlan$resultColumn[!columnJoinPlan$isKey]
   if(length(unique(valCols))!=length(valCols)) {
     return("non-unique value columns")
   }
-  keyCols <- unique(columnJoinPlan$abstractKeyName[nchar(columnJoinPlan$abstractKeyName)>0])
+  keyCols <- unique(columnJoinPlan$resultColumn[columnJoinPlan$isKey])
   if(length(intersect(keyCols, valCols))>0) {
     return("key columns and value columns intersect non-trivially")
   }
@@ -157,11 +161,11 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
     ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
     cMap <- ci$sourceClass
     names(cMap) <- ci$resultColumn
-    if(!any(nchar(ci$abstractKeyName)>0)) {
+    if(!any(ci$isKey>0)) {
       return(paste("no keys for table:", tabnam))
     }
-    keyCols <- ci$abstractKeyName[nchar(ci$abstractKeyName)>0]
-    resCols <- ci$resultColumn[nchar(ci$resultColumn)>0]
+    keyCols <- ci$resultColumn[ci$isKey]
+    resCols <- ci$resultColumn[ci$want | ci$isKey]
     if(length(setdiff(keyCols,resCols))>0) {
       return(paste("key cols not contained in result cols for table:", tabnam))
     }
@@ -226,8 +230,9 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
                                     ...,
                                     checkColClasses= FALSE) {
   resultColumn <- NULL # declare not an unbound ref
-  abstractKeyName <- NULL # declare not an unbound ref
   tableName <- NULL # declare not an unbound ref
+  isKey <- NULL # declare not an unbound ref
+  want <- NULL # declare not an unbound ref
   # sanity check
   if(any(nchar(tDesc$tableName)<=0)) {
     return("empty table name(s) in tDesc")
@@ -238,10 +243,7 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
   if(length(unique(tDesc$tableName)) != length(tDesc$tableName)) {
     return("non-unique table names in tDesc")
   }
-  keyIdxs <- which(nchar(columnJoinPlan$abstractKeyName)>0)
-  if(!all(columnJoinPlan$resultColumn[keyIdxs]==columnJoinPlan$abstractKeyName[keyIdxs])) {
-    return("non-empty columnJoinPlan abstract keys must equal resultColumn")
-  }
+  keyIdxs <- which(columnJoinPlan$isKey)
   tableIndColNames <- makeTableIndMap(columnJoinPlan$tableName)
   if(length(intersect(tableIndColNames,
                       c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn)))>0) {
@@ -249,7 +251,7 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
   }
   # limit down to things we are using
   columnJoinPlan <- columnJoinPlan %>%
-    dplyr::filter((nchar(resultColumn)>0) | (nchar(abstractKeyName)>0))
+    dplyr::filter(want | isKey)
   if(any(nchar(columnJoinPlan$sourceColumn)<=0)) {
     return("empty source column names")
   }
@@ -266,11 +268,11 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
   columnJoinPlan <- columnJoinPlan %>%
     dplyr::filter(tableName %in% tabsD)
   # check a few desired invarients of the plan
-  valCols <- columnJoinPlan$resultColumn[nchar(columnJoinPlan$abstractKeyName)<=0]
+  valCols <- columnJoinPlan$resultColumn[columnJoinPlan$want & (!columnJoinPlan$isKey)]
   if(length(unique(valCols))!=length(valCols)) {
     return("non-unique value columns")
   }
-  keyCols <- unique(columnJoinPlan$abstractKeyName[nchar(columnJoinPlan$abstractKeyName)>0])
+  keyCols <- unique(columnJoinPlan$resultColumn[columnJoinPlan$isKey])
   if(length(intersect(keyCols, valCols))>0) {
     return("key columns and value columns intersect non-trivially")
   }
@@ -356,22 +358,23 @@ buildJoinPlan <- function(tDesc) {
       stop(paste("replyr::buildJoinPlan table",
                  tnam, "declares a key that is not a column"))
     }
-    abstractKeyName <- rep("", length(cols))
+    isKey <- rep(FALSE, length(cols))
     keyIndexes <- match(keys, cols)
-    abstractKeyName[keyIndexes] <- names(keys)
+    isKey[keyIndexes] <- TRUE
     resultColumn= cols
     resultColumn[keyIndexes] <- names(keys)
     pi <- dplyr::data_frame(tableName= tnam,
                             sourceColumn= cols,
                             sourceClass= classes,
                             resultColumn= resultColumn,
-                            abstractKeyName= abstractKeyName)
+                            isKey= isKey,
+                            want= TRUE)
     plans[[i]] <- pi
   }
   plans <- dplyr::bind_rows(plans)
   # disambiguate non-key result columns
   dups <- plans %>%
-    dplyr::filter(nchar(plans$abstractKeyName)<=0) %>%
+    dplyr::filter(!isKey) %>%
     dplyr::select(resultColumn) %>%
     dplyr::group_by(resultColumn) %>%
     dplyr::summarize(count=n()) %>%
@@ -387,7 +390,7 @@ buildJoinPlan <- function(tDesc) {
     }
   }
   # catch any remaining duplication
-  nonKeyIndexes <- which(nchar(plans$abstractKeyName)<=0)
+  nonKeyIndexes <- which(!plans$isKey)
   plans$resultColumn[nonKeyIndexes] <- make.unique( plans$resultColumn[nonKeyIndexes],
                                                     sep= '_')
   # just in case
@@ -452,7 +455,7 @@ strMapToString <- function(m) {
 #' # build the column join plan
 #' columnJoinPlan <- buildJoinPlan(tDesc)
 #' # decide we don't want the width column
-#' columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='width'] <- ''
+#' columnJoinPlan$want[columnJoinPlan$resultColumn=='width'] <- FALSE
 #' # double check our plan
 #' if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
 #'             checkColClasses= TRUE))) {
@@ -460,7 +463,8 @@ strMapToString <- function(m) {
 #' }
 #' # execute the left joins
 #' executeLeftJoinPlan(tDesc, columnJoinPlan,
-#'                     checkColClasses= TRUE)
+#'                     checkColClasses= TRUE,
+#'                     verbose= TRUE)
 #'
 #' @export
 #'
@@ -507,10 +511,10 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                    tabnam))
       }
       keyRows <- which((columnJoinPlan$tableName==tabnam) &
-                         (nchar(columnJoinPlan$abstractKeyName)>0))
+                         (columnJoinPlan$isKey))
       valRows <- which((columnJoinPlan$tableName==tabnam) &
-                         (nchar(columnJoinPlan$abstractKeyName)<=0) &
-                         (nchar(columnJoinPlan$resultColumn)>0))
+                         (!columnJoinPlan$isKey) &
+                         (columnJoinPlan$want))
       needs <- c(columnJoinPlan$sourceColumn[keyRows],
                 columnJoinPlan$sourceColumn[valRows])
       missing <- setdiff(needs, tabcols)
@@ -529,10 +533,10 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     }
     handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]
     keyRows <- which((columnJoinPlan$tableName==tabnam) &
-      (nchar(columnJoinPlan$abstractKeyName)>0))
+      (columnJoinPlan$isKey))
     valRows <- which((columnJoinPlan$tableName==tabnam) &
-                       (nchar(columnJoinPlan$abstractKeyName)<=0) &
-                       (nchar(columnJoinPlan$resultColumn)>0))
+                       (columnJoinPlan$want) &
+                       (!columnJoinPlan$isKey))
     tableIndCol <- tableIndColNames[[tabnam]]
     nmap <- c(tableIndCol,
               columnJoinPlan$sourceColumn[keyRows],
