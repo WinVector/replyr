@@ -119,56 +119,68 @@ keysAreUnique <- function(tDesc) {
 
 # type unstable: return data.frame if okay, character if problem
 inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
-  resultColumn <- NULL # declare not an unbound ref
-  tableName <- NULL # declare not an unbound ref
-  isKey <- NULL # declare not an unbound ref
-  want <- NULL # declare not an unbound ref
   # sanity check
-  if(any(nchar(columnJoinPlan$tableName)<=0)) {
-    return("empty table name(s) in columnJoinPlan")
+  for(ci in c('tableName', 'sourceColumn', 'sourceClass', 'resultColumn')) {
+    if(is.null(columnJoinPlan[[ci]])) {
+      return(paste('columnJoinPlan column', ci, 'not present'))
+    }
+    if(!is.character(columnJoinPlan[[ci]])) {
+      return(paste('columnJoinPlan column', ci, 'should be of type character'))
+    }
+    if(any(nchar(columnJoinPlan[[ci]])<=0) ||
+       any(is.na(columnJoinPlan))) {
+      return(paste("empty or NA', ci, ' colum in columnJoinPlan"))
+    }
   }
-  keyIdxs <- which(columnJoinPlan$isKey)
-  tableIndColNames <- makeTableIndMap(columnJoinPlan$tableName)
-  if(length(intersect(tableIndColNames,
-                      c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn)))>0) {
-    return("executeLeftJoinPlan: column mappings intersect intended table label columns")
-  }
-  # limit down to things we are using
-  columnJoinPlan <- columnJoinPlan %>%
-    dplyr::filter(want | isKey)
-  if(any(nchar(columnJoinPlan$sourceColumn)<=0)) {
-    return("empty source column names")
-  }
-  if(any(nchar(columnJoinPlan$resultColumn)<=0)) {
-    return("empty result column names")
+  for(ci in c('isKey','want')) {
+    if(is.null(columnJoinPlan[[ci]])) {
+      return(paste('columnJoinPlan column', ci, 'not present'))
+    }
+    if(!is.logical(columnJoinPlan[[ci]])) {
+      return(paste('columnJoinPlan column', ci, 'should be of type logical'))
+    }
+    if(any(is.na(columnJoinPlan))) {
+      return(paste("NA', ci, ' colum in columnJoinPlan"))
+    }
   }
   if(any(columnJoinPlan$isKey & (!columnJoinPlan$want))) {
-    return("want must be set if isKey is set")
+    return("any row marked isKey must also be marked want")
   }
-  tabsC <- unique(columnJoinPlan$tableName)
-  # check a few desired invarients of the plan
   valCols <- columnJoinPlan$resultColumn[!columnJoinPlan$isKey]
-  if(length(unique(valCols))!=length(valCols)) {
-    return("non-unique value columns")
+  if(length(valCols) !=
+     length(unique(valCols))) {
+    return("columnJoinPlan result columns must be unique")
   }
-  keyCols <- unique(columnJoinPlan$resultColumn[columnJoinPlan$isKey])
-  if(length(intersect(keyCols, valCols))>0) {
-    return("key columns and value columns intersect non-trivially")
+  tabs <-  uniqueInOrder(columnJoinPlan$tableName)
+  for(tabnam in tabs) {
+    ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
+    if(length(ci$sourceColumn) !=
+       length(unique(ci$sourceColumn))) {
+      return(paste("columnJoinPlan sourceColumns not unique for table",
+                   ci))
+    }
+    if(sum(ci$isKey)<=0) {
+      return("no keys for table", tabnam)
+    }
   }
-  tabs <- uniqueInOrder(columnJoinPlan$tableName)
+  tableIndColNames <- makeTableIndMap(columnJoinPlan$tableName)
+  tabNOverlap <- intersect(tableIndColNames,
+                           c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn))
+  if(length(tabNOverlap)>0) {
+    return(paste("column source or result names intersect table present columns:",
+                 paste(tabNOverlap, collapse = ', ')))
+
+  }
+  # limit down to things we are using
+  columnJoinPlan <- columnJoinPlan[columnJoinPlan$want, , drop=FALSE]
+  # check a few desired invarients of the plan
   prevResColClasses <- list()
   for(tabnam in tabs) {
     ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
     cMap <- ci$sourceClass
     names(cMap) <- ci$resultColumn
-    if(!any(ci$isKey>0)) {
-      return(paste("no keys for table:", tabnam))
-    }
     keyCols <- ci$resultColumn[ci$isKey]
-    resCols <- ci$resultColumn[ci$want | ci$isKey]
-    if(length(setdiff(keyCols,resCols))>0) {
-      return(paste("key cols not contained in result cols for table:", tabnam))
-    }
+    resCols <- ci$resultColumn[ci$want]
     if(length(prevResColClasses)>0) {
       if(!all(keyCols %in% names(prevResColClasses))) {
         return(paste("key cols not contained in result cols of previous table(s) for table:", tabnam))
@@ -229,57 +241,31 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
                                     ...,
                                     checkColClasses= FALSE) {
-  resultColumn <- NULL # declare not an unbound ref
-  tableName <- NULL # declare not an unbound ref
-  isKey <- NULL # declare not an unbound ref
-  want <- NULL # declare not an unbound ref
+  columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan,
+                                 checkColClasses=checkColClasses)
+  if(is.character(columnJoinPlan)) {
+    return(columnJoinPlan)
+  }
   # sanity check
-  if(any(nchar(tDesc$tableName)<=0)) {
-    return("empty table name(s) in tDesc")
-  }
-  if(any(nchar(columnJoinPlan$tableName)<=0)) {
-    return("empty table name(s) in columnJoinPlan")
-  }
   if(length(unique(tDesc$tableName)) != length(tDesc$tableName)) {
     return("non-unique table names in tDesc")
   }
-  keyIdxs <- which(columnJoinPlan$isKey)
-  tableIndColNames <- makeTableIndMap(columnJoinPlan$tableName)
-  if(length(intersect(tableIndColNames,
-                      c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn)))>0) {
-    return("columnJoinPlan mappings intersect intended table label columns")
-  }
   # limit down to things we are using
-  columnJoinPlan <- columnJoinPlan %>%
-    dplyr::filter(want | isKey)
-  if(any(nchar(columnJoinPlan$sourceColumn)<=0)) {
-    return("empty source column names")
-  }
   tabsC <- unique(columnJoinPlan$tableName)
   if(length(setdiff(tabsC, tDesc$tableName))>0) {
     return("tDesc does not have all the needed tables to join")
   }
-  tDesc <- tDesc %>%
-    dplyr::filter(tableName %in% tabsC)
+  tDesc <- tDesc[tDesc$tableName %in% tabsC, , drop=FALSE]
   if( nrow(tDesc)<=0) {
     return("no tables selected")
   }
   tabsD <- unique(tDesc$tableName)
-  columnJoinPlan <- columnJoinPlan %>%
-    dplyr::filter(tableName %in% tabsD)
+  columnJoinPlan <- columnJoinPlan[columnJoinPlan$tableName %in% tabsD, ,
+                                   drop=FALSE]
   # check a few desired invarients of the plan
-  valCols <- columnJoinPlan$resultColumn[columnJoinPlan$want & (!columnJoinPlan$isKey)]
-  if(length(unique(valCols))!=length(valCols)) {
-    return("non-unique value columns")
-  }
-  keyCols <- unique(columnJoinPlan$resultColumn[columnJoinPlan$isKey])
-  if(length(intersect(keyCols, valCols))>0) {
-    return("key columns and value columns intersect non-trivially")
-  }
   for(i in seq_len(nrow(tDesc))) {
     tnam <- tDesc$tableName[[i]]
-    ci <- columnJoinPlan %>%
-      dplyr::filter(tableName==tnam)
+    ci <- columnJoinPlan[columnJoinPlan$tableName==tnam, , drop=FALSE]
     # don't check tDesc$keys here, as it isn't used after join plan is constructed.
     if(!all(ci$sourceColumn %in% tDesc$columns[[i]])) {
       probs <- paste(setdiff(ci$sourceColumn, tDesc$columns[[i]]),
@@ -287,11 +273,6 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
       return(paste("table description",
                    tnam, "refers to non-column(s):",probs))
     }
-  }
-  res <- inspectAndLimitJoinPlan(columnJoinPlan,
-                                 checkColClasses=checkColClasses)
-  if(is.character(res)) {
-    return(res)
   }
   return(NULL) # okay!
 }
