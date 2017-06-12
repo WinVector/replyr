@@ -23,9 +23,9 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
   print(d)
-  dplyr::db_list_tables(my_db$con)
+  replyr_list_tables(my_db)
   replyr_drop_table_name(my_db, 'd')
-  dplyr::db_list_tables(my_db$con)
+  replyr_list_tables(my_db)
 }
 
 }

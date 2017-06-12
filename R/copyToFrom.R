@@ -19,9 +19,9 @@ NULL
 #'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
 #'   print(d)
-#'   dplyr::db_list_tables(my_db$con)
+#'   replyr_list_tables(my_db)
 #'   replyr_drop_table_name(my_db, 'd')
-#'   dplyr::db_list_tables(my_db$con)
+#'   replyr_list_tables(my_db)
 #' }
 #'
 #' @export
@@ -45,14 +45,16 @@ replyr_drop_table_name <- function(dest, name) {
   # MySQL doesn't seem to always obey overwrite=TRUE
   # not filing this as MySQL isn't a preferred back end.
   found = FALSE
-  tryCatch({
-    cn <- dplyr_src_to_db_handle(dest)
-    if(!(is.null(cn))) {
-      if(name %in% dplyr::db_list_tables(cn)) {
-        found = TRUE
-        dplyr::db_drop_table(cn, name)
+  tryCatch(
+    {
+      cn <- dplyr_src_to_db_handle(dest)
+      if(!is.null(cn)) {
+        if(dplyr::db_has_table(cn, name)) {
+          found = TRUE
+          dplyr::db_drop_table(cn, name)
+        }
       }
-    }},
+    },
     error=function(x) { warning(x); NULL }
   )
   found

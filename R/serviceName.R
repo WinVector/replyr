@@ -15,6 +15,56 @@ dplyr_src_to_db_handle <- function(dplyr_src) {
 }
 
 
+#' list tables
+#'
+#' Work around connection v.s. handle issues \url{https://github.com/tidyverse/dplyr/issues/2849}
+#'
+#'
+#' @param con connection
+#' @return list of tables names
+#'
+#'
+#' @examples
+#'
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
+#'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+#'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
+#'   print(d)
+#'   replyr_list_tables(my_db)
+#' }
+#'
+#' @export
+#'
+replyr_list_tables <- function(con) {
+  cn <- dplyr_src_to_db_handle(con)
+  dplyr::db_list_tables(cn)
+}
+
+#' check for table
+#'
+#' Work around connection v.s. handle issues \url{https://github.com/tidyverse/dplyr/issues/2849}
+#'
+#' @param con connection
+#' @param name character name to check for
+#' @return TRUE if table present
+#'
+#'
+#' @examples
+#'
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
+#'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+#'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
+#'   print(d)
+#'   replyr_has_table(my_db, 'd')
+#' }
+#'
+#' @export
+#'
+replyr_has_table <- function(con, name) {
+  cn <- dplyr_src_to_db_handle(con)
+  dplyr::db_has_table(cn, name)
+}
+
 #' Get the "remote data source" where a data.frame like object lives.
 #'
 #'
