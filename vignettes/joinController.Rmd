@@ -97,7 +97,7 @@ tDesc <- bind_rows(got)
 
 
 ```{r lookdesc}
-print(tDesc, width = Inf)
+print(tDesc %>% select(tableName, sourceClass, isEmpty))
 print(tDesc$columns)
 print(tDesc$colClass)
 
@@ -157,7 +157,8 @@ A join plan can now be built from our table descriptions:
 ```{r plan}
 # build the column join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
-print(columnJoinPlan)
+print(columnJoinPlan %>% 
+        select(tableName, sourceColumn, resultColumn, isKey, want))
 ```
 
 Essentially the join plan is an unnest of the columns from the table descriptions.  This was anticipated in our article ["Managing Spark Data Handles"](http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/).
@@ -178,7 +179,8 @@ if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))) {
   stop("bad join plan")
 }
 
-print(columnJoinPlan)
+print(columnJoinPlan %>% 
+        select(tableName, sourceColumn, resultColumn, isKey, want))
 ```
 
 The join plan is the neglected (and often missing) piece of documentation key to non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
@@ -218,7 +220,12 @@ Basically you:
 As always: the proof is in the pudding.  We should look at results: 
 
 ```{r print}
-print(as.data.frame(results))
+print(results %>%
+        select(PatientID, MeasurementDate, 
+               meas1_weight, height, 
+               name, 
+               table_meas2_present, meas2_weight),
+      width= Inf)
 ```
 
 Notice the joiner added extra columns of the form `table_*_present` to show which tables had needed rows.  This lets us tell different sorts of missingness apart (value `NA` as there was no row to join, versus value `NA` as a `NA` came from a row) and appropriately `coalesce` results easily.  These columns are also very good for collecting statistics on data coverage, and in business settings often are very useful data quality and data provenance features which can often be directly included in machine learning models.
