@@ -218,6 +218,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #' Build a drawable specification of the join diagram
 #'
 #' @param columnJoinPlan join plan
+#' @param graphType first command on graph
 #' @return mermaid diagram spec
 #'
 #' @examples
@@ -248,20 +249,31 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #' @export
 #'
 #'
-makeJoinDiagramSpec <- function(columnJoinPlan) {
+makeJoinDiagramSpec <- function(columnJoinPlan, graphType= "graph LR") {
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan, FALSE)
-  columnJoinPlan <- columnJoinPlan[columnJoinPlan$isKey, , drop=FALSE]
-  str <- "graph LR"
-  mentioned <- list()
+  columnJoinPlanK <- columnJoinPlan[columnJoinPlan$isKey, , drop=FALSE]
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
+  nodeDescr <- lapply(tabs,
+                      function(ti) {
+                        idx <- which(tabs==ti)
+                        ci <- columnJoinPlan[columnJoinPlan$tableName==ti, ,
+                                             drop=FALSE]
+                        cols <- paste(ifelse(ci$isKey, 'k:', 'v:'),
+                                      ci$resultColumn)
+                        cols <- paste(cols, collapse =' <br>')
+                        paste0(idx, ': ', ti, '<br> ', cols)
+                      })
+  names(nodeDescr) <- tabs
+  str <- graphType
+  mentioned <- list()
   for(tii in seq_len(length(tabs))) {
     ti <- tabs[[tii]]
-    tin <- paste0(tii,': ',ti)
-    ci <- columnJoinPlan[columnJoinPlan$tableName==ti, , drop=FALSE]
+    tin <-nodeDescr[[ti]]
+    ci <- columnJoinPlanK[columnJoinPlanK$tableName==ti, , drop=FALSE]
     sources <- setdiff(sort(unique(ci$joinSource)),'')
     for(si in sources) {
       cij <- ci[ci$joinSource==si, , drop=FALSE]
-      sin <- paste0(which(tabs==si), ': ', si)
+      sin <- nodeDescr[[si]]
       keys <- paste0(tii,': ',
                      paste(cij$resultColumn, collapse = ','))
       siNode <- si

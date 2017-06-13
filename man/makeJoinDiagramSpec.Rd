@@ -4,10 +4,12 @@
 \alias{makeJoinDiagramSpec}
 \title{Build a drawable specification of the join diagram}
 \usage{
-makeJoinDiagramSpec(columnJoinPlan)
+makeJoinDiagramSpec(columnJoinPlan, graphType = "graph LR")
 }
 \arguments{
 \item{columnJoinPlan}{join plan}
+
+\item{graphType}{first command on graph}
 }
 \value{
 mermaid diagram spec
