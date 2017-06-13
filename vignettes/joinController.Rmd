@@ -187,7 +187,7 @@ As a diagram the key structure of the join plan looks like the following (produc
 
 ![](joinDiagram1.png)
 
-These diagrams are kind of fun.  For example, here is a more complicated one from the `help(makeJoinDiagramSpec)` exampels:
+These diagrams are kind of fun.  For instance, here is a more complicated one from the `help(makeJoinDiagramSpec)` examples:
 
 ![](joinDiagram2.png)
 
