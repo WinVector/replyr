@@ -109,7 +109,7 @@ print(tDesc$keys)
 `tableDesription()` is a table that holds the following:
 
  * `tableName`: the abstract name we wish to use for this table.
- * `handle`: the actual data handle (either a `data.frame` or a handle to a remote data source such as `PostgreSQL` or `Spark`).  Notice in this case it is "`tbl_dbi`" or "`src_dbi`" (depending on the version of `dplyr`).
+ * `handle`: the actual data handle (either a `data.frame` or a handle to a remote data source such as `PostgreSQL` or `Spark`).  Notice in the example it is of class "`tbl_sqlite`" or "`tbl_dbi`" (depending on the version of `dplyr`).
  * `columns`: the list of columns in the table.
  * `keys`: a named list mapping abstract key names to table column names. The set of keys together is supposed to uniquely identify rows.
  * `colClasses`: a vector of column classes of the underlying table.
