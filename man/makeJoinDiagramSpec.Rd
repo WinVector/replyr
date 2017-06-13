@@ -17,4 +17,27 @@ Build a drawable specification of the join diagram
 }
 \examples{
 
+tDesc <- data.frame(tableName= c('employee',
+                                 'orgtable',
+                                 'revenue',
+                                 'activity'),
+                    handle= I(list(NULL, NULL, NULL, NULL)),
+                    columns= I(list(c('id', 'date'),
+                                  c('id', 'date', 'dept'),
+                                  c('date', 'dept', 'rev'),
+                                  c('id', 'date', 'hours'))),
+                    keys =  I(list(c('id', 'date'),
+                                 c('id', 'date'),
+                                 c('date', 'dept'),
+                                 c('id', 'date'))),
+                    colClass= I(list(c('character', 'numeric'),
+                                   c('character', 'character', 'character'),
+                                   c('numeric', 'character', 'numeric'),
+                                   c('character', 'numeric', 'numeric'))),
+                    sourceClass= 'None',
+                    isEmpty= FALSE,
+                    stringsAsFactors = FALSE)
+diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
+# DiagrammeR::mermaid(diagramSpec)
+
 }
