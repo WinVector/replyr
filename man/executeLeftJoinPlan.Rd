@@ -9,7 +9,7 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
 }
 \arguments{
-\item{tDesc}{description of tables, from \code{\link{tableDesription}} only used to map table names to data.}
+\item{tDesc}{description of tables, from \code{\link{tableDescription}} only used to map table names to data.}
 
 \item{columnJoinPlan}{columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
 
@@ -42,8 +42,8 @@ meas2 <- data.frame(pid= c(2,3),
                     weight= c(105, 110),
                     width= 1)
 # get the initial description of table defs
-tDesc <- rbind(tableDesription('meas1', meas1),
-               tableDesription('meas2', meas2))
+tDesc <- rbind(tableDescription('meas1', meas1),
+               tableDescription('meas2', meas2))
 # declare keys (and give them consitent names)
 tDesc$keys[[1]] <- list(PatientID= 'id')
 tDesc$keys[[2]] <- list(PatientID= 'pid')

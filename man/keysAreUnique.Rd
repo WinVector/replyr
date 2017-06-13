@@ -7,7 +7,7 @@
 keysAreUnique(tDesc)
 }
 \arguments{
-\item{tDesc}{description of tables, from \code{\link{tableDesription}} (and likely altered by user).}
+\item{tDesc}{description of tables, from \code{\link{tableDescription}} (and likely altered by user).}
 }
 \value{
 logical TRUE if keys are unique
@@ -18,8 +18,8 @@ Can be an expensive operation.
 \examples{
 
 d <- data.frame(x=c(1,1,2,2,3,3), y=c(1,2,1,2,1,2))
-tDesc1 <- tableDesription('d1', d)
-tDesc2 <- tableDesription('d2', d)
+tDesc1 <- tableDescription('d1', d)
+tDesc2 <- tableDescription('d2', d)
 tDesc <- rbind(tDesc1, tDesc2)
 tDesc$keys[[2]] <- c(x='x')
 keysAreUnique(tDesc)

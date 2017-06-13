@@ -7,7 +7,7 @@
 inspectDescrAndJoinPlan(tDesc, columnJoinPlan, ..., checkColClasses = FALSE)
 }
 \arguments{
-\item{tDesc}{description of tables, from \code{\link{tableDesription}} (and likely altered by user).}
+\item{tDesc}{description of tables, from \code{\link{tableDescription}} (and likely altered by user).}
 
 \item{columnJoinPlan}{columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
 
@@ -31,8 +31,8 @@ d2 <- data.frame(pid= 2:3,
                  weight= c(130, 110),
                  width= 1)
 # get the initial description of table defs
-tDesc <- rbind(tableDesription('d1', d1),
-               tableDesription('d2', d2))
+tDesc <- rbind(tableDescription('d1', d1),
+               tableDescription('d2', d2))
 # declare keys (and give them consitent names)
 tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 tDesc$keys[[2]] <- list(PrimaryKey= 'pid')

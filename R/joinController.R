@@ -38,15 +38,15 @@ makeTableIndMap <- function(tableNameSeq) {
 #' @examples
 #'
 #' d <- data.frame(x=1:3, y=NA)
-#' tableDesription('d', d)
+#' tableDescription('d', d)
 #'
 #'
 #' @export
 #'
-tableDesription <- function(tableName,
+tableDescription <- function(tableName,
                             handle) {
   if(length(nchar(tableName))<=0) {
-    stop("replyr::tableDesription empty name")
+    stop("replyr::tableDescription empty name")
   }
   sample <- dplyr::collect(head(handle))
   cols <- colnames(sample)
@@ -66,7 +66,7 @@ tableDesription <- function(tableName,
   names(keys) <- cols
   tableIndColNames <- makeTableIndMap(tableName)
   if(length(intersect(tableIndColNames, cols))>0) {
-    warning("replyr::tableDesription table_CLEANEDTABNAME_present column may cause problems (please consider renaming before these steps)")
+    warning("replyr::tableDescription table_CLEANEDTABNAME_present column may cause problems (please consider renaming before these steps)")
   }
   dplyr::data_frame(tableName= tableName,
                     handle= list(handle),
@@ -82,14 +82,14 @@ tableDesription <- function(tableName,
 #'
 #' Can be an expensive operation.
 #'
-#' @param tDesc description of tables, from \code{\link{tableDesription}} (and likely altered by user).
+#' @param tDesc description of tables, from \code{\link{tableDescription}} (and likely altered by user).
 #' @return logical TRUE if keys are unique
 #'
 #' @examples
 #'
 #' d <- data.frame(x=c(1,1,2,2,3,3), y=c(1,2,1,2,1,2))
-#' tDesc1 <- tableDesription('d1', d)
-#' tDesc2 <- tableDesription('d2', d)
+#' tDesc1 <- tableDescription('d1', d)
+#' tDesc2 <- tableDescription('d2', d)
 #' tDesc <- rbind(tDesc1, tDesc2)
 #' tDesc$keys[[2]] <- c(x='x')
 #' keysAreUnique(tDesc)
@@ -207,7 +207,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 
 #' check that a join plan is consistent with table descriptions
 #'
-#' @param tDesc description of tables, from \code{\link{tableDesription}} (and likely altered by user).
+#' @param tDesc description of tables, from \code{\link{tableDescription}} (and likely altered by user).
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @param ... force later arguments to bind by name.
 #' @param checkColClasses logical if true check for exact class name matches
@@ -223,8 +223,8 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'                  weight= c(130, 110),
 #'                  width= 1)
 #' # get the initial description of table defs
-#' tDesc <- rbind(tableDesription('d1', d1),
-#'                tableDesription('d2', d2))
+#' tDesc <- rbind(tableDescription('d1', d1),
+#'                tableDescription('d2', d2))
 #' # declare keys (and give them consitent names)
 #' tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 #' tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
@@ -284,14 +284,14 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
 
 #' Build a join plan
 #'
-#' @param tDesc description of tables from \code{\link{tableDesription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
+#' @param tDesc description of tables from \code{\link{tableDescription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @return detailed column join plan (appropriate for editing)
 #'
 #' @examples
 #'
 #' d <- data.frame(id=1:3, weight= c(200, 140, 98))
-#' tDesc <- rbind(tableDesription('d1', d),
-#'                tableDesription('d2', d))
+#' tDesc <- rbind(tableDescription('d1', d),
+#'                tableDescription('d2', d))
 #' tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 #' tDesc$keys[[2]] <- list(PrimaryKey= 'id')
 #' buildJoinPlan(tDesc)
@@ -410,7 +410,7 @@ strMapToString <- function(m) {
 
 #' Execute an ordered sequence of left joins.
 #'
-#' @param tDesc description of tables, from \code{\link{tableDesription}} only used to map table names to data.
+#' @param tDesc description of tables, from \code{\link{tableDescription}} only used to map table names to data.
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @param ... force later arguments to bind by name.
 #' @param checkColumns logical if TURE confirm column names before starting joins.
@@ -431,8 +431,8 @@ strMapToString <- function(m) {
 #'                     weight= c(105, 110),
 #'                     width= 1)
 #' # get the initial description of table defs
-#' tDesc <- rbind(tableDesription('meas1', meas1),
-#'                tableDesription('meas2', meas2))
+#' tDesc <- rbind(tableDescription('meas1', meas1),
+#'                tableDescription('meas2', meas2))
 #' # declare keys (and give them consitent names)
 #' tDesc$keys[[1]] <- list(PatientID= 'id')
 #' tDesc$keys[[2]] <- list(PatientID= 'pid')
@@ -482,7 +482,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
   if(checkColumns) {
     for(tabnam in tableNameSeq) {
       handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]
-      newdesc <- tableDesription(tabnam, handlei)
+      newdesc <- tableDescription(tabnam, handlei)
       if(newdesc$isEmpty[[1]]) {
         warning(paste("replyr::executeLeftJoinPlan table is empty:",
                       tabnam))

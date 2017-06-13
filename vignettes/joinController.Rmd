@@ -74,7 +74,7 @@ replyr_copy_to(my_db,
                'meas2_train')
 ```
 
-An important (and very neglected) step in data science tasks is documenting roles of tables, especially their key-structure (which we also call "stride" in the sense it describes how you move from row to row).  `replyr::tableDesription()` is a function that builds an initial description of the tables.
+An important (and very neglected) step in data science tasks is documenting roles of tables, especially their key-structure (which we also call "stride" in the sense it describes how you move from row to row).  `replyr::tableDescription()` is a function that builds an initial description of the tables. (Note: `replyr::tableDescription()` is misspelled in the current release version of `replyr`, we have fixed this in [dev](https://github.com/WinVector/replyr)).
 
 ```{r defs}
 # map from abstract names to realized names
@@ -88,7 +88,7 @@ got <- lapply(names(tables),
                 # get table reference from source by concrete name
                 ti <- tbl(my_db, tables[[ni]])
                 # map abstract name to reference
-                tableDesription(ni, ti)
+                tableDescription(ni, ti)
               })
 tDesc <- bind_rows(got)
 ```
@@ -106,7 +106,7 @@ names(tDesc$keys) <- tDesc$tableName
 print(tDesc$keys)
 ```
 
-`tableDesription()` is a table that holds the following:
+`tableDescription()` is a table that holds the following:
 
  * `tableName`: the abstract name we wish to use for this table.
  * `handle`: the actual data handle (either a `data.frame` or a handle to a remote data source such as `PostgreSQL` or `Spark`).  Notice in the example it is of class "`tbl_sqlite`" or "`tbl_dbi`" (depending on the version of `dplyr`).
@@ -198,7 +198,7 @@ results <- executeLeftJoinPlan(tDesc, columnJoinPlan,
 
 `executeLeftJoinPlan()` takes both a table description table (`tDesc`, keyed by `tableName`) and the join plan (`columnJoinPlan`, keyed by `tableName` and `sourceColumn`).
 
-The separation of concerns is strong: all details about then intended left-join sequence are taken from the `columnJoinPlan`, and only the mapping from abstract table names to tables (or table references/handles) is taken from `tDesc`.  This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy.  `tDesc` is a runtime entity (as it binds names to live handles, so can't be serialized: you must save the code steps to produce it; note only the columns `tableName` and `handle` are used so there is no point re-editing the `keys` column after running `tableDesription()` on new tables) and `columnJoinPlan` is a durable entity (has only information, not handles).
+The separation of concerns is strong: all details about then intended left-join sequence are taken from the `columnJoinPlan`, and only the mapping from abstract table names to tables (or table references/handles) is taken from `tDesc`.  This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy.  `tDesc` is a runtime entity (as it binds names to live handles, so can't be serialized: you must save the code steps to produce it; note only the columns `tableName` and `handle` are used so there is no point re-editing the `keys` column after running `tableDescription()` on new tables) and `columnJoinPlan` is a durable entity (has only information, not handles).
 
 Basically you:
 

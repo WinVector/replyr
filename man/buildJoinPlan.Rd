@@ -7,7 +7,7 @@
 buildJoinPlan(tDesc)
 }
 \arguments{
-\item{tDesc}{description of tables from \code{\link{tableDesription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
+\item{tDesc}{description of tables from \code{\link{tableDescription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
 }
 \value{
 detailed column join plan (appropriate for editing)
@@ -18,8 +18,8 @@ Build a join plan
 \examples{
 
 d <- data.frame(id=1:3, weight= c(200, 140, 98))
-tDesc <- rbind(tableDesription('d1', d),
-               tableDesription('d2', d))
+tDesc <- rbind(tableDescription('d1', d),
+               tableDescription('d2', d))
 tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 tDesc$keys[[2]] <- list(PrimaryKey= 'id')
 buildJoinPlan(tDesc)

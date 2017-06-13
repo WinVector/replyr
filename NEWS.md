@@ -1,4 +1,8 @@
 
+'replyr' 0.4.1 2017-06-13
+
+ * fix spelling of tableDescription()
+
 'replyr' 0.4.0 2017-06-12
 
  * Introduce executeLeftJoinPlan join controller.
