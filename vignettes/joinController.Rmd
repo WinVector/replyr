@@ -187,6 +187,10 @@ As a diagram the key structure of the join plan looks like the following (produc
 
 ![](joinDiagram1.png)
 
+These diagrams are kind of fun.  For example, here is a more complicated one from the `help(makeJoinDiagramSpec)` exampels:
+
+![](joinDiagram2.png)
+
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 
 ```{r run}
