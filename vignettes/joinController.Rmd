@@ -13,7 +13,7 @@ vignette: >
 
 This note describes a useful tool we call a "join controller" (and is part of our "[R and Big Data](http://www.win-vector.com/blog/tag/r-and-big-data/)" series, please see [here](http://www.win-vector.com/blog/2017/05/new-series-r-and-big-data-concentrating-on-spark-and-sparklyr/) for the introduction, and [here](https://github.com/WinVector/BigDataRStrata2017) for one our big data courses).
 
-When working on real world predictive modeling tasks in production the ability to join data and document how you join data is paramount.  One of the reasons is: there are very strong reasons to organize production data in something resembling one of the [Codd normal forms](https://en.wikipedia.org/wiki/Database_normalization).  However, for machine learning we need a fully denormalized for (all columns populated into a single to ready to go row, no matter what their provenance, keying, or stride).
+When working on real world predictive modeling tasks in production, the ability to join data and document how you join data is paramount.  One of the reasons is: there are very strong reasons to organize production data in something resembling one of the [Codd normal forms](https://en.wikipedia.org/wiki/Database_normalization).  However, for machine learning we need a fully denormalized for (all columns populated into a single to ready to go row, no matter what their provenance, keying, or stride).
 
 This is not an essential difficulty as in relational data systems moving between these forms can be done by joining, and data stores such as [PostgreSQL](https://www.postgresql.org) or [Apache Spark](https://spark.apache.org) as designed to provide powerful join capabilities.
 
@@ -213,7 +213,7 @@ As always: the proof is in the pudding.  We should look at results:
 print(as.data.frame(results))
 ```
 
-Notice the joiner add extra columns of the form `table_*_present` to show which tables had needed rows.  This lets us tell different sorts of missingness apart (value `NA` as there was no row to join, versus value `NA` as a `NA` came from a row) and appropriately `coalesce` results easily.  These columns are also very good for collecting statistics on data coverage, and in business settings often are very useful data quality and data provenance features which can often be directly included in machine learning models.
+Notice the joiner added extra columns of the form `table_*_present` to show which tables had needed rows.  This lets us tell different sorts of missingness apart (value `NA` as there was no row to join, versus value `NA` as a `NA` came from a row) and appropriately `coalesce` results easily.  These columns are also very good for collecting statistics on data coverage, and in business settings often are very useful data quality and data provenance features which can often be directly included in machine learning models.
 
 Also notice the join plan is very specific: every decision (such as what order to operate and how to disambiguate column names) is already explicitly set in the plan.  The executor is then allowed to simply move through the tables left-joining in the order the table names first appear in the plan.
 
