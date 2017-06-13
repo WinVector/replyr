@@ -15,9 +15,9 @@ One of the big selling points of the [`R`](https://cran.r-project.org) package [
  * Databases (`SQLite`, `PostgreSQL`, `MySQL`, and more).
  * [`Spark`](http://spark.apache.org) (via [`SparklyR`](https://CRAN.R-project.org/package=sparklyr)).
  
-This yields the *expectation* that the same code can be used on these multiple data sources.  This in fact not quite the case.  One has the weaker circumstance that while some `dplyr` code will often work with each of these data sources,  sometimes no one piece of code will work on all data sources.
+This yields the *expectation* that the same code can be used on these multiple data sources.  This in fact not quite the case.  One has the weaker circumstance that while some `dplyr` code will often work with each of these data sources,  sometimes no one piece of code will work on all data sources simultaneously.
 
-That is we may have to adapt our `dplyr` workflows to the data source.  The [`replyr` package]( https://CRAN.R-project.org/package=replyr) (especially the [development version](https://github.com/WinVector/replyr)) attempts to make it possible to write code that will run correctly on a variety of data sources.  Our current emphasis is running correctly on [`RPostgreSQL`]( https://CRAN.R-project.org/package=RPostgreSQL) and [`Sparklyr`]( https://CRAN.R-project.org/package=sparklyr) as this adds significant medium data and big data capabilities to [`R`](https://cran.r-project.org). 
+That is we may have to adapt our `dplyr` workflows to the data source.  The [`replyr` package]( https://CRAN.R-project.org/package=replyr) attempts to make it possible to write code that will run correctly on a variety of data sources.  Our current emphasis is running correctly on [`RPostgreSQL`]( https://CRAN.R-project.org/package=RPostgreSQL) and [`Sparklyr`]( https://CRAN.R-project.org/package=sparklyr) as this adds significant medium data and big data capabilities to [`R`](https://cran.r-project.org). 
 
 #### Example
 
@@ -26,26 +26,23 @@ The above is much clearer if we work a concrete example.
 Let's first start up an `R` instance.
 
 ```{r setup}
-# devtools::install_github("tidyverse/dplyr")
-# devtools::install_github('tidyverse/dbplyr')
 base::date()
 suppressPackageStartupMessages(library("dplyr"))
 packageVersion("dplyr")
+packageVersion("dbplyr")
+suppressPackageStartupMessages(packageVersion("sparklyr"))
 packageVersion("sparklyr")
-if(requireNamespace("dbplyr", quietly = TRUE)) {
-  packageVersion("dbplyr")
-}
 packageVersion("replyr")
 R.Version()$version.string
 ```
 
-And work a local `data.frame` example.  We create a `data.frame`, use a function to add a column, and perform a couple of example joins.
+We will start with a local `data.frame` example.  We create a `data.frame`, use a function to add a column, and perform a couple of example joins.
 
 One must understand that these operations are not meant to look meaningful on their own.  They are the types of code one sees in the middle of larger meaningful data transformations.  The sub-operations we are calling out include:
 
  * Creating a table.
- * Adding a constant character column to the table (our functions `f()` and `fCast()`).
- * Performing a simple join (our function `fJoin()`).
+ * Adding a constant character column to the table (our example functions `f()` and `fCast()`).
+ * Performing a simple join (our example function `fJoin()`).
 
 We are going to spare the reader any "motivating story" or cutesy pretend application. In return we ask the reader trust us that non-trivial data 
 projects include many steps at least this complicated, and at least this 
@@ -166,7 +163,7 @@ print(dRC)
 fJoin(dRC, dRC)
 ```
 
-At this point it *appears* that just adding an extra cast will give us code that works everywhere.  Our next example we show another database that insists on not having the cast.
+At this point it *appears* that just adding an extra cast will give us code that works everywhere. For the `0.5.0` version of `dplyr` it turned out: [`MySQL` required the cast *not* be present](https://github.com/WinVector/replyr/blob/master/extras/AddConstCol_dplyr_0_5_0.md).  This is why `replyr::addConstantColumn()` inspects the class of the database connection and issues different `dplyr` commands to different datbases.  This allows generic user code to work on multiple databases and with different versions of `dplyr` (as `dplyr` `0.7.0` is quite new, so not all project may be able to switch over to it immediately).
 
 ```{r PostgreSQLCleanup, include=FALSE}
 # clean up
@@ -174,82 +171,11 @@ dplyr::db_drop_table(sc$con, 'd')
 rm(list=c('sc', 'd')); gc(verbose = FALSE)
 ```
 
-#### `MySQL` example
-
-The `MySQL` adapter requires our extra cast not be present.  This means no generic code that doesn't do something non-transparent (such as looking at the database type) is going to work reliably on both databases.
-
-Here is the `MySQL` example.  
-
-
-It has multiple problems.  The first is `MySQL` (at least through the `dplyr`) adapter doesn't seem to be able to handle a ["self-join"](https://en.wikipedia.org/wiki/Join_(SQL)#Self-join) (which is in fact a very useful operation in a number of situations).
-
-```{r MySQLexample, error=TRUE}
-sc <- dplyr::src_mysql('mysql', 
-                       '127.0.0.1', 
-                       3306, 
-                       'root', '')
-d <- copy_to(sc, dLocal, 'd')
-
-# call our function on table
-dR <- f(d)
-print(dR)
-
-# try the join
-fJoin(dR, dR)
-```
-
-We can try to work around that by making copies of tables.  Such code would be less efficient but should work on multiple data sources.
-
-```{r MySQLexamplej2}
-# copy table
-dR <- compute(dR)
-dR2 <- dR %>% 
-  filter(TRUE) %>% 
-  compute()
-
-# try the join again
-fJoin(dR, dR2)
-```
-
-That was ugly, but such code could be made to work on our previous data sources.  The real issue is the `MySQL` adapter will not work with `fCast()`.  This is a problems as converting `f()` to `fCast()` was a necessary adaption for the `RPostgreSQL` adapter. 
-
-```{r MySQLcast, error=TRUE}
-# cast function fails for MySQL adapter
-dRC <- fCast(d)
-print(dRC)
-```
-
-We could say "don't use `MySQL`", but many clients have significant data in `MySQL` databases and `dplyr 0.5.0` explicitly mentions `MySQL` as an important target (at least as of 2016-06-23):
-
-> ["Currently dplyr supports the three most popular open source databases (sqlite, mysql and postgresql), and google’s bigquery."](https://cran.r-project.org/web/packages/dplyr/vignettes/databases.html)
-
-The way we work with around this in the development version of [`replyr`](https://github.com/WinVector/replyr) is: swallow our pride, inspect the database name and run different code depending on the database.  That looks like the following:
-
-```{r MySQLreplyr}
-# devtools::install_github("WinVector/replyr")
-dRC <- replyr::addConstantColumn(d, 'newCol', 'a')
-
-dR <- compute(dR)
-dR2 <- dR %>% 
-  filter(TRUE) %>% 
-  compute()
-
-# try the join again
-fJoin(dR, dR2)
-```
-
-The idea is unlike `f()` and `fCast()` the function `replyr::addConstantColumn()` will work with both `PostgreSQL` and `MySQL`.  This means code written in terms of `replyr::addConstantColumn()` has a chance of being generic and working on multiple data sources.
-
-```{r MySQLCleanup, include=FALSE}
-# clean up
-dplyr::db_drop_table(sc$con, 'd')
-rm(list=c('sc', 'd', 'dR', 'dR2', 'dRC')); gc(verbose = FALSE)
-```
 
 
 #### `Spark`
 
-`Spark` is becoming a very important system for `R` users due to its ability to work at scale and be scripted throught the `SparkR` or `SparklyR` interfaces.
+`Spark` is becoming a very important system for `R` users due to its ability to work at scale and be scripted through the `SparkR` or `SparklyR` interfaces.
 
 Notice in this `Spark 2.0.2` example we can use the same code as the original example (we are only using `replyr::addConstantColumn()` as a choice).
 
@@ -267,18 +193,17 @@ fJoin(dR, dR)
 
 ```{r SparkCleanup, include=FALSE}
 # clean up
-dplyr::db_drop_table(sc, 'd')
 sparklyr::spark_disconnect(sc)
-rm(list=c('sc', 'd', 'dR', 'dRC')); gc(verbose = FALSE)
 ```
 
 
 ### Conclusion
 
-At this point we have shown that while `dplyr` can work over multiple data sources, it often needs somewhat different code for each one.  This makes writing reliable, re-usable, *generic* code needlessly difficult.  To work around this we suggest using a genericising adapter such as `replyr` to work around these differences in production.  
+At this point we have shown that while `dplyr` can work over multiple data sources, it often needs somewhat different code for each one.  This makes writing reliable, re-usable, *generic* code needlessly difficult.  Each of these problems is easy to fix if they the entirety of your goals, but as interruptions in laying out a larger workflow they can be killing distractions.  [`replyr`]( https://CRAN.R-project.org/package=replyr) is (among other things) a patch-set in convenient package form.
 
-We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on work in the meantime (and often the issues are not considered a high priority).
+We suggest using a genericising adapter such as `replyr` to work around these differences in production.  
 
+We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues are not considered a high priority).
 
 ## Appendix: re-run initial examples with `replyr::addConstantColumn()`
 
