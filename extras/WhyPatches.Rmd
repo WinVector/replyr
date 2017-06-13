@@ -1,11 +1,13 @@
 ---
-title: "Add Constant Column"
+title: "Why To Use Patches"
 author: "John Mount"
 date: "`r Sys.Date()`"
 output:
   md_document:
     variant: markdown_github
 ---
+
+# Why To Use Patches
 
 #### Introduction
 
@@ -163,7 +165,7 @@ print(dRC)
 fJoin(dRC, dRC)
 ```
 
-At this point it *appears* that just adding an extra cast will give us code that works everywhere. For the `0.5.0` version of `dplyr` it turned out: [`MySQL` required the cast *not* be present](https://github.com/WinVector/replyr/blob/master/extras/AddConstCol_dplyr_0_5_0.md).  This is why `replyr::addConstantColumn()` inspects the class of the database connection and issues different `dplyr` commands to different datbases.  This allows generic user code to work on multiple databases and with different versions of `dplyr` (as `dplyr` `0.7.0` is quite new, so not all project may be able to switch over to it immediately).
+At this point it *appears* that just adding an extra cast will give us code that works everywhere. For the `0.5.0` version of `dplyr` it turned out: [`MySQL` required the cast *not* be present](https://github.com/WinVector/replyr/blob/master/extras/AddConstCol_dplyr_0_5_0.md).  This is why `replyr::addConstantColumn()` inspects the class of the database connection and issues different `dplyr` commands to different databases.  This allows generic user code to work on multiple databases and with different versions of `dplyr` (as `dplyr` `0.7.0` is quite new, so not all project may be able to switch over to it immediately).
 
 ```{r PostgreSQLCleanup, include=FALSE}
 # clean up
@@ -204,6 +206,59 @@ At this point we have shown that while `dplyr` can work over multiple data sourc
 We suggest using a genericising adapter such as `replyr` to work around these differences in production.  
 
 We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues are not considered a high priority).
+
+
+## Appendix: other currently needed work-arounds or patches
+
+### union_all
+
+```{r unionall, error=TRUE}
+my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+dr <- dplyr::copy_to(my_db,
+                     data.frame(x= c(1,2),
+                                y= c('a','b'),
+                                stringsAsFactors = FALSE),
+                     'dr',
+                     overwrite=TRUE)
+dr <- head(dr,1)
+
+# works
+replyr_union_all(dr, dr)
+
+# throws
+dplyr::union_all(dr, dr)
+```
+
+### rename
+
+```{r rename, error=TRUE}
+dLocal <- data.frame(x = 1:2,
+                     origCol = c("a", "b"),
+                     stringsAsFactors = FALSE)
+
+sc <- sparklyr::spark_connect(version = "2.0.2",
+                              master = "local")
+
+d <- copy_to(sc, dLocal, "d")
+
+# works
+dLocal %>%
+  rename(x2 = x, origCol2 = origCol)
+
+# works
+d %>%
+  rename(x2 = x) %>%
+  rename(origCol2 = origCol)
+
+# works
+d %>%
+  replyr_mapRestrictCols(c("x2"="x", "origCol2"="origCol"))
+
+# throws
+d %>%
+  rename(x2 = x, origCol2 = origCol)
+```
+
 
 ## Appendix: re-run initial examples with `replyr::addConstantColumn()`
 
