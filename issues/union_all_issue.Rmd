@@ -17,11 +17,14 @@ options(width =100)
 ```
 
 ```{r unionx, error=TRUE}
-library('dplyr')
+suppressPackageStartupMessages(library('dplyr'))
 packageVersion('dplyr')
-my_db <- dplyr::src_sqlite("replyr_sqliteEx.sqlite3", create = TRUE)
+packageVersion('dbplyr')
+my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 dr <- dplyr::copy_to(my_db,
-                     data.frame(x=c(1,2),y=c('a','b'),stringsAsFactors = FALSE),'dr',
+                     data.frame(x=c(1,2), y=c('a','b'),
+                                stringsAsFactors = FALSE),
+                     'dr',
                      overwrite=TRUE)
 dr <- head(dr,1)
 # dr <- compute(dr)
@@ -29,38 +32,49 @@ print(dr)
 print(dplyr::union_all(dr,dr))
 ```
 
+Filed as [RSQLite 215](https://github.com/rstats-db/RSQLite/issues/215) and [dplyr 2858](https://github.com/tidyverse/dplyr/issues/2858).
+
 ```{r cleanup}
 rm(list=ls())
 gc()
 ```
 
 Note calling `compute` doesn't always fix the problem in my more complicated production example.
-Also `union` seems to not have the same issue as `union_all`.  It also seems like nested function calls
-exhebriate the issue, perhaps a reference to a necissary structure goes out of scope and allows sub-table collection 
-too soon?  To trigger the full error in `replyr` force use of `union_all` in `replyr_bind_rows` and then try knitting `basicChecksSpark200.Rmd`.
+Also `union` seems to not have the same issue as `union_all`.  It also seems like nested function calls exacerbating the issue, perhaps a reference to a necissary structure goes out of scope and allows sub-table collection too soon?  To trigger the full error in `replyr` force use of `union_all` in `replyr_bind_rows` and then try knitting `basicChecksSpark200.Rmd`.
+
+The following now works:
 
 ```{r unionxs200, error=TRUE}
-library('dplyr')
-library('sparklyr')
+suppressPackageStartupMessages(library('dplyr'))
+suppressPackageStartupMessages(library('sparklyr'))
 packageVersion('dplyr')
+packageVersion('dbplyr')
 packageVersion('sparklyr')
 my_db <- sparklyr::spark_connect(version='2.0.0', 
    master = "local")
 class(my_db)
 my_db$spark_home
 da <- dplyr::copy_to(my_db,
-                     data.frame(x=c(1,2),y=c('a','b'),stringsAsFactors = FALSE),'dr',
+                     data.frame(x=c(1,2),y=c('a','b'),
+                                stringsAsFactors = FALSE),
+                     'da',
                      overwrite=TRUE)
 da <- head(da,1)
+print(da)
 db <- dplyr::copy_to(my_db,
-                     data.frame(x=c(3,4),y=c('c','d'),stringsAsFactors = FALSE),'dr',
+                     data.frame(x=c(3,4),y=c('c','d'),
+                                stringsAsFactors = FALSE),
+                     'db',
                      overwrite=TRUE)
 db <- head(db,1)
 #da <- compute(da)
 db <- compute(db)
+print(db)
 res <- dplyr::union_all(da,db)
 res <- dplyr::compute(res)
 print(res)
+print(da)
+print(db)
 ```
 
 ```{r cleanup2}
