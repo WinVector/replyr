@@ -183,6 +183,10 @@ print(columnJoinPlan)
 
 The join plan is the neglected (and often missing) piece of documentation key to non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
 
+As a diagram the key structure of the join plan looks like the following (produced by `DiagrammeR::mermaid(makeJoinDiagramSpec(columnJoinPlan))`):
+
+![](joinDiagram1.png)
+
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 
 ```{r run}

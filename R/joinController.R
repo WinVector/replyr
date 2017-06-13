@@ -174,35 +174,88 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
   # limit down to things we are using
   columnJoinPlan <- columnJoinPlan[columnJoinPlan$want, , drop=FALSE]
   # check a few desired invarients of the plan
-  prevResColClasses <- list()
+  columnJoinPlan$joinSource <- ''
+  prevResultColInfo <- list()
   for(tabnam in tabs) {
     ci <- columnJoinPlan[columnJoinPlan$tableName==tabnam, , drop=FALSE]
     cMap <- ci$sourceClass
     names(cMap) <- ci$resultColumn
     keyCols <- ci$resultColumn[ci$isKey]
     resCols <- ci$resultColumn[ci$want]
-    if(length(prevResColClasses)>0) {
-      missedKeys <- setdiff(keyCols, names(prevResColClasses))
+    if(length(prevResultColInfo)>0) {
+      missedKeys <- setdiff(keyCols, names(prevResultColInfo))
       if(length(missedKeys)>0) {
         return(paste("key col(s) (",
                      paste(missedKeys, collapse = ', '),
                      ") not contained in result cols of previous table(s) for table:", tabnam))
       }
+      for(ki in keyCols) {
+        prevInfo <- prevResultColInfo[[ki]]
+        #print(paste(prevInfo$tabableName, ki, '->', tabnam, ki))
+        columnJoinPlan$joinSource[(columnJoinPlan$tableName==tabnam) &
+                         (columnJoinPlan$resultColumn==ki)] <- prevInfo$tabableName
+      }
     }
     for(ki in resCols) {
-      prevClass <- prevResColClasses[[ki]]
+      prevInfo <- prevResultColInfo[[ki]]
       curClass <- cMap[[ki]]
-      if((checkColClasses)&&(!is.null(prevClass))&&
-         (curClass!=prevClass)) {
+      if((checkColClasses)&&(!is.null(prevInfo))&&
+         (curClass!=prevInfo$clsname)) {
         return(paste("column",ki,"changed from",
-                     prevClass,"to",curClass,"at table",
+                     prevInfo$clsname,"to",curClass,"at table",
                      tabnam))
 
       }
-      prevResColClasses[[ki]] <- curClass
+      if(is.null(prevInfo)) {
+        prevResultColInfo[[ki]] <- list(clsname= curClass,
+                                        tabableName= tabnam)
+      }
     }
   }
   columnJoinPlan
+}
+
+#' Build a drawable specification of the join diagram
+#'
+#' @param columnJoinPlan join plan
+#' @return mermaid diagram spec
+#'
+#' @examples
+#'
+#' @export
+#'
+#'
+makeJoinDiagramSpec <- function(columnJoinPlan) {
+  columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan, FALSE)
+  columnJoinPlan <- columnJoinPlan[columnJoinPlan$isKey, , drop=FALSE]
+  str <- "graph LR"
+  mentioned <- list()
+  tabs <- uniqueInOrder(columnJoinPlan$tableName)
+  for(tii in seq_len(length(tabs))) {
+    ti <- tabs[[tii]]
+    tin <- paste0(tii,': ',ti)
+    ci <- columnJoinPlan[columnJoinPlan$tableName==ti, , drop=FALSE]
+    sources <- setdiff(sort(unique(ci$joinSource)),'')
+    for(si in sources) {
+      cij <- ci[ci$joinSource==si, , drop=FALSE]
+      sin <- paste0(which(tabs==si), ': ', si)
+      keys <- paste0(tii,': ',
+                     paste(cij$resultColumn, collapse = ','))
+      siNode <- si
+      tiNode <- ti
+      if(is.null( mentioned[[si]])) {
+        siNode <- paste0(si, '(', sin, ')')
+      }
+      if(is.null( mentioned[[ti]]) ) {
+        tiNode <- paste0(ti, '>', tin, ']')
+      }
+      str <- paste0(str, '\n',
+                    siNode, '-- ', keys, ' -->', tiNode)
+      mentioned[[si]] <- TRUE
+      mentioned[[ti]] <- TRUE
+    }
+  }
+  str
 }
 
 #' check that a join plan is consistent with table descriptions
