@@ -11,15 +11,15 @@ output:
 
 #### Introduction
 
-One of the big selling points of the [`R`](https://cran.r-project.org) package [`dplyr`]( https://CRAN.R-project.org/package=dplyr) is it lets you use the same grammar to work with data from a variety of data sources:
+One of the big selling points of the [`R`](https://cran.r-project.org) package [`dplyr`]( https://CRAN.R-project.org/package=dplyr) is it lets you use the a grammar of data manipulation to work with data from a variety of data sources:
 
  * local `data.frame`s.
  * Databases (`SQLite`, `PostgreSQL`, `MySQL`, and more).
  * [`Spark`](http://spark.apache.org) (via [`SparklyR`](https://CRAN.R-project.org/package=sparklyr)).
  
-This yields the *expectation* that the same code can be used on these multiple data sources.  This in fact not quite the case.  One has the weaker circumstance that while some `dplyr` code will often work with each of these data sources,  sometimes no one piece of code will work on all data sources simultaneously.
+This yields the *expectation* that the same code will have similar results on these multiple data sources.  This in fact not quite the case.  One has the weaker circumstance that while some `dplyr` code will often work with each of these data sources.
 
-That is we may have to adapt our `dplyr` workflows to the data source.  The [`replyr` package]( https://CRAN.R-project.org/package=replyr) attempts to make it possible to write code that will run correctly on a variety of data sources.  Our current emphasis is running correctly on [`RPostgreSQL`]( https://CRAN.R-project.org/package=RPostgreSQL) and [`Sparklyr`]( https://CRAN.R-project.org/package=sparklyr) as this adds significant medium data and big data capabilities to [`R`](https://cran.r-project.org). 
+That is one may have to adapt or patch a `dplyr` workflows to the particular data source you are working with.  The [`replyr` package]( https://CRAN.R-project.org/package=replyr) includes a collection of patches that attempt to make it possible to write code that will run correctly on a variety of data sources.  Our current emphasis is running correctly on [`RPostgreSQL`]( https://CRAN.R-project.org/package=RPostgreSQL) and [`Sparklyr`]( https://CRAN.R-project.org/package=sparklyr) as this adds significant medium data and big data capabilities to [`R`](https://cran.r-project.org). 
 
 #### Example
 
@@ -34,6 +34,7 @@ packageVersion("dplyr")
 packageVersion("dbplyr")
 suppressPackageStartupMessages(packageVersion("sparklyr"))
 packageVersion("sparklyr")
+library("replyr")
 packageVersion("replyr")
 R.Version()$version.string
 ```
@@ -165,14 +166,13 @@ print(dRC)
 fJoin(dRC, dRC)
 ```
 
-At this point it *appears* that just adding an extra cast will give us code that works everywhere. For the `0.5.0` version of `dplyr` it turned out: [`MySQL` required the cast *not* be present](https://github.com/WinVector/replyr/blob/master/extras/AddConstCol_dplyr_0_5_0.md).  This is why `replyr::addConstantColumn()` inspects the class of the database connection and issues different `dplyr` commands to different databases.  This allows generic user code to work on multiple databases and with different versions of `dplyr` (as `dplyr` `0.7.0` is quite new, so not all project may be able to switch over to it immediately).
+At this point it appears that just adding an extra cast will give us code that works everywhere. Of course one has to remember to do this. To make remembering simple we have a function called `replyr::addConstantColumn()` which attempt to remember if the cast is needed (which depends both on the type of the value being added and the database we are working with). This is a small thing, but once you have a lot of these they can be substantial.
 
 ```{r PostgreSQLCleanup, include=FALSE}
 # clean up
 dplyr::db_drop_table(sc$con, 'd')
 rm(list=c('sc', 'd')); gc(verbose = FALSE)
 ```
-
 
 
 #### `Spark`
@@ -205,10 +205,35 @@ At this point we have shown that while `dplyr` can work over multiple data sourc
 
 We suggest using a genericising adapter such as `replyr` to work around these differences in production.  
 
-We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues are not considered a high priority).
+We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues do not appear to be considered a high priority).
 
 
 ## Appendix: other currently needed work-arounds or patches
+
+The following are all small speed bumps that are easy to move past, *if* they were what you were directly working and thinking about.  Hidden as steps in larger code or packages they can produce wrong results or at least trigger long debugging sessions.
+
+### nrow
+
+From [`dplyr` issue 2871](https://github.com/tidyverse/dplyr/issues/2871):
+
+```{r rnrow}
+d <- data.frame(x = 1:3)
+
+# expected behavior
+nrow(d)
+#> [1] 3
+
+# db vector behavior (throws)
+dS <- dbplyr::memdb_frame(x = 1:3)
+print(dS)
+
+# return NA
+nrow(dS)
+
+# works
+replyr_nrow(dS)
+```
+
 
 ### union_all
 
@@ -231,33 +256,19 @@ dplyr::union_all(dr, dr)
 
 ### rename
 
+From [`dplyr` issue 2860](https://github.com/tidyverse/dplyr/issues/2860):
+
 ```{r rename, error=TRUE}
-dLocal <- data.frame(x = 1:2,
-                     origCol = c("a", "b"),
-                     stringsAsFactors = FALSE)
-
-sc <- sparklyr::spark_connect(version = "2.0.2",
-                              master = "local")
-
-d <- copy_to(sc, dLocal, "d")
+df <- dbplyr::memdb_frame(x = 1:3, y = 4:6)
+df
 
 # works
-dLocal %>%
-  rename(x2 = x, origCol2 = origCol)
-
-# works
-d %>%
-  rename(x2 = x) %>%
-  rename(origCol2 = origCol)
-
-# works
-d %>%
-  replyr_mapRestrictCols(c("x2"="x", "origCol2"="origCol"))
+df %>% replyr_mapRestrictCols(c('A'='x', 'B'='y'))
 
 # throws
-d %>%
-  rename(x2 = x, origCol2 = origCol)
+df %>% rename(A=x, B=y)
 ```
+
 
 
 ## Appendix: re-run initial examples with `replyr::addConstantColumn()`

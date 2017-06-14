@@ -3,15 +3,15 @@ Why To Use Patches
 
 #### Introduction
 
-One of the big selling points of the [`R`](https://cran.r-project.org) package [`dplyr`](https://CRAN.R-project.org/package=dplyr) is it lets you use the same grammar to work with data from a variety of data sources:
+One of the big selling points of the [`R`](https://cran.r-project.org) package [`dplyr`](https://CRAN.R-project.org/package=dplyr) is it lets you use the a grammar of data manipulation to work with data from a variety of data sources:
 
 -   local `data.frame`s.
 -   Databases (`SQLite`, `PostgreSQL`, `MySQL`, and more).
 -   [`Spark`](http://spark.apache.org) (via [`SparklyR`](https://CRAN.R-project.org/package=sparklyr)).
 
-This yields the *expectation* that the same code can be used on these multiple data sources. This in fact not quite the case. One has the weaker circumstance that while some `dplyr` code will often work with each of these data sources, sometimes no one piece of code will work on all data sources simultaneously.
+This yields the *expectation* that the same code will have similar results on these multiple data sources. This in fact not quite the case. One has the weaker circumstance that while some `dplyr` code will often work with each of these data sources.
 
-That is we may have to adapt our `dplyr` workflows to the data source. The [`replyr` package](https://CRAN.R-project.org/package=replyr) attempts to make it possible to write code that will run correctly on a variety of data sources. Our current emphasis is running correctly on [`RPostgreSQL`](https://CRAN.R-project.org/package=RPostgreSQL) and [`Sparklyr`](https://CRAN.R-project.org/package=sparklyr) as this adds significant medium data and big data capabilities to [`R`](https://cran.r-project.org).
+That is one may have to adapt or patch a `dplyr` workflows to the particular data source you are working with. The [`replyr` package](https://CRAN.R-project.org/package=replyr) includes a collection of patches that attempt to make it possible to write code that will run correctly on a variety of data sources. Our current emphasis is running correctly on [`RPostgreSQL`](https://CRAN.R-project.org/package=RPostgreSQL) and [`Sparklyr`](https://CRAN.R-project.org/package=sparklyr) as this adds significant medium data and big data capabilities to [`R`](https://cran.r-project.org).
 
 #### Example
 
@@ -23,7 +23,7 @@ Let's first start up an `R` instance.
 base::date()
 ```
 
-    ## [1] "Tue Jun 13 10:27:57 2017"
+    ## [1] "Wed Jun 14 13:59:23 2017"
 
 ``` r
 suppressPackageStartupMessages(library("dplyr"))
@@ -51,10 +51,11 @@ packageVersion("sparklyr")
     ## [1] '0.5.6'
 
 ``` r
+library("replyr")
 packageVersion("replyr")
 ```
 
-    ## [1] '0.4.0'
+    ## [1] '0.4.1'
 
 ``` r
 R.Version()$version.string
@@ -266,7 +267,7 @@ fJoin(dRC, dRC)
     ## 1     1         a      a     1         a
     ## 2     1         a      a     2         b
 
-At this point it *appears* that just adding an extra cast will give us code that works everywhere. For the `0.5.0` version of `dplyr` it turned out: [`MySQL` required the cast *not* be present](https://github.com/WinVector/replyr/blob/master/extras/AddConstCol_dplyr_0_5_0.md). This is why `replyr::addConstantColumn()` inspects the class of the database connection and issues different `dplyr` commands to different databases. This allows generic user code to work on multiple databases and with different versions of `dplyr` (as `dplyr` `0.7.0` is quite new, so not all project may be able to switch over to it immediately).
+At this point it appears that just adding an extra cast will give us code that works everywhere. Of course one has to remember to do this. To make remembering simple we have a function called `replyr::addConstantColumn()` which attempt to remember if the cast is needed (which depends both on the type of the value being added and the database we are working with). This is a small thing, but once you have a lot of these they can be substantial.
 
 #### `Spark`
 
@@ -299,10 +300,55 @@ At this point we have shown that while `dplyr` can work over multiple data sourc
 
 We suggest using a genericising adapter such as `replyr` to work around these differences in production.
 
-We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues are not considered a high priority).
+We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues do not appear to be considered a high priority).
 
 Appendix: other currently needed work-arounds or patches
 --------------------------------------------------------
+
+The following are all small speed bumps that are easy to move past, *if* they were what you were directly working and thinking about. Hidden as steps in larger code or packages they can produce wrong results or at least trigger long debugging sessions.
+
+### nrow
+
+From [`dplyr` issue 2871](https://github.com/tidyverse/dplyr/issues/2871):
+
+``` r
+d <- data.frame(x = 1:3)
+
+# expected behavior
+nrow(d)
+```
+
+    ## [1] 3
+
+``` r
+#> [1] 3
+
+# db vector behavior (throws)
+dS <- dbplyr::memdb_frame(x = 1:3)
+print(dS)
+```
+
+    ## # Source:   table<icknocjeex> [?? x 1]
+    ## # Database: sqlite 3.11.1 [:memory:]
+    ##       x
+    ##   <int>
+    ## 1     1
+    ## 2     2
+    ## 3     3
+
+``` r
+# return NA
+nrow(dS)
+```
+
+    ## [1] NA
+
+``` r
+# works
+replyr_nrow(dS)
+```
+
+    ## [1] 3
 
 ### union\_all
 
@@ -320,7 +366,13 @@ dr <- head(dr,1)
 replyr_union_all(dr, dr)
 ```
 
-    ## Error in replyr_union_all(dr, dr): could not find function "replyr_union_all"
+    ## # Source:   table<replyr_union_all_XHyNS0UUHP1xv3O7tXJN_0000000003> [?? x
+    ## #   2]
+    ## # Database: sqlite 3.11.1 [:memory:]
+    ##       x     y
+    ##   <dbl> <chr>
+    ## 1     1     a
+    ## 2     1     a
 
 ``` r
 # throws
@@ -331,51 +383,37 @@ dplyr::union_all(dr, dr)
 
 ### rename
 
+From [`dplyr` issue 2860](https://github.com/tidyverse/dplyr/issues/2860):
+
 ``` r
-dLocal <- data.frame(x = 1:2,
-                     origCol = c("a", "b"),
-                     stringsAsFactors = FALSE)
-
-sc <- sparklyr::spark_connect(version = "2.0.2",
-                              master = "local")
-
-d <- copy_to(sc, dLocal, "d")
-
-# works
-dLocal %>%
-  rename(x2 = x, origCol2 = origCol)
+df <- dbplyr::memdb_frame(x = 1:3, y = 4:6)
+df
 ```
 
-    ##   x2 origCol2
-    ## 1  1        a
-    ## 2  2        b
+    ## # Source:   table<inayporhku> [?? x 2]
+    ## # Database: sqlite 3.11.1 [:memory:]
+    ##       x     y
+    ##   <int> <int>
+    ## 1     1     4
+    ## 2     2     5
+    ## 3     3     6
 
 ``` r
 # works
-d %>%
-  rename(x2 = x) %>%
-  rename(origCol2 = origCol)
+df %>% replyr_mapRestrictCols(c('A'='x', 'B'='y'))
 ```
 
     ## # Source:   lazy query [?? x 2]
-    ## # Database: spark_connection
-    ##      x2 origCol2
-    ##   <int>    <chr>
-    ## 1     1        a
-    ## 2     2        b
-
-``` r
-# works
-d %>%
-  replyr_mapRestrictCols(c("x2"="x", "origCol2"="origCol"))
-```
-
-    ## Error in replyr_mapRestrictCols(., c(x2 = "x", origCol2 = "origCol")): could not find function "replyr_mapRestrictCols"
+    ## # Database: sqlite 3.11.1 [:memory:]
+    ##       A     B
+    ##   <int> <int>
+    ## 1     1     4
+    ## 2     2     5
+    ## 3     3     6
 
 ``` r
 # throws
-d %>%
-  rename(x2 = x, origCol2 = origCol)
+df %>% rename(A=x, B=y)
 ```
 
     ## Error in names(select)[match(old_vars, vars)] <- new_vars: NAs are not allowed in subscripted assignments
@@ -418,7 +456,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_nIfcdyZXaqsjRUwCQ7Wa_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_46GWksQeTjFIUXu1Y88F_0000000000> [?? x
     ## #   3]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x origCol newCol
@@ -451,7 +489,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_QuoS0t2N8wjouSJ7PXmA_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_7L77sBsoKAxNmkPAkkFs_0000000000> [?? x
     ## #   3]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x origCol newCol
