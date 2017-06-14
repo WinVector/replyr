@@ -251,6 +251,9 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'
 makeJoinDiagramSpec <- function(columnJoinPlan, graphType= "graph LR") {
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan, FALSE)
+  if(is.character(columnJoinPlan)) {
+    stop(columnJoinPlan)
+  }
   columnJoinPlanK <- columnJoinPlan[columnJoinPlan$isKey, , drop=FALSE]
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
   nodeDescr <- lapply(tabs,
