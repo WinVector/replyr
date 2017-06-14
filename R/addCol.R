@@ -48,6 +48,6 @@ addConstantColumn <- function(d,
   # force calculation as chaning of replyr_private_name_vi was chaning previously assigned columns!
   # needed to work around this: https://github.com/WinVector/replyr/blob/master/issues/TrailingRefIssue.md
   dm <- dplyr::compute(dm, name= tempNameGenerator())
-  throwAway <- nrow(dm) # make sure calc is forced
+  throwAway <- collect(head(dm)) # make sure calc is forced
   dm
 }

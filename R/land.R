@@ -10,7 +10,7 @@ toToMakeEager <- function(value) {
   force(value)
   if('tbl' %in% class(value)) {
     # try to make eager
-    throwAway <- nrow(value)
+    throwAway <- collect(head(value))
   }
   value
 }

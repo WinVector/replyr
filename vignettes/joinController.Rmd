@@ -114,7 +114,7 @@ names(tDesc$keys) <- tDesc$tableName
 print(tDesc$keys)
 ```
 
-`tableDescription()` is a table that holds the following:
+`tableDescription()` produces tables that hold the following:
 
  * `tableName`: the abstract name we wish to use for this table.
  * `handle`: the actual data handle (either a `data.frame` or a handle to a remote data source such as `PostgreSQL` or `Spark`).  Notice in the example it is of class "`tbl_sqlite`" or "`tbl_dbi`" (depending on the version of `dplyr`).
