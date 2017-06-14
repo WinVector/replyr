@@ -23,7 +23,7 @@ Let's first start up an `R` instance.
 base::date()
 ```
 
-    ## [1] "Wed Jun 14 13:59:23 2017"
+    ## [1] "Wed Jun 14 14:09:54 2017"
 
 ``` r
 suppressPackageStartupMessages(library("dplyr"))
@@ -202,7 +202,7 @@ fJoin(dRC, dRC)
     ## 1     1         a      a     1         a
     ## 2     1         a      a     2         b
 
-Notice the exact same code worked on the data even when it is in a database. This is a big advantage. Experience earned using `dplyr` on `data.frame`s can be re-used when working with databases. Procedures can be rehearsed, and code can be re-used. `dplyr` isn't promising us a single "better in-memory `data.frame`" is is giving us the ability to delegate implementation to other systems including substantial databases and `Spark`.
+Notice the exact same code worked on the data even when it is in a database. This is a big advantage. Experience earned using `dplyr` on `data.frame`s can be re-used when working with databases. Procedures can be rehearsed, and code can be re-used. `dplyr` isn't just promising us a single "better in-memory `data.frame`" it is giving us the ability to delegate implementation to other systems including substantial databases and `Spark`.
 
 #### PostgreSQL example
 
@@ -328,7 +328,7 @@ dS <- dbplyr::memdb_frame(x = 1:3)
 print(dS)
 ```
 
-    ## # Source:   table<icknocjeex> [?? x 1]
+    ## # Source:   table<mnnfqorlyv> [?? x 1]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x
     ##   <int>
@@ -366,7 +366,7 @@ dr <- head(dr,1)
 replyr_union_all(dr, dr)
 ```
 
-    ## # Source:   table<replyr_union_all_XHyNS0UUHP1xv3O7tXJN_0000000003> [?? x
+    ## # Source:   table<replyr_union_all_0ArOjSI2rmgl2NirOZTd_0000000003> [?? x
     ## #   2]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x     y
@@ -390,7 +390,7 @@ df <- dbplyr::memdb_frame(x = 1:3, y = 4:6)
 df
 ```
 
-    ## # Source:   table<inayporhku> [?? x 2]
+    ## # Source:   table<qsjmqoinkt> [?? x 2]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x     y
     ##   <int> <int>
@@ -456,7 +456,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_46GWksQeTjFIUXu1Y88F_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_eHtYNzQq8m1dk46k0yFO_0000000000> [?? x
     ## #   3]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x origCol newCol
@@ -489,7 +489,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_7L77sBsoKAxNmkPAkkFs_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_6I6tKmdp2t1t1DqsPzS8_0000000000> [?? x
     ## #   3]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x origCol newCol

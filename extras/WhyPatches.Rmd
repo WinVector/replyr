@@ -123,7 +123,7 @@ print(dRC)
 fJoin(dRC, dRC)
 ```
 
-Notice the exact same code worked on the data even when it is in a database.  This is a big advantage.  Experience earned using `dplyr` on `data.frame`s can be re-used when working with databases.  Procedures can be rehearsed, and code can be re-used.  `dplyr` isn't promising us a single "better in-memory `data.frame`" is is giving us the ability to delegate implementation to other systems including substantial databases and `Spark`.
+Notice the exact same code worked on the data even when it is in a database.  This is a big advantage.  Experience earned using `dplyr` on `data.frame`s can be re-used when working with databases.  Procedures can be rehearsed, and code can be re-used.  `dplyr` isn't just promising us a single "better in-memory `data.frame`" it is giving us the ability to delegate implementation to other systems including substantial databases and `Spark`.
 
 ```{r SQLiteCleanup, include=FALSE}
 # clean up
