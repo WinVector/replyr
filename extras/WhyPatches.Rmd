@@ -205,7 +205,7 @@ At this point we have shown that while `dplyr` can work over multiple data sourc
 
 We suggest using a genericising adapter such as `replyr` to work around these differences in production.  
 
-We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues do not appear to be considered a high priority).
+We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime.
 
 
 ## Appendix: other currently needed work-arounds or patches

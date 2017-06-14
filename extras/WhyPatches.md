@@ -23,7 +23,7 @@ Let's first start up an `R` instance.
 base::date()
 ```
 
-    ## [1] "Wed Jun 14 14:09:54 2017"
+    ## [1] "Wed Jun 14 15:45:02 2017"
 
 ``` r
 suppressPackageStartupMessages(library("dplyr"))
@@ -300,7 +300,7 @@ At this point we have shown that while `dplyr` can work over multiple data sourc
 
 We suggest using a genericising adapter such as `replyr` to work around these differences in production.
 
-We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime (and often the issues do not appear to be considered a high priority).
+We do, as a public service, file everything we find as concise issues with the original projects; but one needs to make progress on actual production work in the meantime.
 
 Appendix: other currently needed work-arounds or patches
 --------------------------------------------------------
@@ -328,7 +328,7 @@ dS <- dbplyr::memdb_frame(x = 1:3)
 print(dS)
 ```
 
-    ## # Source:   table<mnnfqorlyv> [?? x 1]
+    ## # Source:   table<mrbdaaweal> [?? x 1]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x
     ##   <int>
@@ -366,7 +366,7 @@ dr <- head(dr,1)
 replyr_union_all(dr, dr)
 ```
 
-    ## # Source:   table<replyr_union_all_0ArOjSI2rmgl2NirOZTd_0000000003> [?? x
+    ## # Source:   table<replyr_union_all_Q8dHrDF0Vf7qpqqytrNK_0000000003> [?? x
     ## #   2]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x     y
@@ -390,7 +390,7 @@ df <- dbplyr::memdb_frame(x = 1:3, y = 4:6)
 df
 ```
 
-    ## # Source:   table<qsjmqoinkt> [?? x 2]
+    ## # Source:   table<ycekaozytk> [?? x 2]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x     y
     ##   <int> <int>
@@ -456,7 +456,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_eHtYNzQq8m1dk46k0yFO_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_1NMMS9Ep97DRrBIP51YQ_0000000000> [?? x
     ## #   3]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x origCol newCol
@@ -489,7 +489,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_6I6tKmdp2t1t1DqsPzS8_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_C7ilqokumKEaC9JvfYDC_0000000000> [?? x
     ## #   3]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x origCol newCol
