@@ -506,7 +506,7 @@ strMapToString <- function(m) {
 
 #' Execute an ordered sequence of left joins.
 #'
-#' @param tDesc description of tables, from \code{\link{tableDescription}} only used to map table names to data.
+#' @param tDesc description of tables, either a \code{data.frame} from \code{\link{tableDescription}}, or a list mapping from names to handles/frames.  Only used to map table names to data.
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @param ... force later arguments to bind by name.
 #' @param checkColumns logical if TURE confirm column names before starting joins.
@@ -545,6 +545,11 @@ strMapToString <- function(m) {
 #' executeLeftJoinPlan(tDesc, columnJoinPlan,
 #'                     checkColClasses= TRUE,
 #'                     verbose= TRUE)
+#' # also good
+#' executeLeftJoinPlan(list('meas1'=meas1, 'meas2'=meas2),
+#'                     columnJoinPlan,
+#'                     checkColClasses= TRUE,
+#'                     verbose= TRUE)
 #'
 #' @export
 #'
@@ -562,10 +567,20 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
   if(is.character(columnJoinPlan)) {
     stop(paste("replyr::executeLeftJoinPlan", columnJoinPlan))
   }
-  if(length(unique(tDesc$tableName))!=length(tDesc$tableName)) {
-    stop("replyr::executeLeftJoinPlan duplicate table names in tDesc")
+  if('data.frame' %in% class(tDesc)) {
+    if(length(unique(tDesc$tableName))!=length(tDesc$tableName)) {
+      stop("replyr::executeLeftJoinPlan duplicate table names in tDesc")
+    }
+    tMap <- tDesc$handle
+    names(tMap) <- tDesc$tableName
+  } else {
+    # named list
+    tMap <- tDesc
+    if(length(unique(names(tMap)))!=length(names(tMap))) {
+      stop("replyr::executeLeftJoinPlan duplicate table names in tDesc")
+    }
   }
-  if(!all(columnJoinPlan$tableName %in% tDesc$tableName)) {
+  if(!all(columnJoinPlan$tableName %in% names(tMap))) {
     stop("replyr::executeLeftJoinPlan some needed columnJoinPlan table(s) not in tDesc")
   }
   # get the names of tables in columnJoinPlan order
@@ -577,7 +592,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
   }
   if(checkColumns) {
     for(tabnam in tableNameSeq) {
-      handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]
+      handlei <- tMap[[tabnam]]
       newdesc <- tableDescription(tabnam, handlei)
       if(newdesc$isEmpty[[1]]) {
         warning(paste("replyr::executeLeftJoinPlan table is empty:",
@@ -611,7 +626,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     if(verbose) {
       print(paste('start',tabnam, base::date()))
     }
-    handlei <- tDesc$handle[[which(tDesc$tableName==tabnam)]]
+    handlei <- tMap[[tabnam]]
     keyRows <- which((columnJoinPlan$tableName==tabnam) &
       (columnJoinPlan$isKey))
     valRows <- which((columnJoinPlan$tableName==tabnam) &

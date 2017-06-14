@@ -9,7 +9,7 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
 }
 \arguments{
-\item{tDesc}{description of tables, from \code{\link{tableDescription}} only used to map table names to data.}
+\item{tDesc}{description of tables, either a \code{data.frame} from \code{\link{tableDescription}}, or a list mapping from names to handles/frames.  Only used to map table names to data.}
 
 \item{columnJoinPlan}{columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
 
@@ -58,6 +58,11 @@ if(!is.null(inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
 }
 # execute the left joins
 executeLeftJoinPlan(tDesc, columnJoinPlan,
+                    checkColClasses= TRUE,
+                    verbose= TRUE)
+# also good
+executeLeftJoinPlan(list('meas1'=meas1, 'meas2'=meas2),
+                    columnJoinPlan,
                     checkColClasses= TRUE,
                     verbose= TRUE)
 
