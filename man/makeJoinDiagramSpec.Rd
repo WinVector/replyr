@@ -4,12 +4,17 @@
 \alias{makeJoinDiagramSpec}
 \title{Build a drawable specification of the join diagram}
 \usage{
-makeJoinDiagramSpec(columnJoinPlan, graphType = "graph LR")
+makeJoinDiagramSpec(columnJoinPlan, ..., graphType = "graph LR",
+  groupByKeys = TRUE)
 }
 \arguments{
 \item{columnJoinPlan}{join plan}
 
+\item{...}{force later arguments to bind by name}
+
 \item{graphType}{first command on graph}
+
+\item{groupByKeys}{logical if true build key-equivilant sub-graphs}
 }
 \value{
 mermaid diagram spec

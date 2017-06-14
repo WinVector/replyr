@@ -218,7 +218,9 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #' Build a drawable specification of the join diagram
 #'
 #' @param columnJoinPlan join plan
+#' @param ... force later arguments to bind by name
 #' @param graphType first command on graph
+#' @param groupByKeys logical if true build key-equivilant sub-graphs
 #' @return mermaid diagram spec
 #'
 #' @examples
@@ -249,7 +251,9 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #' @export
 #'
 #'
-makeJoinDiagramSpec <- function(columnJoinPlan, graphType= "graph LR") {
+makeJoinDiagramSpec <- function(columnJoinPlan, ...,
+                                graphType= "graph LR",
+                                groupByKeys= TRUE) {
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan, FALSE)
   if(is.character(columnJoinPlan)) {
     stop(columnJoinPlan)
@@ -267,13 +271,14 @@ makeJoinDiagramSpec <- function(columnJoinPlan, graphType= "graph LR") {
                         paste0(idx, ': ', ti, '<br> ', cols)
                       })
   names(nodeDescr) <- tabs
-  str <- graphType
+  keysToGroups <- list()
   mentioned <- list()
   for(tii in seq_len(length(tabs))) {
     ti <- tabs[[tii]]
-    tin <-nodeDescr[[ti]]
+    tin <- nodeDescr[[ti]]
     ci <- columnJoinPlanK[columnJoinPlanK$tableName==ti, , drop=FALSE]
     sources <- setdiff(sort(unique(ci$joinSource)),'')
+    linkGroup <- ''
     for(si in sources) {
       cij <- ci[ci$joinSource==si, , drop=FALSE]
       sin <- nodeDescr[[si]]
@@ -288,10 +293,31 @@ makeJoinDiagramSpec <- function(columnJoinPlan, graphType= "graph LR") {
       if(is.null( mentioned[[ti]]) ) {
         tiNode <- paste0(ti, '>"', tin, '"]')
       }
-      str <- paste0(str, '\n',
+      linkGroup <- paste0(linkGroup, '\n',
                     siNode, '-- ', edgeLabel, ' -->', tiNode)
       mentioned[[si]] <- TRUE
       mentioned[[ti]] <- TRUE
+    }
+    keySet <- paste(sort(unique(ci$resultColumn[ci$isKey])),
+                    collapse=':')
+    prevGroup <- keysToGroups[[keySet]]
+    if(is.null(prevGroup)) {
+      keysToGroups[[keySet]] <- linkGroup
+    } else {
+      keysToGroups[[keySet]] <- paste0(prevGroup, '\n', linkGroup)
+    }
+  }
+  str <- graphType
+  for(keySet in names(keysToGroups)) {
+    linkGroup <- keysToGroups[[keySet]]
+    if(groupByKeys) {
+      str <- paste0(str,'\n',
+                    'subgraph ', keySet, '\n',
+                    linkGroup, '\n',
+                    'end\n')
+    } else {
+      str <- paste0(str,'\n',
+                    linkGroup, '\n')
     }
   }
   str

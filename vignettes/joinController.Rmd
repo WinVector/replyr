@@ -195,11 +195,11 @@ The join plan is the neglected (and often missing) piece of documentation key to
 
 As a diagram the key structure of the join plan looks like the following (produced by `DiagrammeR::mermaid(makeJoinDiagramSpec(columnJoinPlan))`):
 
-![](joinDiagram1.png)
+<img src="joinDiagram1.png" width="600">
 
 These diagrams are kind of fun.  For instance, here is a more complicated one from the `help(makeJoinDiagramSpec)` examples:
 
-![](joinDiagram2.png)
+<img src="joinDiagram2.png" width="600">
 
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 
