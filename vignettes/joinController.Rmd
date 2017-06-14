@@ -78,19 +78,27 @@ An important (and very neglected) step in data science tasks is documenting role
 
 ```{r defs}
 # map from abstract names to realized names
-tables <- list('meas1' = 'meas1_train',
-               'names' = 'names_facts',
-               'meas2' = 'meas2_train')
-
-# get the initial description of table defs
-got <- lapply(names(tables),
-              function(ni) {
-                # get table reference from source by concrete name
-                ti <- tbl(my_db, tables[[ni]])
-                # map abstract name to reference
-                tableDescription(ni, ti)
-              })
-tDesc <- bind_rows(got)
+trainTables <- data_frame(tableName = c('meas1', 
+                                        'names', 
+                                        'meas2'),
+                          concreteName = c('meas1_train', 
+                                           'names_facts', 
+                                           'meas2_train'))
+# get table references from source by concrete names
+trainTables$handle <- lapply(trainTables$concreteName,
+                             function(ni) {
+                               tbl(my_db, ni)
+                             })
+# convert to full description table
+tDesc <- bind_rows(
+  lapply(seq_len(nrow(trainTables)),
+         function(ri) {
+           ni <- trainTables$tableName[[ri]]
+           ti <- trainTables$handle[[ri]]
+           tableDescription(ni, ti)
+         }
+  )
+)
 ```
 
 `tDesc` is essentially a slightly enriched version of the data handle concordance described in "[Managing Spark data handles in R](http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/)."  We can take a quick look at the stored simplified [summaries](http://www.win-vector.com/blog/2017/05/summarizing-big-data-in-r/):
@@ -231,6 +239,29 @@ print(results %>%
 Notice the joiner added extra columns of the form `table_*_present` to show which tables had needed rows.  This lets us tell different sorts of missingness apart (value `NA` as there was no row to join, versus value `NA` as a `NA` came from a row) and appropriately `coalesce` results easily.  These columns are also very good for collecting statistics on data coverage, and in business settings often are very useful data quality and data provenance features which can often be directly included in machine learning models.
 
 Also notice the join plan is very specific: every decision (such as what order to operate and how to disambiguate column names) is already explicitly set in the plan.  The executor is then allowed to simply move through the tables left-joining in the order the table names first appear in the plan.
+
+The `columnJoinPlan` is meant to be re-usable. In particular we can imaging running it to build training data, possibly re-running it to build test/validation data, and re-running it many times to build data we apply the model to.  To facilitate this `executeLeftJoinPlan()` is generous in what it accepts as a `tDesc`.  All it needs from the `tDesc` argument is a way to map abstract names (`tableName`) to concrete data realizations (either `data.frame`s or `dplyr` data handles).  So by design  `executeLeftJoinPlan()` accepts either a `data.frame` (and only looks at the `tableName` and `handle` columns) or a map.  So the following calls to `executeLeftJoinPlan()` also work:
+
+```{r execpartialtab}
+# hand build table with parallel tableName and handle columns
+tTab <- trainTables %>%
+  select(tableName, handle)
+print(tTab)
+r <- executeLeftJoinPlan(tTab, columnJoinPlan, 
+                         verbose= FALSE,
+                         tempNameGenerator= tempNameGenerator)
+```
+
+```{r listmap}
+# map of abstract table names to handles
+tMap = trainTables$handle
+names(tMap) <- trainTables$tableName
+r <- executeLeftJoinPlan(tMap, columnJoinPlan, 
+                         verbose= FALSE,
+                         tempNameGenerator= tempNameGenerator)
+```
+
+The above facilities are not intended to re-run the original training data, but to make it very easy to re-apply the `columnJoinPlan` to new tables (i.e., to support testing/validation and support later model application on future data).  Notice in neither case do we use the concrete names of the tables, we map abstract (notional) names to handles.
 
 Having to "join a bunch of tables to get the data into simple rows" is a common step in data science.  Therefore you do not want this to be a difficult and undocumented task.  By using a join controller you essentially make the documentation the executable specification for the task.
 
