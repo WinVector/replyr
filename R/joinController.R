@@ -277,18 +277,19 @@ makeJoinDiagramSpec <- function(columnJoinPlan, graphType= "graph LR") {
     for(si in sources) {
       cij <- ci[ci$joinSource==si, , drop=FALSE]
       sin <- nodeDescr[[si]]
-      keys <- paste0(tii,': ',
-                     paste(cij$resultColumn, collapse = ','))
+      edgeLabel <- paste0('"', tii, ': ',
+                     paste(cij$resultColumn, collapse = ','),
+                     '"')
       siNode <- si
       tiNode <- ti
       if(is.null( mentioned[[si]])) {
-        siNode <- paste0(si, '(', sin, ')')
+        siNode <- paste0(si, '("', sin, '")')
       }
       if(is.null( mentioned[[ti]]) ) {
-        tiNode <- paste0(ti, '>', tin, ']')
+        tiNode <- paste0(ti, '>"', tin, '"]')
       }
       str <- paste0(str, '\n',
-                    siNode, '-- ', keys, ' -->', tiNode)
+                    siNode, '-- ', edgeLabel, ' -->', tiNode)
       mentioned[[si]] <- TRUE
       mentioned[[ti]] <- TRUE
     }
