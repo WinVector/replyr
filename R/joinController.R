@@ -225,7 +225,12 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'
 #' @examples
 #'
-#' tDesc <- data.frame(tableName= c('employee',
+#'
+#' # note: employeeAndDate is likely built as a cross-product
+#' #       join of an employee table and set of dates of interest
+#' #       before getting to the join controller step.  We call
+#' #       such a table "row control" or "experimental design."
+#' tDesc <- data.frame(tableName= c('employeeAndDate',
 #'                                  'orgtable',
 #'                                  'revenue',
 #'                                  'activity'),
