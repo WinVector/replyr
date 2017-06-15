@@ -159,7 +159,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
       return(paste("columnJoinPlan sourceColumns not unique for table",
                    ci))
     }
-    if(sum(ci$isKey)<=0) {
+    if((sum(ci$isKey)<=0) && (tabnam!=tabs[[1]])) {
       return("no keys for table", tabnam)
     }
   }
@@ -306,10 +306,12 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     keySet <- paste(sort(unique(ci$resultColumn[ci$isKey])),
                     collapse=':')
     prevGroup <- keysToGroups[[keySet]]
-    if(is.null(prevGroup)) {
-      keysToGroups[[keySet]] <- linkGroup
-    } else {
-      keysToGroups[[keySet]] <- paste0(prevGroup, '\n', linkGroup)
+    if(nchar(linkGroup)>0) {
+      if(is.null(prevGroup)) {
+        keysToGroups[[keySet]] <- linkGroup
+      } else {
+        keysToGroups[[keySet]] <- paste0(prevGroup, '\n', linkGroup)
+      }
     }
   }
   str <- graphType
@@ -446,7 +448,7 @@ buildJoinPlan <- function(tDesc) {
       stop(paste("replyr::buildJoinPlan table",
                  tnam, "no columns"))
     }
-    if(length(keys)<=0) {
+    if((length(keys)<=0)&&(i>1)) {
       stop(paste("replyr::buildJoinPlan table",
                  tnam, "no keys"))
     }
