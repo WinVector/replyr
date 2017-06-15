@@ -23,7 +23,7 @@ Let's first start up an `R` instance.
 base::date()
 ```
 
-    ## [1] "Wed Jun 14 15:45:02 2017"
+    ## [1] "Thu Jun 15 08:08:01 2017"
 
 ``` r
 suppressPackageStartupMessages(library("dplyr"))
@@ -307,7 +307,7 @@ Appendix: other currently needed work-arounds or patches
 
 The following are all small speed bumps that are easy to move past, *if* they were what you were directly working and thinking about. Hidden as steps in larger code or packages they can produce wrong results or at least trigger long debugging sessions.
 
-### nrow
+### nrow / counting rows
 
 From [`dplyr` issue 2871](https://github.com/tidyverse/dplyr/issues/2871):
 
@@ -328,7 +328,7 @@ dS <- dbplyr::memdb_frame(x = 1:3)
 print(dS)
 ```
 
-    ## # Source:   table<mrbdaaweal> [?? x 1]
+    ## # Source:   table<rrwfercpqy> [?? x 1]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x
     ##   <int>
@@ -366,7 +366,7 @@ dr <- head(dr,1)
 replyr_union_all(dr, dr)
 ```
 
-    ## # Source:   table<replyr_union_all_Q8dHrDF0Vf7qpqqytrNK_0000000003> [?? x
+    ## # Source:   table<replyr_union_all_AOJRZYEuB4bVN9SOZwR8_0000000003> [?? x
     ## #   2]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x     y
@@ -390,7 +390,7 @@ df <- dbplyr::memdb_frame(x = 1:3, y = 4:6)
 df
 ```
 
-    ## # Source:   table<ycekaozytk> [?? x 2]
+    ## # Source:   table<xwennrwspv> [?? x 2]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x     y
     ##   <int> <int>
@@ -417,6 +417,71 @@ df %>% rename(A=x, B=y)
 ```
 
     ## Error in names(select)[match(old_vars, vars)] <- new_vars: NAs are not allowed in subscripted assignments
+
+### counting rows again
+
+From [`dplyr` issue 2080](https://github.com/tidyverse/dplyr/issues/2080%5D):
+
+``` r
+suppressPackageStartupMessages(library(dplyr))
+library(purrr)
+```
+
+    ## 
+    ## Attaching package: 'purrr'
+
+    ## The following objects are masked from 'package:dplyr':
+    ## 
+    ##     contains, order_by
+
+``` r
+df <- tibble(x = list(
+  tibble(y = 1:2),
+  tibble(y = 1:3),
+  tibble(y = 1:4)
+))
+
+nrows <- function(df) {
+  df %>% summarise(n = n()) %>% .[["n"]]
+}
+
+df %>%
+  mutate(
+    n1 = x %>% map_int(nrows),
+    n2 = x %>% map_int(. %>% summarise(n = n()) %>% .[["n"]]),
+    n3 = map_int(x, ~ summarise(., n = n())[["n"]]),
+    n4 = map_int(x, function(df) summarise(df, n = n())[["n"]]),
+    n5 = x %>% map_dbl(replyr::replyr_nrow)
+  )
+```
+
+    ## # A tibble: 3 x 6
+    ##                  x    n1    n2    n3    n4    n5
+    ##             <list> <int> <int> <int> <int> <dbl>
+    ## 1 <tibble [2 x 1]>     2     3     3     3     2
+    ## 2 <tibble [3 x 1]>     3     3     3     3     3
+    ## 3 <tibble [4 x 1]>     4     3     3     3     4
+
+All of these functions are "the same", but only the ones that are externally wrapped (`nrows()` and `replyr_nrow()`) seem to have a sucessful execution environment (gets the nested row-counts right). This example is a bit different than the others, it is a reason to prefer "pedestrian code [base-R](http://www.win-vector.com/blog/tag/base-r/)" (wrapping your own function) to some of the slick meta-notations.
+
+Roughly: each of thes `tidyverse` packages `magrittr`, `dplyr`, and `purrr` has already consumed so much referential transparency that they don't work together without [further explicit coordination](https://github.com/tidyverse/magrittr/issues/141) (which consumes even more referential transparency, making working with additional systems and constraints even harder).
+
+Appendix: reasons to patch instead of waiting for a fix
+-------------------------------------------------------
+
+An alternative to working around issues is to wait for `dplyr` itself to incorporate fixes, or at least work-arounds. However this can take time, and there are indications that the `dplyr` authors do not see `dplyr` itself as the correct place to correct work-arounds. We can try to guess intent by looking at package author comments from some of the issue reports:
+
+-   ["Looks like its a bug in MySQL"](https://github.com/tidyverse/dplyr/issues/2777).
+-   ["There's nothing we can do here - SQLite doesn't support this SQL."](https://github.com/tidyverse/dplyr/issues/2858) (To be clear: this is in reference to `SQL` generate by `dplyr`, not `SQL` passed in from user code.)
+-   ["I don't see any obvious way to do better."](https://github.com/tidyverse/dplyr/issues/2830)
+
+My guess is the `dplyr` development strategy is to emit a fairly consistent dialect of `SQL` to all `db`-backends. This strategy is efficient, but may not work in all cases (["It's called SQL 92 because there's 92 versions of it...."](https://github.com/tidyverse/dplyr/issues/2800)).
+
+The user code may issue unintentionally difficult commands (as one of the points of the `dplyr` grammar is to spare the user the full details of `SQL`), but the user does expect and need them to be carried out. It is a bit like the [programmer's credo](https://twitter.com/pinboard/status/761656824202276864?lang=en) (a parody of [JFK's Moon Speech](https://er.jsc.nasa.gov/seh/ricetalk.htm)):
+
+> we do these things not because they are easy, but because we thought they were going to be easy
+
+So `replyr` ends up collecting work-arounds and patches to avoid triggering situations that `dplyr` is not currently working around (right or wrong).
 
 Appendix: re-run initial examples with `replyr::addConstantColumn()`
 --------------------------------------------------------------------
@@ -456,7 +521,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_1NMMS9Ep97DRrBIP51YQ_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_aOSsW07GoQWkP1msGg1y_0000000000> [?? x
     ## #   3]
     ## # Database: sqlite 3.11.1 [:memory:]
     ##       x origCol newCol
@@ -489,7 +554,7 @@ print(dR)
 ```
 
     ## # Source:  
-    ## #   table<replyr_addConstantColumn_C7ilqokumKEaC9JvfYDC_0000000000> [?? x
+    ## #   table<replyr_addConstantColumn_fnU7HT7kxp7gsUIu2MNo_0000000000> [?? x
     ## #   3]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x origCol newCol
