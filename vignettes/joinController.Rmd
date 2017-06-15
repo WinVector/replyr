@@ -105,7 +105,7 @@ tDesc <- bind_rows(
 
 
 ```{r lookdesc}
-print(tDesc %>% select(tableName, sourceClass, isEmpty))
+print(tDesc %>% select(tableName, sourceClass, handle, isEmpty))
 print(tDesc$columns)
 print(tDesc$colClass)
 
