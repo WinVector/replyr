@@ -278,6 +278,18 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
   names(nodeDescr) <- tabs
   keysToGroups <- list()
   mentioned <- list()
+  # special case first note
+  ti <- tabs[[1]]
+  tin <- nodeDescr[[ti]]
+  tiNode <- paste0(ti, '("', tin, '")')
+  mentioned[[ti]] <- TRUE
+  ci <- columnJoinPlanK[columnJoinPlanK$tableName==ti, , drop=FALSE]
+  keySet <- '.'
+  if(nrow(ci)>0) {
+    keySet <- paste(sort(unique(ci$resultColumn)),
+                    collapse=':')
+  }
+  keysToGroups[keySet] <- tiNode
   for(tii in seq_len(length(tabs))) {
     ti <- tabs[[tii]]
     tin <- nodeDescr[[ti]]
@@ -296,7 +308,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
         siNode <- paste0(si, '("', sin, '")')
       }
       if(is.null( mentioned[[ti]]) ) {
-        tiNode <- paste0(ti, '>"', tin, '"]')
+        tiNode <- paste0(ti, '["', tin, '"]')
       }
       linkGroup <- paste0(linkGroup, '\n',
                     siNode, '-- ', edgeLabel, ' -->', tiNode)
