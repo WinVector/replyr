@@ -256,7 +256,7 @@ I think the `tidyeval`/`rlang` philosophy is a "tools to application view" and `
 
 A lot of the `tidyeval`/`rlang` design is centered on treating variable names as lexical closures that capture an environment they should be evaluated in. This does make them more like general `R` functions (which also have this behavior).
 
-However, closures actually counter to some common analyst practice.
+However, creating so many long-term bindings is a actually counter to some common data analyst practice.
 
 The `my_mutate(df, expr)` example itself from `vignette('programming', package = 'dplyr')` even shows the pattern I am referring to: the analyst transiently pairs abstract variable names to a chosen concrete data set. One argument is the data and the other is the expression to be applied to that data (and only that data, with clean code not capturing values from environments).
 
