@@ -7,7 +7,7 @@ output:
     variant: markdown_github
 ---
 
-[`tidyeval`/`rlang`](https://CRAN.R-project.org/package=rlang) generates domains specific languages that, in my opinion, have somewhat involved and irregular laws.  Here are some details paraphrased from [`vignette('programming', package = 'dplyr')`](https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html)):
+In [`R`](https://www.r-project.org) [`tidyeval`/`rlang`](https://CRAN.R-project.org/package=rlang) generates domains specific languages that, in my opinion, have somewhat involved and irregular laws.  Here are some details paraphrased from [`vignette('programming', package = 'dplyr')`](https://cran.r-project.org/web/packages/dplyr/vignettes/programming.html)):
 
  * "`:=`" is needed to make left-hand-side re-mapping possible (adding yet another "more than one assignment type operator running around" notation issue).
  * "`!!`" substitution requires parenthesis to safely bind (so the notation is actually "`(!! )`, not "`!!`").
@@ -41,7 +41,7 @@ my_mutate <- function(df, expr) {
 my_mutate(d, a)
 ```
 
-So we would expect from working examples we could write a function that adds one to a column as follows:
+So we would now expect we could write a function that adds one to a column as follows:
 
 ```{r mutateerr, error = TRUE}
 tidy_mutate <- function(df, res_var, input_var) {
@@ -69,7 +69,7 @@ tidy_mutate1 <- function(df, input_var) {
 tidy_mutate1(d, a)
 ```
 
-That almost looks like some sort of side-effect of the first `enquo()` causing the `quo_name()` to behave differently.  
+That almost looks like some sort of side-effect of the first `enquo()` causing the `quo_name()` to behave differently (perhaps an unintended interaction with `R` function argument promise semantics).
 
 We could try `rlang::sym()`, but I think that is for quoting arguments prior to the function call:
 
@@ -127,16 +127,46 @@ wrapr_mutate_nse <- function(df, res_var, input_var) {
 wrapr_mutate_nse(d, res, a)
 ```
 
+Or, if you are uncomfortable with macros being implemented through string-substitution one can use `wrapr::let()` in "language mode" (where it works directly on abstract syntax trees).
+
+```{r wraprl}
+wrapr_mutate_se <- function(df, res_var, input_var) {
+  wrapr::let(
+    c(RESVAR= res_var,
+      INPUTVAR= input_var),
+    df %>%
+      mutate(RESVAR = INPUTVAR + 1),
+    subsMethod= 'langsubs'
+  )
+}
+
+wrapr_mutate_se(d, 'res', 'a')
+
+wrapr_mutate_nse <- function(df, res_var, input_var) {
+  wrapr::let(
+    c(RESVAR= substitute(res_var),
+      INPUTVAR= substitute(input_var)),
+    df %>%
+      mutate(RESVAR = INPUTVAR + 1),
+    subsMethod= 'langsubs'
+  )
+}
+
+wrapr_mutate_nse(d, res, a)
+```
+
 ### Conclusion
+
+`tidyeval`/`rlang` provides tools to compose or daisy-chain non-standard-evaluation functions (i.e., write new non-standard-evaluation functions in terms of others. This abrogates the issue that it can be hard to compose non-standard function interfaces (i.e., one can not [parameterize them or program over them](https://www.youtube.com/watch?v=iKLGxzzm9Hk) without a tool such as `tidyeval`/`rlang`).  `wrapr::let()` concentrates on standard evaluation, providing a tool that allows one to re-wrap non-standard-evaluation interfaces as standard evaluation interfaces.
+
+I think the `tidyeval`/`rlang` philosophy is a "tools to application view" and `wrapr::let()` is a "use-case to tool view." These are differing views, so each will artificially look "silly" if judged in terms of the other. 
 
 A lot of the `tidyeval`/`rlang` design is centered on treating variable names as lexical closures that capture an environment they should be evaluated in. This does make them more like general `R` functions (which also have this behavior).
 
-Instead of converting non-standard-evaluation functions to standard-evaluation interfaces (as is the `wrapr::let()` strategy) `tidyeval`/`rlang` concentrates on daisy-chaining non-standard-evaluation functions (i.e., writing new non-standard-evaluation functions in terms of others, which is difficult without `tidyeval`/`rlang`).
+However, closures actually counter to some common analyst practice.
 
-However, I think that is actually counter to common analyst practice.  Analysts actually like standard evaluation and are willing to believe variable names are mere strings.
+The `my_mutate(df, expr)` example itself from `vignette('programming', package = 'dplyr')` even shows the pattern I am referring to: the analyst transiently pairs abstract variable names to a chosen concrete data set. One argument is the data and the other is the expression to be applied to that data.
 
-The `my_mutate(df, expr)` example itself from `vignette('programming', package = 'dplyr')` even shows the pattern: the analyst transiently binds abstract variable names to a chosen data set. One argument is the data and the other is the expression to be applied to that data.
+Many calls are written this way (for example `predict()`) and it has the huge advantage that it documents your intent to change out what data is being applied (such as running a procedure twice, once on training data and once on future application data).
 
-Many calls are written this way (for example `predict()`) and it has the huge advantage that it documents your intent to change out what data is being applied (such as running a procedure twice, once on training data and once on future application data).  In fact instead of going to a lot of effort to say variable names are not mere strings, I say go the opposite way: prefer variables names as strings.
-
-This is a principle we use in our [join controller](http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/) which has no issue sharing variables out as an external spreadsheet, because it thinks of variable names as fundamentally being strings (not as `quosures` temporally working "under cover" in string representations).
+This is a principle we also strongly apply in our [join controller](http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/) which has no issue sharing variables out as an external spreadsheet, because it thinks of variable names as fundamentally being strings (not as `quosures` temporally working "under cover" in string representations).
