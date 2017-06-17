@@ -7,7 +7,7 @@ output:
     variant: markdown_github
 ---
 
-How to render join diagram directly into R Markdown (source code [here](https://github.com/WinVector/replyr/blob/master/extras/graphViz.Rmd)).
+How to render join diagram directly into R Markdown (source code [here](https://github.com/WinVector/replyr/blob/master/extras/graphViz.Rmd), [view raw](https://raw.githubusercontent.com/WinVector/replyr/master/extras/graphViz.Rmd)).
 
 Converter info from: [here](https://stackoverflow.com/questions/31336898/how-to-save-leaflet-in-r-map-as-png-or-jpg-file).
 
