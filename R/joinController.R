@@ -251,6 +251,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'                     isEmpty= FALSE,
 #'                     stringsAsFactors = FALSE)
 #' diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
+#' # to render:
 #' # DiagrammeR::grViz(diagramSpec)
 #'
 #' @export
@@ -280,8 +281,10 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     ti <- tabs[[idx]]
     ci <- columnJoinPlan[columnJoinPlan$tableName==ti, ,
                          drop=FALSE]
-    keys <- paste(sort(ci$resultColumn[ci$isKey]),
-                  collapse = ',')
+    keys <- paste('{',
+                  paste(sort(ci$resultColumn[ci$isKey]),
+                  collapse = ', '),
+                  '}')
     if(nchar(keys)<=0) {
       keys <- '.' # can't use '' as a list key
     }
