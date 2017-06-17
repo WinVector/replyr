@@ -264,9 +264,11 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     stop(columnJoinPlan)
   }
   if(is.null(graphOpts)) {
-    graphOpts <- paste("graph [",
-                       "layout = dot, rankdir = LR, overlap = false,",
-                       "compound = true, nodesep = .5, ranksep = .25]")
+    graphOpts <- paste(" graph [",
+                       "layout = dot, rankdir = LR, overlap = prism,",
+                       "compound = true, nodesep = .5, ranksep = .25]\n",
+                       " edge [decorate = true, arrowhead = dot]\n",
+                       " node [style=filled, fillcolor=lightgrey]\n")
   }
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
   tabIndexes <- seq_len(length(tabs))
@@ -294,7 +296,8 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     }
     graph <- paste0(graph, "\n  ",
                     'node', idx,
-                    " [ shape = '", shape, "' , label = '", ndi, "\\l']")
+                    " [ shape = '", shape, "' , label = '", ndi, "\\l']\n"
+                    )
   }
   # pass 2: edges
   columnJoinPlanK <- columnJoinPlan[columnJoinPlan$isKey, ,
@@ -311,7 +314,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
                   collapse = '\\l')
       graph <- paste0(graph, "\n",
                       " node", sii, " -> ", "node", tii,
-                      " [ label='", ki, "' ]")
+                      " [ label='", ki, "\\l' ]")
     }
   }
   if(groupByKeys) {
@@ -324,7 +327,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
         graph <- paste0(graph, '\n',
                         'subgraph cluster_', gii, ' {\n',
                         'style=filled\n',
-                        'color=lightblue\n',
+                        'color=lightgreen\n',
                         'label = "',gi,'"\n',
                         paste(group, collapse=' ; '),
                         '\n}')
