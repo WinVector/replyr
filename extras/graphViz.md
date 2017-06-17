@@ -7,6 +7,7 @@ library("replyr")
 library("htmlwidgets")
 library("webshot")
 # webshot::install_phantomjs()
+library("magick")
 
 tDesc <- data.frame(tableName= c('employeeAndDate',
                                  'orgtable',
@@ -39,6 +40,9 @@ saveDiagramAsPNG <- function(diagram, fileName) {
   saveWidget(diagram, tempPath, selfcontained = FALSE)
   webshot(tempPath, file = fileName,
           cliprect = "viewport")
+  img <- image_read(fileName)
+  img <- image_trim(img)
+  image_write(img, path = fileName, format = "png")
   # intentionally not removing the temp directory, as it could be dangerous
   dir
 }
@@ -47,6 +51,6 @@ pngName <- 'joinPlan.png'
 saveDiagramAsPNG(diagram, pngName)
 ```
 
-    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpJAKdbn"
+    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpFbRGGd"
 
 <img src="joinPlan.png" width="600">
