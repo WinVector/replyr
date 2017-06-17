@@ -217,6 +217,8 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 
 #' Build a drawable specification of the join diagram
 #'
+#' Some examples and instructions how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
+#'
 #' @param columnJoinPlan join plan
 #' @param ... force later arguments to bind by name
 #' @param groupByKeys logical if true build key-equivilant sub-graphs

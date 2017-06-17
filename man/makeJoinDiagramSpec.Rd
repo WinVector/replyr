@@ -20,7 +20,7 @@ makeJoinDiagramSpec(columnJoinPlan, ..., groupByKeys = TRUE,
 mermaid diagram spec
 }
 \description{
-Build a drawable specification of the join diagram
+Some examples and instructions how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
 }
 \examples{
 
@@ -50,6 +50,7 @@ tDesc <- data.frame(tableName= c('employeeAndDate',
                     isEmpty= FALSE,
                     stringsAsFactors = FALSE)
 diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
+# to render:
 # DiagrammeR::grViz(diagramSpec)
 
 }
