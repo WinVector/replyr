@@ -4,15 +4,12 @@
 \alias{makeJoinDiagramSpec}
 \title{Build a drawable specification of the join diagram}
 \usage{
-makeJoinDiagramSpec(columnJoinPlan, ..., graphType = "graph LR",
-  groupByKeys = TRUE)
+makeJoinDiagramSpec(columnJoinPlan, ..., groupByKeys = TRUE)
 }
 \arguments{
 \item{columnJoinPlan}{join plan}
 
 \item{...}{force later arguments to bind by name}
-
-\item{graphType}{first command on graph}
 
 \item{groupByKeys}{logical if true build key-equivilant sub-graphs}
 }
@@ -24,7 +21,12 @@ Build a drawable specification of the join diagram
 }
 \examples{
 
-tDesc <- data.frame(tableName= c('employee',
+
+# note: employeeAndDate is likely built as a cross-product
+#       join of an employee table and set of dates of interest
+#       before getting to the join controller step.  We call
+#       such a table "row control" or "experimental design."
+tDesc <- data.frame(tableName= c('employeeAndDate',
                                  'orgtable',
                                  'revenue',
                                  'activity'),
@@ -45,6 +47,6 @@ tDesc <- data.frame(tableName= c('employee',
                     isEmpty= FALSE,
                     stringsAsFactors = FALSE)
 diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
-# DiagrammeR::mermaid(diagramSpec)
+# DiagrammeR::grViz(diagramSpec)
 
 }

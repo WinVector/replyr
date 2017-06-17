@@ -193,7 +193,7 @@ print(columnJoinPlan %>%
 
 The join plan is the neglected (and often missing) piece of documentation key to non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
 
-As a diagram the key structure of the join plan looks like the following (produced by `DiagrammeR::mermaid(makeJoinDiagramSpec(columnJoinPlan))`):
+As a diagram the key structure of the join plan looks like the following (produced by `DiagrammeR::grViz(makeJoinDiagramSpec(columnJoinPlan))`):
 
 <img src="joinDiagram1.png" width="600">
 

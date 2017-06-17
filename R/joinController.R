@@ -219,7 +219,6 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'
 #' @param columnJoinPlan join plan
 #' @param ... force later arguments to bind by name
-#' @param graphType first command on graph
 #' @param groupByKeys logical if true build key-equivilant sub-graphs
 #' @return mermaid diagram spec
 #'
@@ -251,95 +250,72 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'                     isEmpty= FALSE,
 #'                     stringsAsFactors = FALSE)
 #' diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
-#' # DiagrammeR::mermaid(diagramSpec)
+#' # DiagrammeR::grViz(diagramSpec)
 #'
 #' @export
 #'
 #'
 makeJoinDiagramSpec <- function(columnJoinPlan, ...,
-                                graphType= "graph LR",
                                 groupByKeys= TRUE) {
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan, FALSE)
   if(is.character(columnJoinPlan)) {
     stop(columnJoinPlan)
   }
-  columnJoinPlanK <- columnJoinPlan[columnJoinPlan$isKey, , drop=FALSE]
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
-  nodeDescr <- lapply(tabs,
-                      function(ti) {
-                        idx <- which(tabs==ti)
-                        ci <- columnJoinPlan[columnJoinPlan$tableName==ti, ,
-                                             drop=FALSE]
-                        cols <- paste(ifelse(ci$isKey, 'k:', 'v:'),
-                                      ci$resultColumn)
-                        cols <- paste(cols, collapse =' <br>')
-                        paste0(idx, ': ', ti, '<br> ', cols)
-                      })
-  names(nodeDescr) <- tabs
+  tabIndexes <- seq_len(length(tabs))
+  names(tabIndexes) <- tabs
   keysToGroups <- list()
-  mentioned <- list()
-  # special case first note
-  ti <- tabs[[1]]
-  tin <- nodeDescr[[ti]]
-  tiNode <- paste0(ti, '("', tin, '")')
-  mentioned[[ti]] <- TRUE
-  ci <- columnJoinPlanK[columnJoinPlanK$tableName==ti, , drop=FALSE]
-  keySet <- '.'
-  if(nrow(ci)>0) {
-    keySet <- paste(sort(unique(ci$resultColumn)),
-                    collapse=':')
+  graph <- "digraph joinplan {\n graph [layout = dot, rankdir = LR, overlap = false, compound = true, nodesep = .5, ranksep = .25]\n"
+  # pass 1: define nodes and groups of nodes
+  for(idx in seq_len(length(tabs))) {
+    ti <- tabs[[idx]]
+    ci <- columnJoinPlan[columnJoinPlan$tableName==ti, ,
+                         drop=FALSE]
+    keys <- paste(sort(ci$resultColumn[ci$isKey]),
+                  collapse = ',')
+    keysToGroups[[keys]] <- c(keysToGroups[[keys]], idx)
+    cols <- paste(ifelse(ci$isKey, 'k:', 'v:'),
+                  ci$resultColumn)
+    cols <- paste(cols, collapse ='\n')
+    ndi <- paste0(idx, ': ', ti, '\n', cols)
+    graph <- paste0(graph, "\n  ",
+                    'node', idx,
+                    " [ shape='box', label = '", ndi, "']")
   }
-  keysToGroups[keySet] <- tiNode
+  # pass 2: edges
+  columnJoinPlanK <- columnJoinPlan[columnJoinPlan$isKey, ,
+                                    drop=FALSE]
   for(tii in seq_len(length(tabs))) {
     ti <- tabs[[tii]]
-    tin <- nodeDescr[[ti]]
-    ci <- columnJoinPlanK[columnJoinPlanK$tableName==ti, , drop=FALSE]
-    sources <- setdiff(sort(unique(ci$joinSource)),'')
-    linkGroup <- ''
+    ci <- columnJoinPlanK[columnJoinPlanK$tableName==ti &
+                            nchar(columnJoinPlanK$joinSource)>0, ,
+                          drop=FALSE]
+    sources <- sort(unique(ci$joinSource))
     for(si in sources) {
-      cij <- ci[ci$joinSource==si, , drop=FALSE]
-      sin <- nodeDescr[[si]]
-      edgeLabel <- paste0('"', tii, ': ',
-                     paste(cij$resultColumn, collapse = ','),
-                     '"')
-      siNode <- si
-      tiNode <- ti
-      if(is.null( mentioned[[si]])) {
-        siNode <- paste0(si, '("', sin, '")')
-      }
-      if(is.null( mentioned[[ti]]) ) {
-        tiNode <- paste0(ti, '["', tin, '"]')
-      }
-      linkGroup <- paste0(linkGroup, '\n',
-                    siNode, '-- ', edgeLabel, ' -->', tiNode)
-      mentioned[[si]] <- TRUE
-      mentioned[[ti]] <- TRUE
+      sii <- tabIndexes[[si]]
+      ki <- paste(ci$resultColumn[ci$joinSource==si],
+                  collapse = ',')
+      graph <- paste0(graph, "\n",
+                      " node", sii, " -> ", "node", tii,
+                      " [ label='", ki, "' ]")
     }
-    keySet <- paste(sort(unique(ci$resultColumn[ci$isKey])),
-                    collapse=':')
-    prevGroup <- keysToGroups[[keySet]]
-    if(nchar(linkGroup)>0) {
-      if(is.null(prevGroup)) {
-        keysToGroups[[keySet]] <- linkGroup
-      } else {
-        keysToGroups[[keySet]] <- paste0(prevGroup, '\n', linkGroup)
+  }
+  if(groupByKeys) {
+    # assign subgraphs
+    for(gii in seq_len(length(names(keysToGroups)))) {
+      gi <- names(keysToGroups)[[gii]]
+      group <- keysToGroups[[gi]]
+      if(length(group)>1) {
+        group <- paste0('node', group)
+        graph <- paste0(graph, '\n',
+                        'subgraph cluster_', gii, ' {\n',
+                        paste(group, collapse=' ; '),
+                        '\n}')
       }
     }
   }
-  str <- graphType
-  for(keySet in names(keysToGroups)) {
-    linkGroup <- keysToGroups[[keySet]]
-    if(groupByKeys) {
-      str <- paste0(str,'\n',
-                    'subgraph ', keySet, '\n',
-                    linkGroup, '\n',
-                    'end\n')
-    } else {
-      str <- paste0(str,'\n',
-                    linkGroup, '\n')
-    }
-  }
-  str
+  graph <- paste0(graph, '\n', '}\n')
+  graph
 }
 
 #' check that a join plan is consistent with table descriptions
