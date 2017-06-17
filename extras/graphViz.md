@@ -1,4 +1,6 @@
-How to render join diagram directly into R Markdown (source code [here](https://github.com/WinVector/replyr/blob/master/extras/graphViz.Rmd), [view raw](https://raw.githubusercontent.com/WinVector/replyr/master/extras/graphViz.Rmd)).
+How to render a [`replyr`](https://github.com/WinVector/replyr) join diagram directly into R Markdown (source code [here](https://github.com/WinVector/replyr/blob/master/extras/graphViz.Rmd), [view raw](https://raw.githubusercontent.com/WinVector/replyr/master/extras/graphViz.Rmd)).
+
+Please see [here](http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/) for a discussion and motiviation of `replyr` join diagrams.
 
 Converter info from: [here](https://stackoverflow.com/questions/31336898/how-to-save-leaflet-in-r-map-as-png-or-jpg-file).
 
@@ -53,6 +55,6 @@ pngName <- 'joinPlan.png'
 saveDiagramAsPNG(diagram, pngName)
 ```
 
-    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpWcrNcF"
+    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpx9ezkY"
 
 <img src="joinPlan.png" width="600">
