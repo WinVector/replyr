@@ -276,11 +276,11 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     keysToGroups[[keys]] <- c(keysToGroups[[keys]], idx)
     cols <- paste(ifelse(ci$isKey, 'k:', 'v:'),
                   ci$resultColumn)
-    cols <- paste(cols, collapse ='\n')
-    ndi <- paste0(idx, ': ', ti, '\n', cols)
+    cols <- paste(cols, collapse ='\\l')
+    ndi <- paste0(idx, ': ', ti, '\\l', cols)
     graph <- paste0(graph, "\n  ",
                     'node', idx,
-                    " [ shape='box', label = '", ndi, "']")
+                    " [ shape='box', label = '", ndi, "\\l']")
   }
   # pass 2: edges
   columnJoinPlanK <- columnJoinPlan[columnJoinPlan$isKey, ,
@@ -294,7 +294,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     for(si in sources) {
       sii <- tabIndexes[[si]]
       ki <- paste(ci$resultColumn[ci$joinSource==si],
-                  collapse = ',')
+                  collapse = '\\l')
       graph <- paste0(graph, "\n",
                       " node", sii, " -> ", "node", tii,
                       " [ label='", ki, "' ]")
