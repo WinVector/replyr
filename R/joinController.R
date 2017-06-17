@@ -220,6 +220,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #' @param columnJoinPlan join plan
 #' @param ... force later arguments to bind by name
 #' @param groupByKeys logical if true build key-equivilant sub-graphs
+#' @param graphOpts options for graphViz
 #' @return mermaid diagram spec
 #'
 #' @examples
@@ -256,16 +257,22 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'
 #'
 makeJoinDiagramSpec <- function(columnJoinPlan, ...,
-                                groupByKeys= TRUE) {
+                                groupByKeys= TRUE,
+                                graphOpts= NULL) {
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan, FALSE)
   if(is.character(columnJoinPlan)) {
     stop(columnJoinPlan)
+  }
+  if(is.null(graphOpts)) {
+    graphOpts <- paste("graph [",
+                       "layout = dot, rankdir = LR, overlap = false,",
+                       "compound = true, nodesep = .5, ranksep = .25]")
   }
   tabs <- uniqueInOrder(columnJoinPlan$tableName)
   tabIndexes <- seq_len(length(tabs))
   names(tabIndexes) <- tabs
   keysToGroups <- list()
-  graph <- "digraph joinplan {\n graph [layout = dot, rankdir = LR, overlap = false, compound = true, nodesep = .5, ranksep = .25]\n"
+  graph <- paste0("digraph joinplan {\n ", graphOpts, "\n")
   # pass 1: define nodes and groups of nodes
   for(idx in seq_len(length(tabs))) {
     ti <- tabs[[idx]]
