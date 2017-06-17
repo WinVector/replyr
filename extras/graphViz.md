@@ -1,4 +1,4 @@
-How to render join diagram directly into R Markdown.
+How to render join diagram directly into R Markdown (source code [here](https://github.com/WinVector/replyr/blob/master/extras/graphViz.Rmd)).
 
 Converter info from: [here](https://stackoverflow.com/questions/31336898/how-to-save-leaflet-in-r-map-as-png-or-jpg-file).
 
@@ -47,6 +47,6 @@ pngName <- 'joinPlan.png'
 saveDiagramAsPNG(diagram, pngName)
 ```
 
-    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp9LV2xI"
+    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmp13Rx1E"
 
 <img src="joinPlan.png" width="600">
