@@ -6,8 +6,10 @@ Converter info from: [here](https://stackoverflow.com/questions/31336898/how-to-
 library("replyr")
 library("htmlwidgets")
 library("webshot")
+# instructions: https://github.com/wch/webshot/ 
 # webshot::install_phantomjs()
 library("magick")
+# install instructions: https://github.com/ropensci/magick#readme
 
 tDesc <- data.frame(tableName= c('employeeAndDate',
                                  'orgtable',
@@ -51,6 +53,6 @@ pngName <- 'joinPlan.png'
 saveDiagramAsPNG(diagram, pngName)
 ```
 
-    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpFbRGGd"
+    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//RtmpWcrNcF"
 
 <img src="joinPlan.png" width="600">
