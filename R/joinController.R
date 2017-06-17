@@ -280,14 +280,21 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
                          drop=FALSE]
     keys <- paste(sort(ci$resultColumn[ci$isKey]),
                   collapse = ',')
+    if(nchar(keys)<=0) {
+      keys <- '.' # can't use '' as a list key
+    }
     keysToGroups[[keys]] <- c(keysToGroups[[keys]], idx)
     cols <- paste(ifelse(ci$isKey, 'k:', 'v:'),
                   ci$resultColumn)
     cols <- paste(cols, collapse ='\\l')
     ndi <- paste0(idx, ': ', ti, '\\l', cols)
+    shape = 'box'
+    if(idx<=1) {
+      shape = 'Msquare'
+    }
     graph <- paste0(graph, "\n  ",
                     'node', idx,
-                    " [ shape='box', label = '", ndi, "\\l']")
+                    " [ shape = '", shape, "' , label = '", ndi, "\\l']")
   }
   # pass 2: edges
   columnJoinPlanK <- columnJoinPlan[columnJoinPlan$isKey, ,
@@ -312,10 +319,13 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     for(gii in seq_len(length(names(keysToGroups)))) {
       gi <- names(keysToGroups)[[gii]]
       group <- keysToGroups[[gi]]
-      if(length(group)>1) {
+      if(length(group)>0) {
         group <- paste0('node', group)
         graph <- paste0(graph, '\n',
                         'subgraph cluster_', gii, ' {\n',
+                        'style=filled\n',
+                        'color=lightblue\n',
+                        'label = "',gi,'"\n',
                         paste(group, collapse=' ; '),
                         '\n}')
       }
