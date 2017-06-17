@@ -20,7 +20,7 @@ makeJoinDiagramSpec(columnJoinPlan, ..., groupByKeys = TRUE,
 mermaid diagram spec
 }
 \description{
-Some examples and instructions how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
+Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
 }
 \examples{
 
