@@ -85,7 +85,7 @@ replyr_drop_table_name <- function(dest, name) {
 #'
 #' @export
 replyr_copy_to <- function(dest,
-                           df, name = deparse(substitute(df)),
+                           df, name = paste(deparse(substitute(df)), collapse= ' '),
                            ...,
                            rowNumberColumn= NULL,
                            temporary= FALSE,

@@ -4,8 +4,8 @@
 \alias{replyr_copy_to}
 \title{Copy data to remote service.}
 \usage{
-replyr_copy_to(dest, df, name = deparse(substitute(df)), ...,
-  rowNumberColumn = NULL, temporary = FALSE, overwrite = TRUE,
+replyr_copy_to(dest, df, name = paste(deparse(substitute(df)), collapse =
+  " "), ..., rowNumberColumn = NULL, temporary = FALSE, overwrite = TRUE,
   maxrow = 1e+06, forceDelete = FALSE)
 }
 \arguments{
