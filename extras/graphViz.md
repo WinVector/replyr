@@ -49,6 +49,7 @@ saveDiagramAsPNG <- function(diagram, fileName) {
   img <- image_trim(img)
   image_write(img, path = fileName, format = "png")
   # intentionally not removing the temp directory, as it could be dangerous
+  # Command would be: unlink(dir, recursive = TRUE)
   dir
 }
 
