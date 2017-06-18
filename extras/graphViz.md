@@ -37,7 +37,8 @@ diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
 diagram <- DiagrammeR::grViz(diagramSpec)
 
 
-# render as HTML and then get an PNG webshot
+# render as HTML and then get an PNG webshot.
+# returns path to the temp directory it used for intermediate results (user may want to remove it later).
 saveDiagramAsPNG <- function(diagram, fileName) {
   dir <- tempdir()
   tempPath <- paste(dir, 'temp.html', sep= '/')
@@ -52,9 +53,7 @@ saveDiagramAsPNG <- function(diagram, fileName) {
 }
 
 pngName <- 'joinPlan.png'
-saveDiagramAsPNG(diagram, pngName)
+tmpdir <- saveDiagramAsPNG(diagram, pngName)
 ```
-
-    ## [1] "/var/folders/7q/h_jp2vj131g5799gfnpzhdp80000gn/T//Rtmpx9ezkY"
 
 <img src="joinPlan.png" width="600">
