@@ -67,7 +67,7 @@ tmpdir <- saveDiagramAsPNG(diagram, pngName)
 ```
 
 ```{r showimg, results='asis', echo=FALSE}
-cat(paste0('<img src="', pngName, '" width="600">'))
+cat(paste0('<center><img src="', pngName, '" width="600" border="0"></center>'))
 ```
 
 

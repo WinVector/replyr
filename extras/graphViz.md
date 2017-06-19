@@ -57,4 +57,6 @@ pngName <- 'joinPlan.png'
 tmpdir <- saveDiagramAsPNG(diagram, pngName)
 ```
 
-<img src="joinPlan.png" width="600">
+<center>
+<img src="joinPlan.png" width="600" border="0">
+</center>
