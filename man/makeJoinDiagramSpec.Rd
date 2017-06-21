@@ -12,7 +12,7 @@ makeJoinDiagramSpec(columnJoinPlan, ..., groupByKeys = TRUE,
 
 \item{...}{force later arguments to bind by name}
 
-\item{groupByKeys}{logical if true build key-equivilant sub-graphs}
+\item{groupByKeys}{logical if true build key-equivalent sub-graphs}
 
 \item{graphOpts}{options for graphViz}
 }
@@ -50,7 +50,13 @@ tDesc <- data.frame(tableName= c('employeeAndDate',
                     isEmpty= FALSE,
                     stringsAsFactors = FALSE)
 diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
-# to render:
-# DiagrammeR::grViz(diagramSpec)
+# to render as JavaScript:
+#   DiagrammeR::grViz(diagramSpec)
+# or as PNG:
+#   renderJoinDiagram(diagramSpec)
+#
 
+}
+\seealso{
+\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}
 }

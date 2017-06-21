@@ -25,3 +25,6 @@ tDesc$keys[[2]] <- c(x='x')
 keysAreUnique(tDesc)
 
 }
+\seealso{
+\code{\link{tableDescription}}
+}

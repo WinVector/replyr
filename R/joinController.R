@@ -30,6 +30,7 @@ makeTableIndMap <- function(tableNameSeq) {
 #' Please see \url{http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/} for details.
 #' Note: one usually needs to alter the keys column which is just populated with all columns.
 #'
+#' @seealso \code{\link{buildJoinPlan}}, \code{\link{keysAreUnique}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param tableName name of table to add to join plan.
 #' @param handle table or table handle to add to join plan (can already be in the plan).
@@ -82,6 +83,8 @@ tableDescription <- function(tableName,
 #'
 #' Can be an expensive operation.
 #'
+#' @seealso \code{\link{tableDescription}}
+#'
 #' @param tDesc description of tables, from \code{\link{tableDescription}} (and likely altered by user).
 #' @return logical TRUE if keys are unique
 #'
@@ -129,7 +132,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
     }
     if(any(nchar(columnJoinPlan[[ci]])<=0) ||
        any(is.na(columnJoinPlan))) {
-      return(paste("empty or NA', ci, ' colum in columnJoinPlan"))
+      return(paste("empty or NA', ci, ' column in columnJoinPlan"))
     }
   }
   for(ci in c('isKey','want')) {
@@ -173,7 +176,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
   }
   # limit down to things we are using
   columnJoinPlan <- columnJoinPlan[columnJoinPlan$want, , drop=FALSE]
-  # check a few desired invarients of the plan
+  # check a few desired invariants of the plan
   columnJoinPlan$joinSource <- ''
   prevResultColInfo <- list()
   for(tabnam in tabs) {
@@ -219,9 +222,11 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'
 #' Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
 #'
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}
+#'
 #' @param columnJoinPlan join plan
 #' @param ... force later arguments to bind by name
-#' @param groupByKeys logical if true build key-equivilant sub-graphs
+#' @param groupByKeys logical if true build key-equivalent sub-graphs
 #' @param graphOpts options for graphViz
 #' @return mermaid diagram spec
 #'
@@ -253,8 +258,11 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'                     isEmpty= FALSE,
 #'                     stringsAsFactors = FALSE)
 #' diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
-#' # to render:
-#' # DiagrammeR::grViz(diagramSpec)
+#' # to render as JavaScript:
+#' #   DiagrammeR::grViz(diagramSpec)
+#' # or as PNG:
+#' #   renderJoinDiagram(diagramSpec)
+#' #
 #'
 #' @export
 #'
@@ -343,7 +351,60 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
   graph
 }
 
+
+#' Render a diagram spec from \code{\link{makeJoinDiagramSpec}} as a PNG graphics item.
+#'
+#' Requires packages \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} properly installed to use.
+#'
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
+#'
+#' @param diagramSpec diagram specification from \code{\link{makeJoinDiagramSpec}}.
+#' @param ... force later arguments to bind by name.
+#' @param pngFileName optional, file path where to save the PNG.
+#' @param tempDir directory to create temporary files in (not deleted by this method).
+#' @return png rendering of diagram
+#'
+#'
+#' @export
+#'
+#'
+renderJoinDiagram <- function(diagramSpec,
+                              ...,
+                              pngFileName= NULL,
+                              tempDir= tempdir()) {
+  needs <- c('DiagrammeR', 'htmlwidgets', 'webshot', 'magick')
+  have <- vapply(needs,
+                 function(pi) {
+                   requireNamespace(pi, quietly = TRUE)
+                 }, logical(1))
+  if(any(!have)) {
+    warning(paste("replyr::saveDiagramAsPNG needs all of the packages: ",
+                  paste(needs, collapse = ', '),
+                  "installed and does not have:",
+                  paste(needs[!have], collapse = ', ')))
+    return(NULL)
+  }
+  tempPath <- paste(tempDir, 'joinPlanTemp.html', sep= '/')
+  pngTempFileName <- paste(tempDir, 'joinPlanTemp.png', sep= '/')
+  diagram <- DiagrammeR::grViz(diagramSpec)
+  htmlwidgets::saveWidget(diagram, tempPath, selfcontained = FALSE)
+  webshot::webshot(tempPath, file = pngTempFileName,
+          cliprect = "viewport")
+  img <- magick::image_read(pngTempFileName)
+  img <- magick::image_trim(img)
+  if(!is.null(pngFileName)) {
+    magick::image_write(img, path = pngFileName, format = "png")
+  }
+  # # intentionally not removing the temp directory, as it could be dangerous
+  # # Command would be:
+  #   unlink(tempDir, recursive = TRUE)
+  img
+}
+
+
 #' check that a join plan is consistent with table descriptions
+#'
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param tDesc description of tables, from \code{\link{tableDescription}} (and likely altered by user).
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
@@ -363,7 +424,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 #' # get the initial description of table defs
 #' tDesc <- rbind(tableDescription('d1', d1),
 #'                tableDescription('d2', d2))
-#' # declare keys (and give them consitent names)
+#' # declare keys (and give them consistent names)
 #' tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 #' tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
 #' # build the join plan
@@ -403,7 +464,7 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
   tabsD <- unique(tDesc$tableName)
   columnJoinPlan <- columnJoinPlan[columnJoinPlan$tableName %in% tabsD, ,
                                    drop=FALSE]
-  # check a few desired invarients of the plan
+  # check a few desired invariants of the plan
   for(i in seq_len(nrow(tDesc))) {
     tnam <- tDesc$tableName[[i]]
     ci <- columnJoinPlan[columnJoinPlan$tableName==tnam, , drop=FALSE]
@@ -421,6 +482,8 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
 
 
 #' Build a join plan
+#'
+#' @seealso \code{\link{tableDescription}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param tDesc description of tables from \code{\link{tableDescription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @return detailed column join plan (appropriate for editing)
@@ -553,10 +616,12 @@ strMapToString <- function(m) {
 
 #' Execute an ordered sequence of left joins.
 #'
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}
+#'
 #' @param tDesc description of tables, either a \code{data.frame} from \code{\link{tableDescription}}, or a list mapping from names to handles/frames.  Only used to map table names to data.
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @param ... force later arguments to bind by name.
-#' @param checkColumns logical if TURE confirm column names before starting joins.
+#' @param checkColumns logical if TRUE confirm column names before starting joins.
 #' @param eagerCompute logical if TRUE materialize intermediate results with \code{dplyr::compute}.
 #' @param checkColClasses logical if true check for exact class name matches
 #' @param verbose logical if TRUE print more.
@@ -662,7 +727,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
       missing <- setdiff(needs, tabcols)
       if(length(missing)>0) {
         stop(paste("replyr::executeLeftJoinPlan table",
-                   tabnam, "misisng needed columns",
+                   tabnam, "missing needed columns",
                    paste(missing, collapse = ', ')))
       }
     }

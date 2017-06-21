@@ -15,7 +15,7 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
 
 \item{...}{force later arguments to bind by name.}
 
-\item{checkColumns}{logical if TURE confirm column names before starting joins.}
+\item{checkColumns}{logical if TRUE confirm column names before starting joins.}
 
 \item{eagerCompute}{logical if TRUE materialize intermediate results with \code{dplyr::compute}.}
 
@@ -66,4 +66,7 @@ executeLeftJoinPlan(list('meas1'=meas1, 'meas2'=meas2),
                     checkColClasses= TRUE,
                     verbose= TRUE)
 
+}
+\seealso{
+\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}
 }

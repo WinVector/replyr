@@ -25,3 +25,6 @@ tableDescription('d', d)
 
 
 }
+\seealso{
+\code{\link{buildJoinPlan}}, \code{\link{keysAreUnique}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
+}

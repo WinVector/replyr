@@ -34,27 +34,9 @@ tDesc <- data.frame(tableName= c('employeeAndDate',
                     isEmpty= FALSE,
                     stringsAsFactors = FALSE)
 diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
-diagram <- DiagrammeR::grViz(diagramSpec)
-
-
-# render as HTML and then get an PNG webshot.
-# returns path to the temp directory it used for intermediate results (user may want to remove it later).
-saveDiagramAsPNG <- function(diagram, fileName) {
-  dir <- tempdir()
-  tempPath <- paste(dir, 'temp.html', sep= '/')
-  saveWidget(diagram, tempPath, selfcontained = FALSE)
-  webshot(tempPath, file = fileName,
-          cliprect = "viewport")
-  img <- image_read(fileName)
-  img <- image_trim(img)
-  image_write(img, path = fileName, format = "png")
-  # intentionally not removing the temp directory, as it could be dangerous
-  # Command would be: unlink(dir, recursive = TRUE)
-  dir
-}
-
-pngName <- 'joinPlan.png'
-tmpdir <- saveDiagramAsPNG(diagram, pngName)
+pngFileName <- 'joinPlan.png'
+diagramPNG <- renderJoinDiagram(diagramSpec, 
+                                pngFileName = pngFileName)
 ```
 
 <center>

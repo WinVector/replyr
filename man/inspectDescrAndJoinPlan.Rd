@@ -33,7 +33,7 @@ d2 <- data.frame(pid= 2:3,
 # get the initial description of table defs
 tDesc <- rbind(tableDescription('d1', d1),
                tableDescription('d2', d2))
-# declare keys (and give them consitent names)
+# declare keys (and give them consistent names)
 tDesc$keys[[1]] <- list(PrimaryKey= 'id')
 tDesc$keys[[2]] <- list(PrimaryKey= 'pid')
 # build the join plan
@@ -47,4 +47,7 @@ columnJoinPlan$sourceColumn[columnJoinPlan$sourceColumn=='width'] <- 'wd'
 inspectDescrAndJoinPlan(tDesc, columnJoinPlan,
                         checkColClasses= TRUE)
 
+}
+\seealso{
+\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 }

@@ -25,3 +25,6 @@ tDesc$keys[[2]] <- list(PrimaryKey= 'id')
 buildJoinPlan(tDesc)
 
 }
+\seealso{
+\code{\link{tableDescription}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
+}

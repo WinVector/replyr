@@ -26,5 +26,9 @@ Suggests: testthat,
     ggplot2,
     babynames,
     magrittr,
-    RPostgreSQL
+    RPostgreSQL,
+    DiagrammeR,
+    htmlwidgets,
+    webshot,
+    magick
 VignetteBuilder: knitr
