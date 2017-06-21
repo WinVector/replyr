@@ -29,6 +29,10 @@ Some examples and instructions on how to save as png files can be found here: \u
 #       join of an employee table and set of dates of interest
 #       before getting to the join controller step.  We call
 #       such a table "row control" or "experimental design."
+# Normally tDesc is produced by inspecting tables using
+# replyr::tableDescription() and then limiting the keys
+# column down to the correct specification.
+# For this example we just type tDesc in directly.
 tDesc <- data.frame(tableName= c('employeeAndDate',
                                  'orgtable',
                                  'revenue',
