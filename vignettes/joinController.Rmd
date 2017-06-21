@@ -193,13 +193,26 @@ print(columnJoinPlan %>%
 
 The join plan is the neglected (and often missing) piece of documentation key to non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
 
-As a diagram the key structure of the join plan looks like the following (produced by `DiagrammeR::grViz(makeJoinDiagramSpec(columnJoinPlan))`):
+As a diagram the key structure of the join plan looks like the following:
 
-<img src="joinDiagram1.png" width="600">
+```{r render1}
+pngFileName= 'jPlan.png'
+diagramPNG <- columnJoinPlan %>%
+  makeJoinDiagramSpec() %>%
+  renderJoinDiagram(pngFileName = pngFileName)
+```
+
+```{r showimg, results='asis', echo=FALSE}
+if(!is.null(diagramPNG)) {
+  cat(paste0('<center><img src="', pngFileName, '" width="600" border="0"></center>'))
+} else {
+  cat('<center><img src="joinDiagram1.png" width="600" border="0"></center>')
+}
+```
 
 These diagrams are kind of fun.  For instance, here is a more complicated one from the `help(makeJoinDiagramSpec)` examples:
 
-<img src="joinDiagram2.png" width="600">
+<center><img src="joinDiagram2.png" width="600" border="0"></center>
 
 Some examples and instructions on how to save as png files can be found [here](https://github.com/WinVector/replyr/blob/master/extras/graphViz.md).
 
