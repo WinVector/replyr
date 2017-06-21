@@ -6,12 +6,6 @@ Converter info from: [here](https://stackoverflow.com/questions/31336898/how-to-
 
 ``` r
 library("replyr")
-library("htmlwidgets")
-library("webshot")
-# instructions: https://github.com/wch/webshot/ 
-# webshot::install_phantomjs()
-library("magick")
-# install instructions: https://github.com/ropensci/magick#readme
 
 tDesc <- data.frame(tableName= c('employeeAndDate',
                                  'orgtable',
