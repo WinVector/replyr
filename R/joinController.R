@@ -306,10 +306,10 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     cols <- paste(ifelse(ci$isKey, 'k:', 'v:'),
                   ci$resultColumn)
     cols <- paste(cols, collapse ='\\l')
-    ndi <- paste0(idx, ': ', ti, '\\l', cols)
-    shape = 'box'
+    ndi <- paste0(idx, ': ', ti, '\n\\l', cols)
+    shape = 'tab'
     if(idx<=1) {
-      shape = 'Msquare'
+      shape = 'folder'
     }
     graph <- paste0(graph, "\n  ",
                     'node', idx,
