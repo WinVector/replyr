@@ -70,7 +70,7 @@ print(columnJoinPlan[, c('tableName', 'resultColumn', 'isKey')])
 
 Now suppose we know that we want the table "`employeeAndDate`" to be the left-most table in our left join sequence.  
 
-Not table orders are valid left join plans.  The required invariant of a valid left join plan: except for the left-most table all key values for a given table must be known before a given table can be joined in.  Our current plan (with the tables ordered as presented in `columnJoinPlan`) fails this condition:
+Not all table orders are valid left join plans.  The required invariant of a valid left join plan is: except for the left-most table all key values for a given table must be known before a given table can be joined in.  Our current plan (with the tables ordered as presented in `columnJoinPlan`) fails this condition:
 
 ```{r check1}
 print(paste("issues:", inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
@@ -87,7 +87,7 @@ if(requireNamespace('igraph', quietly = TRUE)) {
 }
 ```
 
-Note that in the above graph we capture that the "`revenue`" table must be joined after the "`orgtable`" (as "`orgtable`" is our mapping from employees to departments).
+Note that in the above graph we capture that the "`revenue`" table must be joined after the "`orgtable`" (as "`orgtable`" is our mapping from employees to departments).   We could work on the legibility of the above graph using `igraph` controls, but I feel that it is just as well to move on to the detailed `DiagrammeR` based left join diagrams.
 
 And (again assuming we have the `igraph` package), we have a new `columnJoinPlan` that passes checks:
 
@@ -135,7 +135,7 @@ if(requireNamespace('igraph', quietly = TRUE)) {
 And this is how we use tools to do the heavy lifting in building a left join plan:
 
   * The table descriptions can be largely built by `replyr::tableDescription()`.
-  * The columns can be disambiguated by `replyr::buildJoinPlan()`.
+  * The column names can be disambiguated by `replyr::buildJoinPlan()`.
   * The user can then export `columnJoinPlan` and refine the definition of table keys using an editor or spreadsheet software.
   * `replyr::topoSortTables()` can then reorder `columnJoinPlan` to bring the tables together in a realizable order.
   * `replyr::makeJoinDiagramSpec() %>% replyr::renderJoinDiagram()` can then produce and capture a detailed diagram of the final join plan.
