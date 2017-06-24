@@ -274,7 +274,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 topoSortTables <- function(columnJoinPlan, leftTableName,
                            ...) {
   if(!requireNamespace('igraph', quietly = TRUE)) {
-    warning("topoSortTables: requres igraph, not sorting")
+    warning("topoSortTables: requres igraph to sort tables")
     return(list(columnJoinPlan= columnJoinPlan,
                 dependencyGraph= NULL))
   }
@@ -725,6 +725,7 @@ strMapToString <- function(m) {
 #' @param eagerCompute logical if TRUE materialize intermediate results with \code{dplyr::compute}.
 #' @param checkColClasses logical if true check for exact class name matches
 #' @param verbose logical if TRUE print more.
+#' @param dryRun logical if TRUE do not perform joins, only print steps.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return joined table
 #'
@@ -772,6 +773,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 eagerCompute= TRUE,
                                 checkColClasses= FALSE,
                                 verbose= FALSE,
+                                dryRun= FALSE,
                                 tempNameGenerator= makeTempNameGenerator("executeLeftJoinPlan")) {
   # sanity check (if there is an obvious config problem fail before doing potentially expensive work)
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan,
@@ -779,6 +781,10 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
   if(is.character(columnJoinPlan)) {
     stop(paste("replyr::executeLeftJoinPlan", columnJoinPlan))
   }
+  if(dryRun) {
+    verbose = TRUE
+  }
+  tMap <- NULL
   if('data.frame' %in% class(tDesc)) {
     if(length(unique(tDesc$tableName))!=length(tDesc$tableName)) {
       stop("replyr::executeLeftJoinPlan duplicate table names in tDesc")
@@ -802,7 +808,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                       c(columnJoinPlan$resultColumn, columnJoinPlan$sourceColumn)))>0) {
     stop("executeLeftJoinPlan: column mappings intersect intended table label columns")
   }
-  if(checkColumns) {
+  if(checkColumns && (!dryRun)) {
     for(tabnam in tableNameSeq) {
       handlei <- tMap[[tabnam]]
       newdesc <- tableDescription(tabnam, handlei)
@@ -834,11 +840,15 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
   }
   # start joining
   res <- NULL
+  first <- TRUE
   for(tabnam in tableNameSeq) {
     if(verbose) {
       print(paste('start',tabnam, base::date()))
     }
-    handlei <- tMap[[tabnam]]
+    handlei <- NULL
+    if(!dryRun) {
+      handlei <- tMap[[tabnam]]
+    }
     keyRows <- which((columnJoinPlan$tableName==tabnam) &
       (columnJoinPlan$isKey))
     valRows <- which((columnJoinPlan$tableName==tabnam) &
@@ -860,33 +870,40 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
         print(paste0("   '",ni,"' = '",nmap[[ni]],"'"))
       }
     }
-    ti <- handlei %>%
-      addConstantColumn(tableIndCol, 1) %>%
-      replyr_mapRestrictCols(nmap, restrict=TRUE)
-    if(eagerCompute) {
-      ti <-  dplyr::compute(ti, name=tempNameGenerator())
+    ti <- NULL
+    if(!is.null(handlei)) {
+      ti <- handlei %>%
+        addConstantColumn(tableIndCol, 1) %>%
+        replyr_mapRestrictCols(nmap, restrict=TRUE)
+      if(eagerCompute) {
+        ti <-  dplyr::compute(ti, name=tempNameGenerator())
+      }
     }
-    if(is.null(res)) {
+    if(first) {
       res <- ti
       if(verbose) {
         print(paste0(" res <- ", tabnam))
       }
+      first <- FALSE
     } else {
       rightKeys <- columnJoinPlan$resultColumn[keyRows]
       if(verbose) {
-        print(paste0(" res <- left_join(res, ", tabnam, ", by = ",
-                    charArrayToString(rightKeys),
-                    ")"))
+        print(paste0(" res <- left_join(res, ", tabnam, ","))
+        print(paste0("                  by = ",
+                     charArrayToString(rightKeys),
+                     ")"))
       }
-      res <- dplyr::left_join(res, ti, by= rightKeys)
-      REPLYR_TABLE_PRESENT_COL <- NULL # signal not an unbound variable
-      wrapr::let(
-        c(REPLYR_TABLE_PRESENT_COL= tableIndCol),
-        res <- dplyr::mutate(res, REPLYR_TABLE_PRESENT_COL =
-                               ifelse(is.na(REPLYR_TABLE_PRESENT_COL), 0, 1))
-      )
-      if(eagerCompute) {
-        res <- dplyr::compute(res, name=tempNameGenerator())
+      if(!dryRun) {
+        res <- dplyr::left_join(res, ti, by= rightKeys)
+        REPLYR_TABLE_PRESENT_COL <- NULL # signal not an unbound variable
+        wrapr::let(
+          c(REPLYR_TABLE_PRESENT_COL= tableIndCol),
+          res <- dplyr::mutate(res, REPLYR_TABLE_PRESENT_COL =
+                                 ifelse(is.na(REPLYR_TABLE_PRESENT_COL), 0, 1))
+        )
+        if(eagerCompute) {
+          res <- dplyr::compute(res, name=tempNameGenerator())
+        }
       }
     }
     if(verbose) {

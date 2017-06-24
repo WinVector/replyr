@@ -6,6 +6,7 @@
 \usage{
 executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
   eagerCompute = TRUE, checkColClasses = FALSE, verbose = FALSE,
+  dryRun = FALSE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
 }
 \arguments{
@@ -22,6 +23,8 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
 \item{checkColClasses}{logical if true check for exact class name matches}
 
 \item{verbose}{logical if TRUE print more.}
+
+\item{dryRun}{logical if TRUE do not perform joins, only print steps.}
 
 \item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }

@@ -196,10 +196,19 @@ The join plan is the neglected (and often missing) piece of documentation key to
 As a diagram the key structure of the join plan looks like the following:
 
 ```{r render1}
-pngFileName= 'jPlan.png'
-diagramPNG <- columnJoinPlan %>%
-  makeJoinDiagramSpec() %>%
-  renderJoinDiagram(pngFileName = pngFileName)
+pngFileName <- 'jPlan.png'
+diagramPNG <- NULL
+have <- c(
+  requireNamespace('DiagrammeR', quietly = TRUE),
+  requireNamespace('htmlwidgets', quietly = TRUE),
+  requireNamespace('webshot', quietly = TRUE),
+  requireNamespace('magick', quietly = TRUE)
+)
+if(all(have)) {
+  diagramPNG <- columnJoinPlan %>%
+    makeJoinDiagramSpec() %>%
+    renderJoinDiagram(pngFileName = pngFileName)
+}
 ```
 
 ```{r showimg, results='asis', echo=FALSE}
@@ -253,7 +262,9 @@ print(results %>%
 
 Notice the joiner added extra columns of the form `table_*_present` to show which tables had needed rows.  This lets us tell different sorts of missingness apart (value `NA` as there was no row to join, versus value `NA` as a `NA` came from a row) and appropriately `coalesce` results easily.  These columns are also very good for collecting statistics on data coverage, and in business settings often are very useful data quality and data provenance features which can often be directly included in machine learning models.
 
-Also notice the join plan is very specific: every decision (such as what order to operate and how to disambiguate column names) is already explicitly set in the plan.  The executor is then allowed to simply move through the tables left-joining in the order the table names first appear in the plan.
+Also notice the join plan is very specific: every decision (such as what order to operate and how to disambiguate column names) is already explicitly set in the plan.  For more on order of operations in left join plans please see "`vignette('DependencySorting', package = 'replyr')`".
+
+The executor is then allowed to simply move through the tables left-joining in the order the table names first appear in the plan.
 
 The `columnJoinPlan` is meant to be re-usable. In particular we can imaging running it to build training data, possibly re-running it to build test/validation data, and re-running it many times to build data we apply the model to.  To facilitate this `executeLeftJoinPlan()` is generous in what it accepts as a `tDesc`.  All it needs from the `tDesc` argument is a way to map abstract names (`tableName`) to concrete data realizations (either `data.frame`s or `dplyr` data handles).  So by design  `executeLeftJoinPlan()` accepts either a `data.frame` (and only looks at the `tableName` and `handle` columns) or a map.  So the following calls to `executeLeftJoinPlan()` also work:
 
