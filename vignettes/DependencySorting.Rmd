@@ -46,7 +46,9 @@ rownames(tDesc) <- NULL
 tDesc <- dplyr::as_data_frame(tDesc)
 ```
 
-One of the great advantages to specifying complicated sequences of operations in data (rather than in code) is: it is easier to transform and extend data.
+Let's again discuss the task of left joining many tables from a data warehouse using [`R`](https://www.r-project.org) and a system called "a join controller" (last discussed [here](http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/)).
+
+One of the great advantages to specifying complicated sequences of operations in data (rather than in code) is: it is often easier to transform and extend data.  Explicit rich data beats vague convention and complicated code.
 
 For example suppose we have built (using `replyr::tableDescription()`) a description of tables we need to left-join (please see `vignette('joinController', package= 'replyr')` for details).  But, suppose we haven't worked out the order to perform the joins in. 
 
@@ -136,7 +138,7 @@ And this is how we use tools to do the heavy lifting in building a left join pla
 
   * The table descriptions can be largely built by `replyr::tableDescription()`.
   * The column names can be disambiguated by `replyr::buildJoinPlan()`.
-  * The user can then export `columnJoinPlan` and refine the definition of table keys using an editor or spreadsheet software.
+  * The user can then export `columnJoinPlan` and refine the definition of table keys using an editor or spreadsheet software.  This is key documentation that should be shared with other groups and kept under source-control.
   * `replyr::topoSortTables()` can then reorder `columnJoinPlan` to bring the tables together in a realizable order.
   * `replyr::makeJoinDiagramSpec() %>% replyr::renderJoinDiagram()` can then produce and capture a detailed diagram of the final join plan.
   * Finally `replyr::executeLeftJoinPlan()` can execute the join plan with diagnostics.
