@@ -218,17 +218,15 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
   columnJoinPlan
 }
 
-#' Build a drawable specification of the join diagram
+
+#' Topologically sort join plan do values are available before uses.
 #'
-#' Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
-#'
-#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}
+#' Depends on \code{igraph} package.
 #'
 #' @param columnJoinPlan join plan
+#' @param leftTableName which table is left
 #' @param ... force later arguments to bind by name
-#' @param groupByKeys logical if true build key-equivalent sub-graphs
-#' @param graphOpts options for graphViz
-#' @return mermaid diagram spec
+#' @return list with dependencyGraph and sorted columnJoinPlan
 #'
 #' @examples
 #'
@@ -250,10 +248,102 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'                                   c('id', 'date', 'dept'),
 #'                                   c('date', 'dept', 'rev'),
 #'                                   c('id', 'date', 'hours'))),
-#'                     keys =  I(list(c('id', 'date'),
-#'                                  c('id', 'date'),
-#'                                  c('date', 'dept'),
-#'                                  c('id', 'date'))),
+#'                     keys =  I(list(c('id'='id', 'date'='date'),
+#'                                  c('id'='id', 'date'='date'),
+#'                                  c('date'='date', 'dept'='dept'),
+#'                                  c('id'='id', 'date'='date'))),
+#'                     colClass= I(list(c('character', 'numeric'),
+#'                                    c('character', 'character', 'character'),
+#'                                    c('numeric', 'character', 'numeric'),
+#'                                    c('character', 'numeric', 'numeric'))),
+#'                     sourceClass= 'None',
+#'                     isEmpty= FALSE,
+#'                     stringsAsFactors = FALSE)
+#' # mess up order
+#' tDesc <- tDesc[seq(nrow(tDesc),1), , drop=FALSE]
+#' columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
+#' print(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))
+#' if(requireNamespace('igraph', quietly = TRUE)) {
+#'    sorted <- topoSortTables(columnJoinPlan, 'employeeAndDate')
+#'    print(inspectDescrAndJoinPlan(tDesc, sorted$columnJoinPlan))
+#'    # plot(sorted$dependencyGraph)
+#' }
+#'
+#' @export
+#'
+topoSortTables <- function(columnJoinPlan, leftTableName,
+                           ...) {
+  if(!requireNamespace('igraph', quietly = TRUE)) {
+    warning("topoSortTables: requres igraph, not sorting")
+    return(list(columnJoinPlan= columnJoinPlan,
+                dependencyGraph= NULL))
+  }
+  g <- igraph::make_empty_graph()
+  vnams <- sort(unique(columnJoinPlan$tableName))
+  for(vi in vnams) {
+    g <- g + igraph::vertex(vi)
+  }
+  # left table is special, prior to all
+  for(vi in setdiff(vnams, leftTableName)) {
+    g <- g + igraph::edge(leftTableName, vi)
+  }
+  n <- length(vnams)
+  for(vii in seq_len(n)) {
+    ci <- columnJoinPlan[columnJoinPlan$tableName==vnams[[vii]], ,
+                         drop=FALSE]
+    knownI <- ci$resultColumn[!ci$isKey]
+    for(vjj in setdiff(seq_len(n), vii)) {
+      cj <- columnJoinPlan[columnJoinPlan$tableName==vnams[[vjj]], ,
+                           drop=FALSE]
+      keysJ <- cj$resultColumn[cj$isKey]
+      if(length(intersect(knownI, keysJ))>0) {
+        g <- g + igraph::edge(vnams[[vii]], vnams[[vjj]])
+      }
+    }
+  }
+  tableOrder <- vnams[as.numeric(igraph::topo_sort(g))]
+  tabs <- split(columnJoinPlan, columnJoinPlan$tableName)
+  tabs <- tabs[tableOrder]
+  list(columnJoinPlan= dplyr::bind_rows(tabs),
+       dependencyGraph= g)
+}
+
+#' Build a drawable specification of the join diagram
+#'
+#' Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
+#'
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}
+#'
+#' @param columnJoinPlan join plan
+#' @param ... force later arguments to bind by name
+#' @param groupByKeys logical if true build key-equivalent sub-graphs
+#' @param graphOpts options for graphViz
+#' @return grViz diagram spec
+#'
+#' @examples
+#'
+#'
+#' # note: employeeAndDate is likely built as a cross-product
+#' #       join of an employee table and set of dates of interest
+#' #       before getting to the join controller step.  We call
+#' #       such a table "row control" or "experimental design."
+#' # Normally tDesc is produced by inspecting tables using
+#' # replyr::tableDescription() and then limiting the keys
+#' # column down to the correct specification.
+#' # For this example we just type tDesc in directly.
+#' tDesc <- data.frame(tableName= c('employeeAndDate',
+#'                                  'orgtable',
+#'                                  'revenue',
+#'                                  'activity'),
+#'                     handle= I(list(NULL, NULL, NULL, NULL)),
+#'                     columns= I(list(c('id', 'date'),
+#'                                   c('id', 'date', 'dept'),
+#'                                   c('date', 'dept', 'rev'),
+#'                                   c('id', 'date', 'hours'))),
+#'                     keys =  I(list(c('id'='id', 'date'='date'),
+#'                                  c('id'='id', 'date'='date'),
+#'                                  c('date'='date', 'dept'='dept'),
+#'                                  c('id'='id', 'date'='date'))),
 #'                     colClass= I(list(c('character', 'numeric'),
 #'                                    c('character', 'character', 'character'),
 #'                                    c('numeric', 'character', 'numeric'),
@@ -490,6 +580,8 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
 #' @seealso \code{\link{tableDescription}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param tDesc description of tables from \code{\link{tableDescription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
+#' @param ... force later arguments to bind by name.
+#' @param check logical, if TRUE check the join plan for consistnecy.
 #' @return detailed column join plan (appropriate for editing)
 #'
 #' @examples
@@ -503,7 +595,9 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
 #'
 #' @export
 #'
-buildJoinPlan <- function(tDesc) {
+buildJoinPlan <- function(tDesc,
+                          ...,
+                          check= TRUE) {
   n <- function(...) {} # declare not an unbound ref
   count <- NULL # declare not an unbound ref
   ntab <- nrow(tDesc)
@@ -587,11 +681,13 @@ buildJoinPlan <- function(tDesc) {
   nonKeyIndexes <- which(!plans$isKey)
   plans$resultColumn[nonKeyIndexes] <- make.unique( plans$resultColumn[nonKeyIndexes],
                                                     sep= '_')
-  # just in case
-  problem <- inspectDescrAndJoinPlan(tDesc, plans)
-  if(!is.null(problem)) {
-    stop(paste("replyr::buildJoinPlan produced plan issue:",
-               problem))
+  if(check) {
+    # just in case
+    problem <- inspectDescrAndJoinPlan(tDesc, plans)
+    if(!is.null(problem)) {
+      stop(paste("replyr::buildJoinPlan produced plan issue:",
+                    problem))
+    }
   }
   plans
 }

@@ -28,6 +28,7 @@ Suggests: testthat,
     magrittr,
     RPostgreSQL,
     DiagrammeR,
+    igraph,
     htmlwidgets,
     webshot,
     magick

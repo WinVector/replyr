@@ -4,10 +4,14 @@
 \alias{buildJoinPlan}
 \title{Build a join plan}
 \usage{
-buildJoinPlan(tDesc)
+buildJoinPlan(tDesc, ..., check = TRUE)
 }
 \arguments{
 \item{tDesc}{description of tables from \code{\link{tableDescription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.}
+
+\item{...}{force later arguments to bind by name.}
+
+\item{check}{logical, if TRUE check the join plan for consistnecy.}
 }
 \value{
 detailed column join plan (appropriate for editing)
