@@ -5,6 +5,36 @@
 #' @importFrom dplyr ungroup summarize transmute
 NULL
 
+#' Check if a table has rows.
+#'
+#' @param d tbl or item that can be coerced into such.
+#' @return number of rows
+#'
+#' @examples
+#'
+#' d <- data.frame(x=c(1,2))
+#' replyr_hasrows(d)
+#'
+#' @export
+replyr_hasrows <- function(d) {
+  if(is.null(d)) {
+    return(FALSE)
+  }
+  # get empty corner case correct (counting returned NA on PostgreSQL for this)
+  # had problems with head(n=1) on sparklyr
+  # https://github.com/WinVector/replyr/blob/master/issues/HeadIssue.md
+  suppressWarnings(
+    dSample <- d %>%
+      dplyr::ungroup() %>%
+      head() %>%
+      dplyr::collect() %>%
+      as.data.frame())
+  if( is.null(dSample) || is.null(nrow(dSample)) || (nrow(dSample)<1)) {
+    return(FALSE)
+  }
+  return(TRUE)
+}
+
 #' Compute number of rows of a tbl.
 #'
 #' Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
@@ -20,31 +50,16 @@ NULL
 #'
 #' @export
 replyr_nrow <- function(x) {
-  # not trusting n().
-  # Commmented code doesn't work on example
-  # x %>% dplyr::ungroup()  %>% dplyr::summarize(count=sum(1)) %>%
-  #   as.data.frame() -> tmp
-  # Code below does.
-  if(is.null(x)) {
-    return(0)
-  }
-  tmp <- NULL
-  # get empty corner case correct (counting returned NA on PostgreSQL for this)
-  # had problems with head(n=1) on sparklyr
-  # https://github.com/WinVector/replyr/blob/master/issues/HeadIssue.md
-  suppressWarnings(
-    x %>% dplyr::ungroup() %>% head() %>% dplyr::collect() %>% as.data.frame() -> tmp)
-  if(is.null(nrow(tmp))||(nrow(tmp)<1)||(ncol(tmp)<1)) {
+  if(!replyr_hasrows(x)) {
     return(0)
   }
   constant <- NULL # false binding for 'constant' so name does not look unbound to CRAN check
   suppressWarnings(
     x %>% dplyr::ungroup() %>%
-      dplyr::transmute(constant=1) %>% dplyr::summarize(count=sum(constant)) %>%
-      dplyr::collect() %>% as.data.frame() -> tmp)
-  if(is.null(nrow(tmp))||(nrow(tmp)<1)||(ncol(tmp)<1)) {
-    return(0)
-  }
+      dplyr::mutate(constant=1.0) %>%
+      dplyr::summarize(count=sum(constant)) %>%
+      dplyr::collect() %>%
+      as.data.frame() -> tmp)
   as.numeric(tmp[1,1,drop=TRUE])
 }
 

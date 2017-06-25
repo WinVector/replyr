@@ -36,13 +36,13 @@ replyr_union_all <- function(tabA, tabB, ...,
     tabB <- dplyr::ungroup(tabB)
   }
   # work on some corners cases (being a bit more generous than the documentation)
-  if(replyr_nrow(tabA)<1) {
+  if(!replyr_hasrows(tabA)) {
     if(!is.null(cols)) {
       return(tabB %>% select(one_of(cols)))
     }
     return(tabB)
   }
-  if(replyr_nrow(tabB)<1) {
+  if(!replyr_hasrows(tabB)) {
     if(!is.null(cols)) {
       return(tabA %>% select(one_of(cols)))
     }
@@ -153,7 +153,7 @@ replyr_bind_rows <- function(lst,
     return(lst[[1]])
   }
   # remove any nulls or trivial data items.
-  lst <- Filter(function(ri) { replyr_nrow(ri)>0 }, lst)
+  lst <- Filter(function(ri) { replyr_hasrows(ri) }, lst)
   if(length(lst)<=1) {
     if(length(lst)<=0) {
       return(NULL)
@@ -165,6 +165,5 @@ replyr_bind_rows <- function(lst,
   if(length(colnames)<=0) {
     return(NULL)
   }
-  lst <- lapply(lst, dplyr::ungroup)
   r_replyr_bind_rows(lst, colnames, tempNameGenerator)
 }

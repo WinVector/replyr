@@ -81,7 +81,7 @@ replyr_coalesce <- function(data, support,
         data <- dplyr::mutate(data, NEWROWCOL= FALSE)
     )
   }
-  if(replyr_nrow(replyr_private_name_additions)<=0) {
+  if(!replyr_hasrows(replyr_private_name_additions)) {
     return(data)
   }
   for(ci in dataCols) {
