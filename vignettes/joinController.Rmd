@@ -198,7 +198,7 @@ As a diagram the key structure of the join plan looks like the following:
 ```{r render1}
 pngFileName <- 'jPlanController.png'
 diagramPNG <- NULL
-# requireNamespace checks just for strict warning hygine in vignette
+# requireNamespace checks just for strict warning hygiene in vignette
 have <- c(
   requireNamespace('DiagrammeR', quietly = TRUE),
   requireNamespace('htmlwidgets', quietly = TRUE),

@@ -126,7 +126,7 @@ Since not all orders are valid left join plans the task is to find a re-ordering
 
 ```{r sort}
 sorted <- NULL
-# requireNamespace checks just for strict warning hygine in vignette
+# requireNamespace checks just for strict warning hygiene in vignette
 if(requireNamespace('igraph', quietly = TRUE)) {
   sorted <- topoSortTables(columnJoinPlan, 'employeeAndDate')
   plot(sorted$dependencyGraph)
@@ -149,7 +149,7 @@ The new `sorted$columnJoinPlan` can be re-plotted (needs the suggested packages:
 ```{r render1}
 pngFileName <- 'jPlanDependencySorting.png'
 diagramPNG <- NULL
-# requireNamespace checks just for strict warning hygine in vignette
+# requireNamespace checks just for strict warning hygiene in vignette
 if(!is.null(sorted)) {
   have <- c(
     requireNamespace('DiagrammeR', quietly = TRUE),
