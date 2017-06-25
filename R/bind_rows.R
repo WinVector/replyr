@@ -114,8 +114,6 @@ r_replyr_bind_rows <- function(lst, colnames, tempNameGenerator) {
       stop("replyr:::r_replyr_bind_rows called with empty list")
     }
     res <- lst[[1]]
-    res <- dplyr::compute(res,
-                          name= tempNameGenerator())
     return(res)
   }
   mid <- floor(n/2)

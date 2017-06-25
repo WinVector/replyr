@@ -1,9 +1,10 @@
 
 #' Produce a temp name generator with a given prefix.
 #'
-#' Returns a function f where f() or f(dumpList=FALSE) return
-#' a new temporary name  f(TRUE) or f(dumpList=TRUE) returns
-#' the list of names generated and clears the list.
+#' Returns a function f where: f() returns a new temporary name,
+#' f(remove=vector) removes names in vector and returns what was removed,
+#' f(dumpList=TRUE) returns the list of names generated and clears the list,
+#' f(peek=TRUE) returns the list without altering anything.
 #'
 #' @param prefix character, string to prefix temp names with.
 #' @param suffix character, optional additional disambiguating breaking string.
@@ -13,8 +14,9 @@
 #'
 #' f <- makeTempNameGenerator('EX')
 #' print(f())
-#' print(f())
-#' print(f(dumpList=TRUE))
+#' nm2 <- f()
+#' print(nm2)
+#' f(remove=nm2)
 #' print(f(dumpList=TRUE))
 #'
 #' @export
@@ -30,15 +32,27 @@ makeTempNameGenerator <- function(prefix,
                     collapse = '')
   }
   count <- 0
-  nameList <- c()
-  function(dumpList=FALSE) {
+  nameList <- list()
+  function(..., peek=FALSE, dumpList=FALSE, remove=NULL) {
+    if(length(list(...))>0) {
+      stop("replyr::makeTempNameGenerator tempname generate unexpected argument")
+    }
+    if(peek) {
+      return(names(nameList))
+    }
     if(dumpList) {
-      v <- nameList
-      nameList <<- c()
+      v <- names(nameList)
+      nameList <<- list()
       return(v)
     }
+    if(!is.null(remove)) {
+      victims <- intersect(remove, names(nameList))
+      # this removes from lists
+      nameList[victims] <<- NULL
+      return(victims)
+    }
     nm <- paste(prefix, suffix, sprintf('%010d',count), sep='_')
-    nameList <<- c(nameList, nm)
+    nameList[[nm]] <<- 1
     count <<- count + 1
     nm
   }

@@ -15,16 +15,18 @@ makeTempNameGenerator(prefix, suffix = NULL)
 name generator function.
 }
 \description{
-Returns a function f where f() or f(dumpList=FALSE) return
-a new temporary name  f(TRUE) or f(dumpList=TRUE) returns
-the list of names generated and clears the list.
+Returns a function f where: f() returns a new temporary name,
+f(remove=vector) removes names in vector and returns what was removed,
+f(dumpList=TRUE) returns the list of names generated and clears the list,
+f(peek=TRUE) returns the list without altering anything.
 }
 \examples{
 
 f <- makeTempNameGenerator('EX')
 print(f())
-print(f())
-print(f(dumpList=TRUE))
+nm2 <- f()
+print(nm2)
+f(remove=nm2)
 print(f(dumpList=TRUE))
 
 }

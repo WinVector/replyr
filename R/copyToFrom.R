@@ -27,11 +27,13 @@ NULL
 #' @export
 #'
 replyr_drop_table_name <- function(dest, name) {
+  if(length(name)<=0) {
+    return(FALSE)
+  }
   if((!is.character(name))||(length(name)!=1)||(nchar(name)<1)) {
     stop('replyr::replyr_drop_table_name name must be a single non-empty string')
   }
-  force(dest)
-  if(is.null(dest)) {
+  if(is.null(dest) || is.character(dest)) {
     # special "no destination" case
     return(FALSE)
   }

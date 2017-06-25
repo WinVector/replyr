@@ -916,6 +916,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     }
   }
   # start joining
+  dataSource <- NULL
   res <- NULL
   first <- TRUE
   for(tabnam in tableNameSeq) {
@@ -925,6 +926,9 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     handlei <- NULL
     if(!dryRun) {
       handlei <- tMap[[tabnam]]
+      if(is.null(dataSource)) {
+        dataSource <- replyr_get_src(handlei)
+      }
     }
     keyRows <- which((columnJoinPlan$tableName==tabnam) &
       (columnJoinPlan$isKey))
@@ -960,7 +964,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
         addConstantColumn(tableIndCol, 1) %>%
         replyr_mapRestrictCols(nmap, restrict=TRUE)
       if(eagerCompute) {
-        ti <-  dplyr::compute(ti, name=tempNameGenerator())
+        ti <- dplyr::compute(ti, name=tempNameGenerator())
       }
     }
     if(first) {
