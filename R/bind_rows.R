@@ -10,39 +10,46 @@
 #' This is an attempt to provide a join-based replacement.
 #'
 #' @param tabA not-NULL table with at least 1 row.
-#' @param tabB not-NULL table with at least on same data source as tabA and commmon columns.
+#' @param tabB not-NULL table with at least 1 row on same data source as tabA and commmon columns.
 #' @param ... force later arguments to be bound by name.
 #' @param cols list of column names to limit to (defaults to intersection), must be non-empty and contained in intersection.
+#' @param useLocalMethod logical if TRUE use dplyr for local data.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return table with all rows of tabA and tabB (union_all).
 #'
 #' @examples
 #'
-#' d1 <- data.frame(x=c('a','b'))
-#' d2 <- data.frame(x='c')
-#' replyr_union_all(d1, d2)
+#' d1 <- data.frame(x = c('a','b'), stringsAsFactors= FALSE)
+#' d2 <- data.frame(x = 'c', stringsAsFactors= FALSE)
+#' replyr_union_all(d1, d2, useLocalMethod= FALSE)
 #'
 #' @export
 replyr_union_all <- function(tabA, tabB, ...,
                              cols= NULL,
+                             useLocalMethod= TRUE,
                              tempNameGenerator= makeTempNameGenerator("replyr_union_all")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_union_all unexpected arguments.")
   }
-  if(!is.null(tabA)) {
+  aHasRows <- replyr_hasrows(tabA)
+  bHasRows <- replyr_hasrows(tabB)
+  if(aHasRows) {
     tabA <- dplyr::ungroup(tabA)
   }
-  if(!is.null(tabB)) {
+  if(bHasRows) {
     tabB <- dplyr::ungroup(tabB)
   }
+  if((!aHasRows) && (!bHasRows)) {
+    return(NULL)
+  }
   # work on some corners cases (being a bit more generous than the documentation)
-  if(!replyr_hasrows(tabA)) {
+  if(!aHasRows) {
     if(!is.null(cols)) {
       return(tabB %>% select(one_of(cols)))
     }
     return(tabB)
   }
-  if(!replyr_hasrows(tabB)) {
+  if(!bHasRows) {
     if(!is.null(cols)) {
       return(tabA %>% select(one_of(cols)))
     }
@@ -54,20 +61,19 @@ replyr_union_all <- function(tabA, tabB, ...,
   if(length(cols)<=0) {
     stop("replyr::replyr_union_all empty column list")
   }
-  if(replyr_is_local_data(tabA)) {
+  if(useLocalMethod && replyr_is_local_data(tabA)) {
     # local, can use dplyr
     return(dplyr::bind_rows(select(tabA, one_of(cols)) ,
                             select(tabB, one_of(cols))))
   }
-  mergeColName <- 'replyrunioncol'
-  if(mergeColName %in% cols) {
-    stop(paste0("replyr::replyr_union_all sorry can't work with ",
-                mergeColName,
-                ' in table column names.'))
-  }
+  # build a new name disjoint from cols
+  mergeColName <- setdiff(
+    paste('REPLYRUNIONCOL', seq_len(length(cols)+1),sep= '_'),
+    cols)[[1]]
   # build a 2-row table to control the union
-  controlTable <- data.frame(replyrunioncol= c('a', 'b'),
+  controlTable <- data.frame(REPLYRUNIONCOL= c('a', 'b'),
                              stringsAsFactors = FALSE)
+  colnames(controlTable) <- mergeColName
   if(!replyr_is_local_data(tabA)) {
     sc <- replyr_get_src(tabA)
     controlTable <- replyr_copy_to(sc, controlTable,
@@ -91,14 +97,15 @@ replyr_union_all <- function(tabA, tabB, ...,
   REPLYRCOLA <- NULL # mark as not an unbound reference
   REPLYRCOLB <- NULL # mark as not an unbound reference
   REPLYRORIGCOL <- NULL # mark as not an unbound reference
-  replyrunioncol <- NULL # mark as not an unbound reference
+  REPLYRUNIONCOL <- NULL # mark as not an unbound reference
   for(ci in cols) {
     wrapr::let(
       c(REPLYRCOLA= paste0(ci,'_a'),
         REPLYRCOLB= paste0(ci,'_b'),
-        REPLYRORIGCOL = ci),
+        REPLYRORIGCOL= ci,
+        REPLYRUNIONCOL= mergeColName),
       joined <- joined %>%
-        mutate(REPLYRORIGCOL = ifelse(replyrunioncol=='a', REPLYRCOLA, REPLYRCOLB))
+        mutate(REPLYRORIGCOL = ifelse(REPLYRUNIONCOL=='a', REPLYRCOLA, REPLYRCOLB))
     )
   }
   joined %>%
@@ -127,7 +134,7 @@ r_replyr_bind_rows <- function(lst, colnames, tempNameGenerator) {
 }
 
 
-#' bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources)
+#' Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @param ... force other arguments to be used by name
@@ -163,7 +170,7 @@ replyr_bind_rows <- function(lst,
   names(lst) <- NULL
   colnames <- Reduce(intersect, lapply(lst, colnames))
   if(length(colnames)<=0) {
-    return(NULL)
+    stop("replyr::replyr_bind_rows no common columns")
   }
   r_replyr_bind_rows(lst, colnames, tempNameGenerator)
 }

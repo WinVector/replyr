@@ -2,7 +2,7 @@
 % Please edit documentation in R/bind_rows.R
 \name{replyr_bind_rows}
 \alias{replyr_bind_rows}
-\title{bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources)}
+\title{Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.}
 \usage{
 replyr_bind_rows(lst, ...,
   tempNameGenerator = makeTempNameGenerator("replyr_bind_rows"))
@@ -18,7 +18,7 @@ replyr_bind_rows(lst, ...,
 single data item
 }
 \description{
-bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources)
+Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.
 }
 \examples{
 
