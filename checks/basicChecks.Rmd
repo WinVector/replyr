@@ -73,7 +73,9 @@ rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 MySQL example ("docker start mysql").  Kind of poor as at least the adapted MySql 
 has a hard time with `NA`.
 
-```{r MySQLexample}
+Taking MySQL check out, too much trouble to maintain the testing database.
+
+```{r MySQLexample, eval=FALSE}
 my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)

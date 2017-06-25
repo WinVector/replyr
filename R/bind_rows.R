@@ -9,6 +9,7 @@
 #' and exponsed union_all semantics differ from data-source backend to backend.
 #' This is an attempt to provide a join-based replacement.
 #'
+#'
 #' @param tabA not-NULL table with at least 1 row.
 #' @param tabB not-NULL table with at least 1 row on same data source as tabA and commmon columns.
 #' @param ... force later arguments to be bound by name.
@@ -113,8 +114,11 @@ replyr_union_all <- function(tabA, tabB, ...,
     dplyr::compute(name=tempNameGenerator())
 }
 
-# list length>=1 no null entries
-r_replyr_bind_rows <- function(lst, colnames, tempNameGenerator) {
+# list length>=1 no null entries, doesn't return NULL
+r_replyr_bind_rows <- function(lst, colnames,
+                               eagerTempRemoval, atTopLevel,
+                               privateTempNameGenerator,
+                               publicTempNameGenerator) {
   n <- length(lst)
   if(n<=1) {
     if(n<=0) {
@@ -126,29 +130,53 @@ r_replyr_bind_rows <- function(lst, colnames, tempNameGenerator) {
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- r_replyr_bind_rows(lst[leftSeq], colnames, tempNameGenerator)
-  right <- r_replyr_bind_rows(lst[rightSeq], colnames, tempNameGenerator)
-  replyr_union_all(left, right,
-                   cols= colnames,
-                   tempNameGenerator= tempNameGenerator)
+  left <- r_replyr_bind_rows(lst[leftSeq], colnames,
+                             eagerTempRemoval, FALSE,
+                             privateTempNameGenerator, publicTempNameGenerator)
+  right <- r_replyr_bind_rows(lst[rightSeq], colnames,
+                              eagerTempRemoval, FALSE,
+                              privateTempNameGenerator, publicTempNameGenerator)
+  namesToNuke <- NULL
+  if(eagerTempRemoval) {
+    namesToNuke <- privateTempNameGenerator(dumpList=TRUE)
+  }
+  res <- replyr_union_all(left, right,
+                          cols= colnames,
+                          useLocalMethod= FALSE,
+                          tempNameGenerator= ifelse(atTopLevel ||
+                                                      (!eagerTempRemoval),
+                                                    publicTempNameGenerator,
+                                                    privateTempNameGenerator))
+  if(length(namesToNuke)>0) {
+    src <- replyr_get_src(left)
+    for(ni in namesToNuke) {
+      replyr_drop_table_name(src, ni)
+    }
+  }
+  res
 }
 
 
 #' Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.
 #'
+#' Can't set \code{eagerTempRemoval=TRUE} on platforms that don't correctly implement \code{dplyr::compute}
+#' (for instance \code{Sparklyr} prior to full resolution of \url{https://github.com/rstudio/sparklyr/issues/721}).
+#'
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @param ... force other arguments to be used by name
+#' @param eagerTempRemoval logical if TRUE remove temps early.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
 #'
 #' @examples
 #'
 #' d <- data.frame(x=1:2)
-#' replyr_bind_rows(list(d,d,d))
+#' replyr_bind_rows(list(d,d,d,d,d))
 #'
 #' @export
 replyr_bind_rows <- function(lst,
                              ...,
+                             eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_bind_rows unexpected arguments")
@@ -172,5 +200,7 @@ replyr_bind_rows <- function(lst,
   if(length(colnames)<=0) {
     stop("replyr::replyr_bind_rows no common columns")
   }
-  r_replyr_bind_rows(lst, colnames, tempNameGenerator)
+  r_replyr_bind_rows(lst, colnames, eagerTempRemoval, TRUE,
+                     makeTempNameGenerator("bind_rows_priv"),
+                     tempNameGenerator)
 }
