@@ -464,11 +464,15 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
     }
     keysToGroups[[keys]] <- c(keysToGroups[[keys]], idx)
     sourceAnnotations <- paste(' (', ci$sourceColumn, ')')
+    ind <- NULL
+    if(idx>1) {
+      ind <- paste('i:', makeTableIndMap(ti)[[1]])
+    }
     cols <- paste0(ifelse(ci$isKey, 'k: ', 'v: '),
                   ci$resultColumn,
                   ifelse(ci$resultColumn==ci$sourceColumn,
                          '', sourceAnnotations))
-    cols <- paste(cols, collapse ='\\l')
+    cols <- paste(c(ind, cols), collapse ='\\l')
     ndi <- paste0(idx, ': ', ti, '\n\\l', cols)
     shape = 'tab'
     if(idx<=1) {
