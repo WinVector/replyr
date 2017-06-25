@@ -10,69 +10,105 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
 # note: employeeAndDate is likely built as a cross-product
 #       join of an employee table and set of dates of interest
 #       before getting to the join controller step.  We call
 #       such a table "row control" or "experimental design."
-# Normally tDesc is produced by inspecting tables using
-# replyr::tableDescription() and then limiting the keys
-# column down to the correct specification.
-# For this example we just type tDesc in directly.
-tDesc <- data.frame(tableName= c('employeeAndDate',
-                                 'orgtable',
-                                 'revenue',
-                                 'activity'),
-                    handle= I(list(NULL, NULL, NULL, NULL)),
-                    columns= I(list(c('id', 'date'),
-                                  c('id', 'date', 'dept'),
-                                  c('date', 'dept', 'rev'),
-                                  c('id', 'date', 'hours'))),
-                    keys =  I(list(c('id'='id', 'date'='date'),
-                                 c('id'='id', 'date'='date'),
-                                 c('date'='date', 'dept'='dept'),
-                                 c('id'='id', 'date'='date'))),
-                    colClass= I(list(c('character', 'numeric'),
-                                   c('character', 'character', 'character'),
-                                   c('numeric', 'character', 'numeric'),
-                                   c('character', 'numeric', 'numeric'))),
-                    sourceClass= 'None',
-                    isEmpty= FALSE,
-                    stringsAsFactors = FALSE)
-# mess up order
-tDesc <- tDesc[c(1,4,3,2), , drop=FALSE]
-rownames(tDesc) <- NULL
-tDesc <- dplyr::as_data_frame(tDesc)
+
+my_db <- dplyr::src_sqlite(":memory:", 
+                           create = TRUE)
+DBI::dbExecute(my_db$con, "
+  CREATE TABLE employeeAndDate (
+     id TEXT,
+     date INTEGER
+  );
+               ")
+DBI::dbExecute(my_db$con, "
+  CREATE TABLE orgtable (
+     eid TEXT,
+     date INTEGER,
+     dept TEXT,
+     location TEXT,
+     PRIMARY KEY (eid, date)
+  );
+               ")
+DBI::dbExecute(my_db$con, "
+  CREATE TABLE revenue (
+     date INTEGER,
+     dept TEXT,
+     rev INTEGER,
+     PRIMARY KEY (date, dept)
+  );
+               ")
+DBI::dbExecute(my_db$con, "
+  CREATE TABLE activity (
+     eid TEXT,
+     date INTEGER,
+     hours INTEGER,
+     location TEXT,
+     PRIMARY KEY (eid, date)
+  );
+               ")
 ```
 
 Let's again discuss the task of left joining many tables from a data warehouse using [`R`](https://www.r-project.org) and a system called "a join controller" (last discussed [here](http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/)).
 
 One of the great advantages to specifying complicated sequences of operations in data (rather than in code) is: it is often easier to transform and extend data.  Explicit rich data beats vague convention and complicated code.
 
-For example suppose we have built (using `replyr::tableDescription()`) a description of tables we need to left-join (please see `vignette('joinController', package= 'replyr')` for details).  But, suppose we haven't worked out the order to perform the joins in. 
+For example suppose we have a `dplyr` `RSQLite` database handle in the variable `my_db` and we are using the following names for our tables in this database (keep in mind `replyr` allows different abstract and concrete table names, for this example we will assume they are the same):
 
-In this case we can use a tool to specify a usable join order.
+```{r tableNames}
+tableNames <- c('employeeAndDate',
+                'revenue',
+                'activity',
+                'orgtable')
+```
 
-First let's assume we have our table descriptions (as described in `vignette('joinController', package= 'replyr')`) and in this case the tables descriptions are the following:
+We can now use `replyr::tableDescription()` to get descriptions of these tables *including* any declared primary key structure.
 
-```{r intro}
+```{r builddesc}
 suppressPackageStartupMessages(library("dplyr"))
 library("replyr")
 
-print(tDesc[, c('tableName', 'keys', 'columns'), ])
+tDesc <- tableNames %>%
+  lapply(
+    function(ni) {
+      replyr::tableDescription(ni,
+                               dplyr::tbl(my_db, ni),
+                               keyInspector= key_inspector_sqlite)
+    }) %>%
+  bind_rows()
+
+print(tDesc[, c('tableName', 'handle', 'keys', 'columns'), ])
 ```
+
 
 This is more legible if we turn it into a column join plan.
 
 ```{r plan1}
 columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
-print(columnJoinPlan[, c('tableName', 'resultColumn', 'isKey')])
+print(columnJoinPlan[, c('tableName', 'sourceColumn', 'resultColumn', 'isKey')])
 ```
 
-Now suppose we know that we want the table "`employeeAndDate`" to be the left-most table in our left join sequence.  
+At this point we are *almost* ready to execute a left join plan on these four tables (as detailed in `vignette('joinController', package= 'replyr')`).  What we need to do is:
 
-Not all table orders are valid left join plans.  The required invariant of a valid left join plan is: except for the left-most table all key values for a given table must be known before a given table can be joined in.  Our current plan (with the tables ordered as presented in `columnJoinPlan`) fails this condition:
+ * Regularize the key structure of the tables.  In our example the analyst would have the domain knowledge that the `id` column in the `employeeAndDate` table is an "employee id" and mean to match the `eid` columns in other tables.
+ * Specify a left-most or controlling table for the analysis.  In this case it is `employeeAndDate` which we assume the analyst created through a join or cross-product of an employee list and set of dates.  The left most table represents the experimental design or the exact set of row if the other tables are uniquely keyed (which can be confirmed with `replyr:keysAreUnique()`).  The left join outcome depends on rows and values in the left most table, and not on its declared key structure (that is why we do not care that the  `employeeAndDate` has no declared keys, which is common for derived tables).
+ * Find an ordering of the rest of the tables that makes the left join executable or realizable (more on this later).
+
+First let's patch up the key structure.  This could be done by exporting the `columnJoinPlan` as a spreadsheet and editing it, but for our example we will just alter it in place.
+
+```{r rekey}
+columnJoinPlan$resultColumn[columnJoinPlan$sourceColumn=='id'] <- 'eid'
+print(columnJoinPlan[, c('tableName', 'sourceColumn', 'resultColumn', 'isKey')])
+```
+
+Now we can worry about left join order.
+
+The most important choice in a left join plan is which table is left-most.  If all the other tables are addressed by primary keys (i.e., there is not more than one row matching any row of the left-table) then the left-most table completely determines the set of rows in the left join result, no matter how many tables we are joining in.  The order the rest of the tables are joined becomes irrelevant assuming it is an order we can execute.
+
+What prevents a proposed left join order from being executable is trying to join in a table that has a keys that we do not yet have values for.  Let's show this as part of our example.  Suppose we know that we want the table "`employeeAndDate`" to be the left-most table in our left join sequence (and again, this is the one important choice).  We can see our current left join plan (`columnJoinPlan`) is not executable in the order it is currently specifying:
+
 
 ```{r check1}
 print(paste("issues:", inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
@@ -80,7 +116,13 @@ print(paste("issues:", inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
 
 This message is saying: when it comes time to join in the "`revenue`" table rows do not yet have values for the "`dept`" key column (so we can't do the join in that order).
 
-These requirements give us table to table pre-conditions: tables that instantiate values for keys must come before tables using those values as keys.  These pre-conditions give us a directed graph with arrows meaning "must be joined earlier than."  For example we can compute the join path dependencies *and* re-order the join plan to be realizable as follows (assuming the `igraph` package is available do perform the topological sorting and plotting).
+The table to table conditions are well-defined if a few invariants and conventions are maintained in the `tDesc` table descriptions:
+
+ * Each `resultColumn` name can occur at most once with `isKey==FALSE`.
+ * `resultColumn` names with `isKey==TRUE` have the same interpretation in all tables (due to the ability to re-map names from `sourceColumn`).
+ * The left-most table is treated as special in that it is "joinable" no matter what key constraints it does or does not declare and no other table can be joined before it.
+
+Since not all orders are valid left join plans the task is to find a re-ordering (if there is one) that is a valid left join plan.  The requirement that each table's keys have known values before we join gives us order relations on the tables (we know which tables must be joined before others).  Finding an ordering that obeys all the relations is called "topological sorting" We can compute the join path dependencies *and* re-order the join plan to be realizable as follows (assuming the `igraph` package is available do perform the topological sorting and plot the directed relations).
 
 ```{r sort}
 if(requireNamespace('igraph', quietly = TRUE)) {
@@ -89,7 +131,7 @@ if(requireNamespace('igraph', quietly = TRUE)) {
 }
 ```
 
-Note that in the above graph we capture that the "`revenue`" table must be joined after the "`orgtable`" (as "`orgtable`" is our mapping from employees to departments).   We could work on the legibility of the above graph using `igraph` controls, but I feel that it is just as well to move on to the detailed `DiagrammeR` based left join diagrams.
+In the above graph a table can only be joined after all of the tables pointing to it have been joined. See that this captures that the "`revenue`" table must be joined after the "`orgtable`" (as "`orgtable`" is our mapping from employees to departments).   We could work on the legibility of the above graph using `igraph` controls, but I feel that it is just as well to move on to the detailed `DiagrammeR` based left join diagrams.
 
 And (again assuming we have the `igraph` package), we have a new `columnJoinPlan` that passes checks:
 

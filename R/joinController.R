@@ -25,6 +25,67 @@ makeTableIndMap <- function(tableNameSeq) {
 }
 
 
+#' Return all columns as guess at preferred primary keys.
+#'
+#' @seealso \code{tableDescription}
+#'
+#' @param handle data handle
+#' @return map of keys to keys
+#'
+#' @examples
+#'
+#' d <- data.frame(x=1:3, y=NA)
+#' key_inspector_all_cols(d)
+#'
+#' @export
+#'
+key_inspector_all_cols <- function(handle) {
+  sample <- dplyr::collect(head(handle))
+  cols <- colnames(sample)
+  keys <- cols
+  names(keys) <- keys
+  keys
+}
+
+
+#' Return all primary key columns as guess at preferred primary keys for a SQLite handle.
+#'
+#' @seealso \code{tableDescription}
+#'
+#' @param handle data handle
+#' @return map of keys to keys
+#'
+#'
+#' @export
+#'
+key_inspector_sqlite <- function(handle) {
+  src <- replyr_get_src(handle)
+  if(is.null(src) || is.character(src)) {
+    stop("replyr::key_inspector_sqlite: not a SQLite source")
+  }
+  con <- dplyr_src_to_db_handle(src)
+  if(is.null(con) || is.character(con)) {
+    stop("replyr::key_inspector_sqlite: could not get DB handle")
+  }
+  # TODO: get a safe way to get the concrete name
+  #  https://github.com/tidyverse/dplyr/issues/2824
+  concreteName <- as.character(handle$ops$x)
+  if(is.null(concreteName) || (!is.character(concreteName))) {
+    stop("replyr::key_inspector_sqlite: could not get concrete table name")
+  }
+  tabInfo <- DBI::dbGetQuery(con,
+                             paste0("pragma table_info(",
+                                    concreteName,
+                                    ")"))
+  keys <- NULL
+  if((!is.null(tabInfo))&&(nrow(tabInfo)>0)) {
+    keys <- tabInfo$name[tabInfo$pk>0]
+    names(keys) <- keys
+  }
+  keys
+}
+
+
 #' Build a nice description of a table.
 #'
 #' Please see \url{http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/} for details.
@@ -34,6 +95,8 @@ makeTableIndMap <- function(tableNameSeq) {
 #'
 #' @param tableName name of table to add to join plan.
 #' @param handle table or table handle to add to join plan (can already be in the plan).
+#' @param ... force later arguments to bind by name.
+#' @param keyInspector function that determines prefered primary key set for table.
 #' @return table describing the data.
 #'
 #' @examples
@@ -45,7 +108,9 @@ makeTableIndMap <- function(tableNameSeq) {
 #' @export
 #'
 tableDescription <- function(tableName,
-                            handle) {
+                            handle,
+                            ...,
+                            keyInspector= key_inspector_all_cols) {
   if(length(nchar(tableName))<=0) {
     stop("replyr::tableDescription empty name")
   }
@@ -63,8 +128,7 @@ tableDescription <- function(tableName,
   if(length(source)>1) {
     source <- paste(source, collapse = ', ')
   }
-  keys <- cols
-  names(keys) <- cols
+  keys <- keyInspector(handle)
   tableIndColNames <- makeTableIndMap(tableName)
   if(length(intersect(tableIndColNames, cols))>0) {
     warning("replyr::tableDescription table_CLEANEDTABNAME_present column may cause problems (please consider renaming before these steps)")
@@ -75,7 +139,8 @@ tableDescription <- function(tableName,
                     keys= list(keys),
                     colClass= list(classes),
                     sourceClass= source,
-                    isEmpty= nrow(sample)<=0)
+                    isEmpty= nrow(sample)<=0,
+                    indicatorColumn= tableIndColNames[[1]])
 }
 
 
@@ -398,8 +463,11 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
       keys <- '.' # can't use '' as a list key
     }
     keysToGroups[[keys]] <- c(keysToGroups[[keys]], idx)
-    cols <- paste(ifelse(ci$isKey, 'k:', 'v:'),
-                  ci$resultColumn)
+    sourceAnnotations <- paste(' (', ci$sourceColumn, ')')
+    cols <- paste0(ifelse(ci$isKey, 'k: ', 'v: '),
+                  ci$resultColumn,
+                  ifelse(ci$resultColumn==ci$sourceColumn,
+                         '', sourceAnnotations))
     cols <- paste(cols, collapse ='\\l')
     ndi <- paste0(idx, ': ', ti, '\n\\l', cols)
     shape = 'tab'
@@ -855,12 +923,19 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                        (columnJoinPlan$want) &
                        (!columnJoinPlan$isKey))
     tableIndCol <- tableIndColNames[[tabnam]]
-    nmap <- c(tableIndCol,
-              columnJoinPlan$sourceColumn[keyRows],
-              columnJoinPlan$sourceColumn[valRows])
-    names(nmap) <- c(tableIndCol,
-                     columnJoinPlan$resultColumn[keyRows],
-                     columnJoinPlan$resultColumn[valRows])
+    if(first) {
+      nmap <- c(columnJoinPlan$sourceColumn[keyRows],
+                columnJoinPlan$sourceColumn[valRows])
+      names(nmap) <- c(columnJoinPlan$resultColumn[keyRows],
+                       columnJoinPlan$resultColumn[valRows])
+    } else {
+      nmap <- c(tableIndCol,
+                columnJoinPlan$sourceColumn[keyRows],
+                columnJoinPlan$sourceColumn[valRows])
+      names(nmap) <- c(tableIndCol,
+                       columnJoinPlan$resultColumn[keyRows],
+                       columnJoinPlan$resultColumn[valRows])
+    }
     # adding an indicator column lets us handle cases where we are taking
     # no values.
     if(verbose) {
@@ -884,7 +959,6 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
       if(verbose) {
         print(paste0(" res <- ", tabnam))
       }
-      first <- FALSE
     } else {
       rightKeys <- columnJoinPlan$resultColumn[keyRows]
       if(verbose) {
@@ -909,6 +983,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     if(verbose) {
       print(paste('done',tabnam, base::date()))
     }
+    first <- FALSE
   }
   res
 }

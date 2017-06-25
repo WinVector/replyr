@@ -4,12 +4,17 @@
 \alias{tableDescription}
 \title{Build a nice description of a table.}
 \usage{
-tableDescription(tableName, handle)
+tableDescription(tableName, handle, ...,
+  keyInspector = key_inspector_all_cols)
 }
 \arguments{
 \item{tableName}{name of table to add to join plan.}
 
 \item{handle}{table or table handle to add to join plan (can already be in the plan).}
+
+\item{...}{force later arguments to bind by name.}
+
+\item{keyInspector}{function that determines prefered primary key set for table.}
 }
 \value{
 table describing the data.
