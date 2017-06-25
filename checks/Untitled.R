@@ -156,10 +156,11 @@ print(sc)
 #' @param sc remote data source tables are on (and where to copy-to and work), NULL for local tables.
 #' @param tabA not-NULL table with at least 1 row on sc data source, and columns \code{c("car", "fact", "value")}.
 #' @param tabB not-NULL table with at least 1 row on same data source as tabA and columns \code{c("car", "fact", "value")}.
+#' @param tempName name for temp table
 #' @return table with all rows of tabA and tabB (union_all).
 #'
 #' @export
-example_union_all <- function(sc, tabA, tabB) {
+example_union_all <- function(sc, tabA, tabB, tempName) {
   cols <- intersect(colnames(tabA), colnames(tabB))
   expectedCols <- c("car", "fact", "value")
   if((length(cols)!=length(expectedCols)) ||
@@ -173,6 +174,7 @@ example_union_all <- function(sc, tabA, tabB) {
                              stringsAsFactors = FALSE)
   if(!is.null(sc)) {
     controlTable <- copy_to(sc, controlTable,
+                            name= tempName,
                             temporary=TRUE)
   }
   # decorate left and right tables for the merge
@@ -220,11 +222,14 @@ for(rep in 1:20) {
   for(i in (2:length(frameListS))) {
     print(paste(' start phase', rep, i, base::date()))
     oi <- frameListS[[i]]
-    res <- example_union_all(sc, res, oi)
+    nm2 <- paste('ctmp', count, sep='_')
+    count <- count + 1
+    res <- example_union_all(sc, res, oi, nm2)
     prevNM <- nm
     nm <- paste('tmp', count, sep='_')
     count <- count + 1
     res <- compute(res, name=nm)
+    dplyr::db_drop_table(sc, nm2)
     dplyr::db_drop_table(sc, prevNM)
     print(paste(' done phase', rep, i, base::date()))
   }
