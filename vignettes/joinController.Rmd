@@ -196,8 +196,9 @@ The join plan is the neglected (and often missing) piece of documentation key to
 As a diagram the key structure of the join plan looks like the following:
 
 ```{r render1}
-pngFileName <- 'jPlan.png'
+pngFileName <- 'jPlanController.png'
 diagramPNG <- NULL
+# requireNamespace checks just for strict warning hygine in vignette
 have <- c(
   requireNamespace('DiagrammeR', quietly = TRUE),
   requireNamespace('htmlwidgets', quietly = TRUE),
@@ -214,8 +215,6 @@ if(all(have)) {
 ```{r showimg, results='asis', echo=FALSE}
 if(!is.null(diagramPNG)) {
   cat(paste0('<center><img src="', pngFileName, '" width="600" border="0"></center>'))
-} else {
-  cat('<center><img src="joinDiagram1.png" width="600" border="0"></center>')
 }
 ```
 

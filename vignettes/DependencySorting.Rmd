@@ -125,6 +125,8 @@ The table to table conditions are well-defined if a few invariants and conventio
 Since not all orders are valid left join plans the task is to find a re-ordering (if there is one) that is a valid left join plan.  The requirement that each table's keys have known values before we join gives us order relations on the tables (we know which tables must be joined before others).  Finding an ordering that obeys all the relations is called "topological sorting" We can compute the join path dependencies *and* re-order the join plan to be realizable as follows (assuming the `igraph` package is available do perform the topological sorting and plot the directed relations).
 
 ```{r sort}
+sorted <- NULL
+# requireNamespace checks just for strict warning hygine in vignette
 if(requireNamespace('igraph', quietly = TRUE)) {
   sorted <- topoSortTables(columnJoinPlan, 'employeeAndDate')
   plot(sorted$dependencyGraph)
@@ -133,31 +135,33 @@ if(requireNamespace('igraph', quietly = TRUE)) {
 
 In the above graph a table can only be joined after all of the tables pointing to it have been joined. See that this captures that the "`revenue`" table must be joined after the "`orgtable`" (as "`orgtable`" is our mapping from employees to departments).   We could work on the legibility of the above graph using `igraph` controls, but I feel that it is just as well to move on to the detailed `DiagrammeR` based left join diagrams.
 
-And (again assuming we have the `igraph` package), we have a new `columnJoinPlan` that passes checks:
+And (again assuming we have the `igraph` package), we have a new `sorted$columnJoinPlan` that passes checks:
 
 ```{r check2}
-if(requireNamespace('igraph', quietly = TRUE)) {
-  columnJoinPlan <- sorted$columnJoinPlan
-  print(paste("issues:", inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
+if(!is.null(sorted)) {
+  print(paste("issues:", inspectDescrAndJoinPlan(tDesc, 
+                                                 sorted$columnJoinPlan)))
 }
 ```
 
-The new `columnJoinPlan` can be re-plotted (needs the suggested packages:  `DiagrammeR`, `htmlwidgets`, `webshot`, and `magick`): 
+The new `sorted$columnJoinPlan` can be re-plotted (needs the suggested packages:  `DiagrammeR`, `htmlwidgets`, `webshot`, and `magick`): 
 
 ```{r render1}
-pngFileName <- 'jPlan.png'
+pngFileName <- 'jPlanDependencySorting.png'
 diagramPNG <- NULL
-have <- c(
-  requireNamespace('igraph', quietly = TRUE),
-  requireNamespace('DiagrammeR', quietly = TRUE),
-  requireNamespace('htmlwidgets', quietly = TRUE),
-  requireNamespace('webshot', quietly = TRUE),
-  requireNamespace('magick', quietly = TRUE)
-)
-if(all(have)) {
-  diagramPNG <- columnJoinPlan %>%
-    makeJoinDiagramSpec() %>%
-    renderJoinDiagram(pngFileName = pngFileName)
+# requireNamespace checks just for strict warning hygine in vignette
+if(!is.null(sorted)) {
+  have <- c(
+    requireNamespace('DiagrammeR', quietly = TRUE),
+    requireNamespace('htmlwidgets', quietly = TRUE),
+    requireNamespace('webshot', quietly = TRUE),
+    requireNamespace('magick', quietly = TRUE)
+  )
+  if(all(have)) {
+    diagramPNG <- sorted$columnJoinPlan %>%
+      makeJoinDiagramSpec() %>%
+      renderJoinDiagram(pngFileName = pngFileName)
+  }
 }
 ```
 
@@ -168,11 +172,11 @@ if(!is.null(diagramPNG)) {
 ```
 
 
-And the new `columnJoinPlan` is ready to be executed:
+And the new `sorted$columnJoinPlan` is ready to be executed:
 
 ```{r steps}
-if(requireNamespace('igraph', quietly = TRUE)) {
-  res <- executeLeftJoinPlan(tDesc, columnJoinPlan, dryRun = TRUE)
+if(!is.null(sorted)) {
+  res <- executeLeftJoinPlan(tDesc, sorted$columnJoinPlan, dryRun = TRUE)
 }
 ```
 
