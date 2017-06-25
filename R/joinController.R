@@ -287,17 +287,22 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
   for(vi in setdiff(vnams, leftTableName)) {
     g <- g + igraph::edge(leftTableName, vi)
   }
+  # add in any other order conditions
   n <- length(vnams)
   for(vii in seq_len(n)) {
-    ci <- columnJoinPlan[columnJoinPlan$tableName==vnams[[vii]], ,
-                         drop=FALSE]
-    knownI <- ci$resultColumn[!ci$isKey]
-    for(vjj in setdiff(seq_len(n), vii)) {
-      cj <- columnJoinPlan[columnJoinPlan$tableName==vnams[[vjj]], ,
+    if(vnams[[vii]]!=leftTableName) {
+      ci <- columnJoinPlan[columnJoinPlan$tableName==vnams[[vii]], ,
                            drop=FALSE]
-      keysJ <- cj$resultColumn[cj$isKey]
-      if(length(intersect(knownI, keysJ))>0) {
-        g <- g + igraph::edge(vnams[[vii]], vnams[[vjj]])
+      knownI <- ci$resultColumn[!ci$isKey]
+      for(vjj in setdiff(seq_len(n), vii)) {
+        if(vnams[[vjj]]!=leftTableName) {
+          cj <- columnJoinPlan[columnJoinPlan$tableName==vnams[[vjj]], ,
+                               drop=FALSE]
+          keysJ <- cj$resultColumn[cj$isKey]
+          if(length(intersect(knownI, keysJ))>0) {
+            g <- g + igraph::edge(vnams[[vii]], vnams[[vjj]])
+          }
+        }
       }
     }
   }
@@ -611,11 +616,6 @@ buildJoinPlan <- function(tDesc,
   for(i in seq_len(ntab)) {
     cols <- tDesc$columns[[i]]
     keys <- tDesc$keys[[i]]
-    if(is.null(names(keys))) {
-      names(keys) <- keys
-    }
-    kblanks <- nchar(names(keys))<=0
-    names(keys)[kblanks] <- keys[kblanks]
     tnam <- tDesc$tableName[[i]]
     classes <- tDesc$colClass[[i]]
     if(length(cols)<=0) {

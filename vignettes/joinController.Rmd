@@ -219,12 +219,6 @@ if(!is.null(diagramPNG)) {
 }
 ```
 
-These diagrams are kind of fun.  For instance, here is a more complicated one from the `help(makeJoinDiagramSpec)` examples:
-
-<center><img src="joinDiagram2.png" width="600" border="0"></center>
-
-Some examples and instructions on how to save as png files can be found [here](https://github.com/WinVector/replyr/blob/master/extras/graphViz.md).
-
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 
 ```{r run}
