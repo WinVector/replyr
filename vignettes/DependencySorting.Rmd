@@ -107,7 +107,7 @@ Now we can worry about left join order.
 
 The most important choice in a left join plan is which table is left-most.  If all the other tables are addressed by primary keys (i.e., there is not more than one row matching any row of the left-table) then the left-most table completely determines the set of rows in the left join result, no matter how many tables we are joining in.  The order the rest of the tables are joined becomes irrelevant assuming it is an order we can execute.
 
-What prevents a proposed left join order from being executable is trying to join in a table that has a keys that we do not yet have values for.  Let's show this as part of our example.  Suppose we know that we want the table "`employeeAndDate`" to be the left-most table in our left join sequence (and again, this is the one important choice).  We can see our current left join plan (`columnJoinPlan`) is not executable in the order it is currently specifying:
+What prevents a proposed left join order from being executable is trying to join in a table that has a key that we do not yet have values for.  Let's show this as part of our example.  Suppose we know that we want the table "`employeeAndDate`" to be the left-most table in our left join sequence (and again, this is the one important choice).  We can see our current left join plan (`columnJoinPlan`) is not executable in the order it is currently specifying:
 
 
 ```{r check1}
