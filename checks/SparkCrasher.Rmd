@@ -1,4 +1,11 @@
+---
+title: "Spark Crasher"
+author: "John Mount"
+date: "6/25/2017"
+output: html_document
+---
 
+```{r}
 # devtools::install_github("tidyverse/dplyr")
 # devtools::install_github("tidyverse/dbplyr")
 # devtools::install_github("rstudio/sparklyr")
@@ -100,4 +107,4 @@ for(rep in 1:20) {
   dplyr::db_drop_table(sc, nm)
   print(paste('done rep', rep, base::date()))
 }
-
+```
