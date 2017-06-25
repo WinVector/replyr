@@ -249,6 +249,11 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
     cMap <- ci$sourceClass
     names(cMap) <- ci$resultColumn
     keyCols <- ci$resultColumn[ci$isKey]
+    if(tabnam!=tabs[[1]]) {
+      if(length(keyCols)<=0) {
+        return(paste("table", tabnam, "declares no keys"))
+      }
+    }
     resCols <- ci$resultColumn[ci$want]
     if(length(prevResultColInfo)>0) {
       missedKeys <- setdiff(keyCols, names(prevResultColInfo))
