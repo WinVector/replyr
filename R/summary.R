@@ -40,6 +40,8 @@ replyr_summary <- function(x,
     stop("replyr::replyr_summary unexpected arguments")
   }
   x <- dplyr::ungroup(x)
+  # localSample might not have columns on zero row caes
+  #   https://github.com/tidyverse/dplyr/issues/2913
   localSample <- x %>%
     head() %>%
     collect() %>%

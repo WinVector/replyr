@@ -40,8 +40,7 @@ makeTableIndMap <- function(tableNameSeq) {
 #' @export
 #'
 key_inspector_all_cols <- function(handle) {
-  sample <- dplyr::collect(head(handle))
-  cols <- colnames(sample)
+  cols <- colnames(handle)
   keys <- cols
   names(keys) <- keys
   keys
@@ -86,6 +85,51 @@ key_inspector_sqlite <- function(handle) {
 }
 
 
+#' Return all primary key columns as guess at preferred primary keys for a PostgreSQL handle.
+#'
+#' @seealso \code{tableDescription}
+#'
+#' @param handle data handle
+#' @return map of keys to keys
+#'
+#'
+#' @export
+#'
+key_inspector_postgresql <- function(handle) {
+  src <- replyr_get_src(handle)
+  if(is.null(src) || is.character(src)) {
+    stop("replyr::key_inspector_postgresql: not a PostgreSQL source")
+  }
+  con <- dplyr_src_to_db_handle(src)
+  if(is.null(con) || is.character(con)) {
+    stop("replyr::key_inspector_postgresql: could not get DB handle")
+  }
+  # TODO: get a safe way to get the concrete name
+  #  https://github.com/tidyverse/dplyr/issues/2824
+  concreteName <- as.character(handle$ops$x)
+  if(is.null(concreteName) || (!is.character(concreteName))) {
+    stop("replyr::key_inspector_postgresql: could not get concrete table name")
+  }
+  # from https://wiki.postgresql.org/wiki/Retrieve_primary_key_columns
+  q <- paste0(
+    "
+    SELECT a.attname, format_type(a.atttypid, a.atttypmod) AS data_type
+    FROM   pg_index i
+    JOIN   pg_attribute a ON a.attrelid = i.indrelid
+    AND a.attnum = ANY(i.indkey)
+    WHERE  i.indrelid = '", concreteName, "'::regclass
+    AND    i.indisprimary;
+    "
+  )
+  tabInfo <- DBI::dbGetQuery(con, q)
+  keys <- NULL
+  if((!is.null(tabInfo))&&(nrow(tabInfo)>0)) {
+    keys <- tabInfo$attname
+    names(keys) <- keys
+  }
+  keys
+}
+
 #' Build a nice description of a table.
 #'
 #' Please see \url{http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/} for details.
@@ -115,7 +159,9 @@ tableDescription <- function(tableName,
     stop("replyr::tableDescription empty name")
   }
   sample <- dplyr::collect(head(handle))
-  cols <- colnames(sample)
+  cols <- colnames(handle)
+  # may not get classes on empty tables
+  # https://github.com/tidyverse/dplyr/issues/2913
   classes <- vapply(cols,
                     function(si) {
                       paste(class(sample[[si]]),

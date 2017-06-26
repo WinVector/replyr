@@ -10,15 +10,16 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-# note: employeeAndDate is likely built as a cross-product
+# note: employeeanddate is likely built as a cross-product
 #       join of an employee table and set of dates of interest
 #       before getting to the join controller step.  We call
 #       such a table "row control" or "experimental design."
 
-my_db <- dplyr::src_sqlite(":memory:", 
+my_db <- dplyr::src_sqlite(":memory:",
                            create = TRUE)
+
 DBI::dbExecute(my_db$con, "
-  CREATE TABLE employeeAndDate (
+  CREATE TABLE employeeanddate (
      id TEXT,
      date INTEGER
   );
@@ -58,7 +59,7 @@ One of the great advantages to specifying complicated sequences of operations in
 For example suppose we have a `dplyr` `RSQLite` database handle in the variable `my_db` and we are using the following names for our tables in this database (keep in mind `replyr` allows different abstract and concrete table names, for this example we will assume they are the same):
 
 ```{r tableNames}
-tableNames <- c('employeeAndDate',
+tableNames <- c('employeeanddate',
                 'revenue',
                 'activity',
                 'orgtable')
@@ -92,8 +93,8 @@ print(columnJoinPlan[, c('tableName', 'sourceColumn', 'resultColumn', 'isKey')])
 
 At this point we are *almost* ready to execute a left join plan on these four tables (as detailed in `vignette('joinController', package= 'replyr')`).  What we need to do is:
 
- * Regularize the key structure of the tables.  In our example the analyst would have the domain knowledge that the `id` column in the `employeeAndDate` table is an "employee id" and mean to match the `eid` columns in other tables.
- * Specify a left-most or controlling table for the analysis.  In this case it is `employeeAndDate` which we assume the analyst created through a join or cross-product of an employee list and set of dates.  The left most table represents the experimental design or the exact set of row if the other tables are uniquely keyed (which can be confirmed with `replyr:keysAreUnique()`).  The left join outcome depends on rows and values in the left most table, and not on its declared key structure (that is why we do not care that the  `employeeAndDate` has no declared keys, which is common for derived tables).
+ * Regularize the key structure of the tables.  In our example the analyst would have the domain knowledge that the `id` column in the `employeeanddate` table is an "employee id" and mean to match the `eid` columns in other tables.
+ * Specify a left-most or controlling table for the analysis.  In this case it is `employeeanddate` which we assume the analyst created through a join or cross-product of an employee list and set of dates.  The left most table represents the experimental design or the exact set of row if the other tables are uniquely keyed (which can be confirmed with `replyr:keysAreUnique()`).  The left join outcome depends on rows and values in the left most table, and not on its declared key structure (that is why we do not care that the  `employeeanddate` has no declared keys, which is common for derived tables).
  * Find an ordering of the rest of the tables that makes the left join executable or realizable (more on this later).
 
 First let's patch up the key structure.  This could be done by exporting the `columnJoinPlan` as a spreadsheet and editing it, but for our example we will just alter it in place.
@@ -107,7 +108,7 @@ Now we can worry about left join order.
 
 The most important choice in a left join plan is which table is left-most.  If all the other tables are addressed by primary keys (i.e., there is not more than one row matching any row of the left-table) then the left-most table completely determines the set of rows in the left join result, no matter how many tables we are joining in.  The order the rest of the tables are joined becomes irrelevant assuming it is an order we can execute.
 
-What prevents a proposed left join order from being executable is trying to join in a table that has a key that we do not yet have values for.  Let's show this as part of our example.  Suppose we know that we want the table "`employeeAndDate`" to be the left-most table in our left join sequence (and again, this is the one important choice).  We can see our current left join plan (`columnJoinPlan`) is not executable in the order it is currently specifying:
+What prevents a proposed left join order from being executable is trying to join in a table that has a key that we do not yet have values for.  Let's show this as part of our example.  Suppose we know that we want the table "`employeeanddate`" to be the left-most table in our left join sequence (and again, this is the one important choice).  We can see our current left join plan (`columnJoinPlan`) is not executable in the order it is currently specifying:
 
 
 ```{r check1}
@@ -128,7 +129,7 @@ Since not all orders are valid left join plans the task is to find a re-ordering
 sorted <- NULL
 # requireNamespace checks just for strict warning hygiene in vignette
 if(requireNamespace('igraph', quietly = TRUE)) {
-  sorted <- topoSortTables(columnJoinPlan, 'employeeAndDate')
+  sorted <- topoSortTables(columnJoinPlan, 'employeeanddate')
   plot(sorted$dependencyGraph)
 }
 ```
@@ -188,4 +189,12 @@ And this is how we use tools to do the heavy lifting in building a left join pla
   * `replyr::topoSortTables()` can then reorder `columnJoinPlan` to bring the tables together in a realizable order.
   * `replyr::makeJoinDiagramSpec() %>% replyr::renderJoinDiagram()` can then produce and capture a detailed diagram of the final join plan.
   * Finally `replyr::executeLeftJoinPlan()` can execute the join plan with diagnostics.
+
+```{r cleanup}
+for(ni in tableNames) {
+  replyr_drop_table_name(my_db, ni)
+}
+rm(list=ls())
+gc(verbose = FALSE)
+```
 
