@@ -19,7 +19,7 @@ inspectDescrAndJoinPlan(tDesc, columnJoinPlan, ..., checkColClasses = FALSE)
 NULL if okay, else a string
 }
 \description{
-check that a join plan is consistent with table descriptions
+Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \examples{
 

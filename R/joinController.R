@@ -1,5 +1,93 @@
 
 
+getConcreteTableName <- function(handle) {
+  # TODO: get a safe way to get the concrete name
+  #  https://github.com/tidyverse/dplyr/issues/2824
+  concreteName <- as.character(handle$ops$x)
+}
+
+example_employeeAndDate <- function(my_db) {
+  . <- NULL # Declare not an unbound varaible
+  # note: employeeanddate is likely built as a cross-product
+  #       join of an employee table and set of dates of interest
+  #       before getting to the join controller step.  We call
+  #       such a table "row control" or "experimental design."
+  keymap <- list()
+  DBI::dbExecute(my_db$con, "
+  CREATE TABLE employeeanddate (
+                 id TEXT,
+                 date INTEGER
+  );
+                 ")
+  keymap[['employeeanddate']] = c()
+  data.frame(id= c('i4', 'i4'),
+             date = c(20140501, 20140601)) %>%
+    DBI::dbWriteTable(my_db$con, 'employeeanddate', value=., append=TRUE)
+  DBI::dbExecute(my_db$con, "
+                 CREATE TABLE orgtable (
+                 eid TEXT,
+                 date INTEGER,
+                 dept TEXT,
+                 location TEXT,
+                 PRIMARY KEY (eid, date)
+                 );
+                 ")
+  keymap[['orgtable']] = c('eid', 'date')
+  data.frame(eid= c('i4', 'i4'),
+             date = c(20140501, 20140601),
+             dept = c('IT', 'SL'),
+             location = c('CA', 'TX')) %>%
+    DBI::dbWriteTable(my_db$con, 'orgtable', value=., append=TRUE)
+  DBI::dbExecute(my_db$con, "
+                 CREATE TABLE revenue (
+                 date INTEGER,
+                 dept TEXT,
+                 rev INTEGER,
+                 PRIMARY KEY (date, dept)
+                 );
+                 ")
+  keymap[['revenue']] = c('dept', 'date')
+  data.frame(date = c(20140501, 20140601),
+             dept = c('SL', 'SL'),
+             rev = c(1000, 2000)) %>%
+    DBI::dbWriteTable(my_db$con, 'revenue', value=., append=TRUE)
+  DBI::dbExecute(my_db$con, "
+                 CREATE TABLE activity (
+                 eid TEXT,
+                 date INTEGER,
+                 hours INTEGER,
+                 location TEXT,
+                 PRIMARY KEY (eid, date)
+                 );
+                 ")
+  keymap[['activity']] = c('eid', 'date')
+  data.frame(eid= c('i4', 'i4'),
+             date = c(20140501, 20140601),
+             hours = c(50, 3),
+             location = c('office', 'client')) %>%
+    DBI::dbWriteTable(my_db$con, 'activity', value=., append=TRUE)
+  tableNames <- c('employeeanddate',
+                  'revenue',
+                  'activity',
+                  'orgtable')
+  key_inspector_by_name <- function(handle) {
+    concreteName <- getConcreteTableName(handle)
+    keys <- keymap[[concreteName]]
+    names(keys) <- keys
+    keys
+  }
+  tDesc <- tableNames %>%
+    lapply(
+      function(ni) {
+        replyr::tableDescription(ni,
+                                 dplyr::tbl(my_db, ni),
+                                 keyInspector = key_inspector_by_name)
+      }) %>%
+    dplyr::bind_rows()
+  tDesc
+}
+
+
 uniqueInOrder <- function(names) {
   name <- NULL # declare not unbound reference
   rowid <- NULL # declare not unbound reference
@@ -66,9 +154,7 @@ key_inspector_sqlite <- function(handle) {
   if(is.null(con) || is.character(con)) {
     stop("replyr::key_inspector_sqlite: could not get DB handle")
   }
-  # TODO: get a safe way to get the concrete name
-  #  https://github.com/tidyverse/dplyr/issues/2824
-  concreteName <- as.character(handle$ops$x)
+  concreteName <- getConcreteTableName(handle)
   if(is.null(concreteName) || (!is.character(concreteName))) {
     stop("replyr::key_inspector_sqlite: could not get concrete table name")
   }
@@ -104,9 +190,7 @@ key_inspector_postgresql <- function(handle) {
   if(is.null(con) || is.character(con)) {
     stop("replyr::key_inspector_postgresql: could not get DB handle")
   }
-  # TODO: get a safe way to get the concrete name
-  #  https://github.com/tidyverse/dplyr/issues/2824
-  concreteName <- as.character(handle$ops$x)
+  concreteName <- getConcreteTableName(handle)
   if(is.null(concreteName) || (!is.character(concreteName))) {
     stop("replyr::key_inspector_postgresql: could not get concrete table name")
   }
@@ -134,6 +218,8 @@ key_inspector_postgresql <- function(handle) {
 #'
 #' Please see \url{http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/} for details.
 #' Note: one usually needs to alter the keys column which is just populated with all columns.
+#'
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
 #' @seealso \code{\link{buildJoinPlan}}, \code{\link{keysAreUnique}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
@@ -338,6 +424,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #' Topologically sort join plan do values are available before uses.
 #'
 #' Depends on \code{igraph} package.
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
 #' @param columnJoinPlan join plan
 #' @param leftTableName which table is left
@@ -347,43 +434,30 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #' @examples
 #'
 #'
-#' # note: employeeAndDate is likely built as a cross-product
+#' # note: employeeanddate is likely built as a cross-product
 #' #       join of an employee table and set of dates of interest
 #' #       before getting to the join controller step.  We call
 #' #       such a table "row control" or "experimental design."
-#' # Normally tDesc is produced by inspecting tables using
-#' # replyr::tableDescription() and then limiting the keys
-#' # column down to the correct specification.
-#' # For this example we just type tDesc in directly.
-#' tDesc <- data.frame(tableName= c('employeeAndDate',
-#'                                  'orgtable',
-#'                                  'revenue',
-#'                                  'activity'),
-#'                     handle= I(list(NULL, NULL, NULL, NULL)),
-#'                     columns= I(list(c('id', 'date'),
-#'                                   c('id', 'date', 'dept'),
-#'                                   c('date', 'dept', 'rev'),
-#'                                   c('id', 'date', 'hours'))),
-#'                     keys =  I(list(c('id'='id', 'date'='date'),
-#'                                  c('id'='id', 'date'='date'),
-#'                                  c('date'='date', 'dept'='dept'),
-#'                                  c('id'='id', 'date'='date'))),
-#'                     colClass= I(list(c('character', 'numeric'),
-#'                                    c('character', 'character', 'character'),
-#'                                    c('numeric', 'character', 'numeric'),
-#'                                    c('character', 'numeric', 'numeric'))),
-#'                     sourceClass= 'None',
-#'                     isEmpty= FALSE,
-#'                     stringsAsFactors = FALSE)
-#' # mess up order
-#' tDesc <- tDesc[seq(nrow(tDesc),1), , drop=FALSE]
+#'
+#'
+#' my_db <- dplyr::src_sqlite(":memory:",
+#'                            create = TRUE)
+#' tDesc <- replyr:::example_employeeAndDate(my_db)
 #' columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
-#' print(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))
+#' # unify keys
+#' columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'
+#' # look at plan defects
+#' print(paste('problems:',
+#'             inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
+#' # fix plan
 #' if(requireNamespace('igraph', quietly = TRUE)) {
-#'    sorted <- topoSortTables(columnJoinPlan, 'employeeAndDate')
-#'    print(inspectDescrAndJoinPlan(tDesc, sorted$columnJoinPlan))
+#'    sorted <- topoSortTables(columnJoinPlan, 'employeeanddate')
+#'    print(paste('problems:',
+#'                inspectDescrAndJoinPlan(tDesc, sorted$columnJoinPlan)))
 #'    # plot(sorted$dependencyGraph)
 #' }
+#' DBI::dbDisconnect(my_db$con)
+#' my_db <- NULL
 #'
 #' @export
 #'
@@ -432,6 +506,7 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #' Build a drawable specification of the join diagram
 #'
 #' Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}
 #'
@@ -444,40 +519,33 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #' @examples
 #'
 #'
-#' # note: employeeAndDate is likely built as a cross-product
+#' # note: employeeanddate is likely built as a cross-product
 #' #       join of an employee table and set of dates of interest
 #' #       before getting to the join controller step.  We call
 #' #       such a table "row control" or "experimental design."
-#' # Normally tDesc is produced by inspecting tables using
-#' # replyr::tableDescription() and then limiting the keys
-#' # column down to the correct specification.
-#' # For this example we just type tDesc in directly.
-#' tDesc <- data.frame(tableName= c('employeeAndDate',
-#'                                  'orgtable',
-#'                                  'revenue',
-#'                                  'activity'),
-#'                     handle= I(list(NULL, NULL, NULL, NULL)),
-#'                     columns= I(list(c('id', 'date'),
-#'                                   c('id', 'date', 'dept'),
-#'                                   c('date', 'dept', 'rev'),
-#'                                   c('id', 'date', 'hours'))),
-#'                     keys =  I(list(c('id'='id', 'date'='date'),
-#'                                  c('id'='id', 'date'='date'),
-#'                                  c('date'='date', 'dept'='dept'),
-#'                                  c('id'='id', 'date'='date'))),
-#'                     colClass= I(list(c('character', 'numeric'),
-#'                                    c('character', 'character', 'character'),
-#'                                    c('numeric', 'character', 'numeric'),
-#'                                    c('character', 'numeric', 'numeric'))),
-#'                     sourceClass= 'None',
-#'                     isEmpty= FALSE,
-#'                     stringsAsFactors = FALSE)
-#' diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
+#'
+#' my_db <- dplyr::src_sqlite(":memory:",
+#'                            create = TRUE)
+#' tDesc <- replyr:::example_employeeAndDate(my_db)
+#' # fix order by hand, please see replyr::topoSortTables for
+#' # how to automate this.
+#' ord <- match(c('employeeanddate', 'orgtable', 'activity', 'revenue'),
+#'              tDesc$tableName)
+#' tDesc <- tDesc[ord, , drop=FALSE]
+#' columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
+#' # unify keys
+#' columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'
+#' # look at plan defects
+#' print(paste('problems:',
+#'             inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
+#' diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
 #' # to render as JavaScript:
 #' #   DiagrammeR::grViz(diagramSpec)
 #' # or as PNG:
 #' #   renderJoinDiagram(diagramSpec)
 #' #
+#' DBI::dbDisconnect(my_db$con)
+#' my_db <- NULL
 #'
 #' @export
 #'
@@ -577,6 +645,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 #' Render a diagram spec from \code{\link{makeJoinDiagramSpec}} as a PNG graphics item.
 #'
 #' Requires packages \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} properly installed to use.
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
@@ -626,6 +695,7 @@ renderJoinDiagram <- function(diagramSpec,
 
 #' check that a join plan is consistent with table descriptions
 #'
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param tDesc description of tables, from \code{\link{tableDescription}} (and likely altered by user).
@@ -705,6 +775,7 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
 
 #' Build a join plan
 #'
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #' @seealso \code{\link{tableDescription}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param tDesc description of tables from \code{\link{tableDescription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
@@ -839,6 +910,7 @@ strMapToString <- function(m) {
 
 #' Execute an ordered sequence of left joins.
 #'
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}
 #'
 #' @param tDesc description of tables, either a \code{data.frame} from \code{\link{tableDescription}}, or a list mapping from names to handles/frames.  Only used to map table names to data.

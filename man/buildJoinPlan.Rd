@@ -17,7 +17,7 @@ buildJoinPlan(tDesc, ..., check = TRUE)
 detailed column join plan (appropriate for editing)
 }
 \description{
-Build a join plan
+Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \examples{
 

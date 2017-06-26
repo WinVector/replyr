@@ -32,7 +32,7 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
 joined table
 }
 \description{
-Execute an ordered sequence of left joins.
+Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \examples{
 

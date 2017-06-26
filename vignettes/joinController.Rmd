@@ -245,12 +245,7 @@ Basically you:
 As always: the proof is in the pudding.  We should look at results: 
 
 ```{r print}
-print(results %>%
-        select(PatientID, MeasurementDate, 
-               meas1_weight, height, 
-               name, 
-               table_meas2_present, meas2_weight),
-      width= Inf)
+dplyr::glimpse(results)
 ```
 
 Notice the joiner added extra columns of the form `table_*_present` to show which tables had needed rows.  This lets us tell different sorts of missingness apart (value `NA` as there was no row to join, versus value `NA` as a `NA` came from a row) and appropriately `coalesce` results easily.  These columns are also very good for collecting statistics on data coverage, and in business settings often are very useful data quality and data provenance features which can often be directly included in machine learning models.

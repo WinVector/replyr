@@ -18,46 +18,34 @@ list with dependencyGraph and sorted columnJoinPlan
 }
 \description{
 Depends on \code{igraph} package.
+Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \examples{
 
 
-# note: employeeAndDate is likely built as a cross-product
+# note: employeeanddate is likely built as a cross-product
 #       join of an employee table and set of dates of interest
 #       before getting to the join controller step.  We call
 #       such a table "row control" or "experimental design."
-# Normally tDesc is produced by inspecting tables using
-# replyr::tableDescription() and then limiting the keys
-# column down to the correct specification.
-# For this example we just type tDesc in directly.
-tDesc <- data.frame(tableName= c('employeeAndDate',
-                                 'orgtable',
-                                 'revenue',
-                                 'activity'),
-                    handle= I(list(NULL, NULL, NULL, NULL)),
-                    columns= I(list(c('id', 'date'),
-                                  c('id', 'date', 'dept'),
-                                  c('date', 'dept', 'rev'),
-                                  c('id', 'date', 'hours'))),
-                    keys =  I(list(c('id'='id', 'date'='date'),
-                                 c('id'='id', 'date'='date'),
-                                 c('date'='date', 'dept'='dept'),
-                                 c('id'='id', 'date'='date'))),
-                    colClass= I(list(c('character', 'numeric'),
-                                   c('character', 'character', 'character'),
-                                   c('numeric', 'character', 'numeric'),
-                                   c('character', 'numeric', 'numeric'))),
-                    sourceClass= 'None',
-                    isEmpty= FALSE,
-                    stringsAsFactors = FALSE)
-# mess up order
-tDesc <- tDesc[seq(nrow(tDesc),1), , drop=FALSE]
+
+
+my_db <- dplyr::src_sqlite(":memory:",
+                           create = TRUE)
+tDesc <- replyr:::example_employeeAndDate(my_db)
 columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
-print(inspectDescrAndJoinPlan(tDesc, columnJoinPlan))
+# unify keys
+columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'
+# look at plan defects
+print(paste('problems:',
+            inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
+# fix plan
 if(requireNamespace('igraph', quietly = TRUE)) {
-   sorted <- topoSortTables(columnJoinPlan, 'employeeAndDate')
-   print(inspectDescrAndJoinPlan(tDesc, sorted$columnJoinPlan))
+   sorted <- topoSortTables(columnJoinPlan, 'employeeanddate')
+   print(paste('problems:',
+               inspectDescrAndJoinPlan(tDesc, sorted$columnJoinPlan)))
    # plot(sorted$dependencyGraph)
 }
+DBI::dbDisconnect(my_db$con)
+my_db <- NULL
 
 }

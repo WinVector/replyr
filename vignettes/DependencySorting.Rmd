@@ -18,38 +18,7 @@ vignette: >
 my_db <- dplyr::src_sqlite(":memory:",
                            create = TRUE)
 
-DBI::dbExecute(my_db$con, "
-  CREATE TABLE employeeanddate (
-     id TEXT,
-     date INTEGER
-  );
-               ")
-DBI::dbExecute(my_db$con, "
-  CREATE TABLE orgtable (
-     eid TEXT,
-     date INTEGER,
-     dept TEXT,
-     location TEXT,
-     PRIMARY KEY (eid, date)
-  );
-               ")
-DBI::dbExecute(my_db$con, "
-  CREATE TABLE revenue (
-     date INTEGER,
-     dept TEXT,
-     rev INTEGER,
-     PRIMARY KEY (date, dept)
-  );
-               ")
-DBI::dbExecute(my_db$con, "
-  CREATE TABLE activity (
-     eid TEXT,
-     date INTEGER,
-     hours INTEGER,
-     location TEXT,
-     PRIMARY KEY (eid, date)
-  );
-               ")
+exDesc <- replyr:::example_employeeAndDate(my_db)
 ```
 
 Let's again discuss the task of left joining many tables from a data warehouse using [`R`](https://www.r-project.org) and a system called "a join controller" (last discussed [here](http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/)).
@@ -177,7 +146,8 @@ And the new `sorted$columnJoinPlan` is ready to be executed:
 
 ```{r steps}
 if(!is.null(sorted)) {
-  res <- executeLeftJoinPlan(tDesc, sorted$columnJoinPlan, dryRun = TRUE)
+  res <- executeLeftJoinPlan(tDesc, sorted$columnJoinPlan)
+  dplyr::glimpse(res)
 }
 ```
 

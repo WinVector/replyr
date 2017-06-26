@@ -23,6 +23,9 @@ table describing the data.
 Please see \url{http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/} for details.
 Note: one usually needs to alter the keys column which is just populated with all columns.
 }
+\details{
+Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
+}
 \examples{
 
 d <- data.frame(x=1:3, y=NA)

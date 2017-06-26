@@ -21,44 +21,38 @@ grViz diagram spec
 }
 \description{
 Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
+Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \examples{
 
 
-# note: employeeAndDate is likely built as a cross-product
+# note: employeeanddate is likely built as a cross-product
 #       join of an employee table and set of dates of interest
 #       before getting to the join controller step.  We call
 #       such a table "row control" or "experimental design."
-# Normally tDesc is produced by inspecting tables using
-# replyr::tableDescription() and then limiting the keys
-# column down to the correct specification.
-# For this example we just type tDesc in directly.
-tDesc <- data.frame(tableName= c('employeeAndDate',
-                                 'orgtable',
-                                 'revenue',
-                                 'activity'),
-                    handle= I(list(NULL, NULL, NULL, NULL)),
-                    columns= I(list(c('id', 'date'),
-                                  c('id', 'date', 'dept'),
-                                  c('date', 'dept', 'rev'),
-                                  c('id', 'date', 'hours'))),
-                    keys =  I(list(c('id'='id', 'date'='date'),
-                                 c('id'='id', 'date'='date'),
-                                 c('date'='date', 'dept'='dept'),
-                                 c('id'='id', 'date'='date'))),
-                    colClass= I(list(c('character', 'numeric'),
-                                   c('character', 'character', 'character'),
-                                   c('numeric', 'character', 'numeric'),
-                                   c('character', 'numeric', 'numeric'))),
-                    sourceClass= 'None',
-                    isEmpty= FALSE,
-                    stringsAsFactors = FALSE)
-diagramSpec <- makeJoinDiagramSpec(buildJoinPlan(tDesc))
+
+my_db <- dplyr::src_sqlite(":memory:",
+                           create = TRUE)
+tDesc <- replyr:::example_employeeAndDate(my_db)
+# fix order by hand, please see replyr::topoSortTables for
+# how to automate this.
+ord <- match(c('employeeanddate', 'orgtable', 'activity', 'revenue'),
+             tDesc$tableName)
+tDesc <- tDesc[ord, , drop=FALSE]
+columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
+# unify keys
+columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'
+# look at plan defects
+print(paste('problems:',
+            inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
+diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
 # to render as JavaScript:
 #   DiagrammeR::grViz(diagramSpec)
 # or as PNG:
 #   renderJoinDiagram(diagramSpec)
 #
+DBI::dbDisconnect(my_db$con)
+my_db <- NULL
 
 }
 \seealso{

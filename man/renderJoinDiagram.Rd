@@ -20,6 +20,7 @@ png rendering of diagram
 }
 \description{
 Requires packages \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} properly installed to use.
+Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \seealso{
 \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
