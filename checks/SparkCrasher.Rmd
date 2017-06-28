@@ -11,13 +11,18 @@ output: html_document
 # devtools::install_github("rstudio/sparklyr")
 # See also: https://github.com/rstudio/sparklyr/issues/721
 suppressPackageStartupMessages(library("dplyr"))
+library("sparklyr")
 
 devtools::session_info()
 
+# more memory as suggested in https://github.com/rstudio/sparklyr/issues/783
+config <- spark_config()
+config[["sparklyr.shell.driver-memory"]] <- "8G"
 
 sc <- sparklyr::spark_connect(version='2.1.0',
                               hadoop_version='2.7',
-                              master = "local")
+                              master = "local",
+                              config = config)
 print(sc)
 
 
