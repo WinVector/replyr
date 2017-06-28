@@ -466,7 +466,8 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
   if(!requireNamespace('igraph', quietly = TRUE)) {
     warning("topoSortTables: requres igraph to sort tables")
     return(list(columnJoinPlan= columnJoinPlan,
-                dependencyGraph= NULL))
+                dependencyGraph= NULL,
+                tableOrder= NULL))
   }
   g <- igraph::make_empty_graph()
   vnams <- sort(unique(columnJoinPlan$tableName))
@@ -500,7 +501,8 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
   tabs <- split(columnJoinPlan, columnJoinPlan$tableName)
   tabs <- tabs[tableOrder]
   list(columnJoinPlan= dplyr::bind_rows(tabs),
-       dependencyGraph= g)
+       dependencyGraph= g,
+       tableOrder= tableOrder)
 }
 
 #' Build a drawable specification of the join diagram
