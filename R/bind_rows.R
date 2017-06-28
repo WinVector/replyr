@@ -181,6 +181,9 @@ replyr_bind_rows <- function(lst,
   if(length(list(...))>0) {
     stop("replyr::replyr_bind_rows unexpected arguments")
   }
+  # sparklyr (post '0.5.6', at least '0.5.6.9008'
+  # has a new sdf_bind_rows function we could try to use on Spark sources (limit columns first)
+  # check: exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')
   if(length(lst)<=1) {
     if(length(lst)<=0) {
       return(NULL)
