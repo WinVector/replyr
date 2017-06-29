@@ -4,7 +4,7 @@
 \alias{replyr_bind_rows}
 \title{Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.}
 \usage{
-replyr_bind_rows(lst, ..., useLocalMethod = TRUE, useSparkMethod = TRUE,
+replyr_bind_rows(lst, ..., useLocalMethod = TRUE, useSparkMethod = FALSE,
   eagerTempRemoval = FALSE,
   tempNameGenerator = makeTempNameGenerator("replyr_bind_rows"))
 }
