@@ -108,6 +108,8 @@ replyr_coalesce <- function(data, support,
         replyr_private_name_additions <- dplyr::mutate(replyr_private_name_additions, NEWROWCOL= TRUE)
     )
   }
+  data <- compute(data, tempNameGenerator())
+  replyr_private_name_additions <- compute(replyr_private_name_additions, tempNameGenerator())
   # Can't use dplyr::bind_rows see https://github.com/WinVector/replyr/blob/master/issues/BindIssue.md
   res <- replyr::replyr_bind_rows(list(data, replyr_private_name_additions),
                                   tempNameGenerator=tempNameGenerator)

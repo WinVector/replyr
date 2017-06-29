@@ -28,7 +28,7 @@
 replyr_union_all <- function(tabA, tabB,
                              ...,
                              useLocalMethod= TRUE,
-                             useSparkMethod= TRUE,
+                             useSparkMethod= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_union_all")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_union_all unexpected arguments.")
@@ -166,6 +166,7 @@ r_replyr_bind_rows <- function(lst,
                                                       (!eagerTempRemoval),
                                                     publicTempNameGenerator,
                                                     privateTempNameGenerator))
+  res <- dplyr::compute(res)
   if(length(namesToNuke)>0) {
     src <- replyr_get_src(left)
     for(ni in namesToNuke) {
@@ -198,7 +199,7 @@ r_replyr_bind_rows <- function(lst,
 replyr_bind_rows <- function(lst,
                              ...,
                              useLocalMethod= TRUE,
-                             useSparkMethod= TRUE,
+                             useSparkMethod= FALSE,
                              eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
