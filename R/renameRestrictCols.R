@@ -100,11 +100,11 @@ replyr_mapRestrictCols <- function(x, nmap,
     stop("replyr::replyr_mapRestrictCols unexpected argument")
   }
   nmap <- as.list(nmap)
+  if(length(nmap)<=0) {
+    return(x)
+  }
   if(reverse) {
     nmap <- replyr_reverseMap(nmap)
-  }
-  if(length(nmap)<=0) {
-    stop("replyr::replyr_mapRestrictCols empty map")
   }
   if(length(unique(as.character(nmap)))!=length(nmap)) {
     stop("replyr::replyr_mapRestrictCols duplicate source columns (nmap values) in replyr_mapRestrictCols")

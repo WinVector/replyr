@@ -13,21 +13,22 @@
 #' @param tabA not-NULL table with at least 1 row.
 #' @param tabB not-NULL table with at least 1 row on same data source as tabA and commmon columns.
 #' @param ... force later arguments to be bound by name.
-#' @param cols list of column names to limit to (defaults to intersection), must be non-empty and contained in intersection.
 #' @param useLocalMethod logical if TRUE use dplyr for local data.
+#' @param useSparkMethod logical if TRUE try to use sdf_bind_rows on Sparklyr data
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return table with all rows of tabA and tabB (union_all).
 #'
 #' @examples
 #'
-#' d1 <- data.frame(x = c('a','b'), stringsAsFactors= FALSE)
-#' d2 <- data.frame(x = 'c', stringsAsFactors= FALSE)
+#' d1 <- data.frame(x = c('a','b'), y = 1, stringsAsFactors= FALSE)
+#' d2 <- data.frame(x = 'c', z = 1, stringsAsFactors= FALSE)
 #' replyr_union_all(d1, d2, useLocalMethod= FALSE)
 #'
 #' @export
-replyr_union_all <- function(tabA, tabB, ...,
-                             cols= NULL,
+replyr_union_all <- function(tabA, tabB,
+                             ...,
                              useLocalMethod= TRUE,
+                             useSparkMethod= TRUE,
                              tempNameGenerator= makeTempNameGenerator("replyr_union_all")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_union_all unexpected arguments.")
@@ -40,41 +41,45 @@ replyr_union_all <- function(tabA, tabB, ...,
   if(bHasRows) {
     tabB <- dplyr::ungroup(tabB)
   }
+  # work on some corners cases (being a bit more generous than the documentation)
   if((!aHasRows) && (!bHasRows)) {
     return(NULL)
   }
-  # work on some corners cases (being a bit more generous than the documentation)
   if(!aHasRows) {
-    if(!is.null(cols)) {
-      return(tabB %>% select(one_of(cols)))
-    }
     return(tabB)
   }
   if(!bHasRows) {
-    if(!is.null(cols)) {
-      return(tabA %>% select(one_of(cols)))
-    }
     return(tabA)
   }
-  if(is.null(cols)) {
-    cols <- intersect(colnames(tabA), colnames(tabB))
-  }
-  if(length(cols)<=0) {
-    stop("replyr::replyr_union_all empty column list")
-  }
+  # see if we can delegate
   if(useLocalMethod && replyr_is_local_data(tabA)) {
     # local, can use dplyr
-    return(dplyr::bind_rows(select(tabA, one_of(cols)) ,
-                            select(tabB, one_of(cols))))
+    return(dplyr::bind_rows(tabA, tabB))
+  }
+  if(useSparkMethod && replyr_is_Spark_data(tabA)) {
+    # sparklyr (post '0.5.6', at least '0.5.6.9008'
+    # has a new sdf_bind_rows function we could try to use on Spark sources (limit columns first)
+    if(requireNamespace('sparklyr', quietly = TRUE) &&
+       exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')) {
+      return(sparklyr::sdf_bind_rows(list(tabA, tabB)))
+    }
   }
   # build a new name disjoint from cols
-  mergeColName <- setdiff(
-    paste('REPLYRUNIONCOL', seq_len(length(cols)+1),sep= '_'),
-    cols)[[1]]
+  colsA <- colnames(tabA)
+  colsB <- colnames(tabB)
+  cols <- union(colsA, colsB)
+  mapA <- colsA
+  if(length(mapA)>0) {
+    names(mapA) <- paste(colsA, 'a', sep='_')
+  }
+  mapB <- colsB
+  if(length(mapB)) {
+    names(mapB) <- paste(colsB, 'b', sep='_')
+  }
   # build a 2-row table to control the union
-  controlTable <- data.frame(REPLYRUNIONCOL= c('a', 'b'),
+  side_x <- NULL # declare not an unbound reference
+  controlTable <- data.frame(side_x = c('a', 'b'),
                              stringsAsFactors = FALSE)
-  colnames(controlTable) <- mergeColName
   if(!replyr_is_local_data(tabA)) {
     sc <- replyr_get_src(tabA)
     controlTable <- replyr_copy_to(sc, controlTable,
@@ -83,39 +88,53 @@ replyr_union_all <- function(tabA, tabB, ...,
   }
   # decorate left and right tables for the merge
   tabA <- tabA %>%
-    select(one_of(cols)) %>%
-    addConstantColumn(mergeColName, 'a',
+    replyr_mapRestrictCols(mapA) %>%
+    addConstantColumn('side_x', 'a',
                       tempNameGenerator=tempNameGenerator)
   tabB <- tabB %>%
-    select(one_of(cols)) %>%
-    addConstantColumn(mergeColName, 'b',
+    replyr_mapRestrictCols(mapB) %>%
+    addConstantColumn('side_x', 'b',
                       tempNameGenerator=tempNameGenerator)
   # do the merges
   joined <- controlTable %>%
-    left_join(tabA, by=mergeColName) %>%
-    left_join(tabB, by=mergeColName, suffix = c('_a', '_b'))
+    left_join(tabA, by='side_x') %>%
+    left_join(tabB, by='side_x')
   # coalesce the values
   REPLYRCOLA <- NULL # mark as not an unbound reference
   REPLYRCOLB <- NULL # mark as not an unbound reference
   REPLYRORIGCOL <- NULL # mark as not an unbound reference
   REPLYRUNIONCOL <- NULL # mark as not an unbound reference
-  for(ci in cols) {
+  for(ci in intersect(colsA, colsB)) {
     wrapr::let(
       c(REPLYRCOLA= paste0(ci,'_a'),
         REPLYRCOLB= paste0(ci,'_b'),
-        REPLYRORIGCOL= ci,
-        REPLYRUNIONCOL= mergeColName),
+        REPLYRORIGCOL= ci),
       joined <- joined %>%
-        mutate(REPLYRORIGCOL = ifelse(REPLYRUNIONCOL=='a', REPLYRCOLA, REPLYRCOLB))
+        mutate(REPLYRORIGCOL = ifelse(side_x=='a', REPLYRCOLA, REPLYRCOLB)) %>%
+        select(-REPLYRCOLA, -REPLYRCOLB)
     )
   }
-  joined %>%
-    select(one_of(cols)) %>%
-    dplyr::compute(name=tempNameGenerator())
+  joined <-  joined %>%
+    select(-side_x)
+  # map remaining columns back
+  uniqueToA <- setdiff(colsA, colsB)
+  if(length(uniqueToA)>0) {
+    names(uniqueToA) <- paste(uniqueToA, 'a', sep='_')
+  }
+  uniqueToB <- setdiff(colsB, colsA)
+  if(length(uniqueToB)>0) {
+    names(uniqueToB) <- paste(uniqueToB, 'b', sep='_')
+  }
+  mapBack <- c(uniqueToA, uniqueToB)
+  if(length(mapBack)>0) {
+    joined <- replyr_mapRestrictCols(joined,
+                                     replyr_reverseMap(mapBack))
+  }
+  joined
 }
 
 # list length>=1 no null entries, doesn't return NULL
-r_replyr_bind_rows <- function(lst, colnames,
+r_replyr_bind_rows <- function(lst,
                                eagerTempRemoval, atTopLevel,
                                privateTempNameGenerator,
                                publicTempNameGenerator) {
@@ -130,10 +149,10 @@ r_replyr_bind_rows <- function(lst, colnames,
   mid <- floor(n/2)
   leftSeq <- 1:mid      # n>=2 so mid>=1
   rightSeq <- (mid+1):n # n>=2 so mid+1<=n
-  left <- r_replyr_bind_rows(lst[leftSeq], colnames,
+  left <- r_replyr_bind_rows(lst[leftSeq],
                              eagerTempRemoval, FALSE,
                              privateTempNameGenerator, publicTempNameGenerator)
-  right <- r_replyr_bind_rows(lst[rightSeq], colnames,
+  right <- r_replyr_bind_rows(lst[rightSeq],
                               eagerTempRemoval, FALSE,
                               privateTempNameGenerator, publicTempNameGenerator)
   namesToNuke <- NULL
@@ -141,8 +160,8 @@ r_replyr_bind_rows <- function(lst, colnames,
     namesToNuke <- privateTempNameGenerator(dumpList=TRUE)
   }
   res <- replyr_union_all(left, right,
-                          cols= colnames,
                           useLocalMethod= FALSE,
+                          useSparkMethod= FALSE,
                           tempNameGenerator= ifelse(atTopLevel ||
                                                       (!eagerTempRemoval),
                                                     publicTempNameGenerator,
@@ -164,6 +183,8 @@ r_replyr_bind_rows <- function(lst, colnames,
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @param ... force other arguments to be used by name
+#' @param useLocalMethod logical if TRUE use dplyr for local data.
+#' @param useSparkMethod logical if TRUE try to use sdf_bind_rows on Sparklyr data
 #' @param eagerTempRemoval logical if TRUE remove temps early.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
@@ -171,20 +192,18 @@ r_replyr_bind_rows <- function(lst, colnames,
 #' @examples
 #'
 #' d <- data.frame(x=1:2)
-#' replyr_bind_rows(list(d,d,d,d,d))
+#' replyr_bind_rows(list(d,d,d,d,d), useLocalMethod= FALSE)
 #'
 #' @export
 replyr_bind_rows <- function(lst,
                              ...,
+                             useLocalMethod= TRUE,
+                             useSparkMethod= TRUE,
                              eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_bind_rows unexpected arguments")
   }
-  # sparklyr (post '0.5.6', at least '0.5.6.9008'
-  # has a new sdf_bind_rows function we could try to use on Spark sources (limit columns first)
-  # check: exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')
-  # TODO: change this and union_all to union of columns from current intersection of columns.
   if(length(lst)<=1) {
     if(length(lst)<=0) {
       return(NULL)
@@ -200,11 +219,19 @@ replyr_bind_rows <- function(lst,
     return(lst[[1]])
   }
   names(lst) <- NULL
-  colnames <- Reduce(intersect, lapply(lst, colnames))
-  if(length(colnames)<=0) {
-    stop("replyr::replyr_bind_rows no common columns")
+  if(useLocalMethod && replyr_is_local_data(lst[[1]])) {
+    # local, can use dplyr
+    return(dplyr::bind_rows(lst))
   }
-  r_replyr_bind_rows(lst, colnames, eagerTempRemoval, TRUE,
+  if(useSparkMethod && replyr_is_Spark_data(lst[[1]])) {
+    # sparklyr (post '0.5.6', at least '0.5.6.9008'
+    # has a new sdf_bind_rows function we could try to use on Spark sources (limit columns first)
+    if(requireNamespace('sparklyr', quietly = TRUE) &&
+       exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')) {
+      return(sparklyr::sdf_bind_rows(lst))
+    }
+  }
+  r_replyr_bind_rows(lst, eagerTempRemoval, TRUE,
                      makeTempNameGenerator("bind_rows_priv"),
                      tempNameGenerator)
 }

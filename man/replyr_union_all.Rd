@@ -4,7 +4,8 @@
 \alias{replyr_union_all}
 \title{Union two tables.}
 \usage{
-replyr_union_all(tabA, tabB, ..., cols = NULL, useLocalMethod = TRUE,
+replyr_union_all(tabA, tabB, ..., useLocalMethod = TRUE,
+  useSparkMethod = TRUE,
   tempNameGenerator = makeTempNameGenerator("replyr_union_all"))
 }
 \arguments{
@@ -14,9 +15,9 @@ replyr_union_all(tabA, tabB, ..., cols = NULL, useLocalMethod = TRUE,
 
 \item{...}{force later arguments to be bound by name.}
 
-\item{cols}{list of column names to limit to (defaults to intersection), must be non-empty and contained in intersection.}
-
 \item{useLocalMethod}{logical if TRUE use dplyr for local data.}
+
+\item{useSparkMethod}{logical if TRUE try to use sdf_bind_rows on Sparklyr data}
 
 \item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
@@ -30,8 +31,8 @@ This is an attempt to provide a join-based replacement.
 }
 \examples{
 
-d1 <- data.frame(x = c('a','b'), stringsAsFactors= FALSE)
-d2 <- data.frame(x = 'c', stringsAsFactors= FALSE)
+d1 <- data.frame(x = c('a','b'), y = 1, stringsAsFactors= FALSE)
+d2 <- data.frame(x = 'c', z = 1, stringsAsFactors= FALSE)
 replyr_union_all(d1, d2, useLocalMethod= FALSE)
 
 }
