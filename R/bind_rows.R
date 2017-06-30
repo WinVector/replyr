@@ -28,7 +28,7 @@
 replyr_union_all <- function(tabA, tabB,
                              ...,
                              useLocalMethod= TRUE,
-                             useSparkMethod= FALSE, # https://github.com/rstudio/sparklyr/issues/804
+                             useSparkMethod= TRUE,
                              tempNameGenerator= makeTempNameGenerator("replyr_union_all")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_union_all unexpected arguments.")
@@ -199,7 +199,7 @@ r_replyr_bind_rows <- function(lst,
 replyr_bind_rows <- function(lst,
                              ...,
                              useLocalMethod= TRUE,
-                             useSparkMethod= FALSE, # https://github.com/rstudio/sparklyr/issues/804
+                             useSparkMethod= TRUE,
                              eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {

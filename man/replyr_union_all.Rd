@@ -5,7 +5,7 @@
 \title{Union two tables.}
 \usage{
 replyr_union_all(tabA, tabB, ..., useLocalMethod = TRUE,
-  useSparkMethod = FALSE,
+  useSparkMethod = TRUE,
   tempNameGenerator = makeTempNameGenerator("replyr_union_all"))
 }
 \arguments{

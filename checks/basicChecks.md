@@ -19,11 +19,11 @@ library('sparklyr')
  #  
  #      top_n
 packageVersion("sparklyr")
- #  [1] '0.5.6.9004'
+ #  [1] '0.5.6.9010'
 if(requireNamespace("dbplyr", quietly = TRUE)) {
   packageVersion("dbplyr")
 }
- #  [1] '1.0.0.9000'
+ #  [1] '1.1.0.9000'
 R.Version()$version.string
  #  [1] "R version 3.4.0 (2017-04-21)"
 packageVersion("replyr")
@@ -506,7 +506,7 @@ resSQLite <- runExample(copyToRemote)
  #  [1] "a" "c"
  #  
  #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
- #  # Source:   table<replyr_filter_QCwOK5gKGwL0GGeRUf2G_0000000001> [?? x 2]
+ #  # Source:   table<replyr_filter_0R9HPX1pQf5VK7XXEYv6_0000000001> [?? x 2]
  #  # Database: sqlite 3.11.1 [:memory:]
  #        x     y
  #    <chr> <int>
@@ -551,7 +551,7 @@ resSQLite <- runExample(copyToRemote)
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
  #  [1] "coalesce example 1"
- #  # Source:     table<sxtbmnbzrz> [?? x 3]
+ #  # Source:     table<mybvcsdyjz> [?? x 3]
  #  # Database:   sqlite 3.11.1 [:memory:]
  #  # Ordered by: year, name
  #     year count  name
@@ -563,7 +563,7 @@ resSQLite <- runExample(copyToRemote)
  #  5  2009     0      
  #  6  2010    NA     c
  #  [1] "coalesce example 2"
- #  # Source:     table<fspjbcjnfx> [?? x 3]
+ #  # Source:     table<fxgrnmhkjg> [?? x 3]
  #  # Database:   sqlite 3.11.1 [:memory:]
  #  # Ordered by: year, name
  #      year count  name
@@ -580,7 +580,7 @@ resSQLite <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
- #  # Source:     table<urxbutjrlb> [?? x 3]
+ #  # Source:     table<ijnskhiglw> [?? x 3]
  #  # Database:   sqlite 3.11.1 [:memory:]
  #  # Ordered by: year
  #     year count  name
@@ -589,7 +589,7 @@ resSQLite <- runExample(copyToRemote)
  #  2  2007     1     b
  #  3  2010    NA     c
  #  [1] "gapply"
- #  # Source:     table<sadryhngvz> [?? x 2]
+ #  # Source:     table<flgckhqoye> [?? x 2]
  #  # Database:   sqlite 3.11.1 [:memory:]
  #  # Ordered by: group
  #       cv group
@@ -597,7 +597,7 @@ resSQLite <- runExample(copyToRemote)
  #  1    20     1
  #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
- #  # Source:     table<replyr_moveValuesToColumns_R3dJ6KtUKmouzXs7jO9i_0000000003> [?? x 3]
+ #  # Source:     table<replyr_moveValuesToColumns_IAYt4dtPZVOGzYpbGkVw_0000000003> [?? x 3]
  #  # Database:   sqlite 3.11.1 [:memory:]
  #  # Ordered by: index
  #    index meastype_meas1 meastype_meas2
@@ -606,7 +606,7 @@ resSQLite <- runExample(copyToRemote)
  #  2     2           m1_2           m2_2
  #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
- #  # Source:     table<ljqjlufzdo> [?? x 4]
+ #  # Source:     table<ezftjhdhcu> [?? x 4]
  #  # Database:   sqlite 3.11.1 [:memory:]
  #  # Ordered by: index, meastype
  #    index  info meastype  meas
@@ -625,8 +625,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #  Auto-disconnecting SQLiteConnection
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  825359 44.1    1442291 77.1  1442291 77.1
- #  Vcells 1567368 12.0    2552219 19.5  1997447 15.3
+ #  Ncells  825309 44.1    1442291 77.1  1442291 77.1
+ #  Vcells 1567033 12.0    2552219 19.5  1987070 15.2
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -759,120 +759,7 @@ resSpark <- runExample(copyToRemote)
  #  2     2     5     a
  #  3     3   NaN     z
  #  
- #  d2 %>% replyr::replyr_quantile("x")
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
+ #  d2 %>% replyr::replyr_quantile("x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
@@ -889,120 +776,7 @@ resSpark <- runExample(copyToRemote)
  #  2     2     5     a
  #  3     3   NaN     z
  #  
- #  d2b %>% replyr::replyr_quantile("x")
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
+ #  d2b %>% replyr::replyr_quantile("x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
@@ -1024,7 +798,7 @@ resSpark <- runExample(copyToRemote)
  #  [1] "a" "c"
  #  
  #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
- #  # Source:   table<replyr_filter_58Zz0thBGMkYfazdE8ie_0000000001> [?? x 2]
+ #  # Source:   table<replyr_filter_oeWcCVDceC0lZBmnZmbT_0000000001> [?? x 2]
  #  # Database: spark_connection
  #        x     y
  #    <chr> <int>
@@ -1033,12 +807,7 @@ resSpark <- runExample(copyToRemote)
  #  3     c     5
  #  4     c     6
  #  
- #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE)
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
+ #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
  #  # Source:   lazy query [?? x 3]
  #  # Database: spark_connection
  #        x     y match
@@ -1058,18 +827,7 @@ resSpark <- runExample(copyToRemote)
  #  3     3
  #  4     3
  #  
- #  d4 %>% replyr::replyr_uniqueValues("x")
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
+ #  d4 %>% replyr::replyr_uniqueValues("x") 
  #  # Source:   lazy query [?? x 2]
  #  # Database: spark_connection
  #        x replyr_private_value_n
@@ -1078,11 +836,6 @@ resSpark <- runExample(copyToRemote)
  #  2     3                      2
  #  3     2                      1
  #  [1] "let example"
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
  #  # Source:   lazy query [?? x 4]
  #  # Database: spark_connection
  #    Sepal_Length Sepal_Width Species  rank
@@ -1090,33 +843,7 @@ resSpark <- runExample(copyToRemote)
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
  #  [1] "coalesce example 1"
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
- #  # Source:     table<tuiqjggjpr> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_12b3b6f9b4103> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year, name
  #     year count  name
@@ -1128,30 +855,7 @@ resSpark <- runExample(copyToRemote)
  #  5  2009     0      
  #  6  2010   NaN     c
  #  [1] "coalesce example 2"
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
- #  # Source:     table<yrgsmiyqry> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_12b3b57c1b6fa> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year, name
  #      year count  name
@@ -1168,48 +872,7 @@ resSpark <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with 14 more rows
  #  [1] "split re-join"
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
- #  # Source:     table<vcjcxwagnl> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_12b3b255da431> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year
  #     year count  name
@@ -1218,48 +881,7 @@ resSpark <- runExample(copyToRemote)
  #  2  2007     1     b
  #  3  2010   NaN     c
  #  [1] "gapply"
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
- #  # Source:     table<zvjrendiea> [?? x 2]
+ #  # Source:     table<sparklyr_tmp_12b3b71f3f303> [?? x 2]
  #  # Database:   spark_connection
  #  # Ordered by: group
  #       cv group
@@ -1267,48 +889,7 @@ resSpark <- runExample(copyToRemote)
  #  1    20     1
  #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
- #  # Source:     table<replyr_moveValuesToColumns_rvDLvkyz4AO0hLOtQVtW_0000000003> [?? x 3]
+ #  # Source:     table<replyr_moveValuesToColumns_88im4nydgIlPgKgnG2Ir_0000000003> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: index
  #    index meastype_meas1 meastype_meas2
@@ -1317,42 +898,7 @@ resSpark <- runExample(copyToRemote)
  #  2     2           m1_2           m2_2
  #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
- #  # Source:     table<dwitpsywyt> [?? x 4]
+ #  # Source:     table<sparklyr_tmp_12b3b2c4e7c74> [?? x 4]
  #  # Database:   spark_connection
  #  # Ordered by: index, meastype
  #    index  info meastype  meas
@@ -1363,34 +909,14 @@ resSpark <- runExample(copyToRemote)
  #  4     2     b    meas2  m2_2
  #  5     3     c    meas1  m1_3
  #  6     3     c    meas2  m2_3
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
-
- #  Warning: Translator is missing window functions:
- #  cor, count, cov, n_distinct, sd
 if(!listsOfSameData(resBase, resSpark)) {
   stop("Spark result differs")
 }
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  880319 47.1    1442291 77.1  1442291 77.1
- #  Vcells 1638612 12.6    3142662 24.0  2059850 15.8
+ #  Ncells  879103 47.0    1442291 77.1  1442291 77.1
+ #  Vcells 1640747 12.6    3142662 24.0  2060742 15.8
 ```
 
 ``` r
@@ -1399,6 +925,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  877953 46.9    1442291 77.1  1442291 77.1
- #  Vcells 1636758 12.5    3142662 24.0  2059850 15.8
+ #  Ncells  876412 46.9    1442291 77.1  1442291 77.1
+ #  Vcells 1632144 12.5    3142662 24.0  2060742 15.8
 ```
