@@ -6,6 +6,8 @@ Introduction
 
 It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https://CRAN.R-project.org/package=dplyr) users when they switch from using a `tbl` implementation based on R in-memory `data.frame`s to one based on a remote database or service. A lot of the power and convenience of the `dplyr` notation is hard to maintain with these more restricted data service providers. Things that work locally can't always be used remotely at scale. It is emphatically not yet the case that one can practice with `dplyr` in one modality and hope to move to another back-end without significant debugging and work-arounds. The [`replyr`](https://github.com/WinVector/replyr) package attempts to provide practical data manipulation affordances to make code perform similarly on local or remote (big) data.
 
+Note: `replyr` is meant only for "tame data frames" that is data frames with non-duplicate column names that are also valid *simple* (without quotes) `R` variables names and columns that are `R` simple vector types (numbers, strings, and such).
+
 ![](tools/replyrs.png)
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
@@ -242,8 +244,8 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_kTvQOahYLbxzTIR9IqdL_0000000001> [?? x 3]
- #  # Database: sqlite 3.11.1 [:memory:]
+ #  # Source:   table<replyr_filter_YquFZv6WMOnisBEQdjro_0000000001> [?? x 3]
+ #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y     z
  #    <dbl> <dbl> <chr>
  #  1     2     5     a
@@ -302,6 +304,6 @@ rm(list=ls())
 gc()
  #  Auto-disconnecting SQLiteConnection
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  663357 35.5    1168576 62.5   940480 50.3
- #  Vcells 1344610 10.3    2552219 19.5  1718113 13.2
+ #  Ncells  682359 36.5    1168576 62.5   940480 50.3
+ #  Vcells 1369324 10.5    2552219 19.5  1799453 13.8
 ```
