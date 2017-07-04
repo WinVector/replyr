@@ -131,7 +131,8 @@ if(!is.null(sorted)) {
   if(all(have)) {
     diagramPNG <- sorted$columnJoinPlan %>%
       makeJoinDiagramSpec() %>%
-      renderJoinDiagram(pngFileName = pngFileName)
+      renderJoinDiagram() %>%
+      convertDiagrameToPNG(pngFileName = pngFileName)
   }
 }
 ```
@@ -162,7 +163,7 @@ And this is how we use tools to do the heavy lifting in building a left join pla
   * The column names can be disambiguated by `replyr::buildJoinPlan()`.
   * The user can then export `columnJoinPlan` and refine the definition of table keys using an editor or spreadsheet software.  This is key documentation that should be shared with other groups and kept under source-control.
   * `replyr::topoSortTables()` can then reorder `columnJoinPlan` to bring the tables together in a realizable order.
-  * `replyr::makeJoinDiagramSpec() %>% replyr::renderJoinDiagram()` can then produce and capture a detailed diagram of the final join plan.
+  * `replyr::makeJoinDiagramSpec() %>% replyr::renderJoinDiagram() %>% convertDiagrameToPNG()` can then produce and capture a detailed diagram of the final join plan.
   * Finally `replyr::executeLeftJoinPlan()` can execute the join plan with diagnostics.
 
 ```{r cleanup}

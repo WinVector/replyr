@@ -4,24 +4,20 @@
 \alias{renderJoinDiagram}
 \title{Render a diagram spec from \code{\link{makeJoinDiagramSpec}} as a PNG graphics item.}
 \usage{
-renderJoinDiagram(diagramSpec, ..., pngFileName = NULL, tempDir = tempdir())
+renderJoinDiagram(diagramSpec, ...)
 }
 \arguments{
 \item{diagramSpec}{diagram specification from \code{\link{makeJoinDiagramSpec}}.}
 
 \item{...}{force later arguments to bind by name.}
-
-\item{pngFileName}{optional, file path where to save the PNG.}
-
-\item{tempDir}{directory to create temporary files in (not deleted by this method).}
 }
 \value{
-png rendering of diagram
+DiagrammeR::grViz result
 }
 \description{
-Requires packages \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} properly installed to use.
+Requires packages \code{DiagrammeR} properly installed to use.
 Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \seealso{
-\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
+\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}, \code{\link{convertDiagrameToPNG}}
 }

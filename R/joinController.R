@@ -644,14 +644,53 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 }
 
 
+
+
+
 #' Render a diagram spec from \code{\link{makeJoinDiagramSpec}} as a PNG graphics item.
+#'
+#' Requires packages \code{DiagrammeR} properly installed to use.
+#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
+#'
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}, \code{\link{convertDiagrameToPNG}}
+#'
+#' @param diagramSpec diagram specification from \code{\link{makeJoinDiagramSpec}}.
+#' @param ... force later arguments to bind by name.
+#' @return DiagrammeR::grViz result
+#'
+#'
+#' @export
+#'
+#'
+renderJoinDiagram <- function(diagramSpec,
+                              ...) {
+  needs <- c('DiagrammeR')
+  have <- vapply(needs,
+                 function(pi) {
+                   requireNamespace(pi, quietly = TRUE)
+                 }, logical(1))
+  if(any(!have)) {
+    warning(paste("replyr::renderJoinDiagram needs all of the packages: ",
+                  paste(needs, collapse = ', '),
+                  "installed and does not have:",
+                  paste(needs[!have], collapse = ', ')))
+    return(NULL)
+  }
+  diagram <- DiagrammeR::grViz(diagramSpec)
+  diagram
+}
+
+
+
+#' Convert a renderJoinDiagram \code{\link{renderJoinDiagram}} result to a PNG graphics item.
 #'
 #' Requires packages \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} properly installed to use.
 #' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
-#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
+#' @seealso \code{\link{renderJoinDiagram}}
 #'
-#' @param diagramSpec diagram specification from \code{\link{makeJoinDiagramSpec}}.
+#'
+#' @param diagram DiagrammeR::grViz result
 #' @param ... force later arguments to bind by name.
 #' @param pngFileName optional, file path where to save the PNG.
 #' @param tempDir directory to create temporary files in (not deleted by this method).
@@ -660,18 +699,17 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 #'
 #' @export
 #'
-#'
-renderJoinDiagram <- function(diagramSpec,
+convertDiagrameToPNG <- function(diagram,
                               ...,
                               pngFileName= NULL,
                               tempDir= tempdir()) {
-  needs <- c('DiagrammeR', 'htmlwidgets', 'webshot', 'magick')
+  needs <- c('DiagrammeR', 'htmlwidgets', 'webshot', 'magick' )
   have <- vapply(needs,
                  function(pi) {
                    requireNamespace(pi, quietly = TRUE)
                  }, logical(1))
   if(any(!have)) {
-    warning(paste("replyr::saveDiagramAsPNG needs all of the packages: ",
+    warning(paste("replyr::convertDiagrameToPNG needs all of the packages: ",
                   paste(needs, collapse = ', '),
                   "installed and does not have:",
                   paste(needs[!have], collapse = ', ')))
@@ -679,10 +717,9 @@ renderJoinDiagram <- function(diagramSpec,
   }
   tempPath <- paste(tempDir, 'joinPlanTemp.html', sep= '/')
   pngTempFileName <- paste(tempDir, 'joinPlanTemp.png', sep= '/')
-  diagram <- DiagrammeR::grViz(diagramSpec)
   htmlwidgets::saveWidget(diagram, tempPath, selfcontained = FALSE)
   webshot::webshot(tempPath, file = pngTempFileName,
-          cliprect = "viewport")
+                   cliprect = "viewport")
   img <- magick::image_read(pngTempFileName)
   img <- magick::image_trim(img)
   if(!is.null(pngFileName)) {
@@ -693,7 +730,6 @@ renderJoinDiagram <- function(diagramSpec,
   #   unlink(tempDir, recursive = TRUE)
   img
 }
-
 
 #' check that a join plan is consistent with table descriptions
 #'

@@ -208,7 +208,8 @@ have <- c(
 if(all(have)) {
   diagramPNG <- columnJoinPlan %>%
     makeJoinDiagramSpec() %>%
-    renderJoinDiagram(pngFileName = pngFileName)
+    renderJoinDiagram() %>%
+    convertDiagrameToPNG(pngFileName = pngFileName)
 }
 ```
 
