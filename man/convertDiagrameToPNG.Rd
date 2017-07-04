@@ -7,7 +7,7 @@
 convertDiagrameToPNG(diagram, ..., pngFileName = NULL, tempDir = tempdir())
 }
 \arguments{
-\item{diagram}{DiagrammeR::grViz result}
+\item{diagram}{DiagrammeR::grViz result (please see replyr::renderJoinDiagram)}
 
 \item{...}{force later arguments to bind by name.}
 

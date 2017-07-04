@@ -690,7 +690,7 @@ renderJoinDiagram <- function(diagramSpec,
 #' @seealso \code{\link{renderJoinDiagram}}
 #'
 #'
-#' @param diagram DiagrammeR::grViz result
+#' @param diagram DiagrammeR::grViz result (please see replyr::renderJoinDiagram)
 #' @param ... force later arguments to bind by name.
 #' @param pngFileName optional, file path where to save the PNG.
 #' @param tempDir directory to create temporary files in (not deleted by this method).
