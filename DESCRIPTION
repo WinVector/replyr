@@ -33,3 +33,4 @@ Suggests: testthat,
     webshot,
     magick
 VignetteBuilder: knitr
+ByteCompile: true
