@@ -57,7 +57,7 @@ replyr_union_all <- function(tabA, tabB,
     return(dplyr::bind_rows(tabA, tabB))
   }
   if(useSparkMethod && replyr_is_Spark_data(tabA)) {
-    # sparklyr (post '0.5.6', at least '0.5.6.9008'
+    # sparklyr (post '0.5.6', at least '0.5.6.9008')
     # has a new sdf_bind_rows function we could try to use on Spark sources (limit columns first)
     if(requireNamespace('sparklyr', quietly = TRUE) &&
        exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')) {
