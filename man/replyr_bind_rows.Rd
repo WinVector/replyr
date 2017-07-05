@@ -15,7 +15,7 @@ replyr_bind_rows(lst, ..., useLocalMethod = TRUE, useSparkMethod = TRUE,
 
 \item{useLocalMethod}{logical if TRUE use dplyr for local data.}
 
-\item{useSparkMethod}{logical if TRUE try to use sdf_bind_rows on Sparklyr data}
+\item{useSparkMethod}{logical if TRUE try to use sparklyr::sdf_bind_rows on Sparklyr data}
 
 \item{eagerTempRemoval}{logical if TRUE remove temps early.}
 

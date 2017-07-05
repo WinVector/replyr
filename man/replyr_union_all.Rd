@@ -17,7 +17,7 @@ replyr_union_all(tabA, tabB, ..., useLocalMethod = TRUE,
 
 \item{useLocalMethod}{logical if TRUE use dplyr for local data.}
 
-\item{useSparkMethod}{logical if TRUE try to use sdf_bind_rows on Sparklyr data}
+\item{useSparkMethod}{logical if TRUE try to use sparklyr::sdf_bind_rows on Sparklyr data}
 
 \item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }

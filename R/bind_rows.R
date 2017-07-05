@@ -14,7 +14,7 @@
 #' @param tabB not-NULL table with at least 1 row on same data source as tabA and commmon columns.
 #' @param ... force later arguments to be bound by name.
 #' @param useLocalMethod logical if TRUE use dplyr for local data.
-#' @param useSparkMethod logical if TRUE try to use sdf_bind_rows on Sparklyr data
+#' @param useSparkMethod logical if TRUE try to use sparklyr::sdf_bind_rows on Sparklyr data
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return table with all rows of tabA and tabB (union_all).
 #'
@@ -185,7 +185,7 @@ r_replyr_bind_rows <- function(lst,
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @param ... force other arguments to be used by name
 #' @param useLocalMethod logical if TRUE use dplyr for local data.
-#' @param useSparkMethod logical if TRUE try to use sdf_bind_rows on Sparklyr data
+#' @param useSparkMethod logical if TRUE try to use sparklyr::sdf_bind_rows on Sparklyr data
 #' @param eagerTempRemoval logical if TRUE remove temps early.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
