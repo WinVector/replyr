@@ -20,7 +20,6 @@ makeJoinDiagramSpec(columnJoinPlan, ..., groupByKeys = TRUE,
 grViz diagram spec
 }
 \description{
-Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
 Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \examples{

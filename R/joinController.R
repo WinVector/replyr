@@ -507,7 +507,6 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 
 #' Build a drawable specification of the join diagram
 #'
-#' Some examples and instructions on how to save as png files can be found here: \url{https://github.com/WinVector/replyr/blob/master/extras/graphViz.md}.
 #' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}

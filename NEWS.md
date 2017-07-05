@@ -1,5 +1,5 @@
 
-'replyr' 0.4.1 2017-06-14
+'replyr' 0.4.1 2017-07-05
 
  * fix spelling of tableDescription()
  * add diagrams to join controller.
