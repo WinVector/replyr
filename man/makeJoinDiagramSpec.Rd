@@ -47,7 +47,7 @@ print(paste('problems:',
 diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
 # to render as JavaScript:
 #   DiagrammeR::grViz(diagramSpec)
-# or as PNG:
+# or as a PNG:
 #   renderJoinDiagram(diagramSpec)
 #
 DBI::dbDisconnect(my_db$con)

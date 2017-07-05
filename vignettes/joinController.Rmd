@@ -196,28 +196,22 @@ The join plan is the neglected (and often missing) piece of documentation key to
 As a diagram the key structure of the join plan looks like the following:
 
 ```{r render1}
-pngFileName <- 'jPlanController.png'
-diagramPNG <- NULL
 # requireNamespace checks just for strict warning hygiene in vignette
 have <- c(
   requireNamespace('DiagrammeR', quietly = TRUE),
   requireNamespace('htmlwidgets', quietly = TRUE),
   requireNamespace('webshot', quietly = TRUE),
-  requireNamespace('magick', quietly = TRUE)
+  requireNamespace('magick', quietly = TRUE),
+  requireNamespace('grid', quietly = TRUE)
 )
 if(all(have)) {
-  diagramPNG <- columnJoinPlan %>%
+  columnJoinPlan %>%
     makeJoinDiagramSpec() %>%
     renderJoinDiagram() %>%
-    convertDiagrameToPNG(pngFileName = pngFileName)
+    grid::grid.raster()
 }
 ```
 
-```{r showimg, results='asis', echo=FALSE}
-if(!is.null(diagramPNG)) {
-  cat(paste0('<center><img src="', pngFileName, '" width="600" border="0"></center>'))
-}
-```
 
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 

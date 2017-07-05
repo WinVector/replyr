@@ -542,7 +542,7 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #' diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
 #' # to render as JavaScript:
 #' #   DiagrammeR::grViz(diagramSpec)
-#' # or as PNG:
+#' # or as a PNG:
 #' #   renderJoinDiagram(diagramSpec)
 #' #
 #' DBI::dbDisconnect(my_db$con)
@@ -651,19 +651,25 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 #' Requires packages \code{DiagrammeR} properly installed to use.
 #' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
+#' This PNG can be smaller than directly including a grViz rendering in markdown.
+#'
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}, \code{\link{convertDiagrameToPNG}}
 #'
 #' @param diagramSpec diagram specification from \code{\link{makeJoinDiagramSpec}}.
 #' @param ... force later arguments to bind by name.
-#' @return DiagrammeR::grViz result
+#' @param pngFileName character, if not null where to write PNG
+#' @param tempDir character, if not null tempDir to create/use
+#' @return DiagrammeR::grViz result as a PNG
 #'
 #'
 #' @export
 #'
 #'
 renderJoinDiagram <- function(diagramSpec,
-                              ...) {
-  needs <- c('DiagrammeR')
+                              ...,
+                              pngFileName = NULL,
+                              tempDir = tempdir()) {
+  needs <- c('DiagrammeR', 'htmlwidgets', 'webshot', 'magick' )
   have <- vapply(needs,
                  function(pi) {
                    requireNamespace(pi, quietly = TRUE)
@@ -676,7 +682,20 @@ renderJoinDiagram <- function(diagramSpec,
     return(NULL)
   }
   diagram <- DiagrammeR::grViz(diagramSpec)
-  diagram
+  tempPath <- paste(tempDir, 'joinPlanTemp.html', sep= '/')
+  pngTempFileName <- paste(tempDir, 'joinPlanTemp.png', sep= '/')
+  htmlwidgets::saveWidget(diagram, tempPath, selfcontained = FALSE)
+  webshot::webshot(tempPath, file = pngTempFileName,
+                   cliprect = "viewport")
+  img <- magick::image_read(pngTempFileName)
+  img <- magick::image_trim(img)
+  if(!is.null(pngFileName)) {
+    magick::image_write(img, path = pngFileName, format = "png")
+  }
+  # # intentionally not removing the temp directory, as it could be dangerous
+  # # Command would be:
+  #   unlink(tempDir, recursive = TRUE)
+  img
 }
 
 
@@ -702,32 +721,7 @@ convertDiagrameToPNG <- function(diagram,
                               ...,
                               pngFileName= NULL,
                               tempDir= tempdir()) {
-  needs <- c('DiagrammeR', 'htmlwidgets', 'webshot', 'magick' )
-  have <- vapply(needs,
-                 function(pi) {
-                   requireNamespace(pi, quietly = TRUE)
-                 }, logical(1))
-  if(any(!have)) {
-    warning(paste("replyr::convertDiagrameToPNG needs all of the packages: ",
-                  paste(needs, collapse = ', '),
-                  "installed and does not have:",
-                  paste(needs[!have], collapse = ', ')))
-    return(NULL)
-  }
-  tempPath <- paste(tempDir, 'joinPlanTemp.html', sep= '/')
-  pngTempFileName <- paste(tempDir, 'joinPlanTemp.png', sep= '/')
-  htmlwidgets::saveWidget(diagram, tempPath, selfcontained = FALSE)
-  webshot::webshot(tempPath, file = pngTempFileName,
-                   cliprect = "viewport")
-  img <- magick::image_read(pngTempFileName)
-  img <- magick::image_trim(img)
-  if(!is.null(pngFileName)) {
-    magick::image_write(img, path = pngFileName, format = "png")
-  }
-  # # intentionally not removing the temp directory, as it could be dangerous
-  # # Command would be:
-  #   unlink(tempDir, recursive = TRUE)
-  img
+
 }
 
 #' check that a join plan is consistent with table descriptions
