@@ -4,7 +4,7 @@
 \alias{replyr_bind_rows}
 \title{Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.}
 \usage{
-replyr_bind_rows(lst, ..., useLocalMethod = TRUE, useSparkMethod = TRUE,
+replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
   eagerTempRemoval = FALSE,
   tempNameGenerator = makeTempNameGenerator("replyr_bind_rows"))
 }
@@ -13,9 +13,9 @@ replyr_bind_rows(lst, ..., useLocalMethod = TRUE, useSparkMethod = TRUE,
 
 \item{...}{force other arguments to be used by name}
 
-\item{useLocalMethod}{logical if TRUE use dplyr for local data.}
+\item{useDplyrLocal}{logical if TRUE use dplyr for local data.}
 
-\item{useSparkMethod}{logical if TRUE try to use sparklyr::sdf_bind_rows on Sparklyr data}
+\item{useSparkRbind}{logical if TRUE try to use rbind on Sparklyr data}
 
 \item{eagerTempRemoval}{logical if TRUE remove temps early.}
 
@@ -31,6 +31,6 @@ Can't set \code{eagerTempRemoval=TRUE} on platforms that don't correctly impleme
 \examples{
 
 d <- data.frame(x=1:2)
-replyr_bind_rows(list(d,d,d,d,d), useLocalMethod= FALSE)
+replyr_bind_rows(list(d,d,d,d,d), useDplyrLocal= FALSE)
 
 }

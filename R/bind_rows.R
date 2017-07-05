@@ -13,8 +13,8 @@
 #' @param tabA not-NULL table with at least 1 row.
 #' @param tabB not-NULL table with at least 1 row on same data source as tabA and commmon columns.
 #' @param ... force later arguments to be bound by name.
-#' @param useLocalMethod logical if TRUE use dplyr for local data.
-#' @param useSparkMethod logical if TRUE try to use sparklyr::sdf_bind_rows on Sparklyr data
+#' @param useDplyrLocal logical if TRUE use dplyr::bind_rows for local data.
+#' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return table with all rows of tabA and tabB (union_all).
 #'
@@ -22,13 +22,13 @@
 #'
 #' d1 <- data.frame(x = c('a','b'), y = 1, stringsAsFactors= FALSE)
 #' d2 <- data.frame(x = 'c', z = 1, stringsAsFactors= FALSE)
-#' replyr_union_all(d1, d2, useLocalMethod= FALSE)
+#' replyr_union_all(d1, d2, useDplyrLocal= FALSE)
 #'
 #' @export
 replyr_union_all <- function(tabA, tabB,
                              ...,
-                             useLocalMethod= TRUE,
-                             useSparkMethod= TRUE,
+                             useDplyrLocal= TRUE,
+                             useSparkRbind= TRUE,
                              tempNameGenerator= makeTempNameGenerator("replyr_union_all")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_union_all unexpected arguments.")
@@ -52,16 +52,19 @@ replyr_union_all <- function(tabA, tabB,
     return(tabA)
   }
   # see if we can delegate
-  if(useLocalMethod && replyr_is_local_data(tabA)) {
+  if(useDplyrLocal && replyr_is_local_data(tabA)) {
     # local, can use dplyr
     return(dplyr::bind_rows(tabA, tabB))
   }
-  if(useSparkMethod && replyr_is_Spark_data(tabA)) {
+  if(useSparkRbind && replyr_is_Spark_data(tabA)) {
     # sparklyr (post '0.5.6', at least '0.5.6.9008')
-    # has a new sdf_bind_rows function we could try to use on Spark sources (limit columns first)
+    # has a new sdf_bind_rows function we could try to use on Spark sources
+    # (limit columns first).
+    # using existince of sparklyr::sdf_bind_rows as evidence that rbind
+    # is correctly overloaded for sparklyr.
     if(requireNamespace('sparklyr', quietly = TRUE) &&
        exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')) {
-      return(sparklyr::sdf_bind_rows(list(tabA, tabB)))
+      return(rbind(tabA, tabB))
     }
   }
   # build a new name disjoint from cols
@@ -160,8 +163,8 @@ r_replyr_bind_rows <- function(lst,
     namesToNuke <- privateTempNameGenerator(dumpList=TRUE)
   }
   res <- replyr_union_all(left, right,
-                          useLocalMethod= FALSE,
-                          useSparkMethod= FALSE,
+                          useDplyrLocal= FALSE,
+                          useSparkRbind= FALSE,
                           tempNameGenerator= ifelse(atTopLevel ||
                                                       (!eagerTempRemoval),
                                                     publicTempNameGenerator,
@@ -184,8 +187,8 @@ r_replyr_bind_rows <- function(lst,
 #'
 #' @param lst list of items to combine, must be all in same dplyr data service
 #' @param ... force other arguments to be used by name
-#' @param useLocalMethod logical if TRUE use dplyr for local data.
-#' @param useSparkMethod logical if TRUE try to use sparklyr::sdf_bind_rows on Sparklyr data
+#' @param useDplyrLocal logical if TRUE use dplyr for local data.
+#' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
 #' @param eagerTempRemoval logical if TRUE remove temps early.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
@@ -193,13 +196,13 @@ r_replyr_bind_rows <- function(lst,
 #' @examples
 #'
 #' d <- data.frame(x=1:2)
-#' replyr_bind_rows(list(d,d,d,d,d), useLocalMethod= FALSE)
+#' replyr_bind_rows(list(d,d,d,d,d), useDplyrLocal= FALSE)
 #'
 #' @export
 replyr_bind_rows <- function(lst,
                              ...,
-                             useLocalMethod= TRUE,
-                             useSparkMethod= TRUE,
+                             useDplyrLocal= TRUE,
+                             useSparkRbind= TRUE,
                              eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
@@ -220,16 +223,19 @@ replyr_bind_rows <- function(lst,
     return(lst[[1]])
   }
   names(lst) <- NULL
-  if(useLocalMethod && replyr_is_local_data(lst[[1]])) {
+  if(useDplyrLocal && replyr_is_local_data(lst[[1]])) {
     # local, can use dplyr
     return(dplyr::bind_rows(lst))
   }
-  if(useSparkMethod && replyr_is_Spark_data(lst[[1]])) {
-    # sparklyr (post '0.5.6', at least '0.5.6.9008'
-    # has a new sdf_bind_rows function we could try to use on Spark sources (limit columns first)
+  if(useSparkRbind && replyr_is_Spark_data(lst[[1]])) {
+    # sparklyr (post '0.5.6', at least '0.5.6.9008')
+    # has a new sdf_bind_rows function we could try to use on Spark sources
+    # (limit columns first).
+    # using existince of sparklyr::sdf_bind_rows as evidence that rbind
+    # is correctly overloaded for sparklyr.
     if(requireNamespace('sparklyr', quietly = TRUE) &&
        exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')) {
-      return(sparklyr::sdf_bind_rows(lst))
+      return(do.call(rbind, lst))
     }
   }
   r_replyr_bind_rows(lst, eagerTempRemoval, TRUE,
