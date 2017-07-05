@@ -652,6 +652,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 #' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
 #' This PNG can be smaller than directly including a grViz rendering in markdown.
+#' Requires all of \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} to be installed with all external dependencies properly installed and configured.
 #'
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}, \code{\link{convertDiagrameToPNG}}
 #'
@@ -681,20 +682,32 @@ renderJoinDiagram <- function(diagramSpec,
                   paste(needs[!have], collapse = ', ')))
     return(NULL)
   }
-  diagram <- DiagrammeR::grViz(diagramSpec)
-  tempPath <- paste(tempDir, 'joinPlanTemp.html', sep= '/')
-  pngTempFileName <- paste(tempDir, 'joinPlanTemp.png', sep= '/')
-  htmlwidgets::saveWidget(diagram, tempPath, selfcontained = FALSE)
-  webshot::webshot(tempPath, file = pngTempFileName,
-                   cliprect = "viewport")
-  img <- magick::image_read(pngTempFileName)
-  img <- magick::image_trim(img)
-  if(!is.null(pngFileName)) {
-    magick::image_write(img, path = pngFileName, format = "png")
-  }
-  # # intentionally not removing the temp directory, as it could be dangerous
-  # # Command would be:
-  #   unlink(tempDir, recursive = TRUE)
+  img <- NULL
+  tryCatch(
+    {
+      diagram <- DiagrammeR::grViz(diagramSpec)
+      tempPath <- paste(tempDir, 'joinPlanTemp.html', sep= '/')
+      pngTempFileName <- paste(tempDir, 'joinPlanTemp.png', sep= '/')
+      htmlwidgets::saveWidget(diagram, tempPath, selfcontained = FALSE)
+      webshot::webshot(tempPath, file = pngTempFileName,
+                       cliprect = "viewport")
+      img <- magick::image_read(pngTempFileName)
+      img <- magick::image_trim(img)
+      if(!is.null(pngFileName)) {
+        magick::image_write(img, path = pngFileName, format = "png")
+      }
+      # # intentionally not removing the temp directory, as it could be dangerous
+      # # Command would be:
+      #   unlink(tempDir, recursive = TRUE)
+    },
+    error = function(e) {
+      warning(paste("replyr::renderJoinDiagram caught ",
+                    paste(as.character(e), collapse = ' '),
+                    "likely one of",
+                    paste(needs, collapse = ', '),
+                    "has uninstalled/unconfigured external dependencies"))
+    }
+  )
   img
 }
 

@@ -128,10 +128,12 @@ if(!is.null(sorted)) {
     requireNamespace('grid', quietly = TRUE)
   )
   if(all(have)) {
-    sorted$columnJoinPlan %>%
+    png <- sorted$columnJoinPlan %>%
       makeJoinDiagramSpec() %>%
-      renderJoinDiagram() %>%
-      grid::grid.raster()
+      renderJoinDiagram()
+    if(!is.null(png)) {
+      grid::grid.raster(png)
+    }
   }
 }
 ```

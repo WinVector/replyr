@@ -23,7 +23,8 @@ Requires packages \code{DiagrammeR} properly installed to use.
 Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 }
 \details{
-This PNG can be smaller than directly including a grViz rendring in markdown.
+This PNG can be smaller than directly including a grViz rendering in markdown.
+Requires all of \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} to be installed with all external dependencies properly installed and configured.
 }
 \seealso{
 \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}, \code{\link{convertDiagrameToPNG}}
