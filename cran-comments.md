@@ -15,7 +15,7 @@
  * using option ‘--as-cran’
  * checking for file ‘replyr/DESCRIPTION’ ... OK
  * checking extension type ... Package
- * this is package ‘replyr’ version ‘0.4.1’
+ * this is package ‘replyr’ version ‘0.4.2’
 
 
 NOTEs
