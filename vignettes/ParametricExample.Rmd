@@ -43,7 +43,8 @@ the notation remains straightforward:
 ```{r}
 library("dplyr")
 packageVersion("dplyr")
-d %>% mutate(x_isNA = is.na(x))
+
+mutate(d, x_isNA = is.na(x))
 ```
 
 Now suppose, as is common in actual data science and data wrangling work, we
@@ -109,7 +110,7 @@ The code looks like this:
 # wrapr::let solution
 wrapr::let(alias = list(cname = cname, rname = rname),
             expr  = {
-            d %>% mutate(rname = is.na(cname))
+              mutate(d, rname = is.na(cname))
             })
 ```
 

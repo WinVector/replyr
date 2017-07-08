@@ -26,7 +26,9 @@ Removing `NA`s with `dplyr`.
 ```{r start}
 library('dplyr')
 library('replyr')
-d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
+d <- data.frame(x=c(1,2,2),
+                y=c(3,5,NA),
+                z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
 print(d)
 
@@ -128,7 +130,7 @@ What we see is that "what is pure `dplyr`" depends on what operators are availab
 ```{r naomit, error=TRUE}
 na.omit(d)
 
-no.omit(dRemote)
+na.omit(dRemote)
 ```
 
 It is fairly clear how we can build `na.omit` from `complete.cases`.

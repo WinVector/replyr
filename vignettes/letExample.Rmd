@@ -39,19 +39,20 @@ are known, but complicated when they are not. We use `wrapr::let` to write such 
 function without the use of `lazyeval` or `rlang`/`tidyeval`.
 
 ```{r sumstat_intervals}
-sumstat_intervals = function(dframe, colname, groupcolname=NULL) {
+sumstat_intervals = function(dframe, colname, groupcolname = NULL) {
   mapping = list(col=colname)
   if(!is.null(groupcolname)) {
-    dframe %>% group_by_(groupcolname) -> dframe
+    dframe <- group_by_(dframe, groupcolname)
   }
-  let(alias=mapping,
+  let(alias = mapping,
       expr={
-        dframe %>% summarize(sdlower = mean(col)-sd(col),
-                             mean=mean(col),
-                             sdupper = mean(col) + sd(col),
-                             iqrlower = median(col)-0.5*IQR(col),
-                             median=median(col),
-                             iqrupper=median(col)+0.5*IQR(col))
+        summarize(dframe, 
+                  sdlower = mean(col)-sd(col),
+                  mean = mean(col),
+                  sdupper = mean(col) + sd(col),
+                  iqrlower = median(col)-0.5*IQR(col),
+                  median = median(col),
+                  iqrupper = median(col)+0.5*IQR(col))
       })
 }
 ```
