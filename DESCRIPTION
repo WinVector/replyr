@@ -1,6 +1,6 @@
 Package: replyr
 Type: Package
-Title: Diligent Use of Big Data for R
+Title: Diligent Use of Big Data with R
 Version: 0.5.0
 Date: 2017-07-08
 Author: John Mount, Nina Zumel
@@ -24,8 +24,6 @@ Suggests: testthat,
     rmarkdown,
     sparklyr,
     ggplot2,
-    babynames,
-    magrittr,
     RPostgreSQL,
     DiagrammeR,
     igraph,
