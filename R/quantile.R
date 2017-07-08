@@ -58,34 +58,39 @@ replyr_quantile <- function(x,cname,
   if((!is.character(cname))||(length(cname)!=1)) {
     stop('replyr_quantile cname must be a single string')
   }
-  x %>% replyr_select(cname) %>% dplyr::ungroup() -> x
+  x %.>%
+    dplyr::ungroup(.) %.>%
+    replyr_select(., cname) -> x
   # make the variable name "x" as dplyr is much easier if we know the variable name
-  if(cname!='x') {
-    XCOL <- NULL # declare no external binding
-    let(
-      list(XCOL=cname),
-      x %>% dplyr::rename(x=XCOL) -> x
-    )
-  }
+  x <- replyr_rename(x, oldName = cname, newName = 'x')
   # filter out NA
-  x %>% dplyr::filter(!is.na(x)) -> x
+  x <- dplyr::filter(x, !is.na(x))
   nrows <- replyr_nrow(x)
   # Binary search for a given target.
-  x %>% dplyr::summarise(xmax=max(x),xmin=min(x)) %>%
-    dplyr::collect() %>% as.data.frame() %>% as.numeric() -> lims
+  x %.>%
+    dplyr::summarise(., xmax=max(x),xmin=min(x)) %.>%
+    dplyr::collect(.) %.>%
+    as.data.frame(.) %.>%
+    as.numeric(.) -> lims
   f <- function(v) {
     v <- as.numeric(v)
-    x %>% dplyr::filter(x<=v) -> xsub
-    xsub %>% replyr_nrow() -> count
-    xsub %>% dplyr::summarise(xmax=max(x)) %>%
-      dplyr::collect() %>% as.data.frame() %>% as.numeric() -> lv
-    x %>% dplyr::filter(x>v) -> xup
+    x %.>% dplyr::filter(., x<=v) -> xsub
+    xsub %.>% replyr_nrow(.) -> count
+    xsub %.>%
+      dplyr::summarise(., xmax=max(x)) %.>%
+      dplyr::collect(.) %.>%
+      as.data.frame(.) %.>%
+      as.numeric(.) -> lv
+    x %.>%
+      dplyr::filter(., x>v) -> xup
     rv <- max(lims)
     if(count<nrows) {
-      x %>%
-        dplyr::filter(x>v) %>%
-        dplyr::summarise(xmin=min(x)) %>%
-        dplyr::collect() %>% as.data.frame() %>% as.numeric() -> rv
+      x %.>%
+        dplyr::filter(., x>v) %.>%
+        dplyr::summarise(., xmin=min(x)) %.>%
+        dplyr::collect(.) %.>%
+        as.data.frame(.) %.>%
+        as.numeric(.) -> rv
     }
     data.frame(v=v,count=count,lv=lv,rv=rv)
   }
@@ -144,17 +149,14 @@ replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25),
   if((!is.character(cname))||(length(cname)!=1)) {
     stop('replyr_quantilec cname must be a single string')
   }
-  x %>% replyr_select(cname) %>% dplyr::ungroup() -> x
+  x %.>%
+    dplyr::ungroup(.) %.>%
+    replyr_select(., cname)  -> x
   # make the variable name "x" as dplyr is much easier if we know the variable name
-  if(cname!='x') {
-    XCOL <- NULL # declare no external binding
-    let(
-      list(XCOL=cname),
-      x %>% dplyr::rename(x=XCOL) -> x
-    )
-  }
+  x <- replyr_rename(x, oldName = cname, newName = 'x')
   # filter out NA
-  x %>% dplyr::filter(!is.na(x)) -> x
+  x %.>%
+    dplyr::filter(., !is.na(x)) -> x
   # get targets
   nrows <- replyr_nrow(x)
   targets <- sort(unique(pmax(1,pmin(nrows,c(
@@ -163,12 +165,13 @@ replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25),
     ceiling(probs*nrows),
     floor(probs*nrows))))))
   const <- NULL; # incicate we are using this as a name and it does not need a binding.
-  x %>% dplyr::mutate(const=1) %>%
-    dplyr::arrange(x) %>%
-    dplyr::mutate(s=cumsum(const)) %>%
-    replyr_filter('s',targets,
-                  tempNameGenerator=tempNameGenerator) %>%
-    dplyr::collect() %>%
-    as.data.frame() -> marks
+  x %.>%
+    dplyr::mutate(., const=1) %.>%
+    dplyr::arrange(., x) %.>%
+    dplyr::mutate(., s=cumsum(const)) %.>%
+    replyr_filter(., 's',targets,
+                  tempNameGenerator=tempNameGenerator) %.>%
+    dplyr::collect(.) %.>%
+    as.data.frame(.) -> marks
   polishQ(nrows,marks,probs)
 }

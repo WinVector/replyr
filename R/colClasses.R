@@ -14,11 +14,11 @@
 #'
 #' @export
 replyr_colClasses <- function(x) {
-  x  %>%
-    dplyr::ungroup() %>%
-    head() %>%
-    dplyr::collect() %>%
-    as.data.frame() -> topx
+  x  %.>%
+    dplyr::ungroup(.) %.>%
+    head(.) %.>%
+    dplyr::collect(.) %.>%
+    as.data.frame(.) -> topx
   classes <- lapply(topx,class)
   names(classes) <- colnames(topx)
   classes
@@ -40,7 +40,10 @@ replyr_colClasses <- function(x) {
 #' replyr_testCols(d,is.numeric)
 #'
 #' @export
-replyr_testCols <- function(x,f,n = 6L) {
-  x %>% head(n=n) %>% dplyr::collect() %>% as.data.frame() -> topx
+replyr_testCols <- function(x, f, n = 6L) {
+  x %.>%
+    head(., n=n) %.>%
+    dplyr::collect(.) %.>%
+    as.data.frame(.) -> topx
   vapply(topx,f,logical(1))
 }

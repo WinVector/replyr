@@ -24,11 +24,11 @@ replyr_hasrows <- function(d) {
   # had problems with head(n=1) on sparklyr
   # https://github.com/WinVector/replyr/blob/master/issues/HeadIssue.md
   suppressWarnings(
-    dSample <- d %>%
-      dplyr::ungroup() %>%
-      head() %>%
-      dplyr::collect() %>%
-      as.data.frame())
+    dSample <- d %.>%
+      dplyr::ungroup(.) %.>%
+      head(.) %.>%
+      dplyr::collect(.) %.>%
+      as.data.frame(.))
   if( is.null(dSample) || is.null(nrow(dSample)) || (nrow(dSample)<1)) {
     return(FALSE)
   }
@@ -55,11 +55,12 @@ replyr_nrow <- function(x) {
   }
   constant <- NULL # false binding for 'constant' so name does not look unbound to CRAN check
   suppressWarnings(
-    x %>% dplyr::ungroup() %>%
-      dplyr::mutate(constant=1.0) %>%
-      dplyr::summarize(count=sum(constant)) %>%
-      dplyr::collect() %>%
-      as.data.frame() -> tmp)
-  as.numeric(tmp[1,1,drop=TRUE])
+    x %.>%
+      dplyr::ungroup(.) %.>%
+      dplyr::mutate(., constant=1.0) %.>%
+      dplyr::summarize(., count=sum(constant)) %.>%
+      dplyr::collect(.) %.>%
+      as.data.frame(.) -> tmp)
+  as.numeric(tmp[1, 1, drop=TRUE])
 }
 

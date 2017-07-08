@@ -62,13 +62,14 @@ replyr_inTest <- function(x,cname,values,nname,
   # Try it the right way first (this way works well on good stacks).
   res <- NULL
   good <- FALSE
-  x %>% dplyr::left_join(jtab,by=byClause) %>%
-    dplyr::compute(name= tempNameGenerator()) -> res
+  x %.>%
+    dplyr::left_join(., jtab, by=byClause) %.>%
+    dplyr::compute(., name= tempNameGenerator()) -> res
   # replace NA with false
   RCOL <- NULL # declare no external binding
   let(
     list(RCOL=nname),
-    res %>% dplyr::mutate(RCOL=!is.na(RCOL)) -> res
+    res <- dplyr::mutate(res, RCOL=!is.na(RCOL))
   )
   res
 }

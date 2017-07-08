@@ -54,7 +54,8 @@ replyr_filter <- function(x,cname,values,
   #   spark 1.6.2 can't join tables with matching names (even as the join condition).
   # which is why we copy first
   res <- NULL
-  x %>% dplyr::inner_join(jtab, by=byClause) %>%
-    dplyr::compute(name= tempNameGenerator()) -> res
+  x %.>%
+    dplyr::inner_join(.,jtab, by=byClause) %.>%
+    dplyr::compute(., name= tempNameGenerator()) -> res
   res
 }

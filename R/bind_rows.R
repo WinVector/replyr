@@ -90,18 +90,18 @@ replyr_union_all <- function(tabA, tabB,
                                    temporary=TRUE)
   }
   # decorate left and right tables for the merge
-  tabA <- tabA %>%
-    replyr_mapRestrictCols(mapA) %>%
-    addConstantColumn('side_x', 'a',
+  tabA <- tabA %.>%
+    replyr_mapRestrictCols(., mapA) %.>%
+    addConstantColumn(., 'side_x', 'a',
                       tempNameGenerator=tempNameGenerator)
-  tabB <- tabB %>%
-    replyr_mapRestrictCols(mapB) %>%
-    addConstantColumn('side_x', 'b',
+  tabB <- tabB %.>%
+    replyr_mapRestrictCols(., mapB) %.>%
+    addConstantColumn(., 'side_x', 'b',
                       tempNameGenerator=tempNameGenerator)
   # do the merges
-  joined <- controlTable %>%
-    left_join(tabA, by='side_x') %>%
-    left_join(tabB, by='side_x')
+  joined <- controlTable %.>%
+    left_join(., tabA, by='side_x') %.>%
+    left_join(., tabB, by='side_x')
   # coalesce the values
   REPLYRCOLA <- NULL # mark as not an unbound reference
   REPLYRCOLB <- NULL # mark as not an unbound reference
@@ -112,13 +112,13 @@ replyr_union_all <- function(tabA, tabB,
       c(REPLYRCOLA= paste0(ci,'_a'),
         REPLYRCOLB= paste0(ci,'_b'),
         REPLYRORIGCOL= ci),
-      joined <- joined %>%
-        mutate(REPLYRORIGCOL = ifelse(side_x=='a', REPLYRCOLA, REPLYRCOLB)) %>%
-        select(-REPLYRCOLA, -REPLYRCOLB)
+      joined <- joined %.>%
+        mutate(., REPLYRORIGCOL =
+                 ifelse(side_x=='a', REPLYRCOLA, REPLYRCOLB)) %.>%
+        select(., -REPLYRCOLA, -REPLYRCOLB)
     )
   }
-  joined <-  joined %>%
-    select(-side_x)
+  joined <- select(joined, -side_x)
   # map remaining columns back
   uniqueToA <- setdiff(colsA, colsB)
   if(length(uniqueToA)>0) {

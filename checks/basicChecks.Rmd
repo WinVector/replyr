@@ -26,6 +26,7 @@ if(requireNamespace("dbplyr", quietly = TRUE)) {
   packageVersion("dbplyr")
 }
 R.Version()$version.string
+library("replyr")
 packageVersion("replyr")
 source('CheckFns.R')
 ```

@@ -4,10 +4,12 @@
 \alias{replyr_rename}
 \title{Rename a column}
 \usage{
-replyr_rename(.data, newName, oldName)
+replyr_rename(.data, ..., newName, oldName)
 }
 \arguments{
 \item{.data}{data object to work on}
+
+\item{...}{force later arguments to bind by name}
 
 \item{newName}{character new column name}
 
@@ -21,6 +23,6 @@ Rename a column
 d <- data.frame(Sepal_Length= c(5.8,5.7),
                 Sepal_Width= c(4.0,4.4),
                 Species= 'setosa', rank=c(1,2))
-replyr_rename(d, 'family', 'Species')
+replyr_rename(d, newName = 'family', oldName = 'Species')
 
 }

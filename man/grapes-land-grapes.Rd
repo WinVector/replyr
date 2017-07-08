@@ -38,9 +38,9 @@ oppugnant reading of some style guides.
 \examples{
 
 library("dplyr")
-7 \%>\% sin() \%->\% z1
-7 \%>\% sin() \%->_\% 'z2'
+sin(7) \%->\% z1
+sin(7) \%->_\% 'z2'
 varname <- 'z3'
-7 \%>\% sin() \%->_\% varname
+sin(7) \%->_\% varname
 
 }

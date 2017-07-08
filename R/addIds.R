@@ -32,16 +32,16 @@ replyr_add_ids <- function(df, idColName) {
   #   no applicable method for 'escape' applied to an object of class "function"
   wrapr::let(
     c(REPLYRIDCOLNAME= idColName),
-    df %>%
-      mutate(REPLYRIDCOLNAME = row_number()) -> df
+    df <-
+      mutate(df, REPLYRIDCOLNAME = row_number())
   )
   # # SQL-style try, only warns if not ordered
   # REPLYRIDCOLNAME <- NULL # indicate not an unbound variable
   # wrapr::let(
   #   c(REPLYRIDCOLNAME= idColName),
-  #   df %>%
-  #     mutate(REPLYRIDCOLNAME= 1) %>%
-  #     mutate(REPLYRIDCOLNAME= cumsum(REPLYRIDCOLNAME)) -> df
+  #   df %.>%
+  #     mutate(., REPLYRIDCOLNAME= 1) %.>%
+  #     mutate(., REPLYRIDCOLNAME= cumsum(REPLYRIDCOLNAME)) -> df
   # )
   df
 }

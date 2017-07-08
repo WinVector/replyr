@@ -89,10 +89,10 @@ replyr_moveValuesToRows <- function(data,
   if(isMySQL) {
     useAsChar <- FALSE
   }
-  localSample <- data %>%
-    head() %>%
-    collect() %>%
-    as.data.frame()
+  localSample <- data %.>%
+    head(.) %.>%
+    collect(.) %.>%
+    as.data.frame(.)
   classMap <- data.frame(colName= colnames(localSample),
                          className = vapply(localSample, class, character(1)),
                          stringsAsFactors = FALSE)
@@ -105,35 +105,35 @@ replyr_moveValuesToRows <- function(data,
                     targetsB <- c(dcols, nameForNewKeyColumn, nameForNewValueColumn)
                     # PostgreSQL needs to know types on character types with the lazyeval form.
                     # MySQL does not like such annotation.
-                    data %>% dplyr::select(dplyr::one_of(targetsA)) -> dtmp
+                    data %.>% dplyr::select(., dplyr::one_of(targetsA)) -> dtmp
                     NEWCOL <- NULL  # declare not unbound
                     OLDCOL <- NULL  # declare not unbound
                     if(useAsChar) {
                       wrapr::let(
                         c(NEWCOL=nameForNewKeyColumn),
-                        dtmp %>% dplyr::mutate(NEWCOL= as.character(di)) -> dtmp
+                        dtmp %.>% dplyr::mutate(., NEWCOL= as.character(di)) -> dtmp
                       )
                     } else {
                       wrapr::let(
                         c(NEWCOL=nameForNewKeyColumn),
-                        dtmp %>% dplyr::mutate(NEWCOL= di) -> dtmp
+                        dtmp %.>% dplyr::mutate(., NEWCOL= di) -> dtmp
                       )
                     }
                     wrapr::let(
                       c(NEWCOL=nameForNewValueColumn, OLDCOL=di),
-                      dtmp %>%
-                        dplyr::mutate(NEWCOL= OLDCOL) %>%
-                        dplyr::select(dplyr::one_of(targetsB)) -> dtmp
+                      dtmp %.>%
+                        dplyr::mutate(., NEWCOL= OLDCOL) %.>%
+                        dplyr::select(., dplyr::one_of(targetsB)) -> dtmp
                     )
                     if(heterogeniousValues) {
                       wrapr::let(
                         c(NEWCOL=nameForNewValueColumn),
-                        dtmp %>% mutate(NEWCOL = as.character(NEWCOL)) -> dtmp
+                        dtmp %.>% mutate(., NEWCOL = as.character(NEWCOL)) -> dtmp
                       )
                     }
                     # worry about drifting ref issue
                     # See issues/TrailingRefIssue.Rmd
-                    dtmp %>% dplyr::compute(name= tempNameGenerator()) -> dtmp
+                    dtmp %.>% dplyr::compute(., name= tempNameGenerator()) -> dtmp
                     dtmp
                   })
   res <- replyr_bind_rows(rlist,
@@ -241,9 +241,9 @@ replyr_moveValuesToColumns <- function(data,
   if(isMySQL) {
     useAsChar <- FALSE
   }
-  data %>%
-    replyr_uniqueValues(columnToTakeKeysFrom) %>%
-    replyr_copy_from(maxrow=maxcols) -> colStats
+  data %.>%
+    replyr_uniqueValues(., columnToTakeKeysFrom) %.>%
+    replyr_copy_from(., maxrow=maxcols) -> colStats
   valSupport <- sort(colStats[[columnToTakeKeysFrom]])
   newCols <- valSupport
   if(!is.null(sep)) {
@@ -260,11 +260,11 @@ replyr_moveValuesToColumns <- function(data,
   let(
     c(VCOL= columnToTakeValuesFrom),
     {
-      data %>%
-        dplyr::filter(!is.na(VCOL)) -> data # use absence instead of NA
-      (data %>%
-         dplyr::summarize(x=min(VCOL)) %>%
-         dplyr::collect())$x -> minV
+      data %.>%
+        dplyr::filter(., !is.na(VCOL)) -> data # use absence instead of NA
+      (data %.>%
+         dplyr::summarize(., x=min(VCOL)) %.>%
+         dplyr::collect(.))$x -> minV
     }
   )
   sentinelV <- NA
@@ -291,28 +291,28 @@ replyr_moveValuesToColumns <- function(data,
       c(NEWCOL=ci,
         KCOL=columnToTakeKeysFrom,
         VCOL=columnToTakeValuesFrom),
-      data %>%
-        dplyr::mutate(NEWCOL = ifelse(KCOL==vi, VCOL, sentinelV)) -> data
+      data %.>%
+        dplyr::mutate(., NEWCOL = ifelse(KCOL==vi, VCOL, sentinelV)) -> data
     )
     # Must call compute here or ci value changing changes mutate.
     # See issues/TrailingRefIssue.Rmd
     data <- compute(data, name= tempNameGenerator())
   }
   copyCols <- c(setdiff(cnames, mcols), newCols)
-  data %>%
-    dplyr::select(dplyr::one_of(copyCols)) -> data
+  data %.>%
+    dplyr::select(., dplyr::one_of(copyCols)) -> data
   if(dosummarize) {
     if(length(rowKeyColumns)<=0) {
-      data %>%
-        dplyr::summarize_all("max") -> data
+      data %.>%
+        dplyr::summarize_all(., "max") -> data
     } else {
       # Right now this only works with single key column
       KEYCOLS <- NULL # declare not unbound
       wrapr::let(
         c(KEYCOLS= rowKeyColumns),
-        data %>%
-          dplyr::group_by(KEYCOLS) %>%
-          dplyr::summarize_all("max") -> data
+        data %.>%
+          dplyr::group_by(., KEYCOLS) %.>%
+          dplyr::summarize_all(., "max") -> data
       )
     }
   }
@@ -320,8 +320,8 @@ replyr_moveValuesToColumns <- function(data,
   for(ci in newCols) {
     wrapr::let(
       c(NEWCOL=ci),
-      data %>%
-        dplyr::mutate(NEWCOL = ifelse(NEWCOL==sentinelV, fill, NEWCOL)) -> data
+      data %.>%
+        dplyr::mutate(., NEWCOL = ifelse(NEWCOL==sentinelV, fill, NEWCOL)) -> data
     )
     # Must call compute here or ci value changing changes mutate.
     # See issues/TrailingRefIssue.Rmd

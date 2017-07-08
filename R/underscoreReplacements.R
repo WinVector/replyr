@@ -5,6 +5,7 @@
 #' Rename a column
 #'
 #' @param .data data object to work on
+#' @param ... force later arguments to bind by name
 #' @param newName character new column name
 #' @param oldName character old column name
 #'
@@ -13,11 +14,16 @@
 #' d <- data.frame(Sepal_Length= c(5.8,5.7),
 #'                 Sepal_Width= c(4.0,4.4),
 #'                 Species= 'setosa', rank=c(1,2))
-#' replyr_rename(d, 'family', 'Species')
+#' replyr_rename(d, newName = 'family', oldName = 'Species')
 #'
 #' @export
 #'
-replyr_rename <- function(.data, newName, oldName) {
+replyr_rename <- function(.data,
+                          ...,
+                          newName, oldName) {
+  if(length(list(...))>0) {
+    stop("replyr::replyr_rename unexpected arguments")
+  }
   newName <- as.character(newName)
   oldName <- as.character(oldName)
   if((length(newName)!=1)||(length(oldName)!=1)) {

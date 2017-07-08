@@ -27,19 +27,13 @@ replyr_uniqueValues <- function(x, cname) {
   REPLYRGROUPINGCOL <- NULL # declare not an unbound variable
   wrapr::let(
     c(REPLYRGROUPINGCOL=cname),
-    x %>% dplyr::ungroup() %>%
-      replyr_select(cname) %>%
-      dplyr::mutate(replyr_private_value_n=1.0) %>%
-      dplyr::group_by(REPLYRGROUPINGCOL) %>%
-      dplyr::summarize(replyr_private_value_n=sum(replyr_private_value_n)) -> res
+    x %.>%
+      dplyr::ungroup(.) %.>%
+      replyr_select(., cname) %.>%
+      dplyr::mutate(., replyr_private_value_n=1.0) %.>%
+      dplyr::group_by(., REPLYRGROUPINGCOL) %.>%
+      dplyr::summarize(., replyr_private_value_n=sum(replyr_private_value_n)) -> res
   )
-  # # Can't get rid of the warning on MySQL, even the following doesn't shut it up
-  # suppressWarnings(
-  #   # on mutate step in MySQL:  In .local(conn, statement, ...) : Decimal MySQL column 1 imported as numeric
-  #   x %>% dplyr::ungroup() %>%
-  #     dplyr::select_(cname) %>% dplyr::mutate(replyr_private_value_n=1.0) %>%
-  #     dplyr::group_by_(cname) %>% dplyr::summarize(replyr_private_value_n=sum(replyr_private_value_n)) %>%
-  #     dplyr::compute() -> res
-  # )
+  # Can't get rid of the warning on MySQL, even suppressWarnings() doesn't shut it up
   res
 }

@@ -39,28 +39,58 @@ NULL
 #' @examples
 #'
 #' library('dplyr')
-#' d <- data.frame(group=c(1,1,2,2,2),
-#'                 order=c(.1,.2,.3,.4,.5),
-#'                 values=c(10,20,2,4,8))
+#' d <- data.frame(
+#'   group = c(1, 1, 2, 2, 2),
+#'   order = c(.1, .2, .3, .4, .5),
+#'   values = c(10, 20, 2, 4, 8)
+#' )
 #'
 #' # User supplied window functions.  They depend on known column names and
 #' # the data back-end matching function names (as cumsum).
-#' cumulative_sum <- . %>% mutate(cv=cumsum(values))
-#' rank_in_group <- . %>% mutate(constcol=1) %>%
-#'           mutate(rank=cumsum(constcol)) %>% select(-constcol)
+#' cumulative_sum <- function(d) {
+#'   mutate(d, cv = cumsum(values))
+#' }
+#' rank_in_group <- function(d) {
+#'   d <- mutate(d, constcol = 1)
+#'   d <- mutate(d, rank = cumsum(constcol))
+#'   select(d, -constcol)
+#' }
 #'
-#' for(partitionMethod in c('group_by','split','extract')) {
+#' for (partitionMethod in c('group_by', 'split', 'extract')) {
 #'   print(partitionMethod)
 #'   print('cumulative sum example')
-#'   print(d %>% gapply('group',cumulative_sum,ocolumn='order',
-#'                      partitionMethod=partitionMethod))
+#'   print(
+#'     gapply(
+#'       d,
+#'       'group',
+#'       cumulative_sum,
+#'       ocolumn = 'order',
+#'       partitionMethod = partitionMethod
+#'     )
+#'   )
 #'   print('ranking example')
-#'   print(d %>% gapply('group',rank_in_group,ocolumn='order',
-#'                      partitionMethod=partitionMethod))
+#'   print(
+#'     gapply(
+#'       d,
+#'       'group',
+#'       rank_in_group,
+#'       ocolumn = 'order',
+#'       partitionMethod = partitionMethod
+#'     )
+#'   )
 #'   print('ranking example (decreasing)')
-#'   print(d %>% gapply('group',rank_in_group,ocolumn='order',decreasing=TRUE,
-#'                      partitionMethod=partitionMethod))
+#'   print(
+#'     gapply(
+#'       d,
+#'       'group',
+#'       rank_in_group,
+#'       ocolumn = 'order',
+#'       decreasing = TRUE,
+#'       partitionMethod = partitionMethod
+#'     )
+#'   )
 #' }
+#'
 #'
 #' @export
 gapply <- function(df,gcolumn,f,
@@ -84,20 +114,22 @@ gapply <- function(df,gcolumn,f,
   if(length(list(...))>0) {
     stop('replyr::gapply unexpected arguments')
   }
-  df %>% dplyr::ungroup() -> df  # make sure some other grouping isn't interfering.
+  df %.>%
+    dplyr::ungroup(.) -> df  # make sure some other grouping isn't interfering.
   if(partitionMethod=='group_by') {
     if(!bindrows) {
       stop("replyr::gapply needs bindRows=TRUE")
     }
     # don't enforce maxgroups in this case, as large numbers of groups should not be a problem
-    df %>% replyr_group_by(gcolumn) -> df
+    df %.>%
+      replyr_group_by(., gcolumn) -> df
     if(!is.null(ocolumn)) {
       df <- replyr_arrange(df,ocolumn,decreasing)
     }
     if(!is.null(f)) {
-      df %>% f -> df
+      df %.>% f(.) -> df
     }
-    df %>% dplyr::ungroup() -> df
+    df %.>% dplyr::ungroup(.) -> df
     return(df)
   }
   if(partitionMethod=='split') {
@@ -106,12 +138,14 @@ gapply <- function(df,gcolumn,f,
     }
     # only works on local data frames
     if(!is.null(maxgroups)) {
-      df %>% replyr_uniqueValues(gcolumn) %>% replyr_nrow() -> ngroups
+      df %.>%
+        replyr_uniqueValues(., gcolumn) %.>%
+        replyr_nrow(.) -> ngroups
       if(ngroups>maxgroups) {
         stop("replyr::gapply maxgroups exceeded")
       }
     }
-    df %>% base::split(df[[gcolumn]]) -> res
+    base::split(df, df[[gcolumn]]) -> res
     if(!is.null(ocolumn)) {
       orderer <- function(di) {
         replyr_arrange(di,ocolumn,decreasing)
@@ -139,11 +173,12 @@ gapply <- function(df,gcolumn,f,
     return(res)
   }
   if(partitionMethod=='extract') {
-    df %>% replyr_uniqueValues(gcolumn) %>%
-      replyr_copy_from(maxrow=maxgroups) -> groups
+    df %.>%
+      replyr_uniqueValues(., gcolumn) %.>%
+      replyr_copy_from(., maxrow=maxgroups) -> groups
     res <- lapply(groups[[gcolumn]],
                   function(gi) {
-                    df %>% replyr_filter(cname=gcolumn,values=gi,
+                    df %.>% replyr_filter(., cname=gcolumn,values=gi,
                                          verbose=FALSE,
                                          tempNameGenerator=tempNameGenerator) -> gsubi
                     if(!is.null(ocolumn)) {
@@ -200,10 +235,9 @@ gapply <- function(df,gcolumn,f,
 #' d <- data.frame(group=c(1,1,2,2,2),
 #'                 order=c(.1,.2,.3,.4,.5),
 #'                 values=c(10,20,2,4,8))
-#' d %>%
-#'   replyr_split('group', partitionMethod='extract') %>%
-#'   lapply(function(di) data.frame(as.list(colMeans(di)))) %>%
-#'   replyr_bind_rows()
+#' dSplit <- replyr_split(d, 'group', partitionMethod='extract')
+#' dApp <- lapply(dSplit, function(di) data.frame(as.list(colMeans(di))))
+#' replyr_bind_rows(dApp)
 #'
 #' @export
 replyr_split <- function(df,gcolumn,

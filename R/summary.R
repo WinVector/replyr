@@ -2,7 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr %>% ungroup summarize transmute summarise_all funs
+#' @importFrom dplyr ungroup summarize transmute summarise_all funs
 #' @importFrom stats sd
 #' @importFrom utils capture.output head
 NULL
@@ -42,10 +42,10 @@ replyr_summary <- function(x,
   x <- dplyr::ungroup(x)
   # localSample might not have columns on zero row caes
   #   https://github.com/tidyverse/dplyr/issues/2913
-  localSample <- x %>%
-    head() %>%
-    collect() %>%
-    as.data.frame()
+  localSample <- x %.>%
+    head(.) %.>%
+    collect(.) %.>%
+    as.data.frame(.)
   cnames <- colnames(x)
   if(!is.null(cols)) {
     cnames <- intersect(cnames, cols)
@@ -73,18 +73,19 @@ replyr_summary <- function(x,
                       WCOL <- NULL # declare this is not a free binding
                       let(alias=list(WCOL=ci),
                           expr={
-                            x %>% dplyr::select(WCOL) %>%
-                              dplyr::filter(!is.na(WCOL)) -> xsub
+                            x %.>% dplyr::select(., WCOL) %.>%
+                              dplyr::filter(., !is.na(WCOL)) -> xsub
                           })
                       ngood <- replyr_nrow(xsub)
-                      xsub %>% dplyr::summarise_all(dplyr::funs(min = min,
+                      xsub %.>% dplyr::summarise_all(., dplyr::funs(min = min,
                                             # q25 = quantile(., 0.25),  # MySQL can't do this
                                             # median = median,          # MySQL can't do this
                                             # q75 = quantile(., 0.75),  # MySQL can't do this
                                             max = max,
                                             mean = mean,
-                                            sd = sd)) %>%
-                        dplyr::collect() %>% as.data.frame() -> si
+                                            sd = sd)) %.>%
+                        dplyr::collect(.) %.>%
+                        as.data.frame(.) -> si
                       # dplyr::summarize_each has sd=0 for single row SQLite examples
                       # please see here: https://github.com/WinVector/replyr/blob/master/issues/SQLitesd.md
                       if(ngood<=1) {
@@ -92,7 +93,9 @@ replyr_summary <- function(x,
                       }
                       nunique = NA
                       if(countUniqueNum) {
-                        xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
+                        xsub %.>%
+                          replyr_uniqueValues(., ci) %.>%
+                          replyr_nrow(.) -> nunique
                       }
                       si <-  data.frame(column=ci,
                                         index=0,
@@ -114,19 +117,21 @@ replyr_summary <- function(x,
                        WCOL <- NULL # declare this is not a free binding
                        let(alias=list(WCOL=ci),
                            expr={
-                             x %>% dplyr::select(WCOL) %>%
-                               dplyr::filter(!is.na(WCOL)) %>%
-                               dplyr::mutate(WCOL= ifelse(WCOL,1,0)) -> xsub
+                             x %.>%
+                               dplyr::select(., WCOL) %.>%
+                               dplyr::filter(., !is.na(WCOL)) %.>%
+                               dplyr::mutate(., WCOL= ifelse(WCOL,1,0)) -> xsub
                            })
                        ngood <- replyr_nrow(xsub)
-                       xsub %>% dplyr::summarise_all(dplyr::funs(min = min,
+                       xsub %.>% dplyr::summarise_all(., dplyr::funs(min = min,
                                                                   # q25 = quantile(., 0.25),  # MySQL can't do this
                                                                   # median = median,          # MySQL can't do this
                                                                   # q75 = quantile(., 0.75),  # MySQL can't do this
                                                                   max = max,
                                                                   mean = mean,
-                                                                  sd = sd)) %>%
-                         dplyr::collect() %>% as.data.frame() -> si
+                                                                  sd = sd)) %.>%
+                         dplyr::collect(.) %.>%
+                         as.data.frame(.) -> si
                        # dplyr::summarize_each has sd=0 for single row SQLite examples
                        # please see here: https://github.com/WinVector/replyr/blob/master/issues/SQLitesd.md
                        if(ngood<=1) {
@@ -134,7 +139,9 @@ replyr_summary <- function(x,
                        }
                        nunique = NA
                        if(countUniqueNum) {
-                         xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
+                         xsub %.>%
+                           replyr_uniqueValues(., ci) %.>%
+                           replyr_nrow(.) -> nunique
                        }
                        si <-  data.frame(column=ci,
                                          index=0,
@@ -173,8 +180,9 @@ replyr_summary <- function(x,
                       WCOL <- NULL # declare this is not a free binding
                       let(alias=list(WCOL=ci),
                           expr={
-                            x %>% dplyr::select(WCOL) %>%
-                              dplyr::filter(!is.na(WCOL)) -> xsub
+                            x %.>%
+                              dplyr::select(., WCOL) %.>%
+                              dplyr::filter(., !is.na(WCOL)) -> xsub
                           })
                       ngood <- replyr_nrow(xsub)
                       # min/max don't work on local data.frames for factors, but do for strings.
@@ -184,9 +192,11 @@ replyr_summary <- function(x,
                       good <- FALSE
                       tryCatch(
                         {
-                        xsub %>% dplyr::summarise_all(dplyr::funs(lexmin = min,
-                                                                   lexmax = max)) %>%
-                            dplyr::collect() %>% as.data.frame() -> si;
+                        xsub %.>%
+                            dplyr::summarise_all(., dplyr::funs(lexmin = min,
+                                                                   lexmax = max)) %.>%
+                            dplyr::collect(.) %.>%
+                            as.data.frame(.) -> si;
                         si <- data.frame(lexmin = as.character(si$lexmin),
                                          lexmax = as.character(si$lexmax),
                                          stringsAsFactors = FALSE)
@@ -196,8 +206,8 @@ replyr_summary <- function(x,
                       )
                       if((!good)&&(replyr_is_local_data(xsub))) {
                         suppressWarnings(
-                          xsub %>%
-                            as.data.frame() -> xsublocal
+                          xsub %.>%
+                            as.data.frame(.) -> xsublocal
                         )
                         si <- data.frame(lexmin = min(as.character(xsublocal[[ci]])),
                                          lexmax = max(as.character(xsublocal[[ci]])),
@@ -205,7 +215,9 @@ replyr_summary <- function(x,
                       }
                       nunique = NA
                       if(countUniqueNonNum) {
-                        xsub %>% replyr_uniqueValues(ci) %>% replyr_nrow() -> nunique
+                        xsub %.>%
+                          replyr_uniqueValues(., ci) %.>%
+                          replyr_nrow(.) -> nunique
                       }
                       si <- data.frame(column=ci,
                                        index=0,

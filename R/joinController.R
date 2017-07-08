@@ -21,7 +21,7 @@ example_employeeAndDate <- function(my_db) {
                  ")
   keymap[['employeeanddate']] = c()
   data.frame(id= c('i4', 'i4'),
-             date = c(20140501, 20140601)) %>%
+             date = c(20140501, 20140601)) %.>%
     DBI::dbWriteTable(my_db$con, 'employeeanddate', value=., append=TRUE)
   DBI::dbExecute(my_db$con, "
                  CREATE TABLE orgtable (
@@ -36,7 +36,7 @@ example_employeeAndDate <- function(my_db) {
   data.frame(eid= c('i4', 'i4'),
              date = c(20140501, 20140601),
              dept = c('IT', 'SL'),
-             location = c('CA', 'TX')) %>%
+             location = c('CA', 'TX')) %.>%
     DBI::dbWriteTable(my_db$con, 'orgtable', value=., append=TRUE)
   DBI::dbExecute(my_db$con, "
                  CREATE TABLE revenue (
@@ -49,7 +49,7 @@ example_employeeAndDate <- function(my_db) {
   keymap[['revenue']] = c('dept', 'date')
   data.frame(date = c(20140501, 20140601),
              dept = c('SL', 'SL'),
-             rev = c(1000, 2000)) %>%
+             rev = c(1000, 2000)) %.>%
     DBI::dbWriteTable(my_db$con, 'revenue', value=., append=TRUE)
   DBI::dbExecute(my_db$con, "
                  CREATE TABLE activity (
@@ -64,7 +64,7 @@ example_employeeAndDate <- function(my_db) {
   data.frame(eid= c('i4', 'i4'),
              date = c(20140501, 20140601),
              hours = c(50, 3),
-             location = c('office', 'client')) %>%
+             location = c('office', 'client')) %.>%
     DBI::dbWriteTable(my_db$con, 'activity', value=., append=TRUE)
   tableNames <- c('employeeanddate',
                   'revenue',
@@ -76,14 +76,14 @@ example_employeeAndDate <- function(my_db) {
     names(keys) <- keys
     keys
   }
-  tDesc <- tableNames %>%
-    lapply(
+  tDesc <- tableNames %.>%
+    lapply(.,
       function(ni) {
         replyr::tableDescription(ni,
                                  dplyr::tbl(my_db, ni),
                                  keyInspector = key_inspector_by_name)
-      }) %>%
-    dplyr::bind_rows()
+      }) %.>%
+    dplyr::bind_rows(.)
   tDesc
 }
 
@@ -94,10 +94,10 @@ uniqueInOrder <- function(names) {
   dn <- data.frame(name= names,
                    rowid= seq_len(length(names)),
                    stringsAsFactors = FALSE)
-  dn <- dn %>%
-    dplyr::group_by(name) %>%
-    dplyr::summarize(rowid=min(rowid)) %>%
-    dplyr::arrange(rowid)
+  dn <- dn %.>%
+    dplyr::group_by(., name) %.>%
+    dplyr::summarize(., rowid=min(rowid)) %.>%
+    dplyr::arrange(., rowid)
   dn$name
 }
 
@@ -306,10 +306,10 @@ keysAreUnique <- function(tDesc) {
                          return(TRUE)
                        }
                        keys <- tDesc$keys[[i]]
-                       nunique <- gi %>%
-                         replyr_group_by(keys) %>%
-                         dplyr::summarize(count = n()) %>%
-                         replyr::replyr_nrow()
+                       nunique <- gi %.>%
+                         replyr_group_by(., keys) %.>%
+                         dplyr::summarize(., count = n()) %.>%
+                         replyr::replyr_nrow(.)
                        return(nunique==nrow)
                      },
                      logical(1))
@@ -899,12 +899,12 @@ buildJoinPlan <- function(tDesc,
   }
   plans <- dplyr::bind_rows(plans)
   # disambiguate non-key result columns
-  dups <- plans %>%
-    dplyr::filter(!isKey) %>%
-    dplyr::select(resultColumn) %>%
-    dplyr::group_by(resultColumn) %>%
-    dplyr::summarize(count=n()) %>%
-    dplyr::filter(count>1)
+  dups <- plans %.>%
+    dplyr::filter(., !isKey) %.>%
+    dplyr::select(., resultColumn) %.>%
+    dplyr::group_by(., resultColumn) %.>%
+    dplyr::summarize(., count=n()) %.>%
+    dplyr::filter(., count>1)
   if(nrow(dups)>0) {
     for(ci in dups$resultColumn) {
       indices <- which(plans$resultColumn==ci)
@@ -1124,9 +1124,9 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
     }
     ti <- NULL
     if(!is.null(handlei)) {
-      ti <- handlei %>%
-        addConstantColumn(tableIndCol, 1) %>%
-        replyr_mapRestrictCols(nmap, restrict=TRUE)
+      ti <- handlei %.>%
+        addConstantColumn(., tableIndCol, 1) %.>%
+        replyr_mapRestrictCols(., nmap, restrict=TRUE)
       if(eagerCompute) {
         ti <- dplyr::compute(ti, name=tempNameGenerator())
       }

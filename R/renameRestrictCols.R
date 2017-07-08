@@ -158,7 +158,7 @@ replyr_mapRestrictCols <- function(x, nmap,
   }
   if(restrict) {
     # limit down to only names we are mapping
-    x %>% dplyr::select(dplyr::one_of(as.character(nmap))) -> x
+    x <- dplyr::select(x, dplyr::one_of(as.character(nmap)))
   }
   # re-map names, re-factor mapping to two maps to avoid
   # name-aliasing issues

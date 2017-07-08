@@ -105,17 +105,17 @@ runExample <- function(copyToRemote) {
   d1s <- replyr::replyr_summary(d1)
   print(d1s)
 
-  cat('\nd1 %>% replyr::replyr_colClasses() \n')
-  print(d1 %>% replyr::replyr_colClasses())
+  cat('\nd1 %.>% replyr::replyr_colClasses(.) \n')
+  print(d1 %.>% replyr::replyr_colClasses(.))
 
-  cat('\nd1 %>% replyr::replyr_testCols(is.numeric) \n')
-  print(d1 %>% replyr::replyr_testCols(is.numeric))
+  cat('\nd1 %.>% replyr::replyr_testCols(., is.numeric) \n')
+  print(d1 %.>% replyr::replyr_testCols(., is.numeric))
 
-  cat('\nd1 %>% replyr::replyr_dim() \n')
-  print(d1 %>% replyr::replyr_dim())
+  cat('\nd1 %.>% replyr::replyr_dim(.) \n')
+  print(d1 %.>% replyr::replyr_dim(.))
 
-  cat('\nd1 %>% replyr::replyr_nrow() \n')
-  print(d1 %>% replyr::replyr_nrow())
+  cat('\nd1 %.>% replyr::replyr_nrow(.) \n')
+  print(d1 %.>% replyr::replyr_nrow(.))
 
   # mysql crashes on copyToRemote with NA values in string constants
   # https://github.com/hadley/dplyr/issues/2259
@@ -123,21 +123,21 @@ runExample <- function(copyToRemote) {
   d2 <- copyToRemote(data.frame(x=c(1,2,3),y=c(3,5,NA),z=c('a','a','z')),'d2')
   print(d2)
 
-  cat('\nd2 %>% replyr::replyr_quantile("x") \n')
-  print(d2 %>% replyr::replyr_quantile("x"))
+  cat('\nd2 %.>% replyr::replyr_quantile(., "x") \n')
+  print(d2 %.>% replyr::replyr_quantile(., "x"))
 
-  cat('\nd2 %>% replyr::replyr_summary() \n')
-  print(d2 %>% replyr::replyr_summary())
+  cat('\nd2 %.>% replyr::replyr_summary(.) \n')
+  print(d2 %.>% replyr::replyr_summary(.))
 
   d2b <- copyToRemote(data.frame(x=c(1,2,3),y=c(3,5,NA),z=c('a','a','z'),
                                  stringsAsFactors = FALSE),'d2b')
   print(d2b)
 
-  cat('\nd2b %>% replyr::replyr_quantile("x") \n')
-  print(d2b %>% replyr::replyr_quantile("x"))
+  cat('\nd2b %.>% replyr::replyr_quantile(., "x") \n')
+  print(d2b %.>% replyr::replyr_quantile(., "x"))
 
-  cat('\nd2b %>% replyr::replyr_summary() \n')
-  print(d2b %>% replyr::replyr_summary())
+  cat('\nd2b %.>% replyr::replyr_summary(.) \n')
+  print(d2b %.>% replyr::replyr_summary(.))
 
   d3 <- copyToRemote(data.frame(x=c('a','a','b','b','c','c'),
                                 y=1:6,
@@ -148,17 +148,17 @@ runExample <- function(copyToRemote) {
   values <- c('a','c')
   print(values)
 
-  cat('\nd3 %>% replyr::replyr_filter("x",values,verbose=FALSE) \n')
-  print(d3 %>% replyr::replyr_filter("x",values,verbose=FALSE))
+  cat('\nd3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) \n')
+  print(d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE))
 
-  cat('\nd3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) \n')
-  print(d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE))
+  cat('\nd3 %.>% replyr::replyr_inTest(., "x",values,"match",verbose=FALSE) \n')
+  print(d3 %.>% replyr::replyr_inTest(., "x",values,"match",verbose=FALSE))
 
   d4 <- copyToRemote(data.frame(x=c(1,2,3,3)),'d4')
   print(d4)
 
-  cat('\nd4 %>% replyr::replyr_uniqueValues("x") \n')
-  print(d4 %>% replyr::replyr_uniqueValues("x"))
+  cat('\nd4 %.>% replyr::replyr_uniqueValues(., "x") \n')
+  print(d4 %.>% replyr::replyr_uniqueValues(., "x"))
 
   # let example
   print("let example")
@@ -170,7 +170,7 @@ runExample <- function(copyToRemote) {
   wrapr::let(
     alias=mapping,
     expr={
-      dlet %>% mutate(RankColumn=RankColumn-1) -> dletres
+      dlet %.>% mutate(., RankColumn=RankColumn-1) -> dletres
     })
   print(dletres)
 
@@ -184,8 +184,8 @@ runExample <- function(copyToRemote) {
   support <- copyToRemote(data.frame(year=2005:2010),
                           'support')
   filled <-  replyr::replyr_coalesce(dcoalesce, support,
-                            fills=list(count= 0, name= '')) %>%
-    arrange(year, name)
+                            fills=list(count= 0, name= '')) %.>%
+    arrange(., year, name)
   print(filled)
 
   print("coalesce example 2")
@@ -199,8 +199,8 @@ runExample <- function(copyToRemote) {
                                       stringsAsFactors = FALSE),
                           'support2')
   filled2 <-  replyr::replyr_coalesce(data, support,
-                            fills=list(count=0)) %>%
-    arrange(year, name)
+                            fills=list(count=0)) %.>%
+    arrange(., year, name)
   print(filled2)
 
 

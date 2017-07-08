@@ -19,15 +19,16 @@ library('sparklyr')
  #  
  #      top_n
 packageVersion("sparklyr")
- #  [1] '0.5.6.9010'
+ #  [1] '0.5.6.9012'
 if(requireNamespace("dbplyr", quietly = TRUE)) {
   packageVersion("dbplyr")
 }
  #  [1] '1.1.0.9000'
 R.Version()$version.string
  #  [1] "R version 3.4.0 (2017-04-21)"
+library("replyr")
 packageVersion("replyr")
- #  [1] '0.4.2'
+ #  [1] '0.5.0'
 source('CheckFns.R')
 ```
 
@@ -57,7 +58,7 @@ resBase <- runExample(noopCopy)
  #  4      y     4    factor     3   0      NA  NA  NA   NA        NA      3     hi
  #  5      z     5 character     3   0      NA  NA  NA   NA        NA      a      z
  #  
- #  d1 %>% replyr::replyr_colClasses() 
+ #  d1 %.>% replyr::replyr_colClasses(.) 
  #  $p
  #  [1] "logical"
  #  
@@ -74,25 +75,25 @@ resBase <- runExample(noopCopy)
  #  [1] "character"
  #  
  #  
- #  d1 %>% replyr::replyr_testCols(is.numeric) 
+ #  d1 %.>% replyr::replyr_testCols(., is.numeric) 
  #      p     w     x     y     z 
  #  FALSE  TRUE  TRUE FALSE FALSE 
  #  
- #  d1 %>% replyr::replyr_dim() 
+ #  d1 %.>% replyr::replyr_dim(.) 
  #  [1] 3 5
  #  
- #  d1 %>% replyr::replyr_nrow() 
+ #  d1 %.>% replyr::replyr_nrow(.) 
  #  [1] 3
  #    x  y z
  #  1 1  3 a
  #  2 2  5 a
  #  3 3 NA z
  #  
- #  d2 %>% replyr::replyr_quantile("x") 
+ #  d2 %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2 %>% replyr::replyr_summary() 
+ #  d2 %.>% replyr::replyr_summary(.) 
  #    column index   class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1 numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2 numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
@@ -102,11 +103,11 @@ resBase <- runExample(noopCopy)
  #  2 2  5 a
  #  3 3 NA z
  #  
- #  d2b %>% replyr::replyr_quantile("x") 
+ #  d2b %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2b %>% replyr::replyr_summary() 
+ #  d2b %.>% replyr::replyr_summary(.) 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
@@ -120,14 +121,14 @@ resBase <- runExample(noopCopy)
  #  6 c 6
  #  [1] "a" "c"
  #  
- #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
+ #  d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) 
  #    x y
  #  1 a 1
  #  2 a 2
  #  3 c 5
  #  4 c 6
  #  
- #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
+ #  d3 %.>% replyr::replyr_inTest(., "x",values,"match",verbose=FALSE) 
  #    x y match
  #  1 a 1  TRUE
  #  2 a 2  TRUE
@@ -141,7 +142,7 @@ resBase <- runExample(noopCopy)
  #  3 3
  #  4 3
  #  
- #  d4 %>% replyr::replyr_uniqueValues("x") 
+ #  d4 %.>% replyr::replyr_uniqueValues(., "x") 
  #  # A tibble: 3 x 2
  #        x replyr_private_value_n
  #    <dbl>                  <dbl>
@@ -237,7 +238,7 @@ resTbl <- runExample(tblCopy)
  #  4      y     4    factor     3   0      NA  NA  NA   NA        NA      3     hi
  #  5      z     5 character     3   0      NA  NA  NA   NA        NA      a      z
  #  
- #  d1 %>% replyr::replyr_colClasses() 
+ #  d1 %.>% replyr::replyr_colClasses(.) 
  #  $p
  #  [1] "logical"
  #  
@@ -254,14 +255,14 @@ resTbl <- runExample(tblCopy)
  #  [1] "character"
  #  
  #  
- #  d1 %>% replyr::replyr_testCols(is.numeric) 
+ #  d1 %.>% replyr::replyr_testCols(., is.numeric) 
  #      p     w     x     y     z 
  #  FALSE  TRUE  TRUE FALSE FALSE 
  #  
- #  d1 %>% replyr::replyr_dim() 
+ #  d1 %.>% replyr::replyr_dim(.) 
  #  [1] 3 5
  #  
- #  d1 %>% replyr::replyr_nrow() 
+ #  d1 %.>% replyr::replyr_nrow(.) 
  #  [1] 3
  #  # A tibble: 3 x 3
  #        x     y      z
@@ -270,11 +271,11 @@ resTbl <- runExample(tblCopy)
  #  2     2     5      a
  #  3     3    NA      z
  #  
- #  d2 %>% replyr::replyr_quantile("x") 
+ #  d2 %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2 %>% replyr::replyr_summary() 
+ #  d2 %.>% replyr::replyr_summary(.) 
  #    column index   class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1 numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2 numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
@@ -286,11 +287,11 @@ resTbl <- runExample(tblCopy)
  #  2     2     5     a
  #  3     3    NA     z
  #  
- #  d2b %>% replyr::replyr_quantile("x") 
+ #  d2b %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2b %>% replyr::replyr_summary() 
+ #  d2b %.>% replyr::replyr_summary(.) 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
@@ -306,7 +307,7 @@ resTbl <- runExample(tblCopy)
  #  6     c     6
  #  [1] "a" "c"
  #  
- #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
+ #  d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) 
  #  # A tibble: 4 x 2
  #        x     y
  #    <chr> <int>
@@ -315,7 +316,7 @@ resTbl <- runExample(tblCopy)
  #  3     c     5
  #  4     c     6
  #  
- #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
+ #  d3 %.>% replyr::replyr_inTest(., "x",values,"match",verbose=FALSE) 
  #  # A tibble: 6 x 3
  #        x     y match
  #    <chr> <int> <lgl>
@@ -333,7 +334,7 @@ resTbl <- runExample(tblCopy)
  #  3     3
  #  4     3
  #  
- #  d4 %>% replyr::replyr_uniqueValues("x") 
+ #  d4 %.>% replyr::replyr_uniqueValues(., "x") 
  #  # A tibble: 3 x 2
  #        x replyr_private_value_n
  #    <dbl>                  <dbl>
@@ -433,7 +434,7 @@ resSQLite <- runExample(copyToRemote)
  #  4      y     4 character    NA  NA      NA  NA  NA   NA        NA      3     hi
  #  5      z     5 character    NA  NA      NA  NA  NA   NA        NA      a      z
  #  
- #  d1 %>% replyr::replyr_colClasses() 
+ #  d1 %.>% replyr::replyr_colClasses(.) 
  #  $p
  #  [1] "integer"
  #  
@@ -450,14 +451,14 @@ resSQLite <- runExample(copyToRemote)
  #  [1] "character"
  #  
  #  
- #  d1 %>% replyr::replyr_testCols(is.numeric) 
+ #  d1 %.>% replyr::replyr_testCols(., is.numeric) 
  #      p     w     x     y     z 
  #   TRUE  TRUE  TRUE FALSE FALSE 
  #  
- #  d1 %>% replyr::replyr_dim() 
+ #  d1 %.>% replyr::replyr_dim(.) 
  #  [1] 3 5
  #  
- #  d1 %>% replyr::replyr_nrow() 
+ #  d1 %.>% replyr::replyr_nrow(.) 
  #  [1] 3
  #  # Source:   table<d2> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
@@ -467,11 +468,11 @@ resSQLite <- runExample(copyToRemote)
  #  2     2     5     a
  #  3     3    NA     z
  #  
- #  d2 %>% replyr::replyr_quantile("x") 
+ #  d2 %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2 %>% replyr::replyr_summary() 
+ #  d2 %.>% replyr::replyr_summary(.) 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1   numeric    NA  NA      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric    NA  NA      NA   3   5    4 1.414214   <NA>   <NA>
@@ -484,11 +485,11 @@ resSQLite <- runExample(copyToRemote)
  #  2     2     5     a
  #  3     3    NA     z
  #  
- #  d2b %>% replyr::replyr_quantile("x") 
+ #  d2b %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2b %>% replyr::replyr_summary() 
+ #  d2b %.>% replyr::replyr_summary(.) 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1   numeric    NA  NA      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric    NA  NA      NA   3   5    4 1.414214   <NA>   <NA>
@@ -505,8 +506,8 @@ resSQLite <- runExample(copyToRemote)
  #  6     c     6
  #  [1] "a" "c"
  #  
- #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
- #  # Source:   table<replyr_filter_aZnHgNyE38G8EHZzZTmT_0000000001> [?? x 2]
+ #  d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) 
+ #  # Source:   table<replyr_filter_J9w6N9tGvIikvZIWriZl_0000000001> [?? x 2]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y
  #    <chr> <int>
@@ -515,7 +516,7 @@ resSQLite <- runExample(copyToRemote)
  #  3     c     5
  #  4     c     6
  #  
- #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
+ #  d3 %.>% replyr::replyr_inTest(., "x",values,"match",verbose=FALSE) 
  #  # Source:   lazy query [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y match
@@ -535,7 +536,7 @@ resSQLite <- runExample(copyToRemote)
  #  3     3
  #  4     3
  #  
- #  d4 %>% replyr::replyr_uniqueValues("x") 
+ #  d4 %.>% replyr::replyr_uniqueValues(., "x") 
  #  # Source:   lazy query [?? x 2]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x replyr_private_value_n
@@ -551,7 +552,7 @@ resSQLite <- runExample(copyToRemote)
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
  #  [1] "coalesce example 1"
- #  # Source:     table<rudzcdfykq> [?? x 3]
+ #  # Source:     table<llgjfmwhub> [?? x 3]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: year, name
  #     year count  name
@@ -563,7 +564,7 @@ resSQLite <- runExample(copyToRemote)
  #  5  2009     0      
  #  6  2010    NA     c
  #  [1] "coalesce example 2"
- #  # Source:     table<ukeiqtaicb> [?? x 3]
+ #  # Source:     table<hcdrdzwcdc> [?? x 3]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: year, name
  #      year count  name
@@ -580,7 +581,7 @@ resSQLite <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
- #  # Source:     table<bnxyhldedd> [?? x 3]
+ #  # Source:     table<ulrqbftqib> [?? x 3]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: year
  #     year count  name
@@ -589,7 +590,7 @@ resSQLite <- runExample(copyToRemote)
  #  2  2007     1     b
  #  3  2010    NA     c
  #  [1] "gapply"
- #  # Source:     table<qadhymxxjq> [?? x 2]
+ #  # Source:     table<jphzbfsvak> [?? x 2]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: group
  #       cv group
@@ -597,7 +598,7 @@ resSQLite <- runExample(copyToRemote)
  #  1    20     1
  #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
- #  # Source:     table<replyr_moveValuesToColumns_l8RI1bHroCRsYYCb6lg0_0000000003> [?? x 3]
+ #  # Source:     table<replyr_moveValuesToColumns_NXtyoNS5QL4pSWrLTKOS_0000000003> [?? x 3]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: index
  #    index meastype_meas1 meastype_meas2
@@ -606,7 +607,7 @@ resSQLite <- runExample(copyToRemote)
  #  2     2           m1_2           m2_2
  #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
- #  # Source:     table<wrfcdiueyj> [?? x 4]
+ #  # Source:     table<gwsfxwctqf> [?? x 4]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: index, meastype
  #    index  info meastype  meas
@@ -625,8 +626,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #  Auto-disconnecting SQLiteConnection
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  852270 45.6    1442291 77.1  1442291 77.1
- #  Vcells 1602408 12.3    2552219 19.5  2060163 15.8
+ #  Ncells  854422 45.7    1442291 77.1  1442291 77.1
+ #  Vcells 1609166 12.3    2552219 19.5  2059406 15.8
 ```
 
 MySQL example ("docker start mysql"). Kind of poor as at least the adapted MySql has a hard time with `NA`.
@@ -725,7 +726,7 @@ resSpark <- runExample(copyToRemote)
  #  4      y     4 character     3   0      NA  NA  NA   NA        NA      3     hi
  #  5      z     5 character     3   0      NA  NA  NA   NA        NA      a      z
  #  
- #  d1 %>% replyr::replyr_colClasses() 
+ #  d1 %.>% replyr::replyr_colClasses(.) 
  #  $p
  #  [1] "logical"
  #  
@@ -742,14 +743,14 @@ resSpark <- runExample(copyToRemote)
  #  [1] "character"
  #  
  #  
- #  d1 %>% replyr::replyr_testCols(is.numeric) 
+ #  d1 %.>% replyr::replyr_testCols(., is.numeric) 
  #      p     w     x     y     z 
  #  FALSE  TRUE  TRUE FALSE FALSE 
  #  
- #  d1 %>% replyr::replyr_dim() 
+ #  d1 %.>% replyr::replyr_dim(.) 
  #  [1] 3 5
  #  
- #  d1 %>% replyr::replyr_nrow() 
+ #  d1 %.>% replyr::replyr_nrow(.) 
  #  [1] 3
  #  # Source:   table<d2> [?? x 3]
  #  # Database: spark_connection
@@ -759,11 +760,11 @@ resSpark <- runExample(copyToRemote)
  #  2     2     5     a
  #  3     3   NaN     z
  #  
- #  d2 %>% replyr::replyr_quantile("x") 
+ #  d2 %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2 %>% replyr::replyr_summary() 
+ #  d2 %.>% replyr::replyr_summary(.) 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
@@ -776,11 +777,11 @@ resSpark <- runExample(copyToRemote)
  #  2     2     5     a
  #  3     3   NaN     z
  #  
- #  d2b %>% replyr::replyr_quantile("x") 
+ #  d2b %.>% replyr::replyr_quantile(., "x") 
  #     0 0.25  0.5 0.75    1 
  #  1.00 1.00 1.75 2.75 3.00 
  #  
- #  d2b %>% replyr::replyr_summary() 
+ #  d2b %.>% replyr::replyr_summary(.) 
  #    column index     class nrows nna nunique min max mean       sd lexmin lexmax
  #  1      x     1   numeric     3   0      NA   1   3    2 1.000000   <NA>   <NA>
  #  2      y     2   numeric     3   1      NA   3   5    4 1.414214   <NA>   <NA>
@@ -797,8 +798,8 @@ resSpark <- runExample(copyToRemote)
  #  6     c     6
  #  [1] "a" "c"
  #  
- #  d3 %>% replyr::replyr_filter("x",values,verbose=FALSE) 
- #  # Source:   table<replyr_filter_OviuxuioUwmwG28zNekh_0000000001> [?? x 2]
+ #  d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) 
+ #  # Source:   table<replyr_filter_j5n6p165sHeWlsZTS7nU_0000000001> [?? x 2]
  #  # Database: spark_connection
  #        x     y
  #    <chr> <int>
@@ -807,7 +808,7 @@ resSpark <- runExample(copyToRemote)
  #  3     c     5
  #  4     c     6
  #  
- #  d3 %>% replyr::replyr_inTest("x",values,"match",verbose=FALSE) 
+ #  d3 %.>% replyr::replyr_inTest(., "x",values,"match",verbose=FALSE) 
  #  # Source:   lazy query [?? x 3]
  #  # Database: spark_connection
  #        x     y match
@@ -827,7 +828,7 @@ resSpark <- runExample(copyToRemote)
  #  3     3
  #  4     3
  #  
- #  d4 %>% replyr::replyr_uniqueValues("x") 
+ #  d4 %.>% replyr::replyr_uniqueValues(., "x") 
  #  # Source:   lazy query [?? x 2]
  #  # Database: spark_connection
  #        x replyr_private_value_n
@@ -843,7 +844,7 @@ resSpark <- runExample(copyToRemote)
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
  #  [1] "coalesce example 1"
- #  # Source:     table<sparklyr_tmp_1186c71dbe69> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_16bb76e9e1660> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year, name
  #     year count  name
@@ -855,7 +856,7 @@ resSpark <- runExample(copyToRemote)
  #  5  2009     0      
  #  6  2010   NaN     c
  #  [1] "coalesce example 2"
- #  # Source:     table<sparklyr_tmp_1186c31bfe325> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_16bb74ccf315c> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year, name
  #      year count  name
@@ -872,7 +873,7 @@ resSpark <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with 14 more rows
  #  [1] "split re-join"
- #  # Source:     table<sparklyr_tmp_1186c2cd9aba7> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_16bb736b1b669> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year
  #     year count  name
@@ -881,7 +882,7 @@ resSpark <- runExample(copyToRemote)
  #  2  2007     1     b
  #  3  2010   NaN     c
  #  [1] "gapply"
- #  # Source:     table<sparklyr_tmp_1186c69477f2> [?? x 2]
+ #  # Source:     table<sparklyr_tmp_16bb74d3ec38c> [?? x 2]
  #  # Database:   spark_connection
  #  # Ordered by: group
  #       cv group
@@ -889,7 +890,7 @@ resSpark <- runExample(copyToRemote)
  #  1    20     1
  #  2     8     2
  #  [1] "replyr_moveValuesToColumns"
- #  # Source:     table<replyr_moveValuesToColumns_dxUjAIpDhHgjYMmQiRGY_0000000003> [?? x 3]
+ #  # Source:     table<replyr_moveValuesToColumns_MCKBFJaEO8qJJxN2Bf7q_0000000003> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: index
  #    index meastype_meas1 meastype_meas2
@@ -898,7 +899,7 @@ resSpark <- runExample(copyToRemote)
  #  2     2           m1_2           m2_2
  #  3     3           m1_3           m2_3
  #  [1] "replyr_moveValuesToRows"
- #  # Source:     table<sparklyr_tmp_1186c7d4eb43d> [?? x 4]
+ #  # Source:     table<sparklyr_tmp_16bb7539843f2> [?? x 4]
  #  # Database:   spark_connection
  #  # Ordered by: index, meastype
  #    index  info meastype  meas
@@ -915,8 +916,8 @@ if(!listsOfSameData(resBase, resSpark)) {
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  903704 48.3    1442291 77.1  1442291 77.1
- #  Vcells 1671500 12.8    3142662 24.0  2085287 16.0
+ #  Ncells  905870 48.4    1442291 77.1  1442291 77.1
+ #  Vcells 1678210 12.9    3142662 24.0  2091509 16.0
 ```
 
 ``` r
@@ -925,6 +926,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  902849 48.3    1442291 77.1  1442291 77.1
- #  Vcells 1668724 12.8    3142662 24.0  2085287 16.0
+ #  Ncells  905076 48.4    1442291 77.1  1442291 77.1
+ #  Vcells 1675722 12.8    3142662 24.0  2091509 16.0
 ```
