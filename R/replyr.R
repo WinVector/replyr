@@ -34,6 +34,9 @@ wrapr::let
 #' @export
 wrapr::restrictToNameAssignments
 
+#' @importFrom wrapr %.>%
+#' @export
+wrapr::`%.>%`
 
 #' @importFrom wrapr DebugFn
 #' @export

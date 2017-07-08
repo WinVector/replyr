@@ -1,6 +1,10 @@
 
 'replyr' 0.4.2 2017-07-05
 
+ * Start switch over to dot block pipe.
+
+'replyr' 0.4.2 2017-07-05
+
  * fix spelling of tableDescription()
  * add diagrams to join controller.
  * prepare for sparklyr rbind().

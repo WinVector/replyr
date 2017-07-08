@@ -1,8 +1,8 @@
 Package: replyr
 Type: Package
 Title: Diligent Use of Big Data for R
-Version: 0.4.2
-Date: 2017-07-05
+Version: 0.5.0
+Date: 2017-07-08
 Author: John Mount, Nina Zumel
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr
@@ -14,7 +14,7 @@ Description: Methods to diligently use 'dplyr' remote data sources ('SQL' databa
 License: GPL-3
 LazyData: TRUE
 Imports:
-  wrapr (>= 0.1.2),
+  wrapr (>= 0.3.0),
   dplyr (>= 0.5.0),
   DBI,
   RSQLite
@@ -35,3 +35,4 @@ Suggests: testthat,
     grid
 VignetteBuilder: knitr
 ByteCompile: true
+Remotes: WinVector/wrapr

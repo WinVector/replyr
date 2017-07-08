@@ -7,6 +7,8 @@
 \alias{reexports}
 \alias{restrictToNameAssignments}
 \alias{reexports}
+\alias{\%.>\%}
+\alias{reexports}
 \alias{DebugFn}
 \alias{reexports}
 \alias{DebugFnE}
@@ -25,6 +27,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{wrapr}{\code{\link[wrapr]{let}}, \code{\link[wrapr]{restrictToNameAssignments}}, \code{\link[wrapr]{DebugFn}}, \code{\link[wrapr]{DebugFnE}}, \code{\link[wrapr]{DebugFnW}}, \code{\link[wrapr]{DebugFnWE}}, \code{\link[wrapr]{DebugPrintFn}}, \code{\link[wrapr]{DebugPrintFnE}}}
+  \item{wrapr}{\code{\link[wrapr]{let}}, \code{\link[wrapr]{restrictToNameAssignments}}, \code{\link[wrapr]{\%.>\%}}, \code{\link[wrapr]{DebugFn}}, \code{\link[wrapr]{DebugFnE}}, \code{\link[wrapr]{DebugFnW}}, \code{\link[wrapr]{DebugFnWE}}, \code{\link[wrapr]{DebugPrintFn}}, \code{\link[wrapr]{DebugPrintFnE}}}
 }}
 
