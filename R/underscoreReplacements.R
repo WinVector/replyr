@@ -35,6 +35,7 @@ replyr_rename <- function(.data,
     wrapr::let(
       c(REPLYR_PRIVATE_NEWNAME=newName,
         REPLYR_PRIVATE_OLDNAME=oldName),
+      strict = FALSE,
       .data <- dplyr::rename(.data,
                              REPLYR_PRIVATE_NEWNAME = REPLYR_PRIVATE_OLDNAME)
     )
