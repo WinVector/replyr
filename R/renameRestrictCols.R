@@ -226,6 +226,9 @@ replyr_apply_f_mapped <- function(d,
                                   restrictMapIn = FALSE,
                                   rmap = replyr::replyr_reverseMap(nmap),
                                   restrictMapOut = FALSE) {
+  if(length(list(...))>0) {
+    stop("replyr_apply_f_mapped: unexpected arguments")
+  }
   dMapped <- replyr_mapRestrictCols(d, nmap,
                                     restrict = restrictMapIn)
   dF <- f(dMapped)
