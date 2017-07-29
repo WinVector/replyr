@@ -112,9 +112,8 @@ replyr_mapRestrictCols <- function(x, nmap,
   if(length(unique(names(nmap)))!=length(nmap)) {
     stop("replyr::replyr_mapRestrictCols duplicate destination columns (nmap keys) in replyr_mapRestrictCols")
   }
-  if(length(setdiff(as.character(nmap), colnames(x)))>0) {
-    stop("replyr::replyr_mapRestrictCols all source columns (nmap values) must be column names of x")
-  }
+  # restrict down to names in x
+  nmap <- nmap[as.character(nmap) %in% colnames(x)]
   if(!restrict) {
     dupMapping <- base::intersect(names(nmap), # destinations
                               setdiff(colnames(x), as.character(nmap)) # columns we are leaving in place
