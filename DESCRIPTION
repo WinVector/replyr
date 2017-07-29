@@ -3,9 +3,13 @@ Type: Package
 Title: Diligent Use of Big Data with R
 Version: 0.5.2
 Date: 2017-07-29
-Author: John Mount, Nina Zumel
+Authors@R: c(
+    person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
+    person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),
+    person(family = "Win-Vector LLC", role = c("cph"))
+    )
 Maintainer: John Mount <jmount@win-vector.com>
-URL: https://github.com/WinVector/replyr
+URL: http://winvector.github.io/reply/
 BugReports: https://github.com/WinVector/replyr/issues
 Description: Methods to diligently use 'dplyr' remote data sources ('SQL' databases,
    'Spark' 2.0.0 and above).

@@ -1,7 +1,5 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -25,7 +23,7 @@ It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https
 
 Note: `replyr` is meant only for "tame data frames" that is data frames with non-duplicate column names that are also valid *simple* (without quotes) `R` variables names and columns that are `R` simple vector types (numbers, strings, and such).
 
-![](tools/replyrs.png)
+![](https://github.com/WinVector/replyr/raw/master/tools/replyrs.png)
 
 `replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
 

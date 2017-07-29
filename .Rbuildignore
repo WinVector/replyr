@@ -12,3 +12,4 @@
 ^derby.log$
 ^log4j.spark.log$
 ^cran-comments.md$
+^docs$
