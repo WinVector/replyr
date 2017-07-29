@@ -1,8 +1,8 @@
 Package: replyr
 Type: Package
 Title: Diligent Use of Big Data with R
-Version: 0.5.1
-Date: 2017-07-12
+Version: 0.5.2
+Date: 2017-07-29
 Author: John Mount, Nina Zumel
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr

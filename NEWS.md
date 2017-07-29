@@ -1,4 +1,8 @@
 
+'replyr' 0.5.2 2017-07-29
+
+ * More forgiving mapping fn.
+ 
 'replyr' 0.5.1 2017-07-12
 
  * Allow non-strict names in some cases.
