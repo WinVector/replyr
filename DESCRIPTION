@@ -9,7 +9,7 @@ Authors@R: c(
     person(family = "Win-Vector LLC", role = c("cph"))
     )
 Maintainer: John Mount <jmount@win-vector.com>
-URL: http://winvector.github.io/reply/
+URL: https://github.com/WinVector/replyr/, https://winvector.github.io/reply/
 BugReports: https://github.com/WinVector/replyr/issues
 Description: Methods to diligently use 'dplyr' remote data sources ('SQL' databases,
    'Spark' 2.0.0 and above).

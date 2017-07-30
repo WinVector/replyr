@@ -74,7 +74,14 @@
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/WinVector/replyr/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -89,7 +96,7 @@
       <h1>coalesce</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-07-29</h4>
+            <h4 class="date">2017-07-30</h4>
           </div>
 
     
@@ -142,11 +149,11 @@ filled &lt;-<span class="st"> </span>filled[<span class="kw">order</span>(filled
 filled</code></pre></div>
 <pre><code>##    year count name
 ## 1  2005     6    a
-## 19 2005     0    b
+## 18 2005     0    b
 ## 14 2005     0    c
 ## 9  2005     0    d
 ## 24 2006     0    a
-## 18 2006     0    b
+## 19 2006     0    b
 ## 13 2006     0    c
 ## 8  2006     0    d
 ## 23 2007     0    a
@@ -191,7 +198,7 @@ dbData &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dpl
 dbSupport &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, support)
 replyr::<span class="kw"><a href="../reference/replyr_coalesce.html">replyr_coalesce</a></span>(dbData, dbSupport, 
                         <span class="dt">fills =</span> <span class="kw">list</span>(<span class="dt">count=</span><span class="dv">0</span>))</code></pre></div>
-<pre><code>## # Source:   table&lt;eqhqbjhepj&gt; [?? x 3]
+<pre><code>## # Source:   table&lt;ezpgumzfvl&gt; [?? x 3]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##     year count  name
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
@@ -237,8 +244,8 @@ s &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 <span class="kw">gc</span>()</code></pre></div>
 <pre><code>## Auto-disconnecting SQLiteConnection</code></pre>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  678753 36.3    1168576 62.5   940480 50.3
-## Vcells 1213305  9.3    2060183 15.8  1430617 11.0</code></pre>
+## Ncells  678751 36.3    1168576 62.5   940480 50.3
+## Vcells 1213299  9.3    2060183 15.8  1430617 11.0</code></pre>
 </div>
   </div>
 
