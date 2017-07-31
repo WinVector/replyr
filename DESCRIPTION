@@ -2,14 +2,14 @@ Package: replyr
 Type: Package
 Title: Diligent Use of Big Data with R
 Version: 0.5.2
-Date: 2017-07-29
+Date: 2017-07-31
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
     person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),
     person(family = "Win-Vector LLC", role = c("cph"))
     )
 Maintainer: John Mount <jmount@win-vector.com>
-URL: https://github.com/WinVector/replyr/, https://winvector.github.io/reply/
+URL: https://github.com/WinVector/replyr/, https://winvector.github.io/replyr/
 BugReports: https://github.com/WinVector/replyr/issues
 Description: Methods to diligently use 'dplyr' remote data sources ('SQL' databases,
    'Spark' 2.0.0 and above).

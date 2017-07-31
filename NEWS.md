@@ -1,5 +1,5 @@
 
-'replyr' 0.5.2 2017-07-29
+'replyr' 0.5.2 2017-07-31
 
  * More forgiving mapping fn.
  
