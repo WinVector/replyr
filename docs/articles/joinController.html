@@ -96,7 +96,7 @@
       <h1>Join Controller</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-07-30</h4>
+            <h4 class="date">2017-07-31</h4>
           </div>
 
     
@@ -343,23 +343,23 @@ tempNameGenerator &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, columnJoinPlan, 
                                <span class="dt">verbose=</span> <span class="ot">TRUE</span>,
                                <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
-<pre><code>## [1] "start meas1 Sun Jul 30 14:46:35 2017"
+<pre><code>## [1] "start meas1 Mon Jul 31 05:06:07 2017"
 ## [1] " rename/restrict meas1"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'MeasurementDate' = 'date'"
 ## [1] "   'meas1_weight' = 'weight'"
 ## [1] "   'height' = 'height'"
 ## [1] " res &lt;- meas1"
-## [1] "done meas1 Sun Jul 30 14:46:35 2017"
-## [1] "start names Sun Jul 30 14:46:35 2017"
+## [1] "done meas1 Mon Jul 31 05:06:07 2017"
+## [1] "start names Mon Jul 31 05:06:07 2017"
 ## [1] " rename/restrict names"
 ## [1] "   'table_names_present' = 'table_names_present'"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'name' = 'name'"
 ## [1] " res &lt;- left_join(res, names,"
 ## [1] "                  by = c( 'PatientID' ))"
-## [1] "done names Sun Jul 30 14:46:35 2017"
-## [1] "start meas2 Sun Jul 30 14:46:35 2017"
+## [1] "done names Mon Jul 31 05:06:07 2017"
+## [1] "start meas2 Mon Jul 31 05:06:07 2017"
 ## [1] " rename/restrict meas2"
 ## [1] "   'table_meas2_present' = 'table_meas2_present'"
 ## [1] "   'PatientID' = 'pid'"
@@ -367,7 +367,7 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 ## [1] "   'meas2_weight' = 'weight'"
 ## [1] " res &lt;- left_join(res, meas2,"
 ## [1] "                  by = c( 'PatientID', 'MeasurementDate' ))"
-## [1] "done meas2 Sun Jul 30 14:46:36 2017"</code></pre>
+## [1] "done meas2 Mon Jul 31 05:06:08 2017"</code></pre>
 <p><code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> takes both a table description table (<code>tDesc</code>, keyed by <code>tableName</code>) and the join plan (<code>columnJoinPlan</code>, keyed by <code>tableName</code> and <code>sourceColumn</code>).</p>
 <p>The separation of concerns is strong: all details about the intended left-join sequence are taken from the <code>columnJoinPlan</code>, and only the mapping from abstract table names to tables (or table references/handles) is taken from <code>tDesc</code>. This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy. <code>tDesc</code> is a runtime entity (as it binds names to live handles, so can’t be serialized: you must save the code steps to produce it; note only the columns <code>tableName</code> and <code>handle</code> are used so there is no point re-editing the <code>keys</code> column after running <code><a href="../reference/tableDescription.html">tableDescription()</a></code> on new tables) and <code>columnJoinPlan</code> is a durable entity (has only information, not handles).</p>
 <p>Basically you:</p>
@@ -423,8 +423,8 @@ for(ti in temps) {
 <span class="kw">gc</span>(<span class="dt">verbose=</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## Auto-disconnecting SQLiteConnection</code></pre>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  939708 50.2    1770749 94.6  1442291 77.1
-## Vcells 1464495 11.2    3759015 28.7  3116537 23.8</code></pre>
+## Ncells  939815 50.2    1770749 94.6  1442291 77.1
+## Vcells 1464663 11.2    3759216 28.7  3116694 23.8</code></pre>
 </div>
 </div>
   </div>

@@ -96,7 +96,7 @@
       <h1>Join Dependency Sorting</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-07-30</h4>
+            <h4 class="date">2017-07-31</h4>
           </div>
 
     
@@ -234,13 +234,13 @@ if(!<span class="kw">is.null</span>(sorted)) {
   dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Sun Jul 30 14:46:26 2017"
+## [1] "start employeeanddate Mon Jul 31 05:06:00 2017"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Sun Jul 30 14:46:26 2017"
-## [1] "start activity Sun Jul 30 14:46:26 2017"
+## [1] "done employeeanddate Mon Jul 31 05:06:01 2017"
+## [1] "start activity Mon Jul 31 05:06:01 2017"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -249,8 +249,8 @@ if(!<span class="kw">is.null</span>(sorted)) {
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Sun Jul 30 14:46:26 2017"
-## [1] "start orgtable Sun Jul 30 14:46:26 2017"
+## [1] "done activity Mon Jul 31 05:06:01 2017"
+## [1] "start orgtable Mon Jul 31 05:06:01 2017"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -259,8 +259,8 @@ if(!<span class="kw">is.null</span>(sorted)) {
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Sun Jul 30 14:46:27 2017"
-## [1] "start revenue Sun Jul 30 14:46:27 2017"
+## [1] "done orgtable Mon Jul 31 05:06:01 2017"
+## [1] "start revenue Mon Jul 31 05:06:01 2017"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -268,7 +268,7 @@ if(!<span class="kw">is.null</span>(sorted)) {
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Sun Jul 30 14:46:27 2017"
+## [1] "done revenue Mon Jul 31 05:06:01 2017"
 ## [1] "join results"
 ## Observations: 2
 ## Variables: 10
@@ -300,7 +300,7 @@ if(!<span class="kw">is.null</span>(sorted)) {
 <span class="kw">gc</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## Auto-disconnecting SQLiteConnection</code></pre>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  966170 51.6    1770749 94.6  1770749 94.6
+## Ncells  966173 51.6    1770749 94.6  1770749 94.6
 ## Vcells 1487830 11.4    3676026 28.1  3203983 24.5</code></pre>
 </div>
   </div>
