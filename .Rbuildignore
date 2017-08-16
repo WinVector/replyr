@@ -13,3 +13,4 @@
 ^log4j.spark.log$
 ^cran-comments.md$
 ^docs$
+^_pkgdown\.yml$
