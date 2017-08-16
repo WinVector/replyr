@@ -128,6 +128,9 @@ replyr_mapRestrictCols <- function(x, nmap,
     if(is.null(ni)) {
       stop('replyr::replyr_mapRestrictCols nmap keys must not be null')
     }
+    if(is.na(ni)) {
+      stop('replyr::replyr_mapRestrictCols nmap keys must not be NA')
+    }
     if(!is.character(ni)) {
       stop('replyr::replyr_mapRestrictCols nmap keys must be strings')
     }
@@ -141,6 +144,9 @@ replyr_mapRestrictCols <- function(x, nmap,
       stop(paste('replyr:replyr_mapRestrictCols nmap key not a valid name: "',ni,'"'))
     }
     ti <- nmap[[ni]]
+    if(is.na(ti)) {
+      stop('replyr::replyr_mapRestrictCols nmap values must not be NA')
+    }
     if(is.null(ti)) {
       stop('replyr::replyr_mapRestrictCols nmap values must not be null')
     }

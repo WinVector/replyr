@@ -49,6 +49,7 @@ replyr_summary <- function(x,
   cnames <- colnames(x)
   if(!is.null(cols)) {
     cnames <- intersect(cnames, cols)
+    localSample <- localSample[, cnames, drop=FALSE]
   }
   nrows <- 0
   if(nrow(localSample)>0) {
