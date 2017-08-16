@@ -26,7 +26,7 @@ RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,
     rmarkdown,
-    sparklyr,
+    sparklyr (>= 0.6.2),
     ggplot2,
     RPostgreSQL,
     DiagrammeR,

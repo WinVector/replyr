@@ -3,20 +3,18 @@
 ## Test environments
 
  * local OS X install x86_64-apple-darwin13.4.0 (64-bit)
- * R version 3.4.0 (2017-04-21)
+ * using R version 3.4.1 (2017-06-30)
  * win-builder (devel and release) 
 
-## R CMD check --as-cran replyr_0.5.2.tar.gz
+## R CMD check --as-cran replyr_0.5.3.tar.gz
 
- * using log directory ‘/Users/johnmount/Documents/work/replyr.Rcheck’
- * using R version 3.4.0 (2017-04-21)
- * using platform: x86_64-apple-darwin15.6.0 (64-bit)
- * using session charset: UTF-8
- * using option ‘--as-cran’
- * checking for file ‘replyr/DESCRIPTION’ ... OK
- * checking extension type ... Package
- * this is package ‘replyr’ version ‘0.4.2’
-
+* using R version 3.4.1 (2017-06-30)
+* using platform: x86_64-apple-darwin15.6.0 (64-bit)
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘replyr/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘replyr’ version ‘0.5.3’
 
 NOTEs
 
