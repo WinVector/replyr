@@ -1,4 +1,8 @@
 
+# replyr 0.5.3 2017-08-16
+
+ * Fix column selector in replyr_summarize().
+ 
 # replyr 0.5.2 2017-07-31
 
  * More forgiving mapping fn.

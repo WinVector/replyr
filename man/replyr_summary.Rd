@@ -22,7 +22,12 @@ replyr_summary(x, ..., countUniqueNum = FALSE, countUniqueNonNum = FALSE,
 summary of columns.
 }
 \description{
-Compute usable summary of columns of tbl.
+Compute per-column summaries and return as a \code{data.frame}.
+}
+\details{
+Can be slow compared to \code{dplyr::summarize_all()} (but serves a different purpose).
+Also, for numeric columns includes \code{NaN} in \code{nna} count (as is typcial for \code{R}, e.g.,
+\code{is.na(NaN)}).
 }
 \examples{
 

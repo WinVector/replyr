@@ -11,6 +11,12 @@ NULL
 
 #' Compute usable summary of columns of tbl.
 #'
+#' Compute per-column summaries and return as a \code{data.frame}.
+#'
+#' Can be slow compared to \code{dplyr::summarize_all()} (but serves a different purpose).
+#' Also, for numeric columns includes \code{NaN} in \code{nna} count (as is typcial for \code{R}, e.g.,
+#' \code{is.na(NaN)}).
+#'
 #' @param x tbl or item that can be coerced into such.
 #' @param ... force additional arguments to be bound by name.
 #' @param countUniqueNum logical, if true include unique non-NA counts for numeric cols.

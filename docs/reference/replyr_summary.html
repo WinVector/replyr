@@ -117,7 +117,7 @@
     </div>
 
     
-    <p>Compute usable summary of columns of tbl.</p>
+    <p>Compute per-column summaries and return as a <code>data.frame</code>.</p>
     
 
     <pre class="usage"><span class='fu'>replyr_summary</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>countUniqueNum</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>countUniqueNonNum</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
@@ -151,6 +151,12 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>summary of columns.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Can be slow compared to <code><a href='http://dplyr.tidyverse.org/reference/summarise_all.html'>dplyr::summarize_all()</a></code> (but serves a different purpose).
+Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (as is typcial for <code>R</code>, e.g.,
+<code>is.na(NaN)</code>).</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -187,6 +193,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
