@@ -654,7 +654,7 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 #' This PNG can be smaller than directly including a grViz rendering in markdown.
 #' Requires all of \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} to be installed with all external dependencies properly installed and configured.
 #'
-#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}, \code{\link{convertDiagrameToPNG}}
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param diagramSpec diagram specification from \code{\link{makeJoinDiagramSpec}}.
 #' @param ... force later arguments to bind by name.
@@ -713,29 +713,6 @@ renderJoinDiagram <- function(diagramSpec,
 
 
 
-#' Convert a renderJoinDiagram \code{\link{renderJoinDiagram}} result to a PNG graphics item.
-#'
-#' Requires packages \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} properly installed to use.
-#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
-#'
-#' @seealso \code{\link{renderJoinDiagram}}
-#'
-#'
-#' @param diagram DiagrammeR::grViz result (please see replyr::renderJoinDiagram)
-#' @param ... force later arguments to bind by name.
-#' @param pngFileName optional, file path where to save the PNG.
-#' @param tempDir directory to create temporary files in (not deleted by this method).
-#' @return png rendering of diagram
-#'
-#'
-#' @export
-#'
-convertDiagrameToPNG <- function(diagram,
-                              ...,
-                              pngFileName= NULL,
-                              tempDir= tempdir()) {
-
-}
 
 #' check that a join plan is consistent with table descriptions
 #'
