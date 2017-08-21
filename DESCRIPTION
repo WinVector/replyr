@@ -2,7 +2,7 @@ Package: replyr
 Type: Package
 Title: Diligent Use of Big Data with R
 Version: 0.5.3
-Date: 2017-08-16
+Date: 2017-08-21
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
     person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),
