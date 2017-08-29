@@ -630,8 +630,6 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
         group <- paste0('node', group)
         graph <- paste0(graph, '\n',
                         'subgraph cluster_', gii, ' {\n',
-                        'style=filled\n',
-                        'color=lightgreen\n',
                         'label = "',gi,'"\n',
                         paste(group, collapse=' ; '),
                         '\n}')

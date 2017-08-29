@@ -1,7 +1,8 @@
 
-# replyr 0.5.3 2017-08-16
+# replyr 0.5.3 2017-08-28
 
  * Fix column selector in replyr_summarize().
+ * Fix graph layout a bit.
  
 # replyr 0.5.2 2017-07-31
 
