@@ -176,10 +176,10 @@ are altered by the fill instructions.</p>
 <span class='no'>filled</span> <span class='kw'>&lt;-</span> <span class='no'>filled</span>[<span class='fu'>order</span>(<span class='no'>filled</span>$<span class='no'>year</span>), ]
 <span class='no'>filled</span></div><div class='output co'>#&gt;   year count name
 #&gt; 1 2005     6    a
-#&gt; 6 2006     0 &lt;NA&gt;
+#&gt; 4 2006     0 &lt;NA&gt;
 #&gt; 2 2007     1    b
 #&gt; 5 2008     0 &lt;NA&gt;
-#&gt; 4 2009     0 &lt;NA&gt;
+#&gt; 6 2009     0 &lt;NA&gt;
 #&gt; 3 2010    NA    c</div><div class='input'>
 <span class='co'># complex key example</span>
 <span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>year</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>2005</span>,<span class='fl'>2007</span>,<span class='fl'>2010</span>),
@@ -194,29 +194,29 @@ are altered by the fill instructions.</p>
 <span class='no'>filled</span> <span class='kw'>&lt;-</span> <span class='no'>filled</span>[<span class='fu'>order</span>(<span class='no'>filled</span>$<span class='no'>year</span>, <span class='no'>filled</span>$<span class='no'>name</span>), ]
 <span class='no'>filled</span></div><div class='output co'>#&gt;    year count name
 #&gt; 1  2005     6    a
-#&gt; 19 2005     0    b
+#&gt; 9  2005     0    b
 #&gt; 14 2005     0    c
-#&gt; 9  2005     0    d
-#&gt; 24 2006     0    a
-#&gt; 18 2006     0    b
-#&gt; 13 2006     0    c
-#&gt; 8  2006     0    d
-#&gt; 23 2007     0    a
+#&gt; 19 2005     0    d
+#&gt; 4  2006     0    a
+#&gt; 10 2006     0    b
+#&gt; 15 2006     0    c
+#&gt; 20 2006     0    d
+#&gt; 5  2007     0    a
 #&gt; 2  2007     1    b
-#&gt; 12 2007     0    c
-#&gt; 7  2007     0    d
-#&gt; 22 2008     0    a
-#&gt; 17 2008     0    b
-#&gt; 11 2008     0    c
-#&gt; 6  2008     0    d
-#&gt; 21 2009     0    a
-#&gt; 16 2009     0    b
-#&gt; 10 2009     0    c
-#&gt; 5  2009     0    d
-#&gt; 20 2010     0    a
-#&gt; 15 2010     0    b
+#&gt; 16 2007     0    c
+#&gt; 21 2007     0    d
+#&gt; 6  2008     0    a
+#&gt; 11 2008     0    b
+#&gt; 17 2008     0    c
+#&gt; 22 2008     0    d
+#&gt; 7  2009     0    a
+#&gt; 12 2009     0    b
+#&gt; 18 2009     0    c
+#&gt; 23 2009     0    d
+#&gt; 8  2010     0    a
+#&gt; 13 2010     0    b
 #&gt; 3  2010    NA    c
-#&gt; 4  2010     0    d</div><div class='input'>
+#&gt; 24 2010     0    d</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

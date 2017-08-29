@@ -205,12 +205,17 @@ have <- c(
   requireNamespace('grid', quietly = TRUE)
 )
 if(all(have)) {
-  png <- columnJoinPlan %>%
-    makeJoinDiagramSpec() %>%
-    renderJoinDiagram()
-  if(!is.null(png)) {
-    grid::grid.raster(png)
-  }
+  tryCatch(
+    {
+      png <- columnJoinPlan %>%
+        makeJoinDiagramSpec() %>%
+        renderJoinDiagram()
+      if(!is.null(png)) {
+        grid::grid.raster(png)
+      }
+    },
+    error = function(e) { warning(e); NULL}
+  )
 }
 ```
 

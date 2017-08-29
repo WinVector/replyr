@@ -3,7 +3,9 @@
 
  * Fix column selector in replyr_summarize().
  * Fix graph layout a bit.
- 
+ * Fix column selector in replyr_summarize().
+ * Fix compatability with next version of DiagrammeR
+
 # replyr 0.5.2 2017-07-31
 
  * More forgiving mapping fn.

@@ -27,5 +27,5 @@ This PNG can be smaller than directly including a grViz rendering in markdown.
 Requires all of \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} to be installed with all external dependencies properly installed and configured.
 }
 \seealso{
-\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}, \code{\link{convertDiagrameToPNG}}
+\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
 }

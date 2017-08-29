@@ -15,7 +15,7 @@ NULL
 #'
 #' Can be slow compared to \code{dplyr::summarize_all()} (but serves a different purpose).
 #' Also, for numeric columns includes \code{NaN} in \code{nna} count (as is typcial for \code{R}, e.g.,
-#' \code{is.na(NaN)}).
+#' \code{is.na(NaN)}).  And note: \code{replyr_summary()} currently skips "raw" columns.
 #'
 #' @param x tbl or item that can be coerced into such.
 #' @param ... force additional arguments to be bound by name.
@@ -27,11 +27,13 @@ NULL
 #' @examples
 #'
 #' d <- data.frame(p= c(TRUE, FALSE, NA),
-#'                 s = NA,
+#'                 r= I(list(1,2,3)),
+#'                 s= NA,
+#'                 t= as.raw(3:5),
 #'                 w= 1:3,
-#'                 x=c(NA,2,3),
-#'                 y=factor(c(3,5,NA)),
-#'                 z=c('a',NA,'z'),
+#'                 x= c(NA,2,3),
+#'                 y= factor(c(3,5,NA)),
+#'                 z= c('a',NA,'z'),
 #'                 stringsAsFactors=FALSE)
 #' d$q <- list(1,2,3)
 #' replyr_summary(d)
