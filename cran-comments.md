@@ -44,5 +44,5 @@ Status: OK (no other NOTEs, WARNINGs, or ERRORs)
 
 All declared dependencies checked.
 
-  devtools::revdep('replyr')
+  devtools::revdep_check()
   [1] "WVPlots"
