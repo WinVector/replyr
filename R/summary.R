@@ -60,8 +60,8 @@ replyr_summary <- function(x,
     localSample <- localSample[, cnames, drop=FALSE]
   }
   nrows <- 0
-  if(nrow(localSample)>0) {
-    nrows <- nrow(x)
+  if(replyr_nrow(localSample)>0) {
+    nrows <- replyr_nrow(x)
   }
   cmap <- seq_len(length(cnames))
   names(cmap) <- cnames

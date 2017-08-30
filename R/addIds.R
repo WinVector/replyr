@@ -13,7 +13,7 @@
 replyr_add_ids <- function(df, idColName) {
   if(replyr_is_local_data(df)) {
     # some source of local frame
-    df[[idColName]] <- seq_len(nrow(df))
+    df[[idColName]] <- seq_len(replyr_nrow(df))
     return(df)
   }
   if(replyr_is_Spark_data(df)) {

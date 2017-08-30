@@ -126,7 +126,7 @@ replyr_copy_to <- function(dest,
     replyr_drop_table_name(dest, name)
   }
   if(!is.null(rowNumberColumn)) {
-    df[[rowNumberColumn]] <- seq_len(nrow(df))
+    df[[rowNumberColumn]] <- seq_len(replyr_nrow(df))
   }
   dplyr::copy_to(dest, df, name,
                  temporary=temporary,

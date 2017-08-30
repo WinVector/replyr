@@ -2,7 +2,7 @@
 % Please edit documentation in R/dim.R
 \name{replyr_dim}
 \alias{replyr_dim}
-\title{Compute dimensions of a tbl.}
+\title{Compute dimensions of a data.frame (work around https://github.com/rstudio/sparklyr/issues/976 ).}
 \usage{
 replyr_dim(x)
 }
@@ -13,11 +13,11 @@ replyr_dim(x)
 dimensions (including rows)
 }
 \description{
-Compute dimensions of a tbl.
+Compute dimensions of a data.frame (work around https://github.com/rstudio/sparklyr/issues/976 ).
 }
 \examples{
 
-d<- data.frame(x=c(1,2))
+d <- data.frame(x=c(1,2))
 replyr_dim(d)
 
 }
