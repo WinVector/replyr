@@ -6,8 +6,8 @@
 \alias{replyr-package}
 \title{replyr: Diligent Use of Big Data for R}
 \description{
-Methods to diligently use 'dplyr' remote data sources in R ('SQL' databases,
-'Spark' 2.0.0 and above). REmote PLYing of big data for R.
+Methods to reliably use 'dplyr' remote data sources in R ('SQL' databases,
+'Spark' 2.0.0 and above) in a generic fashion. REmote PLYing of big data for R.
 Adds convenience functions to make big data tasks more like
 working with an in-memory R 'data.frame'.
 Results do depend on which 'dplyr' data service provider used.

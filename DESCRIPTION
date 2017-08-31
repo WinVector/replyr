@@ -1,6 +1,6 @@
 Package: replyr
 Type: Package
-Title: Diligent Use of Big Data with R
+Title: Reliable Adaption of Big Data with R
 Version: 0.5.4
 Date: 2017-08-30
 Authors@R: c(
@@ -11,8 +11,10 @@ Authors@R: c(
 Maintainer: John Mount <jmount@win-vector.com>
 URL: https://github.com/WinVector/replyr/, https://winvector.github.io/replyr/
 BugReports: https://github.com/WinVector/replyr/issues
-Description: Methods to diligently use 'dplyr' remote data sources ('SQL' databases,
-   'Spark' 2.0.0 and above).
+Description: Methods to use 'dplyr' remote data sources ('SQL' databases,
+   'Spark' 2.0.0 and above) in a reliable "generic" fashion (generic meaning
+   user code works similarly on all such sources, without needing per-source
+   adaption).
    Adds convenience functions to make such tasks more like
    working with an in-memory R 'data.frame'.
 License: GPL-3
