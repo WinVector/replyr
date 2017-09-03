@@ -53,14 +53,30 @@ replyr_nrow <- function(x) {
   if(!replyr_hasrows(x)) {
     return(0)
   }
-  constant <- NULL # false binding for 'constant' so name does not look unbound to CRAN check
-  suppressWarnings(
-    x %.>%
-      dplyr::ungroup(.) %.>%
-      dplyr::mutate(., constant=1.0) %.>%
-      dplyr::summarize(., count=sum(constant)) %.>%
-      dplyr::collect(.) %.>%
-      as.data.frame(.) -> tmp)
-  as.numeric(tmp[1, 1, drop=TRUE])
+  # get rid of raw columns
+  h <- x %.>%
+    dplyr::ungroup(.) %.>%
+    head(.) %.>%
+    dplyr::collect(.) %.>%
+    as.data.frame(.)
+  cn <- colnames(h)
+  ctypes <- vapply(cn,
+                   function(ci) {
+                     paste(class(h[[ci]]), collapse = ' ')
+                   }, character(1))
+  safeCols <- cn[ctypes!='raw']
+  # nrow() not supported in dbplyr/sparklyr world: http://www.win-vector.com/blog/2017/08/why-to-use-the-replyr-r-package/
+  # previous mutate impl was erroring out: https://github.com/tidyverse/dplyr/issues/3069
+  # and using tally directly is bad: https://github.com/tidyverse/dplyr/issues/3070
+  # and this issue is a problem: https://github.com/tidyverse/dplyr/issues/3071
+  constant <- NULL # make obvious this is not an unbound reference
+  ctab <- x %.>%
+    dplyr::ungroup(.) %.>%
+    dplyr::select(., dplyr::one_of(safeCols)) %.>%  # if no columns, not allowd in dbs!
+    dplyr::mutate(., constant = 1.0) %.>%  # collumn we can count, not named n
+    dplyr::summarize(., count = sum(constant)) %.>%
+    dplyr::collect(.) %.>%
+    as.data.frame(.)
+  as.numeric(ctab[1, 1, drop=TRUE])
 }
 
