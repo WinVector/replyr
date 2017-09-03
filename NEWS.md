@@ -1,7 +1,8 @@
 
-# replyr 0.5.4 2017-08-30
+# replyr 0.5.4 2017-09-03
 
  * Work around ncol() issue.
+ * Work around many nrow() issues.
 
 # replyr 0.5.3 2017-08-28
 

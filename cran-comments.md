@@ -6,7 +6,7 @@
  * using R version 3.4.1 (2017-06-30)
  * win-builder (devel and release) 
 
-## R CMD check --as-cran replyr_0.5.3.tar.gz
+## R CMD check --as-cran replyr_0.5.4.tar.gz
 
 * using R version 3.4.1 (2017-06-30)
 * using platform: x86_64-apple-darwin15.6.0 (64-bit)
