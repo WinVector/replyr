@@ -19,8 +19,9 @@ Description: Methods to use 'dplyr' remote data sources ('SQL' databases,
    working with an in-memory R 'data.frame'.
 License: GPL-3
 LazyData: TRUE
+Depends:
+  wrapr (>= 0.4.2)
 Imports:
-  wrapr (>= 0.4.0),
   dplyr (>= 0.5.0),
   DBI,
   RSQLite
@@ -29,6 +30,7 @@ Suggests: testthat,
     knitr,
     rmarkdown,
     sparklyr (>= 0.6.2),
+    dbplyr,
     ggplot2,
     RPostgreSQL,
     DiagrammeR,
