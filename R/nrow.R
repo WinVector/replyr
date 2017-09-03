@@ -53,18 +53,12 @@ replyr_nrow <- function(x) {
   if(!replyr_hasrows(x)) {
     return(0)
   }
+  # try for easy case
+  n <- nrow(x)
+  if(!is.na(n)) {
+    return(n)
+  }
   # get rid of raw columns
-  h <- x %.>%
-    dplyr::ungroup(.) %.>%
-    head(.) %.>%
-    dplyr::collect(.) %.>%
-    as.data.frame(.)
-  cn <- colnames(h)
-  ctypes <- vapply(cn,
-                   function(ci) {
-                     paste(class(h[[ci]]), collapse = ' ')
-                   }, character(1))
-  safeCols <- cn[ctypes!='raw']
   # nrow() not supported in dbplyr/sparklyr world: http://www.win-vector.com/blog/2017/08/why-to-use-the-replyr-r-package/
   # previous mutate impl was erroring out: https://github.com/tidyverse/dplyr/issues/3069
   # and using tally directly is bad: https://github.com/tidyverse/dplyr/issues/3070
@@ -72,11 +66,10 @@ replyr_nrow <- function(x) {
   constant <- NULL # make obvious this is not an unbound reference
   ctab <- x %.>%
     dplyr::ungroup(.) %.>%
-    dplyr::select(., dplyr::one_of(safeCols)) %.>%  # if no columns, not allowd in dbs!
-    dplyr::mutate(., constant = 1.0) %.>%  # collumn we can count, not named n
+    dplyr::transmute(., constant = 1.0) %.>%  # collumn we can count, not named n
     dplyr::summarize(., count = sum(constant)) %.>%
-    dplyr::collect(.) %.>%
+    dplyr::collect(.)  %.>% # I forget if pull is in dplyr 0.5.0
     as.data.frame(.)
-  as.numeric(ctab[1, 1, drop=TRUE])
+  ctab[1,1,drop=TRUE]
 }
 

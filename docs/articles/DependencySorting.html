@@ -236,13 +236,13 @@ if(!<span class="kw">is.null</span>(sorted)) {
   dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Sun Sep  3 09:55:37 2017"
+## [1] "start employeeanddate Sun Sep  3 11:05:32 2017"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Sun Sep  3 09:55:37 2017"
-## [1] "start activity Sun Sep  3 09:55:37 2017"
+## [1] "done employeeanddate Sun Sep  3 11:05:32 2017"
+## [1] "start activity Sun Sep  3 11:05:32 2017"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -251,8 +251,8 @@ if(!<span class="kw">is.null</span>(sorted)) {
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Sun Sep  3 09:55:37 2017"
-## [1] "start orgtable Sun Sep  3 09:55:37 2017"
+## [1] "done activity Sun Sep  3 11:05:32 2017"
+## [1] "start orgtable Sun Sep  3 11:05:32 2017"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -261,8 +261,8 @@ if(!<span class="kw">is.null</span>(sorted)) {
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Sun Sep  3 09:55:38 2017"
-## [1] "start revenue Sun Sep  3 09:55:38 2017"
+## [1] "done orgtable Sun Sep  3 11:05:32 2017"
+## [1] "start revenue Sun Sep  3 11:05:32 2017"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -270,7 +270,7 @@ if(!<span class="kw">is.null</span>(sorted)) {
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Sun Sep  3 09:55:38 2017"
+## [1] "done revenue Sun Sep  3 11:05:33 2017"
 ## [1] "join results"
 ## Observations: 2
 ## Variables: 10
@@ -302,8 +302,8 @@ if(!<span class="kw">is.null</span>(sorted)) {
 <span class="kw">gc</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## Auto-disconnecting SQLiteConnection</code></pre>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  981862 52.5    1770749 94.6  1770749 94.6
-## Vcells 1517275 11.6    4144282 31.7  3386902 25.9</code></pre>
+## Ncells  981401 52.5    1770749 94.6  1770749 94.6
+## Vcells 1516322 11.6    4140436 31.6  3383683 25.9</code></pre>
 </div>
   </div>
 
