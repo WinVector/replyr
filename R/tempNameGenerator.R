@@ -7,7 +7,6 @@
 #' f(peek=TRUE) returns the list without altering anything.
 #'
 #' @param prefix character, string to prefix temp names with.
-#' @param suffix character, optional additional disambiguating breaking string.
 #' @return name generator function.
 #'
 #' @examples
@@ -20,17 +19,14 @@
 #' print(f(dumpList=TRUE))
 #'
 #' @export
-makeTempNameGenerator <- function(prefix,
-                                  suffix= NULL) {
+makeTempNameGenerator <- function(prefix) {
   force(prefix)
   if((length(prefix)!=1)||(!is.character(prefix))) {
     stop("repyr::makeTempNameGenerator prefix must be a string")
   }
-  if(is.null(suffix)) {
-    alphabet <- c(letters, toupper(letters), as.character(0:9))
-    suffix <- paste(base::sample(alphabet, size=20, replace= TRUE),
+  alphabet <- c(letters, tolower(letters), as.character(0:9))
+  suffix <- paste(base::sample(alphabet, size=20, replace= TRUE),
                     collapse = '')
-  }
   count <- 0
   nameList <- list()
   function(..., peek=FALSE, dumpList=FALSE, remove=NULL) {

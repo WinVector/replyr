@@ -1,8 +1,9 @@
 
-# replyr 0.5.4 2017-09-03
+# replyr 0.5.4 2017-09-19
 
  * Work around ncol() issue.
  * Work around many nrow() issues.
+ * Temp name generator work in lower case.
 
 # replyr 0.5.3 2017-08-28
 
