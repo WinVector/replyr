@@ -245,7 +245,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_0dn6qn1zs5tap33dwnon_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_6jiebhpp2ok7v6gorkyr_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -305,6 +305,11 @@ rm(list=ls())
 gc()
  #  Auto-disconnecting SQLiteConnection
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  684002 36.6    1168576 62.5   940480 50.3
- #  Vcells 1382712 10.6    2552219 19.5  1639813 12.6
+ #  Ncells  692436 37.0    1168576 62.5   940480 50.3
+ #  Vcells 1400195 10.7    2552219 19.5  1625936 12.5
 ```
+
+Note
+----
+
+Note: `replyr` is meant only for "tame names", that is: variables and column names that are also valid *simple* (without quotes) `R` variables names.

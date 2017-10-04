@@ -283,4 +283,8 @@ rm(list=ls())
 gc()
 ```
 
+## Note
+
+Note: `replyr` is meant only for "tame names", that is: variables and column names that are also valid *simple* (without quotes) `R` variables names.
+
 
