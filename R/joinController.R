@@ -421,7 +421,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 }
 
 
-#' Topologically sort join plan do values are available before uses.
+#' Topologically sort join plan so values are available before uses.
 #'
 #' Depends on \code{igraph} package.
 #' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.

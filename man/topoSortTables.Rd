@@ -2,7 +2,7 @@
 % Please edit documentation in R/joinController.R
 \name{topoSortTables}
 \alias{topoSortTables}
-\title{Topologically sort join plan do values are available before uses.}
+\title{Topologically sort join plan so values are available before uses.}
 \usage{
 topoSortTables(columnJoinPlan, leftTableName, ...)
 }
