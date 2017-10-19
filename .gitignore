@@ -10,3 +10,5 @@ replyr_sqliteEx.sqlite3
 *.log
 *.log.*
 *.sqlite3*
+revdep
+

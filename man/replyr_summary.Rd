@@ -22,7 +22,7 @@ replyr_summary(x, ..., countUniqueNum = FALSE, countUniqueNonNum = FALSE,
 summary of columns.
 }
 \description{
-Compute per-column summaries and return as a \code{data.frame}.
+Compute per-column summaries and return as a \code{data.frame}.  Warning: can be an expensive operation.
 }
 \details{
 Can be slow compared to \code{dplyr::summarize_all()} (but serves a different purpose).

@@ -2,7 +2,7 @@
 % Please edit documentation in R/rowscols.R
 \name{replyr_moveValuesToColumns}
 \alias{replyr_moveValuesToColumns}
-\title{Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers).}
+\title{Spread values found in rowKeyColumns row groups as new columns (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
   rowKeyColumns, ..., fill = NA, sep = NULL, maxcols = 100,

@@ -93,7 +93,7 @@
       <h1>coalesce</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-09-19</h4>
+            <h4 class="date">2017-10-19</h4>
           </div>
 
     
@@ -120,10 +120,10 @@ data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span clas
                    <span class="dt">count =</span> <span class="kw">c</span>(<span class="dv">6</span>,<span class="dv">1</span>,<span class="ot">NA</span>),
                    <span class="dt">name =</span> <span class="kw">c</span>(<span class="st">'a'</span>,<span class="st">'b'</span>,<span class="st">'c'</span>),
                    <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-support &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">year=</span><span class="dv">2005</span>:<span class="dv">2010</span>)
+support &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">year=</span><span class="dv">2005</span><span class="op">:</span><span class="dv">2010</span>)
 filled &lt;-<span class="st"> </span><span class="kw"><a href="../reference/replyr_coalesce.html">replyr_coalesce</a></span>(data, support,
                           <span class="dt">fills=</span><span class="kw">list</span>(<span class="dt">count=</span><span class="dv">0</span>))
-filled &lt;-<span class="st"> </span>filled[<span class="kw">order</span>(filled$year), ]
+filled &lt;-<span class="st"> </span>filled[<span class="kw">order</span>(filled<span class="op">$</span>year), ]
 filled</code></pre></div>
 <pre><code>##   year count name
 ## 1 2005     6    a
@@ -138,12 +138,12 @@ data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span clas
                    <span class="dt">count =</span> <span class="kw">c</span>(<span class="dv">6</span>,<span class="dv">1</span>,<span class="ot">NA</span>),
                    <span class="dt">name =</span> <span class="kw">c</span>(<span class="st">'a'</span>,<span class="st">'b'</span>,<span class="st">'c'</span>),
                    <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-support &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">year=</span><span class="dv">2005</span>:<span class="dv">2010</span>,
+support &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">year=</span><span class="dv">2005</span><span class="op">:</span><span class="dv">2010</span>,
                    <span class="dt">name=</span> <span class="kw">c</span>(<span class="st">'a'</span>,<span class="st">'b'</span>,<span class="st">'c'</span>,<span class="st">'d'</span>),
                    <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
 filled &lt;-<span class="st"> </span><span class="kw"><a href="../reference/replyr_coalesce.html">replyr_coalesce</a></span>(data, support,
                           <span class="dt">fills=</span><span class="kw">list</span>(<span class="dt">count=</span><span class="dv">0</span>))
-filled &lt;-<span class="st"> </span>filled[<span class="kw">order</span>(filled$year, filled$name), ]
+filled &lt;-<span class="st"> </span>filled[<span class="kw">order</span>(filled<span class="op">$</span>year, filled<span class="op">$</span>name), ]
 filled</code></pre></div>
 <pre><code>##    year count name
 ## 1  2005     6    a
@@ -185,18 +185,18 @@ counts &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
                              <span class="st">'Colusa'</span>),
                      <span class="dt">n=</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">3</span>),
                      <span class="dt">stringsAsFactors=</span> <span class="ot">FALSE</span>)
-replyr::<span class="kw"><a href="../reference/replyr_coalesce.html">replyr_coalesce</a></span>(counts, def, <span class="dt">fills =</span> <span class="kw">list</span>(<span class="dt">n=</span><span class="dv">0</span>))</code></pre></div>
+replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_coalesce">replyr_coalesce</a></span>(counts, def, <span class="dt">fills =</span> <span class="kw">list</span>(<span class="dt">n=</span><span class="dv">0</span>))</code></pre></div>
 <pre><code>##             county        city n
 ## 1 Calaveras County Angels Camp 2
 ## 2    Colusa County      Colusa 3
 ## 3    Colusa County    Williams 0</code></pre>
 <p>Re-running and example in a database:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_db &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
-dbData &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, data)
-dbSupport &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, support)
-replyr::<span class="kw"><a href="../reference/replyr_coalesce.html">replyr_coalesce</a></span>(dbData, dbSupport, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, data)
+dbSupport &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, support)
+replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_coalesce">replyr_coalesce</a></span>(dbData, dbSupport, 
                         <span class="dt">fills =</span> <span class="kw">list</span>(<span class="dt">count=</span><span class="dv">0</span>))</code></pre></div>
-<pre><code>## # Source:   table&lt;qbddookxyr&gt; [?? x 3]
+<pre><code>## # Source:   table&lt;rkiqfpoget&gt; [?? x 3]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##     year count  name
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
@@ -221,7 +221,7 @@ s &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 <pre><code>##   x  n
 ## 1 a  1
 ## 2 c NA</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">replyr::<span class="kw"><a href="../reference/replyr_coalesce.html">replyr_coalesce</a></span>(d,s,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_coalesce">replyr_coalesce</a></span>(d,s,
                         <span class="dt">fills=</span> <span class="kw">list</span>(<span class="dt">n=</span><span class="dv">0</span>))</code></pre></div>
 <pre><code>##   x  n
 ## 1 a  1
@@ -233,17 +233,16 @@ s &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 s &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="st">'a'</span>,<span class="st">'b'</span>), 
                 <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)
 <span class="kw">tryCatch</span>(
-  replyr::<span class="kw"><a href="../reference/replyr_coalesce.html">replyr_coalesce</a></span>(d,s,
+  replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_coalesce">replyr_coalesce</a></span>(d,s,
                         <span class="dt">fills=</span> <span class="kw">list</span>(<span class="dt">n=</span><span class="dv">0</span>)),
-  <span class="dt">error=</span> function(e) { e })</code></pre></div>
+  <span class="dt">error=</span> <span class="cf">function</span>(e) { e })</code></pre></div>
 <pre><code>## &lt;simpleError in replyr::replyr_coalesce(d, s, fills = list(n = 0)): replyr::replyr_coalesce support is not a unique set of keys for data&gt;</code></pre>
 <p>Cleaning up:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()</code></pre></div>
-<pre><code>## Auto-disconnecting SQLiteConnection</code></pre>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  683428 36.5    1168576 62.5   940480 50.3
-## Vcells 1221944  9.4    2060183 15.8  1570460 12.0</code></pre>
+## Ncells  682558 36.5    1168576 62.5   940480 50.3
+## Vcells 1216857  9.3    2060183 15.8  1426730 10.9</code></pre>
 </div>
   </div>
 

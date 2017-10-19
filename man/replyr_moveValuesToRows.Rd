@@ -2,7 +2,7 @@
 % Please edit documentation in R/rowscols.R
 \name{replyr_moveValuesToRows}
 \alias{replyr_moveValuesToRows}
-\title{Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).}
+\title{Collect values found in columnsToTakeFrom as tuples (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).}
 \usage{
 replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
   columnsToTakeFrom, ..., na.rm = FALSE, nameForNewClassColumn = NULL,

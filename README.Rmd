@@ -285,6 +285,6 @@ gc()
 
 ## Note
 
-Note: `replyr` is meant only for "tame names", that is: variables and column names that are also valid *simple* (without quotes) `R` variables names.
+Note: `replyr` is meant only for "tame names", that is: variables and column names that are also valid *simple* (without quotes) `R` variables names.  Also `replyr` tries to be a "source agnostic" package, meaning it minimizes the number of places it checks for data source and uses specialized code, this can mean some operations are slow. For example `replyr` does not (yet) use `sparklyr::sdf_pivot()`.
 
 

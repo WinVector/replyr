@@ -29,7 +29,11 @@ replyr_hasrows <- function(d) {
       head(.) %.>%
       dplyr::collect(.) %.>%
       as.data.frame(.))
-  if( is.null(dSample) || is.null(nrow(dSample)) || (nrow(dSample)<1)) {
+  if(is.null(dSample)) {
+    return(FALSE)
+  }
+  n <- nrow(dSample)
+  if(is.null(n) || is.na(n) || (n<1)) {
     return(FALSE)
   }
   return(TRUE)
@@ -50,12 +54,12 @@ replyr_hasrows <- function(d) {
 #'
 #' @export
 replyr_nrow <- function(x) {
-  if(!replyr_hasrows(x)) {
-    return(0)
+  if(is.null(x)) {
+    return(FALSE)
   }
   # try for easy case
   n <- nrow(x)
-  if(!is.na(n)) {
+  if((!is.null(n)) && (!is.na(n))) {
     return(n)
   }
   # get rid of raw columns

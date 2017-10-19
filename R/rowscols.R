@@ -7,7 +7,7 @@ NULL
 
 # dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
-#' Collect values found in columnsToTakeFrom as tuples (experimental, not fully tested on multiple data suppliers).
+#' Collect values found in columnsToTakeFrom as tuples (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
 #'
 #' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
 #' and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
@@ -159,7 +159,7 @@ replyr_moveValuesToRows <- function(data,
 
 
 
-#' Spread values found in rowKeyColumns row groups as new columns (experimental, not fully tested on multiple data suppliers).
+#' Spread values found in rowKeyColumns row groups as new columns (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
 #'
 #' Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 #' from nameForNewValueColumn.
