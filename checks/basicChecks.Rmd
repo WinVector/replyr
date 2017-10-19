@@ -60,7 +60,9 @@ if(!listsOfSameData(resBase, resTbl)) {
 `SQLite` example.
 
 ```{r SQLiteexample}
-my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+RSQLite::initExtension(my_db) # filed as dplyr issue https://github.com/tidyverse/dplyr/issues/3150
+# my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resSQLite <- runExample(copyToRemote)
