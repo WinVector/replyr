@@ -15,6 +15,7 @@ number of rows
 \description{
 Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
 Also \code{replyr_nrow} depends on data being returned to count, so some corner cases (such as zero columns) will count as zero rows.
+In particular work around dplyr issue 2871 \url{https://github.com/tidyverse/dplyr/issues/2871}.
 }
 \examples{
 

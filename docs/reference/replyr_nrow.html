@@ -118,7 +118,8 @@
 
     
     <p>Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
-Also <code>replyr_nrow</code> depends on data being returned to count, so some corner cases (such as zero columns) will count as zero rows.</p>
+Also <code>replyr_nrow</code> depends on data being returned to count, so some corner cases (such as zero columns) will count as zero rows.
+In particular work around dplyr issue 2871 <a href='https://github.com/tidyverse/dplyr/issues/2871'>https://github.com/tidyverse/dplyr/issues/2871</a>.</p>
     
 
     <pre class="usage"><span class='fu'>replyr_nrow</span>(<span class='no'>x</span>)</pre>

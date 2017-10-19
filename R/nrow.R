@@ -43,6 +43,7 @@ replyr_hasrows <- function(d) {
 #'
 #' Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
 #' Also \code{replyr_nrow} depends on data being returned to count, so some corner cases (such as zero columns) will count as zero rows.
+#' In particular work around dplyr issue 2871 \url{https://github.com/tidyverse/dplyr/issues/2871}.
 #'
 #' @param x tbl or item that can be coerced into such.
 #' @return number of rows
@@ -60,6 +61,7 @@ replyr_nrow <- function(x) {
   # try for easy case
   n <- nrow(x)
   if((!is.null(n)) && (!is.na(n))) {
+    # defend against dplyr issue 2871 https://github.com/tidyverse/dplyr/issues/2871
     return(n)
   }
   # get rid of raw columns
