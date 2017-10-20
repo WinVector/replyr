@@ -1,4 +1,8 @@
 
+# replyr 0.5.5 2017-10-20
+
+ * Start on bulk SQL row/column ops.
+ 
 # replyr 0.5.4 2017-10-19
 
  * Work around ncol() issue.
