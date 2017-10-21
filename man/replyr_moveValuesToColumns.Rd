@@ -34,6 +34,9 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 data item
 }
 \description{
+May be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
+}
+\details{
 Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 from nameForNewValueColumn.
 This is denormalizing operation, or essentially a \code{tidyr::spread}, \code{dplyr::dcast}, or pivot.
@@ -58,4 +61,7 @@ replyr_moveValuesToColumns(d,
 #                            sep= '_')
 
 
+}
+\seealso{
+\url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}, \code{\link{replyr_moveValuesToRows}}, \code{\link{replyr_moveValuesToColumns}}
 }

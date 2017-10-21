@@ -1,7 +1,9 @@
 
-# replyr 0.5.5 2017-10-20
+# replyr 0.8.0 2017-10-21
 
- * Start on bulk SQL row/column ops.
+ * Bulk SQL row/column ops.
+ * Bump up dependencies.
+ * Deprecate older pivot/un-pivot code.
  
 # replyr 0.5.4 2017-10-19
 

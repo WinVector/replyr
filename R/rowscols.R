@@ -3,11 +3,16 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 #' @importFrom dplyr select mutate one_of
+#' @importFrom wrapr %.>%
+#' @importFrom seplyr group_by_se
+#' @importFrom cdata moveValuesToRows moveValuesToColumns
 NULL
 
 # dplyr::one_of is what is causing us to depend on dplyr (>= 0.5.0)
 
 #' Collect values found in columnsToTakeFrom as tuples (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
+#'
+#' May be deprecated soon, please use \code{\link[cdata]{moveValuesToRows}} or \code{\link{moveValuesToRowsQ}}.
 #'
 #' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
 #' and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
@@ -22,6 +27,8 @@ NULL
 #' @param nameForNewClassColumn optional name to land original cell classes to.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return data item
+#'
+#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}, \code{\link{replyr_moveValuesToRows}}, \code{\link{replyr_moveValuesToColumns}}
 #'
 #' @examples
 #'
@@ -51,6 +58,7 @@ replyr_moveValuesToRows <- function(data,
                                     na.rm= FALSE,
                                     nameForNewClassColumn= NULL,
                                     tempNameGenerator= makeTempNameGenerator("replyr_moveValuesToRows")) {
+  # .Deprecated(old = "replyr_moveValuesToRows", new = "moveValuesToRowsQ")
   if(length(list(...))>0) {
     stop("replyr::replyr_moveValuesToRows unexpected arguments")
   }
@@ -161,6 +169,8 @@ replyr_moveValuesToRows <- function(data,
 
 #' Spread values found in rowKeyColumns row groups as new columns (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
 #'
+#' May be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
+#'
 #' Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 #' from nameForNewValueColumn.
 #' This is denormalizing operation, or essentially a \code{tidyr::spread}, \code{dplyr::dcast}, or pivot.
@@ -177,6 +187,8 @@ replyr_moveValuesToRows <- function(data,
 #' @param maxcols maximum number of values to expand to columns
 #' @param dosummarize logical, if TRUE finish the moveValuesToColumns by summarizing rows.
 #' @return data item
+#'
+#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}, \code{\link{replyr_moveValuesToRows}}, \code{\link{replyr_moveValuesToColumns}}
 #'
 #' @examples
 #'
@@ -208,6 +220,7 @@ replyr_moveValuesToColumns <- function(data,
                                        maxcols= 100,
                                        dosummarize= TRUE,
                                        tempNameGenerator= makeTempNameGenerator("replyr_moveValuesToColumns")) {
+  # .Deprecated(old = "replyr_moveValuesToColumns", new = "moveValuesToColumnsQ")
   if(length(list(...))>0) {
     stop("replyr::replyr_moveValuesToColumns unexpected arguments.")
   }
@@ -332,12 +345,15 @@ replyr_moveValuesToColumns <- function(data,
 
 
 
+# The use of db handles with dplyr is what is giving us a dplyr >= 0.7.0 dependency.
 
-#' Map a set of columns to rows.
+
+
+#' Map a set of columns to rows (query based).
 #'
 #' The controlTable is a table whose first column defines a group and
 #' remaining columns define column selections for that group.   The
-#' result of expandTableToRows() is a cross join of the controlTable
+#' result of moveValuesToRowsQ() is a cross join of the controlTable
 #' and the wideTable with what values are in the columns name by the
 #' column selections in the controlTable given by the names in the
 #' rows of controTable.  This is essentially a multi-column
@@ -347,12 +363,14 @@ replyr_moveValuesToColumns <- function(data,
 #'
 #' @param controlTable table specifying mapping (local data frame)
 #' @param columnsToCopy character list of column names to copy
-#' @param wideTableName name of table containing data to be mapped (Spark data)
+#' @param wideTableName name of table containing data to be mapped (db/Spark data)
 #' @param my_db db handle
 #' @param ... force later arguments to be by name.
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
 #' @param showQuery if TRUE print query
 #' @return long table built by mapping wideTable to one row per group
+#'
+#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 #'
 #' @examples
 #'
@@ -369,30 +387,30 @@ replyr_moveValuesToColumns <- function(data,
 #'                           'aa',  'v1',  'v3',
 #'                           'bb',  'v2',  'v4')
 #' columnsToCopy = 'ID'
-#' expandTableToRows(controlTable, columnsToCopy,
+#' moveValuesToRowsQ(controlTable, columnsToCopy,
 #'                   wideTableName,
 #'                   my_db)
-#' # # Source:   table<cf_rxsb7u3ujlbkq8ipq0v0_0000000010> [?? x 4]
-#' # # Database: spark_connection
-#' #           ID group  col1  col2
-#' #        <dbl> <chr> <dbl> <dbl>
-#' # 1          1    aa   101   301
-#' # 2          1    bb   201   401
-#' # 3          2    aa   102   302
-#' # 4          2    bb   202   402
-#' # 5          3    aa   103   303
-#' # 6          3    bb   203   403
+#' #  # Source:   table<er_tqbavuiflwhgu4i5v7yn_0000000001> [?? x 4]
+#' #  # Database: sqlite 3.19.3 [:memory:]
+#' #       ID group  col1  col2
+#' #    <dbl> <chr> <dbl> <dbl>
+#' #  1     1    aa   101   301
+#' #  2     1    bb   201   401
+#' #  3     2    aa   102   302
+#' #  4     2    bb   202   402
+#' #  5     3    aa   103   303
+#' #  6     3    bb   203   403
 #'
 #' @export
 #'
-expandTableToRows <- function(controlTable, columnsToCopy,
+moveValuesToRowsQ <- function(controlTable, columnsToCopy,
                               wideTableName,
                               my_db,
                               ...,
                               tempNameGenerator = replyr::makeTempNameGenerator('er'),
                               showQuery=FALSE) {
   if(length(list(...))>0) {
-    stop("replyr::expandTableToRows unexpected arguments.")
+    stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
   controlTable <- as.data.frame(controlTable)
   ctabName <- tempNameGenerator()
@@ -442,6 +460,99 @@ expandTableToRows <- function(controlTable, columnsToCopy,
   res <- tbl(my_db, resName)
   res
 }
+
+
+
+#' Map sets rows to columns (query based). NOT IMPLEMENTED YET.
+#'
+#' The controlTable is a table whose first column defines a group and
+#' remaining columns define column selections for that group.   The
+#' result of moveValuesToColumnsQ() is a cross join of the controlTable
+#' and the tallTable with what values are in the columns name by the
+#' column selections in the controlTable given by the names in the
+#' rows of controTable.  This is essentially a multi-column
+#' un-pivot, gather, or moveValuesToRows.  The operation is performed
+#' through the DBI SQL interface as a single cross join with case
+#' statements.
+#'
+#' @param controlTable table specifying mapping (local data frame)
+#' @param keyColumns character list of column defining row groups
+#' @param columnsToCopy character list of column names to copy
+#' @param tallTableName name of table containing data to be mapped (db/Spark data)
+#' @param my_db db handle
+#' @param ... force later arguments to be by name.
+#' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
+#' @param showQuery if TRUE print query
+#' @return long table built by mapping tallTable to one row per group
+#'
+#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
+#'
+#'
+#' @export
+#'
+moveValuesToColumnsQ <- function(controlTable,
+                                 keyColumns,
+                                 columnsToCopy,
+                                 tallTableName,
+                                 my_db,
+                                 ...,
+                                 tempNameGenerator = replyr::makeTempNameGenerator('er'),
+                                 showQuery=FALSE) {
+  stop("replyr::moveValuesToColumnsQ not implemented yet.")
+  if(length(list(...))>0) {
+    stop("replyr::moveValuesToColumnsQ unexpected arguments.")
+  }
+  controlTable <- as.data.frame(controlTable)
+  ctabName <- tempNameGenerator()
+  ctab <- copy_to(my_db, controlTable, ctabName,
+                  overwrite = TRUE, temporary=TRUE)
+  resName <- tempNameGenerator()
+  casestmts <- vapply(2:ncol(controlTable),
+                      function(j) {
+                        whens <- vapply(seq_len(nrow(controlTable)),
+                                        function(i) {
+                                          paste0(' WHEN `b`.`',
+                                                 colnames(controlTable)[1],
+                                                 '` = "',
+                                                 controlTable[i,1,drop=TRUE],
+                                                 '" THEN `a`.`',
+                                                 controlTable[i,j,drop=TRUE],
+                                                 '`' )
+                                        },
+                                        character(1))
+                        casestmt <- paste0('CASE ',
+                                           paste(whens, collapse = ' '),
+                                           ' ELSE NULL END AS `',
+                                           colnames(controlTable)[j],
+                                           '`')
+                      },
+                      character(1))
+  copystmts <- paste0('`a`.`', columnsToCopy, '`')
+  groupstmt <- paste0('`b`.`', colnames(controlTable)[1], '`')
+  # deliberate cross join
+  qs <-  paste0(" SELECT ",
+                paste(c(copystmts, groupstmt, casestmts), collapse = ', '),
+                ' FROM ',
+                tallTableName,
+                ' `a` CROSS JOIN `',
+                ctabName,
+                '` `b` ')
+  q <-  paste0("CREATE TABLE `",
+               resName,
+               "` AS ",
+               qs)
+  if(showQuery) {
+    print(q)
+  }
+  tryCatch(
+    DBI::dbGetQuery(my_db, q),
+    warning = function(w) { NULL })
+  res <- tbl(my_db, resName)
+  res
+}
+
+
+
 
 
 

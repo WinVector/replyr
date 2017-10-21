@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • replyr</title>
+<title>Map sets rows to columns (query based). NOT IMPLEMENTED YET. — moveValuesToColumnsQ • replyr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -37,7 +37,7 @@
   </head>
 
   <body>
-    <div class="container template-vignette-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,27 +110,85 @@
       
       </header>
 
-      <div class="page-header">
-  <h1>Articles <small>version&nbsp;0.8.0</small></h1>
-</div>
-
-<div class="row">
-  <div class="col-md-9">
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="coalesce.html">coalesce</a></li>
-        <li><a href="DependencySorting.html">Join Dependency Sorting</a></li>
-        <li><a href="joinController.html">Join Controller</a></li>
-        <li><a href="letExample.html">let Example</a></li>
-        <li><a href="NArm.html">NA rm</a></li>
-        <li><a href="ParametricExample.html">Parametric Programming in R</a></li>
-        <li><a href="replyr.html">replyr</a></li>
-        <li><a href="summary.html">summary</a></li>
-      </ul>
+      <div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header">
+    <h1>Map sets rows to columns (query based). NOT IMPLEMENTED YET.</h1>
     </div>
+
+    
+    <p>The controlTable is a table whose first column defines a group and
+remaining columns define column selections for that group.   The
+result of moveValuesToColumnsQ() is a cross join of the controlTable
+and the tallTable with what values are in the columns name by the
+column selections in the controlTable given by the names in the
+rows of controTable.  This is essentially a multi-column
+un-pivot, gather, or moveValuesToRows.  The operation is performed
+through the DBI SQL interface as a single cross join with case
+statements.</p>
+    
+
+    <pre class="usage"><span class='fu'>moveValuesToColumnsQ</span>(<span class='no'>controlTable</span>, <span class='no'>keyColumns</span>, <span class='no'>columnsToCopy</span>, <span class='no'>tallTableName</span>,
+  <span class='no'>my_db</span>, <span class='no'>...</span>, <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"er"</span>),
+  <span class='kw'>showQuery</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>controlTable</th>
+      <td><p>table specifying mapping (local data frame)</p></td>
+    </tr>
+    <tr>
+      <th>keyColumns</th>
+      <td><p>character list of column defining row groups</p></td>
+    </tr>
+    <tr>
+      <th>columnsToCopy</th>
+      <td><p>character list of column names to copy</p></td>
+    </tr>
+    <tr>
+      <th>tallTableName</th>
+      <td><p>name of table containing data to be mapped (db/Spark data)</p></td>
+    </tr>
+    <tr>
+      <th>my_db</th>
+      <td><p>db handle</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>force later arguments to be by name.</p></td>
+    </tr>
+    <tr>
+      <th>tempNameGenerator</th>
+      <td><p>a tempNameGenerator from replyr::makeTempNameGenerator()</p></td>
+    </tr>
+    <tr>
+      <th>showQuery</th>
+      <td><p>if TRUE print query</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>long table built by mapping tallTable to one row per group</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/cdata</a>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></code>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code>, <code><a href='moveValuesToRowsQ.html'>moveValuesToRowsQ</a></code>, <code>moveValuesToColumnsQ</code></p>
+    
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
+
   </div>
 </div>
 

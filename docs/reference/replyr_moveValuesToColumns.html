@@ -117,10 +117,7 @@
     </div>
 
     
-    <p>Spread values found in <code>columnToTakeValuesFrom</code> row groups as new columns labeled by <code>columnToTakeKeysFrom</code>.
-from nameForNewValueColumn.
-This is denormalizing operation, or essentially a <code><a href='http://www.rdocumentation.org/packages/tidyr/topics/spread'>tidyr::spread</a></code>, <code>dplyr::dcast</code>, or pivot.
-Similar interface as in the <code>cdata</code> package (though does not perform pre/post condition checks).</p>
+    <p>May be deprecated soon, please use <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code> or <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code>.</p>
     
 
     <pre class="usage"><span class='fu'>replyr_moveValuesToColumns</span>(<span class='no'>data</span>, <span class='no'>columnToTakeKeysFrom</span>, <span class='no'>columnToTakeValuesFrom</span>,
@@ -177,6 +174,17 @@ Similar interface as in the <code>cdata</code> package (though does not perform 
 
     <p>data item</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Spread values found in <code>columnToTakeValuesFrom</code> row groups as new columns labeled by <code>columnToTakeKeysFrom</code>.
+from nameForNewValueColumn.
+This is denormalizing operation, or essentially a <code><a href='http://www.rdocumentation.org/packages/tidyr/topics/spread'>tidyr::spread</a></code>, <code>dplyr::dcast</code>, or pivot.
+Similar interface as in the <code>cdata</code> package (though does not perform pre/post condition checks).</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/cdata</a>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></code>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code>, <code><a href='moveValuesToRowsQ.html'>moveValuesToRowsQ</a></code>, <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code>, <code><a href='replyr_moveValuesToRows.html'>replyr_moveValuesToRows</a></code>, <code>replyr_moveValuesToColumns</code></p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -209,6 +217,10 @@ Similar interface as in the <code>cdata</code> package (though does not perform 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
