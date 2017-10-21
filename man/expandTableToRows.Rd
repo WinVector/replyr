@@ -57,7 +57,7 @@ expandTableToRows(controlTable, columnsToCopy,
                   my_db)
 # # Source:   table<cf_rxsb7u3ujlbkq8ipq0v0_0000000010> [?? x 4]
 # # Database: spark_connection
-#   ID group  col1  col2
+#           ID group  col1  col2
 #        <dbl> <chr> <dbl> <dbl>
 # 1          1    aa   101   301
 # 2          1    bb   201   401
