@@ -330,3 +330,118 @@ replyr_moveValuesToColumns <- function(data,
   data
 }
 
+
+
+
+#' Map a set of columns to rows.
+#'
+#' The controlTable is a table whose first column defines a group and
+#' remaining columns define column selections for that group.   The
+#' result of expandTableToRows() is a cross join of the controlTable
+#' and the wideTable with what values are in the columns name by the
+#' column selections in the controlTable given by the names in the
+#' rows of controTable.  This is essentially a multi-column
+#' un-pivot, gather, or moveValuesToRows.  The operation is performed
+#' through the DBI SQL interface as a single cross join with case
+#' statements.
+#'
+#' @param controlTable table specifying mapping (local data frame)
+#' @param columnsToCopy character list of column names to copy
+#' @param wideTableName name of table containing data to be mapped (Spark data)
+#' @param my_db db handle
+#' @param ... force later arguments to be by name.
+#' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
+#' @param showQuery if TRUE print query
+#' @return long table built by mapping wideTable to one row per group
+#'
+#' @examples
+#'
+#' suppressPackageStartupMessages(library("dplyr"))
+#' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#' wideTableName <- 'dat'
+#' d <- copy_to(my_db,
+#'              tribble(~ID, ~v1, ~v2, ~v3, ~v4,
+#'                      1,           101,  201,  301, 401,
+#'                      2,           102,  202,  302, 402,
+#'                      3,           103,  203,  303, 403),
+#'              wideTableName, overwrite = TRUE, temporary=TRUE)
+#' controlTable <- tribble(~group, ~col1, ~col2,
+#'                         'aa',   'v1',   'v3',
+#'                         'bb',   'v2',   'v4')
+#' columnsToCopy = 'ID'
+#' expandTableToRows(controlTable, columnsToCopy,
+#'                   wideTableName,
+#'                   my_db)
+#' # # Source:   table<cf_rxsb7u3ujlbkq8ipq0v0_0000000010> [?? x 4]
+#' # # Database: spark_connection
+#' #   ID group  col1  col2
+#' #        <dbl> <chr> <dbl> <dbl>
+#' # 1          1    aa   101   301
+#' # 2          1    bb   201   401
+#' # 3          2    aa   102   302
+#' # 4          2    bb   202   402
+#' # 5          3    aa   103   303
+#' # 6          3    bb   203   403
+#'
+#' @export
+#'
+expandTableToRows <- function(controlTable, columnsToCopy,
+                              wideTableName,
+                              my_db,
+                              ...,
+                              tempNameGenerator = replyr::makeTempNameGenerator('er'),
+                              showQuery=FALSE) {
+  if(length(list(...))>0) {
+    stop("replyr::expandTableToRows unexpected arguments.")
+  }
+  controlTable <- as.data.frame(controlTable)
+  ctabName <- tempNameGenerator()
+  ctab <- copy_to(my_db, controlTable, ctabName,
+                  overwrite = TRUE, temporary=TRUE)
+  resName <- tempNameGenerator()
+  casestmts <- vapply(2:ncol(controlTable),
+                      function(j) {
+                        whens <- vapply(seq_len(nrow(controlTable)),
+                                        function(i) {
+                                          paste0(' WHEN `b`.`',
+                                                 colnames(controlTable)[1],
+                                                 '` = "',
+                                                 controlTable[i,1,drop=TRUE],
+                                                 '" THEN `a`.`',
+                                                 controlTable[i,j,drop=TRUE],
+                                                 '`' )
+                                        },
+                                        character(1))
+                        casestmt <- paste0('CASE ',
+                                           paste(whens, collapse = ' '),
+                                           ' ELSE NULL END AS `',
+                                           colnames(controlTable)[j],
+                                           '`')
+                      },
+                      character(1))
+  copystmts <- paste0('`a`.`', columnsToCopy, '`')
+  groupstmt <- paste0('`b`.`', colnames(controlTable)[1], '`')
+  # deliberate cross join
+  qs <-  paste0(" SELECT ",
+                paste(c(copystmts, groupstmt, casestmts), collapse = ', '),
+                ' FROM ',
+                wideTableName,
+                ' `a` CROSS JOIN `',
+                ctabName,
+                '` `b` ')
+  q <-  paste0("CREATE TABLE `",
+               resName,
+               "` AS ",
+               qs)
+  if(showQuery) {
+    print(q)
+  }
+  tryCatch(
+    DBI::dbGetQuery(my_db, q),
+    warning = function(w) { NULL })
+  res <- tbl(my_db, resName)
+  res
+}
+
+
+
