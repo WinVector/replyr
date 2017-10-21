@@ -4,20 +4,21 @@
 \alias{moveValuesToRowsQ}
 \title{Map a set of columns to rows (query based).}
 \usage{
-moveValuesToRowsQ(controlTable, columnsToCopy, wideTableName, my_db, ...,
-  tempNameGenerator = replyr::makeTempNameGenerator("er"),
+moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
+  columnsToCopy = NULL,
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"),
   showQuery = FALSE)
 }
 \arguments{
 \item{controlTable}{table specifying mapping (local data frame)}
-
-\item{columnsToCopy}{character list of column names to copy}
 
 \item{wideTableName}{name of table containing data to be mapped (db/Spark data)}
 
 \item{my_db}{db handle}
 
 \item{...}{force later arguments to be by name.}
+
+\item{columnsToCopy}{character list of column names to copy}
 
 \item{tempNameGenerator}{a tempNameGenerator from replyr::makeTempNameGenerator()}
 
@@ -50,10 +51,11 @@ d <- dplyr::copy_to(my_db,
 controlTable <- dplyr::tribble(~group, ~col1, ~col2,
                                  'aa',  'v1',  'v3',
                                  'bb',  'v2',  'v4')
-columnsToCopy = 'ID'
-moveValuesToRowsQ(controlTable, columnsToCopy,
+columnsToCopy <- 'ID'
+moveValuesToRowsQ(controlTable,
                   wideTableName,
-                  my_db)
+                  my_db,
+                  columnsToCopy = columnsToCopy)
 #  # Source:   table<er_tqbavuiflwhgu4i5v7yn_0000000001> [?? x 4]
 #  # Database: sqlite 3.19.3 [:memory:]
 #       ID group  col1  col2

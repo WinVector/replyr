@@ -128,8 +128,9 @@ through the DBI SQL interface as a single cross join with case
 statements.</p>
     
 
-    <pre class="usage"><span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>, <span class='no'>columnsToCopy</span>, <span class='no'>wideTableName</span>, <span class='no'>my_db</span>, <span class='no'>...</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"er"</span>),
+    <pre class="usage"><span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>, <span class='no'>wideTableName</span>, <span class='no'>my_db</span>, <span class='no'>...</span>,
+  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"mvtrq"</span>),
   <span class='kw'>showQuery</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -138,10 +139,6 @@ statements.</p>
     <tr>
       <th>controlTable</th>
       <td><p>table specifying mapping (local data frame)</p></td>
-    </tr>
-    <tr>
-      <th>columnsToCopy</th>
-      <td><p>character list of column names to copy</p></td>
     </tr>
     <tr>
       <th>wideTableName</th>
@@ -154,6 +151,10 @@ statements.</p>
     <tr>
       <th>...</th>
       <td><p>force later arguments to be by name.</p></td>
+    </tr>
+    <tr>
+      <th>columnsToCopy</th>
+      <td><p>character list of column names to copy</p></td>
     </tr>
     <tr>
       <th>tempNameGenerator</th>
@@ -187,19 +188,20 @@ statements.</p>
 <span class='no'>controlTable</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>group</span>, ~<span class='no'>col1</span>, ~<span class='no'>col2</span>,
                                  <span class='st'>'aa'</span>,  <span class='st'>'v1'</span>,  <span class='st'>'v3'</span>,
                                  <span class='st'>'bb'</span>,  <span class='st'>'v2'</span>,  <span class='st'>'v4'</span>)
-<span class='no'>columnsToCopy</span> <span class='kw'>=</span> <span class='st'>'ID'</span>
-<span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>, <span class='no'>columnsToCopy</span>,
+<span class='no'>columnsToCopy</span> <span class='kw'>&lt;-</span> <span class='st'>'ID'</span>
+<span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>,
                   <span class='no'>wideTableName</span>,
-                  <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;er_rqtm8tdgrqbnsndar6ln_0000000001&gt; [?? x 4]
+                  <span class='no'>my_db</span>,
+                  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='no'>columnsToCopy</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_qenofvv98yctkgewmsev_0000000001&gt; [?? x 3]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
-#&gt;      ID group  col1  col2
-#&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1     1    aa   101   301
-#&gt; 2     1    bb   201   401
-#&gt; 3     2    aa   102   302
-#&gt; 4     2    bb   202   402
-#&gt; 5     3    aa   103   303
-#&gt; 6     3    bb   203   403</div><div class='input'>#  # Source:   table<er_tqbavuiflwhgu4i5v7yn_0000000001> [?? x 4]
+#&gt;   group  col1  col2
+#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1    aa   101   301
+#&gt; 2    bb   201   401
+#&gt; 3    aa   102   302
+#&gt; 4    bb   202   402
+#&gt; 5    aa   103   303
+#&gt; 6    bb   203   403</div><div class='input'>#  # Source:   table<er_tqbavuiflwhgu4i5v7yn_0000000001> [?? x 4]
 #  # Database: sqlite 3.19.3 [:memory:]
 #       ID group  col1  col2
 #    <dbl> <chr> <dbl> <dbl>

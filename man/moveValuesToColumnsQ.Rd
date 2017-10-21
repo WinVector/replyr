@@ -2,18 +2,17 @@
 % Please edit documentation in R/rowscols.R
 \name{moveValuesToColumnsQ}
 \alias{moveValuesToColumnsQ}
-\title{Map sets rows to columns (query based). NOT IMPLEMENTED YET.}
+\title{Map sets rows to columns (query based).}
 \usage{
-moveValuesToColumnsQ(controlTable, keyColumns, columnsToCopy, tallTableName,
-  my_db, ..., tempNameGenerator = replyr::makeTempNameGenerator("er"),
+moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
+  columnsToCopy = NULL,
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"),
   showQuery = FALSE)
 }
 \arguments{
-\item{controlTable}{table specifying mapping (local data frame)}
-
 \item{keyColumns}{character list of column defining row groups}
 
-\item{columnsToCopy}{character list of column names to copy}
+\item{controlTable}{table specifying mapping (local data frame)}
 
 \item{tallTableName}{name of table containing data to be mapped (db/Spark data)}
 
@@ -21,12 +20,14 @@ moveValuesToColumnsQ(controlTable, keyColumns, columnsToCopy, tallTableName,
 
 \item{...}{force later arguments to be by name.}
 
+\item{columnsToCopy}{character list of column names to copy}
+
 \item{tempNameGenerator}{a tempNameGenerator from replyr::makeTempNameGenerator()}
 
 \item{showQuery}{if TRUE print query}
 }
 \value{
-long table built by mapping tallTable to one row per group
+wide table built by mapping key-grouped tallTable rows to one row per group
 }
 \description{
 The controlTable is a table whose first column defines a group and
@@ -38,6 +39,37 @@ rows of controTable.  This is essentially a multi-column
 un-pivot, gather, or moveValuesToRows.  The operation is performed
 through the DBI SQL interface as a single cross join with case
 statements.
+}
+\examples{
+
+my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+tallTableName <- 'dat'
+d <- dplyr::copy_to(my_db,
+                    dplyr::tribble(~ID, ~group, ~col1, ~col2,
+                                   1,   "aa",   101,   301,
+                                   1,   "bb",   201,   401,
+                                   2,   "aa",   102,   302,
+                                   2,   "bb",   202,   402,
+                                   3,   "aa",   103,   303,
+                                   3,   "bb",   203,   403),
+                    tallTableName,
+                    overwrite = TRUE, temporary=TRUE)
+controlTable <- dplyr::tribble(~group, ~col1, ~col2,
+                               'aa',  'v1',  'v3',
+                               'bb',  'v2',  'v4')
+keyColumns <- 'ID'
+moveValuesToColumnsQ(keyColumns,
+                     controlTable,
+                     tallTableName,
+                     my_db)
+# # Source:   table<mvtcq_gazoxayw2qnelwbqidky_0000000001> [?? x 5]
+# # Database: sqlite 3.19.3 [:memory:]
+#      ID    v1    v3    v2    v4
+#   <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1     1   101   301   201   401
+# 2     2   102   302   202   402
+# 3     3   103   303   203   403
+
 }
 \seealso{
 \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}

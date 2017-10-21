@@ -362,10 +362,10 @@ replyr_moveValuesToColumns <- function(data,
 #' statements.
 #'
 #' @param controlTable table specifying mapping (local data frame)
-#' @param columnsToCopy character list of column names to copy
 #' @param wideTableName name of table containing data to be mapped (db/Spark data)
 #' @param my_db db handle
 #' @param ... force later arguments to be by name.
+#' @param columnsToCopy character list of column names to copy
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
 #' @param showQuery if TRUE print query
 #' @return long table built by mapping wideTable to one row per group
@@ -385,10 +385,11 @@ replyr_moveValuesToColumns <- function(data,
 #' controlTable <- dplyr::tribble(~group, ~col1, ~col2,
 #'                                  'aa',  'v1',  'v3',
 #'                                  'bb',  'v2',  'v4')
-#' columnsToCopy = 'ID'
-#' moveValuesToRowsQ(controlTable, columnsToCopy,
+#' columnsToCopy <- 'ID'
+#' moveValuesToRowsQ(controlTable,
 #'                   wideTableName,
-#'                   my_db)
+#'                   my_db,
+#'                   columnsToCopy = columnsToCopy)
 #' #  # Source:   table<er_tqbavuiflwhgu4i5v7yn_0000000001> [?? x 4]
 #' #  # Database: sqlite 3.19.3 [:memory:]
 #' #       ID group  col1  col2
@@ -402,11 +403,12 @@ replyr_moveValuesToColumns <- function(data,
 #'
 #' @export
 #'
-moveValuesToRowsQ <- function(controlTable, columnsToCopy,
+moveValuesToRowsQ <- function(controlTable,
                               wideTableName,
                               my_db,
                               ...,
-                              tempNameGenerator = replyr::makeTempNameGenerator('er'),
+                              columnsToCopy = NULL,
+                              tempNameGenerator = replyr::makeTempNameGenerator('mvtrq'),
                               showQuery=FALSE) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
@@ -436,7 +438,10 @@ moveValuesToRowsQ <- function(controlTable, columnsToCopy,
                                            '`')
                       },
                       character(1))
-  copystmts <- paste0('`a`.`', columnsToCopy, '`')
+  copystmts <- NULL
+  if(length(copystmts)>0) {
+    copystmts <- paste0('`a`.`', columnsToCopy, '`')
+  }
   groupstmt <- paste0('`b`.`', colnames(controlTable)[1], '`')
   # deliberate cross join
   qs <-  paste0(" SELECT ",
@@ -462,7 +467,7 @@ moveValuesToRowsQ <- function(controlTable, columnsToCopy,
 
 
 
-#' Map sets rows to columns (query based). NOT IMPLEMENTED YET.
+#' Map sets rows to columns (query based).
 #'
 #' The controlTable is a table whose first column defines a group and
 #' remaining columns define column selections for that group.   The
@@ -474,30 +479,58 @@ moveValuesToRowsQ <- function(controlTable, columnsToCopy,
 #' through the DBI SQL interface as a single cross join with case
 #' statements.
 #'
-#' @param controlTable table specifying mapping (local data frame)
 #' @param keyColumns character list of column defining row groups
-#' @param columnsToCopy character list of column names to copy
+#' @param controlTable table specifying mapping (local data frame)
 #' @param tallTableName name of table containing data to be mapped (db/Spark data)
 #' @param my_db db handle
 #' @param ... force later arguments to be by name.
+#' @param columnsToCopy character list of column names to copy
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
 #' @param showQuery if TRUE print query
-#' @return long table built by mapping tallTable to one row per group
+#' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
 #' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 #'
+#' @examples
+#'
+#' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#' tallTableName <- 'dat'
+#' d <- dplyr::copy_to(my_db,
+#'                     dplyr::tribble(~ID, ~group, ~col1, ~col2,
+#'                                    1,   "aa",   101,   301,
+#'                                    1,   "bb",   201,   401,
+#'                                    2,   "aa",   102,   302,
+#'                                    2,   "bb",   202,   402,
+#'                                    3,   "aa",   103,   303,
+#'                                    3,   "bb",   203,   403),
+#'                     tallTableName,
+#'                     overwrite = TRUE, temporary=TRUE)
+#' controlTable <- dplyr::tribble(~group, ~col1, ~col2,
+#'                                'aa',  'v1',  'v3',
+#'                                'bb',  'v2',  'v4')
+#' keyColumns <- 'ID'
+#' moveValuesToColumnsQ(keyColumns,
+#'                      controlTable,
+#'                      tallTableName,
+#'                      my_db)
+#' # # Source:   table<mvtcq_gazoxayw2qnelwbqidky_0000000001> [?? x 5]
+#' # # Database: sqlite 3.19.3 [:memory:]
+#' #      ID    v1    v3    v2    v4
+#' #   <dbl> <dbl> <dbl> <dbl> <dbl>
+#' # 1     1   101   301   201   401
+#' # 2     2   102   302   202   402
+#' # 3     3   103   303   203   403
 #'
 #' @export
 #'
-moveValuesToColumnsQ <- function(controlTable,
-                                 keyColumns,
-                                 columnsToCopy,
+moveValuesToColumnsQ <- function(keyColumns,
+                                 controlTable,
                                  tallTableName,
                                  my_db,
                                  ...,
-                                 tempNameGenerator = replyr::makeTempNameGenerator('er'),
-                                 showQuery=FALSE) {
-  stop("replyr::moveValuesToColumnsQ not implemented yet.")
+                                 columnsToCopy = NULL,
+                                 tempNameGenerator = replyr::makeTempNameGenerator('mvtcq'),
+                                 showQuery = FALSE) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
@@ -506,36 +539,38 @@ moveValuesToColumnsQ <- function(controlTable,
   ctab <- copy_to(my_db, controlTable, ctabName,
                   overwrite = TRUE, temporary=TRUE)
   resName <- tempNameGenerator()
-  casestmts <- vapply(2:ncol(controlTable),
-                      function(j) {
-                        whens <- vapply(seq_len(nrow(controlTable)),
-                                        function(i) {
-                                          paste0(' WHEN `b`.`',
-                                                 colnames(controlTable)[1],
-                                                 '` = "',
-                                                 controlTable[i,1,drop=TRUE],
-                                                 '" THEN `a`.`',
-                                                 controlTable[i,j,drop=TRUE],
-                                                 '`' )
-                                        },
-                                        character(1))
-                        casestmt <- paste0('CASE ',
-                                           paste(whens, collapse = ' '),
-                                           ' ELSE NULL END AS `',
-                                           colnames(controlTable)[j],
-                                           '`')
-                      },
-                      character(1))
-  copystmts <- paste0('`a`.`', columnsToCopy, '`')
-  groupstmt <- paste0('`b`.`', colnames(controlTable)[1], '`')
+  collectstmts <- character(nrow(controlTable) * (ncol(controlTable)-1))
+  collectN <- 1
+  for(i in seq_len(nrow(controlTable))) {
+    for(j in 2:ncol(controlTable)) {
+      collectstmts[[collectN]] <- paste0("MAX( CASE WHEN ", # pseudo aggregator
+                                         "`a`.`",
+                                         colnames(controlTable)[[1]],
+                                         "` = \"",
+                                         controlTable[i,1,drop=TRUE],
+                                         "\" THEN `a`.`",
+                                         colnames(controlTable)[[j]],
+                                         "`  ELSE NULL END ) `",
+                                         controlTable[i,j,drop=TRUE],
+                                         "`")
+      collectN <- collectN + 1
+    }
+  }
+  # pseudo-aggregators for columns we are copying
+  # paste works on vectors in alligned fashion (not as a cross-product)
+  copystmts <- NULL
+  if(length(columnsToCopy)>0) {
+    copystmts <- paste0('MAX(`a`.`', columnsToCopy, '`) `', columnsToCopy, '`')
+  }
+  groupterms <- paste0('`a`.`', keyColumns, '`')
+  groupstmts  <- paste0('`a`.`', keyColumns, '` `', keyColumns, '`')
   # deliberate cross join
   qs <-  paste0(" SELECT ",
-                paste(c(copystmts, groupstmt, casestmts), collapse = ', '),
+                paste(c(groupstmts, copystmts, collectstmts), collapse = ', '),
                 ' FROM ',
                 tallTableName,
-                ' `a` CROSS JOIN `',
-                ctabName,
-                '` `b` ')
+                ' `a` GROUP BY ',
+                paste(groupterms, collapse = ', '))
   q <-  paste0("CREATE TABLE `",
                resName,
                "` AS ",

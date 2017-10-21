@@ -245,7 +245,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_g4bdhdctu0oswppvoomk_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_z6ou0kqmyjnacv3jh3bi_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -304,8 +304,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  686695 36.7    1168576 62.5   940480 50.3
- #  Vcells 1385089 10.6    2552219 19.5  1617360 12.4
+ #  Ncells  686785 36.7    1168576 62.5   940480 50.3
+ #  Vcells 1386313 10.6    2552219 19.5  1619959 12.4
 ```
 
 Note
