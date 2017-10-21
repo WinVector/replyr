@@ -348,18 +348,58 @@ replyr_moveValuesToColumns <- function(data,
 # The use of db handles with dplyr is what is giving us a dplyr >= 0.7.0 dependency.
 
 
+checkControlTable <- function(controlTable) {
+  if(!is.data.frame(controlTable)) {
+    return("control table must be a data.frame")
+  }
+  if(nrow(controlTable)<1) {
+    return("control table must have at least 1 row")
+  }
+  if(ncol(controlTable)<1) {
+    return("control table must have at least 1 column")
+  }
+  classes <- vapply(controlTable, class, character(1))
+  if(!all(classes=='character')) {
+    return("all control table columns must be character")
+  }
+  toCheck <- list(
+    "value entries" = as.vector(as.matrix(controlTable[,2:ncol(controlTable)])),
+    "column names" = colnames(controlTable),
+    "group ids" = controlTable[, 1, drop=TRUE]
+  )
+  for(ci in names(toCheck)) {
+    vals <- toCheck[[ci]]
+    if(length(unique(vals))!=length(vals)) {
+      return(paste("all control table", ci, "must be distinct"))
+    }
+    if(!all(vals==make.names(vals))) {
+      return(paste("all control table", ci ,"must be valid R variable names"))
+    }
+  }
+  return(NULL) # good
+}
 
 #' Map a set of columns to rows (query based).
 #'
-#' The controlTable is a table whose first column defines a group and
-#' remaining columns define column selections for that group.   The
-#' result of moveValuesToRowsQ() is a cross join of the controlTable
-#' and the wideTable with what values are in the columns name by the
-#' column selections in the controlTable given by the names in the
-#' rows of controTable.  This is essentially a multi-column
-#' un-pivot, gather, or moveValuesToRows.  The operation is performed
-#' through the DBI SQL interface as a single cross join with case
-#' statements.
+#' Transform data facts from columns into additional rows using SQL
+#' and controlTable.
+#'
+#' This is using the theory of "fluid data"n
+#' (\url{https://github.com/WinVector/cdata}), which includes the
+#' principle that each data cell has coordinates independent of the
+#' storage details and storage detail dependent coordinates (usually
+#' row-id, column-id, and group-id) can be re-derived at will (the
+#' other principle is that there may not be "one true preferred data
+#' shape" and many re-shapings of data may be needed to match data to
+#' different algorithms and methods).
+#'
+#' The controlTable defines the names of each data element in the two notations:
+#' the notation of the tall table (which is row oriented)
+#' and the notation of the wide table (which is column oriented).
+#' controlTable[ , 1] (the group label) cross colnames(controlTable)
+#' (the column labels) are names of data cells in the long form.
+#' controlTable[ , 2:ncol(controlTable)] (column labels)
+#' are names of data cells in the wide form.
 #'
 #' @param controlTable table specifying mapping (local data frame)
 #' @param wideTableName name of table containing data to be mapped (db/Spark data)
@@ -377,29 +417,30 @@ replyr_moveValuesToColumns <- function(data,
 #' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #' wideTableName <- 'dat'
 #' d <- dplyr::copy_to(my_db,
-#'       dplyr::tribble(~ID, ~v1, ~v2, ~v3, ~v4,
-#'                        1, 101, 201, 301, 401,
-#'                        2, 102, 202, 302, 402,
-#'                        3, 103, 203, 303, 403),
+#'       dplyr::tribble(
+#'         ~ID,          ~c1,          ~c2,          ~c3,          ~c4,
+#'       'id1', 'val_id1_c1', 'val_id1_c2', 'val_id1_c3', 'val_id1_c4',
+#'       'id2', 'val_id2_c1', 'val_id2_c2', 'val_id2_c3', 'val_id2_c4',
+#'       'id3', 'val_id3_c1', 'val_id3_c2', 'val_id3_c3', 'val_id3_c4' ),
 #'              wideTableName, overwrite = TRUE, temporary=TRUE)
 #' controlTable <- dplyr::tribble(~group, ~col1, ~col2,
-#'                                  'aa',  'v1',  'v3',
-#'                                  'bb',  'v2',  'v4')
+#'                                  'aa',  'c1',  'c2',
+#'                                  'bb',  'c3',  'c4')
 #' columnsToCopy <- 'ID'
 #' moveValuesToRowsQ(controlTable,
 #'                   wideTableName,
 #'                   my_db,
 #'                   columnsToCopy = columnsToCopy)
-#' #  # Source:   table<er_tqbavuiflwhgu4i5v7yn_0000000001> [?? x 4]
-#' #  # Database: sqlite 3.19.3 [:memory:]
-#' #       ID group  col1  col2
-#' #    <dbl> <chr> <dbl> <dbl>
-#' #  1     1    aa   101   301
-#' #  2     1    bb   201   401
-#' #  3     2    aa   102   302
-#' #  4     2    bb   202   402
-#' #  5     3    aa   103   303
-#' #  6     3    bb   203   403
+#' # # Source:   table<mvtrq_tnl6kueh5givlkobcl54_0000000001> [?? x 4]
+#' # # Database: sqlite 3.19.3 [:memory:]
+#' #      ID group       col1       col2
+#' #   <chr> <chr>      <chr>      <chr>
+#' # 1   id1    aa val_id1_c1 val_id1_c2
+#' # 2   id1    bb val_id1_c3 val_id1_c4
+#' # 3   id2    aa val_id2_c1 val_id2_c2
+#' # 4   id2    bb val_id2_c3 val_id2_c4
+#' # 5   id3    aa val_id3_c1 val_id3_c2
+#' # 6   id3    bb val_id3_c3 val_id3_c4
 #'
 #' @export
 #'
@@ -414,6 +455,10 @@ moveValuesToRowsQ <- function(controlTable,
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
   controlTable <- as.data.frame(controlTable)
+  cCheck <- checkControlTable(controlTable)
+  if(!is.null(cCheck)) {
+    stop(paste("replyr::moveValuesToRowsQ", cCheck))
+  }
   ctabName <- tempNameGenerator()
   ctab <- copy_to(my_db, controlTable, ctabName,
                   overwrite = TRUE, temporary=TRUE)
@@ -439,7 +484,7 @@ moveValuesToRowsQ <- function(controlTable,
                       },
                       character(1))
   copystmts <- NULL
-  if(length(copystmts)>0) {
+  if(length(columnsToCopy)>0) {
     copystmts <- paste0('`a`.`', columnsToCopy, '`')
   }
   groupstmt <- paste0('`b`.`', colnames(controlTable)[1], '`')
@@ -469,15 +514,25 @@ moveValuesToRowsQ <- function(controlTable,
 
 #' Map sets rows to columns (query based).
 #'
-#' The controlTable is a table whose first column defines a group and
-#' remaining columns define column selections for that group.   The
-#' result of moveValuesToColumnsQ() is a cross join of the controlTable
-#' and the tallTable with what values are in the columns name by the
-#' column selections in the controlTable given by the names in the
-#' rows of controTable.  This is essentially a multi-column
-#' un-pivot, gather, or moveValuesToRows.  The operation is performed
-#' through the DBI SQL interface as a single cross join with case
-#' statements.
+#' Transform data facts from rows into additional columns using SQL
+#' and controlTable.
+#'
+#' This is using the theory of "fluid data"n
+#' (\url{https://github.com/WinVector/cdata}), which includes the
+#' principle that each data cell has coordinates independent of the
+#' storage details and storage detail dependent coordinates (usually
+#' row-id, column-id, and group-id) can be re-derived at will (the
+#' other principle is that there may not be "one true preferred data
+#' shape" and many re-shapings of data may be needed to match data to
+#' different algorithms and methods).
+#'
+#' The controlTable defines the names of each data element in the two notations:
+#' the notation of the tall table (which is row oriented)
+#' and the notation of the wide table (which is column oriented).
+#' controlTable[ , 1] (the group label) cross colnames(controlTable)
+#' (the column labels) are names of data cells in the long form.
+#' controlTable[ , 2:ncol(controlTable)] (column labels)
+#' are names of data cells in the wide form.
 #'
 #' @param keyColumns character list of column defining row groups
 #' @param controlTable table specifying mapping (local data frame)
@@ -496,30 +551,31 @@ moveValuesToRowsQ <- function(controlTable,
 #' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #' tallTableName <- 'dat'
 #' d <- dplyr::copy_to(my_db,
-#'                     dplyr::tribble(~ID, ~group, ~col1, ~col2,
-#'                                    1,   "aa",   101,   301,
-#'                                    1,   "bb",   201,   401,
-#'                                    2,   "aa",   102,   302,
-#'                                    2,   "bb",   202,   402,
-#'                                    3,   "aa",   103,   303,
-#'                                    3,   "bb",   203,   403),
-#'                     tallTableName,
-#'                     overwrite = TRUE, temporary=TRUE)
+#'   dplyr::tribble(
+#'    ~ID,   ~group, ~col1,              ~col2,
+#'    "id1", "aa",   "val_id1_gaa_col1", "val_id1_gaa_col2",
+#'    "id1", "bb",   "val_id1_gbb_col1", "val_id1_gbb_col2",
+#'    "id2", "aa",   "val_id2_gaa_col1", "val_id2_gaa_col2",
+#'    "id2", "bb",   "val_id2_gbb_col1", "val_id2_gbb_col2",
+#'    "id3", "aa",   "val_id3_gaa_col1", "val_id3_gaa_col2",
+#'    "id3", "bb",   "val_id3_gbb_col1", "val_id3_gbb_col2" ),
+#'          tallTableName,
+#'          overwrite = TRUE, temporary=TRUE)
 #' controlTable <- dplyr::tribble(~group, ~col1, ~col2,
-#'                                'aa',  'v1',  'v3',
-#'                                'bb',  'v2',  'v4')
+#'                                  'aa',  'c1',  'c2',
+#'                                  'bb',  'c3',  'c4')
 #' keyColumns <- 'ID'
 #' moveValuesToColumnsQ(keyColumns,
 #'                      controlTable,
 #'                      tallTableName,
 #'                      my_db)
-#' # # Source:   table<mvtcq_gazoxayw2qnelwbqidky_0000000001> [?? x 5]
+#' # # Source:   table<mvtcq_y579atnjk3zevjqvkeok_0000000001> [?? x 5]
 #' # # Database: sqlite 3.19.3 [:memory:]
-#' #      ID    v1    v3    v2    v4
-#' #   <dbl> <dbl> <dbl> <dbl> <dbl>
-#' # 1     1   101   301   201   401
-#' # 2     2   102   302   202   402
-#' # 3     3   103   303   203   403
+#' #      ID               c1               c2               c3               c4
+#' #   <chr>            <chr>            <chr>            <chr>            <chr>
+#' # 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
+#' # 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
+#' # 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
 #'
 #' @export
 #'
@@ -535,6 +591,10 @@ moveValuesToColumnsQ <- function(keyColumns,
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
   controlTable <- as.data.frame(controlTable)
+  cCheck <- checkControlTable(controlTable)
+  if(!is.null(cCheck)) {
+    stop(paste("replyr::moveValuesToColumnsQ", cCheck))
+  }
   ctabName <- tempNameGenerator()
   ctab <- copy_to(my_db, controlTable, ctabName,
                   overwrite = TRUE, temporary=TRUE)

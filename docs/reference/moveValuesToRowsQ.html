@@ -117,15 +117,8 @@
     </div>
 
     
-    <p>The controlTable is a table whose first column defines a group and
-remaining columns define column selections for that group.   The
-result of moveValuesToRowsQ() is a cross join of the controlTable
-and the wideTable with what values are in the columns name by the
-column selections in the controlTable given by the names in the
-rows of controTable.  This is essentially a multi-column
-un-pivot, gather, or moveValuesToRows.  The operation is performed
-through the DBI SQL interface as a single cross join with case
-statements.</p>
+    <p>Transform data facts from columns into additional rows using SQL
+and controlTable.</p>
     
 
     <pre class="usage"><span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>, <span class='no'>wideTableName</span>, <span class='no'>my_db</span>, <span class='no'>...</span>,
@@ -170,6 +163,24 @@ statements.</p>
 
     <p>long table built by mapping wideTable to one row per group</p>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This is using the theory of "fluid data"n
+(<a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/cdata</a>), which includes the
+principle that each data cell has coordinates independent of the
+storage details and storage detail dependent coordinates (usually
+row-id, column-id, and group-id) can be re-derived at will (the
+other principle is that there may not be "one true preferred data
+shape" and many re-shapings of data may be needed to match data to
+different algorithms and methods).</p>
+<p>The controlTable defines the names of each data element in the two notations:
+the notation of the tall table (which is row oriented)
+and the notation of the wide table (which is column oriented).
+controlTable[ , 1] (the group label) cross colnames(controlTable)
+(the column labels) are names of data cells in the long form.
+controlTable[ , 2:ncol(controlTable)] (column labels)
+are names of data cells in the wide form.</p>
+    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p><a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/cdata</a>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></code>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code>, <code>moveValuesToRowsQ</code>, <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code></p>
@@ -180,37 +191,38 @@ statements.</p>
 <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
 <span class='no'>wideTableName</span> <span class='kw'>&lt;-</span> <span class='st'>'dat'</span>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>my_db</span>,
-      <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>ID</span>, ~<span class='no'>v1</span>, ~<span class='no'>v2</span>, ~<span class='no'>v3</span>, ~<span class='no'>v4</span>,
-                       <span class='fl'>1</span>, <span class='fl'>101</span>, <span class='fl'>201</span>, <span class='fl'>301</span>, <span class='fl'>401</span>,
-                       <span class='fl'>2</span>, <span class='fl'>102</span>, <span class='fl'>202</span>, <span class='fl'>302</span>, <span class='fl'>402</span>,
-                       <span class='fl'>3</span>, <span class='fl'>103</span>, <span class='fl'>203</span>, <span class='fl'>303</span>, <span class='fl'>403</span>),
+      <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
+        ~<span class='no'>ID</span>,          ~<span class='no'>c1</span>,          ~<span class='no'>c2</span>,          ~<span class='no'>c3</span>,          ~<span class='no'>c4</span>,
+      <span class='st'>'id1'</span>, <span class='st'>'val_id1_c1'</span>, <span class='st'>'val_id1_c2'</span>, <span class='st'>'val_id1_c3'</span>, <span class='st'>'val_id1_c4'</span>,
+      <span class='st'>'id2'</span>, <span class='st'>'val_id2_c1'</span>, <span class='st'>'val_id2_c2'</span>, <span class='st'>'val_id2_c3'</span>, <span class='st'>'val_id2_c4'</span>,
+      <span class='st'>'id3'</span>, <span class='st'>'val_id3_c1'</span>, <span class='st'>'val_id3_c2'</span>, <span class='st'>'val_id3_c3'</span>, <span class='st'>'val_id3_c4'</span> ),
              <span class='no'>wideTableName</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
 <span class='no'>controlTable</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>group</span>, ~<span class='no'>col1</span>, ~<span class='no'>col2</span>,
-                                 <span class='st'>'aa'</span>,  <span class='st'>'v1'</span>,  <span class='st'>'v3'</span>,
-                                 <span class='st'>'bb'</span>,  <span class='st'>'v2'</span>,  <span class='st'>'v4'</span>)
+                                 <span class='st'>'aa'</span>,  <span class='st'>'c1'</span>,  <span class='st'>'c2'</span>,
+                                 <span class='st'>'bb'</span>,  <span class='st'>'c3'</span>,  <span class='st'>'c4'</span>)
 <span class='no'>columnsToCopy</span> <span class='kw'>&lt;-</span> <span class='st'>'ID'</span>
 <span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>,
                   <span class='no'>wideTableName</span>,
                   <span class='no'>my_db</span>,
-                  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='no'>columnsToCopy</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_qenofvv98yctkgewmsev_0000000001&gt; [?? x 3]
+                  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='no'>columnsToCopy</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_qenofvv98yctkgewmsev_0000000001&gt; [?? x 4]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
-#&gt;   group  col1  col2
-#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1    aa   101   301
-#&gt; 2    bb   201   401
-#&gt; 3    aa   102   302
-#&gt; 4    bb   202   402
-#&gt; 5    aa   103   303
-#&gt; 6    bb   203   403</div><div class='input'>#  # Source:   table<er_tqbavuiflwhgu4i5v7yn_0000000001> [?? x 4]
-#  # Database: sqlite 3.19.3 [:memory:]
-#       ID group  col1  col2
-#    <dbl> <chr> <dbl> <dbl>
-#  1     1    aa   101   301
-#  2     1    bb   201   401
-#  3     2    aa   102   302
-#  4     2    bb   202   402
-#  5     3    aa   103   303
-#  6     3    bb   203   403
+#&gt;      ID group       col1       col2
+#&gt;   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
+#&gt; 1   id1    aa val_id1_c1 val_id1_c2
+#&gt; 2   id1    bb val_id1_c3 val_id1_c4
+#&gt; 3   id2    aa val_id2_c1 val_id2_c2
+#&gt; 4   id2    bb val_id2_c3 val_id2_c4
+#&gt; 5   id3    aa val_id3_c1 val_id3_c2
+#&gt; 6   id3    bb val_id3_c3 val_id3_c4</div><div class='input'># # Source:   table<mvtrq_tnl6kueh5givlkobcl54_0000000001> [?? x 4]
+# # Database: sqlite 3.19.3 [:memory:]
+#      ID group       col1       col2
+#   <chr> <chr>      <chr>      <chr>
+# 1   id1    aa val_id1_c1 val_id1_c2
+# 2   id1    bb val_id1_c3 val_id1_c4
+# 3   id2    aa val_id2_c1 val_id2_c2
+# 4   id2    bb val_id2_c3 val_id2_c4
+# 5   id3    aa val_id3_c1 val_id3_c2
+# 6   id3    bb val_id3_c3 val_id3_c4
 
 </div></pre>
   </div>
@@ -220,6 +232,8 @@ statements.</p>
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

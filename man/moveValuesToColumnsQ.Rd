@@ -30,45 +30,57 @@ moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
 wide table built by mapping key-grouped tallTable rows to one row per group
 }
 \description{
-The controlTable is a table whose first column defines a group and
-remaining columns define column selections for that group.   The
-result of moveValuesToColumnsQ() is a cross join of the controlTable
-and the tallTable with what values are in the columns name by the
-column selections in the controlTable given by the names in the
-rows of controTable.  This is essentially a multi-column
-un-pivot, gather, or moveValuesToRows.  The operation is performed
-through the DBI SQL interface as a single cross join with case
-statements.
+Transform data facts from rows into additional columns using SQL
+and controlTable.
+}
+\details{
+This is using the theory of "fluid data"n
+(\url{https://github.com/WinVector/cdata}), which includes the
+principle that each data cell has coordinates independent of the
+storage details and storage detail dependent coordinates (usually
+row-id, column-id, and group-id) can be re-derived at will (the
+other principle is that there may not be "one true preferred data
+shape" and many re-shapings of data may be needed to match data to
+different algorithms and methods).
+
+The controlTable defines the names of each data element in the two notations:
+the notation of the tall table (which is row oriented)
+and the notation of the wide table (which is column oriented).
+controlTable[ , 1] (the group label) cross colnames(controlTable)
+(the column labels) are names of data cells in the long form.
+controlTable[ , 2:ncol(controlTable)] (column labels)
+are names of data cells in the wide form.
 }
 \examples{
 
 my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 tallTableName <- 'dat'
 d <- dplyr::copy_to(my_db,
-                    dplyr::tribble(~ID, ~group, ~col1, ~col2,
-                                   1,   "aa",   101,   301,
-                                   1,   "bb",   201,   401,
-                                   2,   "aa",   102,   302,
-                                   2,   "bb",   202,   402,
-                                   3,   "aa",   103,   303,
-                                   3,   "bb",   203,   403),
-                    tallTableName,
-                    overwrite = TRUE, temporary=TRUE)
+  dplyr::tribble(
+   ~ID,   ~group, ~col1,              ~col2,
+   "id1", "aa",   "val_id1_gaa_col1", "val_id1_gaa_col2",
+   "id1", "bb",   "val_id1_gbb_col1", "val_id1_gbb_col2",
+   "id2", "aa",   "val_id2_gaa_col1", "val_id2_gaa_col2",
+   "id2", "bb",   "val_id2_gbb_col1", "val_id2_gbb_col2",
+   "id3", "aa",   "val_id3_gaa_col1", "val_id3_gaa_col2",
+   "id3", "bb",   "val_id3_gbb_col1", "val_id3_gbb_col2" ),
+         tallTableName,
+         overwrite = TRUE, temporary=TRUE)
 controlTable <- dplyr::tribble(~group, ~col1, ~col2,
-                               'aa',  'v1',  'v3',
-                               'bb',  'v2',  'v4')
+                                 'aa',  'c1',  'c2',
+                                 'bb',  'c3',  'c4')
 keyColumns <- 'ID'
 moveValuesToColumnsQ(keyColumns,
                      controlTable,
                      tallTableName,
                      my_db)
-# # Source:   table<mvtcq_gazoxayw2qnelwbqidky_0000000001> [?? x 5]
+# # Source:   table<mvtcq_y579atnjk3zevjqvkeok_0000000001> [?? x 5]
 # # Database: sqlite 3.19.3 [:memory:]
-#      ID    v1    v3    v2    v4
-#   <dbl> <dbl> <dbl> <dbl> <dbl>
-# 1     1   101   301   201   401
-# 2     2   102   302   202   402
-# 3     3   103   303   203   403
+#      ID               c1               c2               c3               c4
+#   <chr>            <chr>            <chr>            <chr>            <chr>
+# 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
+# 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
+# 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
 
 }
 \seealso{
