@@ -25,7 +25,7 @@ Note: `replyr` is meant only for "tame data frames" that is data frames with non
 
 ![](https://github.com/WinVector/replyr/raw/master/tools/replyrs.png)
 
-`replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
+`replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`.  The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`.  Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.  The rule of thumb is: try `dplyr` first, and if that does not work check if `replyr` has researched a work-around.
 
 `replyr` uniformly uses standard or parametric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
 
@@ -37,8 +37,8 @@ Primary `replyr` services include:
  * `replyr::replyr_bind_rows`
  * `replyr::gapply`
  * `replyr::replyr_summary`
- * `replyr::replyr_moveValuesToRows`
- * `replyr::replyr_moveValuesToColumns`
+ * `replyr::moveValuesToRowsQ`
+ * `replyr::moveValuesToColumnsQ`
  * `replyr::replyr_*`  
  
 ## `wrapr::let`

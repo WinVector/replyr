@@ -51,7 +51,6 @@ in situations where \code{f} itself is fairly complicated and/or expensive.
 }
 \examples{
 
-library('dplyr')
 d <- data.frame(
   group = c(1, 1, 2, 2, 2),
   order = c(.1, .2, .3, .4, .5),
@@ -61,12 +60,13 @@ d <- data.frame(
 # User supplied window functions.  They depend on known column names and
 # the data back-end matching function names (as cumsum).
 cumulative_sum <- function(d) {
-  mutate(d, cv = cumsum(values))
+  dplyr::mutate(d, cv = cumsum(values))
 }
 rank_in_group <- function(d) {
-  d <- mutate(d, constcol = 1)
-  d <- mutate(d, rank = cumsum(constcol))
-  select(d, -constcol)
+  d \%.>\%
+    dplyr::mutate(., constcol = 1) \%.>\%
+    dplyr::mutate(., rank = cumsum(constcol)) \%.>\%
+    dplyr::select(., -constcol)
 }
 
 for (partitionMethod in c('group_by', 'split', 'extract')) {
@@ -103,6 +103,5 @@ for (partitionMethod in c('group_by', 'split', 'extract')) {
     )
   )
 }
-
 
 }

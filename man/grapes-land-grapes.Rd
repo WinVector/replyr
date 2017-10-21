@@ -37,7 +37,6 @@ oppugnant reading of some style guides.
 }
 \examples{
 
-library("dplyr")
 sin(7) \%->\% z1
 sin(7) \%->_\% 'z2'
 varname <- 'z3'

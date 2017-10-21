@@ -374,18 +374,17 @@ replyr_moveValuesToColumns <- function(data,
 #'
 #' @examples
 #'
-#' suppressPackageStartupMessages(library("dplyr"))
 #' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #' wideTableName <- 'dat'
-#' d <- copy_to(my_db,
-#'              tribble(~ID, ~v1, ~v2, ~v3, ~v4,
+#' d <- dplyr::copy_to(my_db,
+#'       dplyr::tribble(~ID, ~v1, ~v2, ~v3, ~v4,
 #'                        1, 101, 201, 301, 401,
 #'                        2, 102, 202, 302, 402,
 #'                        3, 103, 203, 303, 403),
 #'              wideTableName, overwrite = TRUE, temporary=TRUE)
-#' controlTable <- tribble(~group, ~col1, ~col2,
-#'                           'aa',  'v1',  'v3',
-#'                           'bb',  'v2',  'v4')
+#' controlTable <- dplyr::tribble(~group, ~col1, ~col2,
+#'                                  'aa',  'v1',  'v3',
+#'                                  'bb',  'v2',  'v4')
 #' columnsToCopy = 'ID'
 #' moveValuesToRowsQ(controlTable, columnsToCopy,
 #'                   wideTableName,

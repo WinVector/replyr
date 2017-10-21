@@ -104,7 +104,7 @@
 <div class="figure">
 <img src="https://github.com/WinVector/replyr/raw/master/tools/replyrs.png">
 </div>
-<p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (<code>SQL</code> databases, <code>Spark</code>) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions.</p>
+<p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (<code>SQL</code> databases, <code>Spark</code>) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions. The rule of thumb is: try <code>dplyr</code> first, and if that does not work check if <code>replyr</code> has researched a work-around.</p>
 <p><code>replyr</code> uniformly uses standard or parametric interfaces (names of variables as strings) in favor of name capture so that you can easily program <em>over</em> <code>replyr</code>.</p>
 <p>Primary <code>replyr</code> services include:</p>
 <ul>
@@ -114,8 +114,8 @@
 <li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_bind_rows">replyr::replyr_bind_rows</a></code></li>
 <li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/gapply">replyr::gapply</a></code></li>
 <li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr::replyr_summary</a></code></li>
-<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_moveValuesToRows">replyr::replyr_moveValuesToRows</a></code></li>
-<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_moveValuesToColumns">replyr::replyr_moveValuesToColumns</a></code></li>
+<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ">replyr::moveValuesToRowsQ</a></code></li>
+<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToColumnsQ">replyr::moveValuesToColumnsQ</a></code></li>
 <li><code>replyr::replyr_*</code></li>
 </ul>
 </div>
@@ -304,7 +304,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_ebpptdinioporvecvaed_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_aglxjdaoinroo2tpaop2_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.19.3 [:memory:]</span>
  <span class="co">#        x     y     z</span>
  <span class="co">#    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -358,8 +358,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  733279 39.2    1168576 62.5  1168576 62.5</span>
- <span class="co">#  Vcells 1446528 11.1    2552219 19.5  1906842 14.6</span></code></pre></div>
+ <span class="co">#  Ncells  733246 39.2    1168576 62.5  1168576 62.5</span>
+ <span class="co">#  Vcells 1446451 11.1    2552219 19.5  1906794 14.6</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

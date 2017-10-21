@@ -11,7 +11,7 @@ Note: `replyr` is meant only for "tame data frames" that is data frames with non
 
 ![](https://github.com/WinVector/replyr/raw/master/tools/replyrs.png)
 
-`replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions.
+`replyr` supplies methods to get a grip on working with remote `tbl` sources (`SQL` databases, `Spark`) through `dplyr`. The idea is to add convenience functions to make such tasks more like working with an in-memory `data.frame`. Results still do depend on which `dplyr` service you use, but with `replyr` you have fairly uniform access to some useful functions. The rule of thumb is: try `dplyr` first, and if that does not work check if `replyr` has researched a work-around.
 
 `replyr` uniformly uses standard or parametric interfaces (names of variables as strings) in favor of name capture so that you can easily program *over* `replyr`.
 
@@ -23,8 +23,8 @@ Primary `replyr` services include:
 -   `replyr::replyr_bind_rows`
 -   `replyr::gapply`
 -   `replyr::replyr_summary`
--   `replyr::replyr_moveValuesToRows`
--   `replyr::replyr_moveValuesToColumns`
+-   `replyr::moveValuesToRowsQ`
+-   `replyr::moveValuesToColumnsQ`
 -   `replyr::replyr_*`
 
 `wrapr::let`
@@ -245,7 +245,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_3ps0pwcydw0kme24ckmi_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_g4bdhdctu0oswppvoomk_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -304,8 +304,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  686499 36.7    1168576 62.5   940480 50.3
- #  Vcells 1384549 10.6    2552219 19.5  1618540 12.4
+ #  Ncells  686695 36.7    1168576 62.5   940480 50.3
+ #  Vcells 1385089 10.6    2552219 19.5  1617360 12.4
 ```
 
 Note

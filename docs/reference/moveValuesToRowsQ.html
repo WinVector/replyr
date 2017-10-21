@@ -176,18 +176,17 @@ statements.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'>suppressPackageStartupMessages</span>(<span class='fu'>library</span>(<span class='st'>"dplyr"</span>))
 <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
 <span class='no'>wideTableName</span> <span class='kw'>&lt;-</span> <span class='st'>'dat'</span>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>my_db</span>,
-             <span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>ID</span>, ~<span class='no'>v1</span>, ~<span class='no'>v2</span>, ~<span class='no'>v3</span>, ~<span class='no'>v4</span>,
+<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>my_db</span>,
+      <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>ID</span>, ~<span class='no'>v1</span>, ~<span class='no'>v2</span>, ~<span class='no'>v3</span>, ~<span class='no'>v4</span>,
                        <span class='fl'>1</span>, <span class='fl'>101</span>, <span class='fl'>201</span>, <span class='fl'>301</span>, <span class='fl'>401</span>,
                        <span class='fl'>2</span>, <span class='fl'>102</span>, <span class='fl'>202</span>, <span class='fl'>302</span>, <span class='fl'>402</span>,
                        <span class='fl'>3</span>, <span class='fl'>103</span>, <span class='fl'>203</span>, <span class='fl'>303</span>, <span class='fl'>403</span>),
              <span class='no'>wideTableName</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-<span class='no'>controlTable</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>group</span>, ~<span class='no'>col1</span>, ~<span class='no'>col2</span>,
-                          <span class='st'>'aa'</span>,  <span class='st'>'v1'</span>,  <span class='st'>'v3'</span>,
-                          <span class='st'>'bb'</span>,  <span class='st'>'v2'</span>,  <span class='st'>'v4'</span>)
+<span class='no'>controlTable</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>group</span>, ~<span class='no'>col1</span>, ~<span class='no'>col2</span>,
+                                 <span class='st'>'aa'</span>,  <span class='st'>'v1'</span>,  <span class='st'>'v3'</span>,
+                                 <span class='st'>'bb'</span>,  <span class='st'>'v2'</span>,  <span class='st'>'v4'</span>)
 <span class='no'>columnsToCopy</span> <span class='kw'>=</span> <span class='st'>'ID'</span>
 <span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>, <span class='no'>columnsToCopy</span>,
                   <span class='no'>wideTableName</span>,
