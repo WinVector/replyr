@@ -6,7 +6,7 @@
 \usage{
 moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
   columnsToCopy = NULL,
-  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"),
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"), strict = TRUE,
   showQuery = FALSE)
 }
 \arguments{
@@ -21,6 +21,8 @@ moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
 \item{columnsToCopy}{character list of column names to copy}
 
 \item{tempNameGenerator}{a tempNameGenerator from replyr::makeTempNameGenerator()}
+
+\item{strict}{logical, if TRUE check control table contents for uniqueness}
 
 \item{showQuery}{if TRUE print query}
 }
@@ -48,6 +50,8 @@ controlTable[ , 1] (the group label) cross colnames(controlTable)
 (the column labels) are names of data cells in the long form.
 controlTable[ , 2:ncol(controlTable)] (column labels)
 are names of data cells in the wide form.
+To get behavior similar to tidyr::gather/spread one build the control table
+by running an appropiate query over the data.
 }
 \examples{
 

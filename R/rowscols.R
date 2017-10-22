@@ -400,6 +400,8 @@ checkControlTable <- function(controlTable) {
 #' (the column labels) are names of data cells in the long form.
 #' controlTable[ , 2:ncol(controlTable)] (column labels)
 #' are names of data cells in the wide form.
+#' To get behavior similar to tidyr::gather/spread one build the control table
+#' by running an appropiate query over the data.
 #'
 #' @param controlTable table specifying mapping (local data frame)
 #' @param wideTableName name of table containing data to be mapped (db/Spark data)
@@ -407,6 +409,7 @@ checkControlTable <- function(controlTable) {
 #' @param ... force later arguments to be by name.
 #' @param columnsToCopy character list of column names to copy
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
+#' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param showQuery if TRUE print query
 #' @return long table built by mapping wideTable to one row per group
 #'
@@ -450,14 +453,17 @@ moveValuesToRowsQ <- function(controlTable,
                               ...,
                               columnsToCopy = NULL,
                               tempNameGenerator = replyr::makeTempNameGenerator('mvtrq'),
+                              strict = TRUE,
                               showQuery=FALSE) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
   controlTable <- as.data.frame(controlTable)
-  cCheck <- checkControlTable(controlTable)
-  if(!is.null(cCheck)) {
-    stop(paste("replyr::moveValuesToRowsQ", cCheck))
+  if(strict) {
+    cCheck <- checkControlTable(controlTable)
+    if(!is.null(cCheck)) {
+      stop(paste("replyr::moveValuesToRowsQ", cCheck))
+    }
   }
   ctabName <- tempNameGenerator()
   ctab <- copy_to(my_db, controlTable, ctabName,
@@ -533,6 +539,8 @@ moveValuesToRowsQ <- function(controlTable,
 #' (the column labels) are names of data cells in the long form.
 #' controlTable[ , 2:ncol(controlTable)] (column labels)
 #' are names of data cells in the wide form.
+#' To get behavior similar to tidyr::gather/spread one build the control table
+#' by running an appropiate query over the data.
 #'
 #' @param keyColumns character list of column defining row groups
 #' @param controlTable table specifying mapping (local data frame)
@@ -541,6 +549,7 @@ moveValuesToRowsQ <- function(controlTable,
 #' @param ... force later arguments to be by name.
 #' @param columnsToCopy character list of column names to copy
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
+#' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param showQuery if TRUE print query
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
@@ -586,14 +595,17 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  ...,
                                  columnsToCopy = NULL,
                                  tempNameGenerator = replyr::makeTempNameGenerator('mvtcq'),
+                                 strict = TRUE,
                                  showQuery = FALSE) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
   controlTable <- as.data.frame(controlTable)
-  cCheck <- checkControlTable(controlTable)
-  if(!is.null(cCheck)) {
-    stop(paste("replyr::moveValuesToColumnsQ", cCheck))
+  if(strict) {
+    cCheck <- checkControlTable(controlTable)
+    if(!is.null(cCheck)) {
+      stop(paste("replyr::moveValuesToColumnsQ", cCheck))
+    }
   }
   ctabName <- tempNameGenerator()
   ctab <- copy_to(my_db, controlTable, ctabName,
