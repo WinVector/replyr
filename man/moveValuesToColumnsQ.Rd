@@ -6,8 +6,8 @@
 \usage{
 moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
   columnsToCopy = NULL,
-  tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"), strict = TRUE,
-  showQuery = FALSE)
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"),
+  strict = FALSE, showQuery = FALSE)
 }
 \arguments{
 \item{keyColumns}{character list of column defining row groups}

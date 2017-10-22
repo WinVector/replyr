@@ -6,8 +6,8 @@
 \usage{
 moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
   columnsToCopy = NULL,
-  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"), strict = TRUE,
-  showQuery = FALSE)
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"),
+  strict = FALSE, showQuery = FALSE)
 }
 \arguments{
 \item{controlTable}{table specifying mapping (local data frame)}
