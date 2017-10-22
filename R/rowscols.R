@@ -77,6 +77,7 @@ checkControlTable <- function(controlTable) {
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
 #' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param showQuery if TRUE print query
+#' @param literalQuote character, quote for string literals
 #' @return long table built by mapping wideTable to one row per group
 #'
 #' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
@@ -120,7 +121,8 @@ moveValuesToRowsQ <- function(controlTable,
                               columnsToCopy = NULL,
                               tempNameGenerator = replyr::makeTempNameGenerator('mvtrq'),
                               strict = FALSE,
-                              showQuery=FALSE) {
+                              showQuery=FALSE,
+                              literalQuote = "'") {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
@@ -141,9 +143,9 @@ moveValuesToRowsQ <- function(controlTable,
                                         function(i) {
                                           paste0(' WHEN `b`.`',
                                                  colnames(controlTable)[1],
-                                                 '` = "',
-                                                 controlTable[i,1,drop=TRUE],
-                                                 '" THEN `a`.`',
+                                                 '` = ',
+                                                 literalQuote, controlTable[i,1,drop=TRUE], literalQuote,
+                                                 ' THEN `a`.`',
                                                  controlTable[i,j,drop=TRUE],
                                                  '`' )
                                         },
@@ -217,6 +219,7 @@ moveValuesToRowsQ <- function(controlTable,
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
 #' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param showQuery if TRUE print query
+#' @param literalQuote character, quote for string literals
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
 #' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
@@ -262,7 +265,8 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  columnsToCopy = NULL,
                                  tempNameGenerator = replyr::makeTempNameGenerator('mvtcq'),
                                  strict = FALSE,
-                                 showQuery = FALSE) {
+                                 showQuery = FALSE,
+                                 literalQuote = "'") {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
@@ -284,9 +288,9 @@ moveValuesToColumnsQ <- function(keyColumns,
       collectstmts[[collectN]] <- paste0("MAX( CASE WHEN ", # pseudo aggregator
                                          "`a`.`",
                                          colnames(controlTable)[[1]],
-                                         "` = \"",
-                                         controlTable[i,1,drop=TRUE],
-                                         "\" THEN `a`.`",
+                                         "` = ",
+                                         literalQuote, controlTable[i,1,drop=TRUE], literalQuote,
+                                         " THEN `a`.`",
                                          colnames(controlTable)[[j]],
                                          "`  ELSE NULL END ) `",
                                          controlTable[i,j,drop=TRUE],

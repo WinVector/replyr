@@ -77,6 +77,9 @@
       <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
     </li>
     <li>
+      <a href="../articles/FluidData.html">Fluid Data</a>
+    </li>
+    <li>
       <a href="../articles/joinController.html">Join Controller</a>
     </li>
     <li>
@@ -124,7 +127,7 @@ and controlTable.</p>
     <pre class="usage"><span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>, <span class='no'>wideTableName</span>, <span class='no'>my_db</span>, <span class='no'>...</span>,
   <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"mvtrq"</span>),
-  <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>showQuery</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>showQuery</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>literalQuote</span> <span class='kw'>=</span> <span class='st'>"'"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -160,6 +163,10 @@ and controlTable.</p>
     <tr>
       <th>showQuery</th>
       <td><p>if TRUE print query</p></td>
+    </tr>
+    <tr>
+      <th>literalQuote</th>
+      <td><p>character, quote for string literals</p></td>
     </tr>
     </table>
     

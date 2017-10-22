@@ -1,0 +1,280 @@
+---
+title: "Fluid Data"
+author: "John Mount, Win-Vector LLC"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+The [`replyr`](https://winvector.github.io/replyr/) [R](https://www.r-project.org) package
+provides a powerful extension of the "fluid data" (or "coordinatized data") concept (please see [here](http://www.win-vector.com/blog/2017/03/coordinatized-data-a-fluid-data-specification/) for some notes
+) that goes way beyond the concepts of pivot/un-pivot.
+
+The fluid data concept is:
+
+ 1) Data cells have coordinates, and the dependence of these coordinates on a given data representation (a table or map) is an inessential detail to be abstracted out.
+ 2) There may not be one "preferred" shape (or frame of reference) for data: you have to anticipate changing data shape many times to adapt to the tasks and tools (data relativity).
+
+`replyr` supplies two power very general operators for fluid data work at database scale (and `Spark` big data scale):
+
+ 1) [`moveValuesToRowsQ()`](https://winvector.github.io/replyr/reference/moveValuesToRowsQ.html): an operator centered around `SQL` `cross-join` semantics.  un-pivot, `tidyr::gather()` or [`cdata::moveValuesToRows()`](https://winvector.github.io/cdata/reference/moveValuesToRows.html) are special cases of this general operator.
+ 2) [`moveValuesToColumnsQ()`](https://winvector.github.io/replyr/reference/moveValuesToColumnsQ.html): an operator centered around `SQL` `group by` semantics.  pivot, `tidyr::spread()` or [`cdata::moveValuesToColumns()`](https://winvector.github.io/cdata/reference/moveValuesToColumns.html): are special cases of this general operator.
+
+Because these operators are powerful, they are fairly general, and at first hard to mentally model (especially if you insist on think of them in only in terms of more a specialized operator such as pivot, instead of more general relational concepts such as "cross join" and "group by"). 
+These operators are thin wrappers populating and enforcing a few invariants over a large `SQL` statement.  That does not mean that these operators are trivial, they are thin because `SQL` is powerful and we have a good abstraction.
+
+Due to the very detailed and explicit controls used in these operators- they are very comprehensible once studied.  We will follow-up later with additional training material to make quicker comprehension available to more readers. This document is limiting itself to being a mere concise statement of and demonstration of the operators.
+
+# Data coordinate notation theory
+
+We are going to introduce a explicit, dense, and powerful data coordinate notation.
+
+Consider the following table that we call a "control table":
+
+```{r setup}
+suppressPackageStartupMessages(library("replyr"))
+suppressPackageStartupMessages(library("dplyr"))
+options(width = 160) 
+tng <- replyr::makeTempNameGenerator('fdexample')
+```
+
+```{r notation1}
+controlTable <- dplyr::tribble(~group, ~col1, ~col2,
+                               'aa',  'c1',  'c2',
+                               'bb',  'c3',  'c4')
+print(controlTable)
+```
+
+Control tables partially specify a change of data shape or change of data cell coordinates.
+
+The specification is interpreted as follows:
+
+The region `controlTable[ , 2:ncol(controlTable)]` specifies partial coordinates of data cells in another table.  In our example these partial coordinates are "`c1`", "`c2`", "`c3`", and "`c4`" treated as column names.  For example if our data is:
+
+```{r notationd1}
+dat1 <- dplyr::tribble(
+  ~ID,          ~c1,          ~c2,          ~c3,          ~c4,
+  'id1', 'val_id1_c1', 'val_id1_c2', 'val_id1_c3', 'val_id1_c4',
+  'id2', 'val_id2_c1', 'val_id2_c2', 'val_id2_c3', 'val_id2_c4',
+  'id3', 'val_id3_c1', 'val_id3_c2', 'val_id3_c3', 'val_id3_c4' )
+print(dat1)
+```
+
+Then each data cell in `dat` is named by the row-id (stored in the `ID` column) plus the column-name ("`c1`", "`c2`", "`c3`", and "`c4`").  Knowing `ID` plus the column name unique identifies the data-caring cell in table `dat1`.
+
+However, there is an alternate cell naming available from the `controlTable` notation.  Each name in the region  `controlTable[ , 2:ncol(controlTable)]` is itself unique named by the `group` entry and column name of the control table itself.  This means we have 
+the following correspondence from the partial names "`c1`", "`c2`", "`c3`", and "`c4`" to a new set of partial names:
+
+```{r notationd2}
+namePairings <- expand.grid(seq_len(nrow(controlTable)), 
+                     2:ncol(controlTable))
+colnames(namePairings) <- c("controlI", "controlJ")
+namePairings$coords_style1 <- 
+  vapply(seq_len(nrow(namePairings)),
+         function(ii) {
+           as.character(paste("column:",
+                              controlTable[namePairings$controlI[[ii]], 
+                                           namePairings$controlJ[[ii]]]))
+         },
+         character(1))
+namePairings$coords_style2 <- 
+  vapply(seq_len(nrow(namePairings)),
+         function(ii) {
+           paste("group:",
+                 controlTable$group[[namePairings$controlI[[ii]]]],
+                 ", column:",
+                 colnames(controlTable)[[namePairings$controlJ[[ii]]]])
+         },
+         character(1))
+as.matrix(namePairings[ , c("coords_style1", "coords_style2")])
+```
+
+The idea is the control table is a very succinct description of the pairing
+of the `namePairings$coords_style1` cell partial coordinates and the `namePairings$coords_style2` 
+cell partial coordinates.  As we have said the `namePairings$coords_style1` cell partial coordinates 
+become full cell coordinates for the data cells in `dat1` when combined with
+the `dat1` `ID` column.  The `namePairings$coords_style2` are part of a  natural naming for 
+the data cells in the following table:
+
+```{r dat2}
+my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+dat1db <- dplyr::copy_to(my_db, dat1, 'dat1db')
+dat2 <- replyr::moveValuesToRowsQ(controlTable = controlTable,
+                                  wideTableName = 'dat1db',
+                                  my_db = my_db,
+                                  columnsToCopy = "ID",
+                                  tempNameGenerator = tng) %>%
+  arrange(ID, group)
+print(dat2)
+```
+
+For `dat2` the composite row-key `(ID, group)` plus the column name 
+(one of `col1` or `col2`) gives us the positions of the data carrying cells.
+
+So essentially the two readings of `controlTable` are a succinct representation
+of the explicit pairing of data cell coordinates shown in the `namePairings` table.
+
+# The Operators
+
+In terms of the above notation/theory our two operators  `moveValuesToRowsQ()`
+and `moveValuesToColumnsQ()` are (in principle) easy to describe: 
+
+  * `moveValuesToRowsQ()` reshapes data from style 1 to style 2
+  * `moveValuesToColumnsQ()` reshapes data from style 2 to style 1.
+  
+The above is certainly succinct, but carries a lot of information and allows
+for a lot of different possible applications.  Many important applications are
+derived from how these two operators interact with row-operations and column-operations.  
+
+We give simple examples of each of the operators below.
+
+## `moveValuesToRowsQ()`
+
+```{r moveValuesToRowsQ}
+wideTableName <- 'dat'
+d <- dplyr::copy_to(my_db,
+      dplyr::tribble(
+        ~ID,          ~c1,          ~c2,          ~c3,          ~c4,
+      'id1', 'val_id1_c1', 'val_id1_c2', 'val_id1_c3', 'val_id1_c4',
+      'id2', 'val_id2_c1', 'val_id2_c2', 'val_id2_c3', 'val_id2_c4',
+      'id3', 'val_id3_c1', 'val_id3_c2', 'val_id3_c3', 'val_id3_c4' ),
+             wideTableName, overwrite = TRUE, temporary=TRUE)
+controlTable <- dplyr::tribble(~group, ~col1, ~col2,
+                                 'aa',  'c1',  'c2',
+                                 'bb',  'c3',  'c4')
+columnsToCopy <- 'ID'
+replyr::moveValuesToRowsQ(controlTable,
+                          wideTableName,
+                          my_db,
+                          columnsToCopy = columnsToCopy,
+                          tempNameGenerator = tng) %>%
+  arrange(ID, group)
+```
+
+
+## `moveValuesToColumnsQ()`
+
+```{r moveValuesToColumnsQ}
+tallTableName <- 'dat'
+d <- dplyr::copy_to(my_db,
+  dplyr::tribble(
+   ~ID,   ~group, ~col1,              ~col2,
+   "id1", "aa",   "val_id1_gaa_col1", "val_id1_gaa_col2",
+   "id1", "bb",   "val_id1_gbb_col1", "val_id1_gbb_col2",
+   "id2", "aa",   "val_id2_gaa_col1", "val_id2_gaa_col2",
+   "id2", "bb",   "val_id2_gbb_col1", "val_id2_gbb_col2",
+   "id3", "aa",   "val_id3_gaa_col1", "val_id3_gaa_col2",
+   "id3", "bb",   "val_id3_gbb_col1", "val_id3_gbb_col2" ),
+         tallTableName,
+         overwrite = TRUE, temporary=TRUE)
+controlTable <- dplyr::tribble(~group, ~col1, ~col2,
+                                 'aa',  'c1',  'c2',
+                                 'bb',  'c3',  'c4')
+keyColumns <- 'ID'
+replyr::moveValuesToColumnsQ(keyColumns,
+                             controlTable,
+                             tallTableName,
+                             my_db,
+                             tempNameGenerator = tng) %>%
+  arrange(ID)
+```
+
+
+# Pivot/Un-Pivot
+
+Pivot and un-pivot (or `tidyr::spread()` and `tidyr::gather()`) are special 
+cases of the `moveValuesToColumnsQ()` and `moveValuesToRowsQ()` operators.
+Pivot/un-pivot are the cases where the control table has two columns.
+
+
+## Pivot
+
+```{r pivot}
+d <- data.frame(
+  index = c(1, 2, 3, 1, 2, 3),
+  meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
+  meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
+  stringsAsFactors = FALSE)
+print(d)
+
+cdata::moveValuesToColumns(d,
+                           columnToTakeKeysFrom= 'meastype',
+                           columnToTakeValuesFrom= 'meas',
+                           rowKeyColumns= 'index',
+                           sep= '_') %>%
+  arrange(index)
+
+controlTable <- d %>%
+  group_by(meastype) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  select(meastype) %>%
+  mutate(meas = paste0('meastype_', meastype)) %>%
+  select(meastype, meas)
+print(controlTable)
+
+dtall <- dplyr::copy_to(my_db, d, "dtall")
+moveValuesToColumnsQ(keyColumns = "index",
+                     controlTable = controlTable,
+                     tallTableName = "dtall",
+                     my_db = my_db,
+                     tempNameGenerator = tng) %>% 
+  arrange(index)
+```
+
+
+## Un-Pivot
+
+```{r unpivot}
+d <- data.frame(
+  index = c(1, 2, 3),
+  info = c('a', 'b', 'c'),
+  meas1 = c('m1_1', 'm1_2', 'm1_3'),
+  meas2 = c('2.1', '2.2', '2.3'),
+  stringsAsFactors = FALSE)
+print(d)
+
+cdata::moveValuesToRows(d,
+                        nameForNewKeyColumn= 'meastype',
+                        nameForNewValueColumn= 'meas',
+                        columnsToTakeFrom= c('meas1','meas2')) %>%
+  arrange(index, info)
+
+keyColumns = c('index', 'info')
+controlTable <- data.frame(meastype = setdiff(colnames(d), 
+                                              keyColumns),
+                           stringsAsFactors = FALSE)
+controlTable$meas <- controlTable$meastype
+print(controlTable)
+
+dwide <- dplyr::copy_to(my_db, d, "dwide")
+moveValuesToRowsQ(controlTable = controlTable,
+                  wideTableName = "dwide",
+                  my_db = my_db,
+                  columnsToCopy = keyColumns,
+                  tempNameGenerator = tng) %>%
+  arrange(index, info)
+```
+
+# Conclusion
+
+`replyr::moveValuesToRowsQ()` and `replyr::moveValuesToColumnsQ()` represent
+two very general "fluid data" or "coordinatized data" operators that have
+database scale (via `DBI/dbplyr/dplyr`) and big data scale implementations (via `Sparklyr`).
+Some very powerful data transformations can be translated into the above explicit control table
+terminology.  The extra details explicitly managed in the control table notation makes
+for clear calling interfaces.
+
+```{r cleanup}
+for(ti in tng(dumpList = TRUE)) {
+  dplyr::db_drop_table(my_db, ti)
+}
+DBI::dbDisconnect(my_db)
+```
+
+

@@ -54,6 +54,9 @@
       <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
     </li>
     <li>
+      <a href="../articles/FluidData.html">Fluid Data</a>
+    </li>
+    <li>
       <a href="../articles/joinController.html">Join Controller</a>
     </li>
     <li>
@@ -198,7 +201,7 @@ dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class=
 dbSupport &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, support)
 replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_coalesce">replyr_coalesce</a></span>(dbData, dbSupport, 
                         <span class="dt">fills =</span> <span class="kw">list</span>(<span class="dt">count=</span><span class="dv">0</span>))</code></pre></div>
-<pre><code>## # Source:   table&lt;lehzagqfdl&gt; [?? x 3]
+<pre><code>## # Source:   table&lt;gafqjjcwxp&gt; [?? x 3]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##     year count  name
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
@@ -243,8 +246,8 @@ s &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  689241 36.9    1168576 62.5   940480 50.3
-## Vcells 1225324  9.4    2060183 15.8  1608747 12.3</code></pre>
+## Ncells  689244 36.9    1168576 62.5   940480 50.3
+## Vcells 1225344  9.4    2060183 15.8  1608767 12.3</code></pre>
 </div>
   </div>
 

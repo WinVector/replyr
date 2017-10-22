@@ -7,7 +7,7 @@
 moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
   columnsToCopy = NULL,
   tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"),
-  strict = FALSE, showQuery = FALSE)
+  strict = FALSE, showQuery = FALSE, literalQuote = "'")
 }
 \arguments{
 \item{controlTable}{table specifying mapping (local data frame)}
@@ -25,6 +25,8 @@ moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
 \item{strict}{logical, if TRUE check control table contents for uniqueness}
 
 \item{showQuery}{if TRUE print query}
+
+\item{literalQuote}{character, quote for string literals}
 }
 \value{
 long table built by mapping wideTable to one row per group
