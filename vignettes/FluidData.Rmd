@@ -202,6 +202,8 @@ d <- data.frame(
   stringsAsFactors = FALSE)
 print(d)
 
+# the cdata::moveValuesToColumns version
+# equivalent to tidyr::spread(d, 'meastype', 'meas')
 cdata::moveValuesToColumns(d,
                            columnToTakeKeysFrom= 'meastype',
                            columnToTakeValuesFrom= 'meas',
@@ -209,6 +211,7 @@ cdata::moveValuesToColumns(d,
                            sep= '_') %>%
   arrange(index)
 
+# the replyr::moveValuesToColumnsQ() version
 controlTable <- d %>%
   group_by(meastype) %>%
   summarize(count = n()) %>%
@@ -239,12 +242,15 @@ d <- data.frame(
   stringsAsFactors = FALSE)
 print(d)
 
+# the cdata::moveValuesToRows() version
+# equivalent to tidyr::gather(d, 'meastype', 'meas', c('meas1','meas2'))
 cdata::moveValuesToRows(d,
                         nameForNewKeyColumn= 'meastype',
                         nameForNewValueColumn= 'meas',
                         columnsToTakeFrom= c('meas1','meas2')) %>%
   arrange(index, info)
 
+# the replyr::cdata::moveValuesToRows() version
 keyColumns = c('index', 'info')
 controlTable <- data.frame(meastype = setdiff(colnames(d), 
                                               keyColumns),
@@ -260,6 +266,68 @@ moveValuesToRowsQ(controlTable = controlTable,
                   tempNameGenerator = tng) %>%
   arrange(index, info)
 ```
+
+# Interesting Applications
+
+Interesting applications of `replyr::moveValuesToRowsQ()` and `replyr::moveValuesToColumnsQ()` 
+include situations where `tidyr` is not available (databases and `Spark`) and also
+when the data transformation is not obviously a single pivot or un-pivot.
+
+## Row-parallel dispatch
+
+Particularly interesting applications include converting many column operations into
+a row-parallel dispatch. 
+
+Suppose we had the following data in the following format in our system of record 
+(but with many more column groups and columns):
+
+```{r pdat}
+purchaseDat <- dplyr::copy_to(my_db, dplyr::tribble(
+  ~ID, ~Q1purchases, ~Q2purchases, ~Q1rebates, ~Q2rebates,
+    1,           20,           10,          5,          3,
+    2,            5,            6,         10,         12),
+  'purchaseDat')
+print(purchaseDat)
+```
+
+Common tasks might include totaling columns and computing rates between columns.
+However, sometimes that is best done in a row-oriented representation (though
+outside systems may need column oriented, or more denormalized results).  
+With fluid data the task is easy:
+
+```{r fluidex}
+controlTable <- dplyr::tribble(
+  ~group, ~purchases,    ~rebates,
+  "Q1",   "Q1purchases", "Q1rebates",
+  "Q2",   "Q2purchases", "Q2rebates")
+print(controlTable)
+purchasesTall <- moveValuesToRowsQ(columnsToCopy = "ID", 
+                                   controlTable = controlTable, 
+                                   wideTableName = "purchaseDat",
+                                   my_db = my_db,
+                                   tempNameGenerator = tng)
+print(purchasesTall)
+calc <- purchasesTall %>% 
+  mutate(purchasesPerRebate = purchases/rebates) %>%
+  compute(name = "purchasesTallC")
+print(calc)
+
+# move what we want back
+controlTable <- controlTable %>%
+  mutate(purchasesPerRebate = 
+           paste0(group, "purchasesPerRebate"))
+print(controlTable)
+result <- moveValuesToColumnsQ(keyColumns = "ID",
+                               controlTable = controlTable,
+                               tallTableName = "purchasesTallC",
+                               my_db = my_db,
+                               tempNameGenerator = tng)
+print(result)
+```
+
+The point is: the above can work on a large number of rows and columns (especially
+on a system such as `Spark` where row operations are performed in parallel).
+
 
 # Conclusion
 
