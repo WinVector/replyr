@@ -29,7 +29,6 @@ checkControlTable <- function(controlTable) {
     return("all control table columns must be character")
   }
   toCheck <- list(
-    "value entries" = as.vector(as.matrix(controlTable[,2:ncol(controlTable)])),
     "column names" = colnames(controlTable),
     "group ids" = controlTable[, 1, drop=TRUE]
   )
@@ -137,26 +136,35 @@ moveValuesToRowsQ <- function(controlTable,
   ctab <- copy_to(my_db, controlTable, ctabName,
                   overwrite = TRUE, temporary=TRUE)
   resName <- tempNameGenerator()
-  casestmts <- vapply(2:ncol(controlTable),
+  casestmts <- lapply(2:ncol(controlTable),
                       function(j) {
-                        whens <- vapply(seq_len(nrow(controlTable)),
+                        whens <- lapply(seq_len(nrow(controlTable)),
                                         function(i) {
+                                          cij <- controlTable[i,j,drop=TRUE]
+                                          if(is.null(cij) || is.na(cij)) {
+                                            return(NULL)
+                                          }
                                           paste0(' WHEN `b`.`',
                                                  colnames(controlTable)[1],
                                                  '` = ',
                                                  literalQuote, controlTable[i,1,drop=TRUE], literalQuote,
                                                  ' THEN `a`.`',
-                                                 controlTable[i,j,drop=TRUE],
+                                                 cij,
                                                  '`' )
-                                        },
-                                        character(1))
+                                        })
+                        whens <- as.character(Filter(function(x) { !is.null(x) },
+                                                     whens))
+                        if(length(whens)<=0) {
+                          return(NULL)
+                        }
                         casestmt <- paste0('CASE ',
                                            paste(whens, collapse = ' '),
                                            ' ELSE NULL END AS `',
                                            colnames(controlTable)[j],
                                            '`')
-                      },
-                      character(1))
+                      })
+  casestmts <- as.character(Filter(function(x) { !is.null(x) },
+                                   casestmts))
   copystmts <- NULL
   if(length(columnsToCopy)>0) {
     copystmts <- paste0('`a`.`', columnsToCopy, '`')
@@ -281,31 +289,42 @@ moveValuesToColumnsQ <- function(keyColumns,
   ctab <- copy_to(my_db, controlTable, ctabName,
                   overwrite = TRUE, temporary=TRUE)
   resName <- tempNameGenerator()
-  collectstmts <- character(nrow(controlTable) * (ncol(controlTable)-1))
+  collectstmts <- vector(mode = 'list',
+                         length = nrow(controlTable) * (ncol(controlTable)-1))
   collectN <- 1
   for(i in seq_len(nrow(controlTable))) {
     for(j in 2:ncol(controlTable)) {
-      collectstmts[[collectN]] <- paste0("MAX( CASE WHEN ", # pseudo aggregator
-                                         "`a`.`",
-                                         colnames(controlTable)[[1]],
-                                         "` = ",
-                                         literalQuote, controlTable[i,1,drop=TRUE], literalQuote,
-                                         " THEN `a`.`",
-                                         colnames(controlTable)[[j]],
-                                         "`  ELSE NULL END ) `",
-                                         controlTable[i,j,drop=TRUE],
-                                         "`")
+      cij <- controlTable[i,j,drop=TRUE]
+      if((!is.null(cij))&&(!is.na(cij))) {
+        collectstmts[[collectN]] <- paste0("MAX( CASE WHEN ", # pseudo aggregator
+                                           "`a`.`",
+                                           colnames(controlTable)[[1]],
+                                           "` = ",
+                                           literalQuote, controlTable[i,1,drop=TRUE], literalQuote,
+                                           " THEN `a`.`",
+                                           colnames(controlTable)[[j]],
+                                           "`  ELSE NULL END ) `",
+                                           cij,
+                                           "`")
+      }
       collectN <- collectN + 1
     }
   }
+  # turn non-nulls into an array
+  collectstmts <- as.character(Filter(function(x) { !is.null(x) },
+                                      collectstmts))
   # pseudo-aggregators for columns we are copying
   # paste works on vectors in alligned fashion (not as a cross-product)
   copystmts <- NULL
   if(length(columnsToCopy)>0) {
     copystmts <- paste0('MAX(`a`.`', columnsToCopy, '`) `', columnsToCopy, '`')
   }
-  groupterms <- paste0('`a`.`', keyColumns, '`')
-  groupstmts  <- paste0('`a`.`', keyColumns, '` `', keyColumns, '`')
+  groupterms <- NULL
+  groupstmts <- NULL
+  if(length(keyColumns)>0) {
+    groupterms <- paste0('`a`.`', keyColumns, '`')
+    groupstmts <- paste0('`a`.`', keyColumns, '` `', keyColumns, '`')
+  }
   # deliberate cross join
   qs <-  paste0(" SELECT ",
                 paste(c(groupstmts, copystmts, collectstmts), collapse = ', '),
