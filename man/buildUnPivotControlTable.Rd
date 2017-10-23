@@ -20,5 +20,10 @@ buildUnPivotControlTable(nameForNewKeyColumn, nameForNewValueColumn,
 control table
 }
 \description{
-Build a moveValuesToColumnsQ() control table that specifies a un-pivot.
+Some discussion and examples can be found here:
+\url{https://winvector.github.io/replyr/articles/FluidData.html} and
+here \url{https://github.com/WinVector/cdata}.
+}
+\seealso{
+\code{\link[cdata]{moveValuesToRows}}, \code{\link{moveValuesToRowsQ}}
 }

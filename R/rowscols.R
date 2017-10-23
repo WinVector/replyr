@@ -44,6 +44,40 @@ checkControlTable <- function(controlTable) {
   return(NULL) # good
 }
 
+
+
+#' Build a moveValuesToColumnsQ() control table that specifies a un-pivot.
+#'
+#' Some discussion and examples can be found here:
+#' \url{https://winvector.github.io/replyr/articles/FluidData.html} and
+#' here \url{https://github.com/WinVector/cdata}.
+#'
+#' @param nameForNewKeyColumn character name of column to write new keys in.
+#' @param nameForNewValueColumn character name of column to write new values in.
+#' @param columnsToTakeFrom character array names of columns to take values from.
+#' @param ... not used, force later args to be by name
+#' @return control table
+#'
+#' @seealso \code{\link[cdata]{moveValuesToRows}}, \code{\link{moveValuesToRowsQ}}
+#'
+#' @export
+buildUnPivotControlTable <- function(nameForNewKeyColumn,
+                                     nameForNewValueColumn,
+                                     columnsToTakeFrom,
+                                     ...) {
+  if(length(list(...))>0) {
+    stop("replyr::buildUnPivotControlTable unexpected arguments.")
+  }
+  controlTable <- data.frame(x = columnsToTakeFrom,
+                             y = columnsToTakeFrom,
+                             stringsAsFactors = FALSE)
+  colnames(controlTable) <- c(nameForNewKeyColumn, nameForNewValueColumn)
+  controlTable
+}
+
+
+
+
 #' Map a set of columns to rows (query based).
 #'
 #' Transform data facts from columns into additional rows using SQL
@@ -68,6 +102,10 @@ checkControlTable <- function(controlTable) {
 #' To get behavior similar to tidyr::gather/spread one build the control table
 #' by running an appropiate query over the data.
 #'
+#' Some discussion and examples can be found here:
+#' \url{https://winvector.github.io/replyr/articles/FluidData.html} and
+#' here \url{https://github.com/WinVector/cdata}.
+#'
 #' @param controlTable table specifying mapping (local data frame)
 #' @param wideTableName name of table containing data to be mapped (db/Spark data)
 #' @param my_db db handle
@@ -79,7 +117,7 @@ checkControlTable <- function(controlTable) {
 #' @param literalQuote character, quote for string literals
 #' @return long table built by mapping wideTable to one row per group
 #'
-#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
+#' @seealso \code{\link[cdata]{moveValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
 #'
 #' @examples
 #'
@@ -194,6 +232,8 @@ moveValuesToRowsQ <- function(controlTable,
 
 #' Build a moveValuesToColumnsQ() control table that specifies a pivot.
 #'
+#' Some discussion and examples can be found here: \url{https://winvector.github.io/replyr/articles/FluidData.html}.
+#'
 #' @param d data to scan for new column names
 #' @param columnToTakeKeysFrom character name of column build new column names from.
 #' @param columnToTakeValuesFrom character name of column to get values from.
@@ -201,6 +241,8 @@ moveValuesToRowsQ <- function(controlTable,
 #' @param prefix column name prefix (only used when sep is not NULL)
 #' @param sep separator to build complex column names.
 #' @return control table
+#'
+#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 #'
 #' @export
 buildPivotControlTable <- function(d,
@@ -233,28 +275,6 @@ buildPivotControlTable <- function(d,
 }
 
 
-#' Build a moveValuesToColumnsQ() control table that specifies a un-pivot.
-#'
-#' @param nameForNewKeyColumn character name of column to write new keys in.
-#' @param nameForNewValueColumn character name of column to write new values in.
-#' @param columnsToTakeFrom character array names of columns to take values from.
-#' @param ... not used, force later args to be by name
-#' @return control table
-#'
-#' @export
-buildUnPivotControlTable <- function(nameForNewKeyColumn,
-                                     nameForNewValueColumn,
-                                     columnsToTakeFrom,
-                                     ...) {
-  if(length(list(...))>0) {
-    stop("replyr::buildUnPivotControlTable unexpected arguments.")
-  }
-  controlTable <- data.frame(x = columnsToTakeFrom,
-                             y = columnsToTakeFrom,
-                             stringsAsFactors = FALSE)
-  colnames(controlTable) <- c(nameForNewKeyColumn, nameForNewValueColumn)
-  controlTable
-}
 
 
 
@@ -282,6 +302,10 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' To get behavior similar to tidyr::gather/spread one build the control table
 #' by running an appropiate query over the data.
 #'
+#' Some discussion and examples can be found here:
+#' \url{https://winvector.github.io/replyr/articles/FluidData.html} and
+#' here \url{https://github.com/WinVector/cdata}.
+#'
 #' @param keyColumns character list of column defining row groups
 #' @param controlTable table specifying mapping (local data frame)
 #' @param tallTableName name of table containing data to be mapped (db/Spark data)
@@ -294,7 +318,7 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' @param literalQuote character, quote for string literals
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
-#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
+#' @seealso \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
 #'
 #' @examples
 #'

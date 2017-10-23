@@ -24,5 +24,8 @@ buildPivotControlTable(d, columnToTakeKeysFrom, columnToTakeValuesFrom, ...,
 control table
 }
 \description{
-Build a moveValuesToColumnsQ() control table that specifies a pivot.
+Some discussion and examples can be found here: \url{https://winvector.github.io/replyr/articles/FluidData.html}.
+}
+\seealso{
+\url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 }

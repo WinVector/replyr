@@ -241,13 +241,13 @@
   dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Mon Oct 23 09:16:19 2017"
+## [1] "start employeeanddate Mon Oct 23 09:26:19 2017"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Mon Oct 23 09:16:19 2017"
-## [1] "start activity Mon Oct 23 09:16:19 2017"
+## [1] "done employeeanddate Mon Oct 23 09:26:19 2017"
+## [1] "start activity Mon Oct 23 09:26:19 2017"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -256,8 +256,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Mon Oct 23 09:16:20 2017"
-## [1] "start orgtable Mon Oct 23 09:16:20 2017"
+## [1] "done activity Mon Oct 23 09:26:20 2017"
+## [1] "start orgtable Mon Oct 23 09:26:20 2017"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -266,8 +266,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Mon Oct 23 09:16:20 2017"
-## [1] "start revenue Mon Oct 23 09:16:20 2017"
+## [1] "done orgtable Mon Oct 23 09:26:20 2017"
+## [1] "start revenue Mon Oct 23 09:26:20 2017"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -275,7 +275,7 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Mon Oct 23 09:16:20 2017"
+## [1] "done revenue Mon Oct 23 09:26:20 2017"
 ## [1] "join results"
 ## Observations: 2
 ## Variables: 10
@@ -306,8 +306,8 @@
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  981929 52.5    1770749 94.6  1770749 94.6
-## Vcells 1514009 11.6    4138114 31.6  3381758 25.9</code></pre>
+## Ncells  982155 52.5    1770749 94.6  1770749 94.6
+## Vcells 1514683 11.6    4139085 31.6  3382568 25.9</code></pre>
 </div>
   </div>
 

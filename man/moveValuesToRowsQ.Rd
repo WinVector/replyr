@@ -54,6 +54,10 @@ controlTable[ , 2:ncol(controlTable)] (column labels)
 are names of data cells in the wide form.
 To get behavior similar to tidyr::gather/spread one build the control table
 by running an appropiate query over the data.
+
+Some discussion and examples can be found here:
+\url{https://winvector.github.io/replyr/articles/FluidData.html} and
+here \url{https://github.com/WinVector/cdata}.
 }
 \examples{
 
@@ -87,5 +91,5 @@ moveValuesToRowsQ(controlTable,
 
 }
 \seealso{
-\url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
+\code{\link[cdata]{moveValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
 }
