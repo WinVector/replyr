@@ -60,6 +60,10 @@ checkControlTable <- function(controlTable) {
 #'
 #' @seealso \code{\link[cdata]{moveValuesToRows}}, \code{\link{moveValuesToRowsQ}}
 #'
+#' @examples
+#'
+#' buildUnPivotControlTable("measurmentType", "measurmentValue", c("c1", "c2"))
+#'
 #' @export
 buildUnPivotControlTable <- function(nameForNewKeyColumn,
                                      nameForNewValueColumn,
@@ -244,6 +248,13 @@ moveValuesToRowsQ <- function(controlTable,
 #'
 #' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 #'
+#' @examples
+#'
+#' d <- data.frame(measType = c("wt", "ht"),
+#'                 measValue = c(150, 6),
+#'                 stringsAsFactors = FALSE)
+#' buildPivotControlTable(d, 'measType', 'measValue', sep='_')
+#'
 #' @export
 buildPivotControlTable <- function(d,
                                    columnToTakeKeysFrom,
@@ -254,17 +265,19 @@ buildPivotControlTable <- function(d,
   if(length(list(...))>0) {
     stop("replyr::buildPivotControlTable unexpected arguments.")
   }
-  let(mapsyms(columnToTakeKeysFrom, columnToTakeValuesFrom),
+  # don't let n() look like unboudn fn
+  n <- function(...) { NULL }
+  wrapr::let(wrapr::mapsyms(columnToTakeKeysFrom, columnToTakeValuesFrom),
       {
-        controlTable <- d %>%
-          group_by(columnToTakeKeysFrom) %>%
-          summarize(count = n()) %>%
-          ungroup() %>%
-          select(columnToTakeKeysFrom) %>%
-          mutate(columnToTakeValuesFrom = columnToTakeKeysFrom) %>%
-          select(columnToTakeKeysFrom, columnToTakeValuesFrom)  %>%
-          collect() %>%
-          as.data.frame()
+        controlTable <- d %.>%
+          dplyr::group_by(., columnToTakeKeysFrom) %.>%
+          dplyr::summarize(., count = n()) %.>%
+          dplyr::ungroup(.) %.>%
+          dplyr::select(., columnToTakeKeysFrom) %.>%
+          dplyr::mutate(., columnToTakeValuesFrom = columnToTakeKeysFrom) %.>%
+          dplyr::select(., columnToTakeKeysFrom, columnToTakeValuesFrom)  %.>%
+          dplyr::collect(.) %.>%
+          as.data.frame(.)
         if(!is.null(sep)) {
           controlTable$columnToTakeValuesFrom <- paste(prefix,
                                                        controlTable$columnToTakeValuesFrom,

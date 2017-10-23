@@ -24,6 +24,11 @@ Some discussion and examples can be found here:
 \url{https://winvector.github.io/replyr/articles/FluidData.html} and
 here \url{https://github.com/WinVector/cdata}.
 }
+\examples{
+
+buildUnPivotControlTable("measurmentType", "measurmentValue", c("c1", "c2"))
+
+}
 \seealso{
 \code{\link[cdata]{moveValuesToRows}}, \code{\link{moveValuesToRowsQ}}
 }

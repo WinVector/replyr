@@ -26,6 +26,14 @@ control table
 \description{
 Some discussion and examples can be found here: \url{https://winvector.github.io/replyr/articles/FluidData.html}.
 }
+\examples{
+
+d <- data.frame(measType = c("wt", "ht"),
+                measValue = c(150, 6),
+                stringsAsFactors = FALSE)
+buildPivotControlTable(d, 'measType', 'measValue', sep='_')
+
+}
 \seealso{
 \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 }

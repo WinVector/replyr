@@ -192,7 +192,7 @@ dat2 &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="
                                   <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)
 <span class="kw">print</span>(dat2)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_kt1ocivqtjyv8dvfcnea_0000000001&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_ggio3sx5a9vi98blgn9n_0000000001&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -240,7 +240,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
                           <span class="dt">columnsToCopy =</span> columnsToCopy,
                           <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_kt1ocivqtjyv8dvfcnea_0000000003&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_ggio3sx5a9vi98blgn9n_0000000003&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -278,7 +278,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
                              my_db,
                              <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_kt1ocivqtjyv8dvfcnea_0000000005&gt; [?? x 5]
+<pre><code>## # Source:     table&lt;fdexample_ggio3sx5a9vi98blgn9n_0000000005&gt; [?? x 5]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID
 ##      ID               c1               c2               c3               c4
@@ -336,7 +336,7 @@ controlTable &lt;-<span class="st"> </span>replyr<span class="op">::</span><span
                      <span class="dt">my_db =</span> my_db,
                      <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_kt1ocivqtjyv8dvfcnea_0000000007&gt; [?? x 3]
+<pre><code>## # Source:     table&lt;fdexample_ggio3sx5a9vi98blgn9n_0000000007&gt; [?? x 3]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index
 ##   index meastype_meas1 meastype_meas2
@@ -389,7 +389,7 @@ dwide &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="
                   <span class="dt">columnsToCopy =</span> keyColumns,
                   <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index, info)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_kt1ocivqtjyv8dvfcnea_0000000009&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_ggio3sx5a9vi98blgn9n_0000000009&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index, info
 ##   index  info meastype  meas
@@ -441,7 +441,7 @@ With fluid data the task is easy:</p>
                                    <span class="dt">my_db =</span> my_db,
                                    <span class="dt">tempNameGenerator =</span> tng)
 <span class="kw">print</span>(purchasesTall)</code></pre></div>
-<pre><code>## # Source:   table&lt;fdexample_kt1ocivqtjyv8dvfcnea_0000000011&gt; [?? x 4]
+<pre><code>## # Source:   table&lt;fdexample_ggio3sx5a9vi98blgn9n_0000000011&gt; [?? x 4]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##      ID group purchases rebates
 ##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -478,7 +478,7 @@ controlTable &lt;-<span class="st"> </span>controlTable <span class="op">%&gt;%<
                                <span class="dt">my_db =</span> my_db,
                                <span class="dt">tempNameGenerator =</span> tng)
 <span class="kw">print</span>(result)</code></pre></div>
-<pre><code>## # Source:   table&lt;fdexample_kt1ocivqtjyv8dvfcnea_0000000013&gt; [?? x 7]
+<pre><code>## # Source:   table&lt;fdexample_ggio3sx5a9vi98blgn9n_0000000013&gt; [?? x 7]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##      ID Q1purchases Q1rebates Q1purchasesPerRebate Q2purchases Q2rebates Q2purchasesPerRebate
 ##   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;
