@@ -20,10 +20,10 @@ The fluid data concept is:
  1) Data cells have coordinates, and the dependence of these coordinates on a given data representation (a table or map) is an inessential detail to be abstracted out.
  2) There may not be one "preferred" shape (or frame of reference) for data: you have to anticipate changing data shape many times to adapt to the tasks and tools (data relativity).
 
-`replyr` supplies two power very general operators for fluid data work at database scale (and `Spark` big data scale):
+`replyr` supplies two general operators for fluid data work at database scale (and `Spark` big data scale):
 
- 1) [`moveValuesToRowsQ()`](https://winvector.github.io/replyr/reference/moveValuesToRowsQ.html): an operator centered around `SQL` `cross-join` semantics.  un-pivot, `tidyr::gather()` or [`cdata::moveValuesToRows()`](https://winvector.github.io/cdata/reference/moveValuesToRows.html) are special cases of this general operator.
- 2) [`moveValuesToColumnsQ()`](https://winvector.github.io/replyr/reference/moveValuesToColumnsQ.html): an operator centered around `SQL` `group by` semantics.  pivot, `tidyr::spread()` or [`cdata::moveValuesToColumns()`](https://winvector.github.io/cdata/reference/moveValuesToColumns.html): are special cases of this general operator.
+ 1) [`moveValuesToRowsQ()`](https://winvector.github.io/replyr/reference/moveValuesToRowsQ.html): an operator centered around `SQL` `cross-join` semantics.  un-pivot, `tidyr::gather()`, and [`cdata::moveValuesToRows()`](https://winvector.github.io/cdata/reference/moveValuesToRows.html) are special cases of this general operator.
+ 2) [`moveValuesToColumnsQ()`](https://winvector.github.io/replyr/reference/moveValuesToColumnsQ.html): an operator centered around `SQL` `group by` semantics.  pivot, `tidyr::spread()`,  [`cdata::moveValuesToColumns()`](https://winvector.github.io/cdata/reference/moveValuesToColumns.html), and one-hot-encode are special cases of this general operator.
 
 Because these operators are powerful, they are fairly general, and at first hard to mentally model (especially if you insist on think of them in only in terms of more a specialized operator such as pivot, instead of more general relational concepts such as "cross join" and "group by"). 
 These operators are thin wrappers populating and enforcing a few invariants over a large `SQL` statement.  That does not mean that these operators are trivial, they are thin because `SQL` is powerful and we have a good abstraction.
@@ -65,9 +65,9 @@ dat1 <- dplyr::tribble(
 print(dat1)
 ```
 
-Then each data cell in `dat` is named by the row-id (stored in the `ID` column) plus the column-name ("`c1`", "`c2`", "`c3`", and "`c4`").  Knowing `ID` plus the column name unique identifies the data-caring cell in table `dat1`.
+Then each data cell in `dat1` (excluding the key-columns, in this case "`ID`") is named by the row-id (stored in the `ID` column) plus the column-name ("`c1`", "`c2`", "`c3`", and "`c4`").  Knowing `ID` plus the column name unique identifies the data-caring cell in table `dat1`.
 
-However, there is an alternate cell naming available from the `controlTable` notation.  Each name in the region  `controlTable[ , 2:ncol(controlTable)]` is itself unique named by the `group` entry and column name of the control table itself.  This means we have 
+However, there is an alternate cell naming available from the `controlTable` notation.  Each name in the region  `controlTable[ , 2:ncol(controlTable)]` is itself uniquely named by the `group` entry and column name of the control table itself.  This means we have 
 the following correspondence from the partial names "`c1`", "`c2`", "`c3`", and "`c4`" to a new set of partial names:
 
 ```{r notationd2}
