@@ -192,6 +192,70 @@ moveValuesToRowsQ <- function(controlTable,
   res
 }
 
+#' Build a moveValuesToColumnsQ() control table that specifies a pivot.
+#'
+#' @param d data to scan for new column names
+#' @param columnToTakeKeysFrom character name of column build new column names from.
+#' @param columnToTakeValuesFrom character name of column to get values from.
+#' @param ... not used, force later args to be by name
+#' @param prefix column name prefix (only used when sep is not NULL)
+#' @param sep separator to build complex column names.
+#' @return control table
+#'
+#' @export
+buildPivotControlTable <- function(d,
+                                   columnToTakeKeysFrom,
+                                   columnToTakeValuesFrom,
+                                   ...,
+                                   prefix = columnToTakeKeysFrom,
+                                   sep = NULL) {
+  if(length(list(...))>0) {
+    stop("replyr::buildPivotControlTable unexpected arguments.")
+  }
+  let(mapsyms(columnToTakeKeysFrom, columnToTakeValuesFrom),
+      {
+        controlTable <- d %>%
+          group_by(columnToTakeKeysFrom) %>%
+          summarize(count = n()) %>%
+          ungroup() %>%
+          select(columnToTakeKeysFrom) %>%
+          mutate(columnToTakeValuesFrom = columnToTakeKeysFrom) %>%
+          select(columnToTakeKeysFrom, columnToTakeValuesFrom)  %>%
+          collect() %>%
+          as.data.frame()
+        if(!is.null(sep)) {
+          controlTable$columnToTakeValuesFrom <- paste(prefix,
+                                                       controlTable$columnToTakeValuesFrom,
+                                                       sep=sep)
+        }
+        controlTable
+      })
+}
+
+
+#' Build a moveValuesToColumnsQ() control table that specifies a un-pivot.
+#'
+#' @param nameForNewKeyColumn character name of column to write new keys in.
+#' @param nameForNewValueColumn character name of column to write new values in.
+#' @param columnsToTakeFrom character array names of columns to take values from.
+#' @param ... not used, force later args to be by name
+#' @return control table
+#'
+#' @export
+buildUnPivotControlTable <- function(nameForNewKeyColumn,
+                                     nameForNewValueColumn,
+                                     columnsToTakeFrom,
+                                     ...) {
+  if(length(list(...))>0) {
+    stop("replyr::buildUnPivotControlTable unexpected arguments.")
+  }
+  controlTable <- data.frame(x = columnsToTakeFrom,
+                             y = columnsToTakeFrom,
+                             stringsAsFactors = FALSE)
+  colnames(controlTable) <- c(nameForNewKeyColumn, nameForNewValueColumn)
+  controlTable
+}
+
 
 
 #' Map sets rows to columns (query based).

@@ -205,20 +205,17 @@ print(d)
 # the cdata::moveValuesToColumns version
 # equivalent to tidyr::spread(d, 'meastype', 'meas')
 cdata::moveValuesToColumns(d,
-                           columnToTakeKeysFrom= 'meastype',
-                           columnToTakeValuesFrom= 'meas',
+                           columnToTakeKeysFrom = 'meastype',
+                           columnToTakeValuesFrom = 'meas',
                            rowKeyColumns= 'index',
                            sep= '_') %>%
   arrange(index)
 
 # the replyr::moveValuesToColumnsQ() version
-controlTable <- d %>%
-  group_by(meastype) %>%
-  summarize(count = n()) %>%
-  ungroup() %>%
-  select(meastype) %>%
-  mutate(meas = paste0('meastype_', meastype)) %>%
-  select(meastype, meas)
+controlTable <- replyr::buildPivotControlTable(d,
+                                               columnToTakeKeysFrom = 'meastype',
+                                               columnToTakeValuesFrom = 'meas',
+                                               sep = "_")
 print(controlTable)
 
 dtall <- dplyr::copy_to(my_db, d, "dtall")
@@ -251,13 +248,12 @@ cdata::moveValuesToRows(d,
   arrange(index, info)
 
 # the replyr::cdata::moveValuesToRows() version
-keyColumns = c('index', 'info')
-controlTable <- data.frame(meastype = setdiff(colnames(d), 
-                                              keyColumns),
-                           stringsAsFactors = FALSE)
-controlTable$meas <- controlTable$meastype
+controlTable <- buildUnPivotControlTable(nameForNewKeyColumn= 'meastype',
+                                         nameForNewValueColumn= 'meas',
+                                         columnsToTakeFrom= c('meas1','meas2'))
 print(controlTable)
 
+keyColumns = c('index', 'info')
 dwide <- dplyr::copy_to(my_db, d, "dwide")
 moveValuesToRowsQ(controlTable = controlTable,
                   wideTableName = "dwide",
@@ -267,7 +263,7 @@ moveValuesToRowsQ(controlTable = controlTable,
   arrange(index, info)
 ```
 
-# Interesting Applications
+# Additional Interesting Applications
 
 Interesting applications of `replyr::moveValuesToRowsQ()` and `replyr::moveValuesToColumnsQ()` 
 include situations where `tidyr` is not available (databases and `Spark`) and also
@@ -275,8 +271,8 @@ when the data transformation is not obviously a single pivot or un-pivot.
 
 ## Row-parallel dispatch
 
-Particularly interesting applications include converting many column operations into
-a row-parallel dispatch. 
+A particularly interesting application is converting many column operations into
+a single operation using a row-parallel dispatch. 
 
 Suppose we had the following data in the following format in our system of record 
 (but with many more column groups and columns):

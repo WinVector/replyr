@@ -96,7 +96,7 @@
       <h1>Fluid Data</h1>
                         <h4 class="author">John Mount, Win-Vector LLC</h4>
             
-            <h4 class="date">2017-10-22</h4>
+            <h4 class="date">2017-10-23</h4>
           </div>
 
     
@@ -192,7 +192,7 @@ dat2 &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="
                                   <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)
 <span class="kw">print</span>(dat2)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_opff6fxhrak7im032a9w_0000000001&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_bnuutzwnhlobygdp4exq_0000000001&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -240,7 +240,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
                           <span class="dt">columnsToCopy =</span> columnsToCopy,
                           <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_opff6fxhrak7im032a9w_0000000003&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_bnuutzwnhlobygdp4exq_0000000003&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -278,7 +278,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
                              my_db,
                              <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_opff6fxhrak7im032a9w_0000000005&gt; [?? x 5]
+<pre><code>## # Source:     table&lt;fdexample_bnuutzwnhlobygdp4exq_0000000005&gt; [?? x 5]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID
 ##      ID               c1               c2               c3               c4
@@ -308,9 +308,11 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 ## 4     1    meas2 m2_1
 ## 5     2    meas2 m2_2
 ## 6     3    meas2 m2_3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns">moveValuesToColumns</a></span>(d,
-                           <span class="dt">columnToTakeKeysFrom=</span> <span class="st">'meastype'</span>,
-                           <span class="dt">columnToTakeValuesFrom=</span> <span class="st">'meas'</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::moveValuesToColumns version</span>
+<span class="co"># equivalent to tidyr::spread(d, 'meastype', 'meas')</span>
+cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns">moveValuesToColumns</a></span>(d,
+                           <span class="dt">columnToTakeKeysFrom =</span> <span class="st">'meastype'</span>,
+                           <span class="dt">columnToTakeValuesFrom =</span> <span class="st">'meas'</span>,
                            <span class="dt">rowKeyColumns=</span> <span class="st">'index'</span>,
                            <span class="dt">sep=</span> <span class="st">'_'</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index)</code></pre></div>
@@ -318,17 +320,13 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 ## 1     1           m1_1           m2_1
 ## 2     2           m1_2           m2_2
 ## 3     3           m1_3           m2_3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">controlTable &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(meastype) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(<span class="dt">count =</span> <span class="kw"><a href="http://dplyr.tidyverse.org/reference/n.html">n</a></span>()) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(meastype) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">meas =</span> <span class="kw">paste0</span>(<span class="st">'meastype_'</span>, meastype)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(meastype, meas)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the replyr::moveValuesToColumnsQ() version</span>
+controlTable &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/buildPivotControlTable">buildPivotControlTable</a></span>(d,
+                                               <span class="dt">columnToTakeKeysFrom =</span> <span class="st">'meastype'</span>,
+                                               <span class="dt">columnToTakeValuesFrom =</span> <span class="st">'meas'</span>,
+                                               <span class="dt">sep =</span> <span class="st">"_"</span>)
 <span class="kw">print</span>(controlTable)</code></pre></div>
-<pre><code>## # A tibble: 2 x 2
-##   meastype           meas
-##      &lt;chr&gt;          &lt;chr&gt;
+<pre><code>##   meastype           meas
 ## 1    meas1 meastype_meas1
 ## 2    meas2 meastype_meas2</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtall &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d, <span class="st">"dtall"</span>)
@@ -338,7 +336,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
                      <span class="dt">my_db =</span> my_db,
                      <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_opff6fxhrak7im032a9w_0000000007&gt; [?? x 3]
+<pre><code>## # Source:     table&lt;fdexample_bnuutzwnhlobygdp4exq_0000000007&gt; [?? x 3]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index
 ##   index meastype_meas1 meastype_meas2
@@ -361,7 +359,9 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 ## 1     1    a  m1_1   2.1
 ## 2     2    b  m1_2   2.2
 ## 3     3    c  m1_3   2.3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows">moveValuesToRows</a></span>(d,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::moveValuesToRows() version</span>
+<span class="co"># equivalent to tidyr::gather(d, 'meastype', 'meas', c('meas1','meas2'))</span>
+cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows">moveValuesToRows</a></span>(d,
                         <span class="dt">nameForNewKeyColumn=</span> <span class="st">'meastype'</span>,
                         <span class="dt">nameForNewValueColumn=</span> <span class="st">'meas'</span>,
                         <span class="dt">columnsToTakeFrom=</span> <span class="kw">c</span>(<span class="st">'meas1'</span>,<span class="st">'meas2'</span>)) <span class="op">%&gt;%</span>
@@ -373,23 +373,23 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 ## 4     2    b    meas2  2.2
 ## 5     3    c    meas1 m1_3
 ## 6     3    c    meas2  2.3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keyColumns =<span class="st"> </span><span class="kw">c</span>(<span class="st">'index'</span>, <span class="st">'info'</span>)
-controlTable &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">meastype =</span> <span class="kw"><a href="http://dplyr.tidyverse.org/reference/setops.html">setdiff</a></span>(<span class="kw">colnames</span>(d), 
-                                              keyColumns),
-                           <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-controlTable<span class="op">$</span>meas &lt;-<span class="st"> </span>controlTable<span class="op">$</span>meastype
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the replyr::cdata::moveValuesToRows() version</span>
+controlTable &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildUnPivotControlTable.html">buildUnPivotControlTable</a></span>(<span class="dt">nameForNewKeyColumn=</span> <span class="st">'meastype'</span>,
+                                         <span class="dt">nameForNewValueColumn=</span> <span class="st">'meas'</span>,
+                                         <span class="dt">columnsToTakeFrom=</span> <span class="kw">c</span>(<span class="st">'meas1'</span>,<span class="st">'meas2'</span>))
 <span class="kw">print</span>(controlTable)</code></pre></div>
 <pre><code>##   meastype  meas
 ## 1    meas1 meas1
 ## 2    meas2 meas2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dwide &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d, <span class="st">"dwide"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keyColumns =<span class="st"> </span><span class="kw">c</span>(<span class="st">'index'</span>, <span class="st">'info'</span>)
+dwide &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d, <span class="st">"dwide"</span>)
 <span class="kw"><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ</a></span>(<span class="dt">controlTable =</span> controlTable,
                   <span class="dt">wideTableName =</span> <span class="st">"dwide"</span>,
                   <span class="dt">my_db =</span> my_db,
                   <span class="dt">columnsToCopy =</span> keyColumns,
                   <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index, info)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_opff6fxhrak7im032a9w_0000000009&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_bnuutzwnhlobygdp4exq_0000000009&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index, info
 ##   index  info meastype  meas
@@ -400,6 +400,91 @@ controlTable<span class="op">$</span>meas &lt;-<span class="st"> </span>controlT
 ## 4     2     b    meas2   2.2
 ## 5     3     c    meas1  m1_3
 ## 6     3     c    meas2   2.3</code></pre>
+</div>
+</div>
+<div id="additional-interesting-applications" class="section level1">
+<h1 class="hasAnchor">
+<a href="#additional-interesting-applications" class="anchor"></a>Additional Interesting Applications</h1>
+<p>Interesting applications of <code><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ">replyr::moveValuesToRowsQ()</a></code> and <code><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToColumnsQ">replyr::moveValuesToColumnsQ()</a></code> include situations where <code>tidyr</code> is not available (databases and <code>Spark</code>) and also when the data transformation is not obviously a single pivot or un-pivot.</p>
+<div id="row-parallel-dispatch" class="section level2">
+<h2 class="hasAnchor">
+<a href="#row-parallel-dispatch" class="anchor"></a>Row-parallel dispatch</h2>
+<p>A particularly interesting application is converting many column operations into a single operation using a row-parallel dispatch.</p>
+<p>Suppose we had the following data in the following format in our system of record (but with many more column groups and columns):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">purchaseDat &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+  <span class="op">~</span>ID, <span class="op">~</span>Q1purchases, <span class="op">~</span>Q2purchases, <span class="op">~</span>Q1rebates, <span class="op">~</span>Q2rebates,
+    <span class="dv">1</span>,           <span class="dv">20</span>,           <span class="dv">10</span>,          <span class="dv">5</span>,          <span class="dv">3</span>,
+    <span class="dv">2</span>,            <span class="dv">5</span>,            <span class="dv">6</span>,         <span class="dv">10</span>,         <span class="dv">12</span>),
+  <span class="st">'purchaseDat'</span>)
+<span class="kw">print</span>(purchaseDat)</code></pre></div>
+<pre><code>## # Source:   table&lt;purchaseDat&gt; [?? x 5]
+## # Database: sqlite 3.19.3 [:memory:]
+##      ID Q1purchases Q2purchases Q1rebates Q2rebates
+##   &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1     1          20          10         5         3
+## 2     2           5           6        10        12</code></pre>
+<p>Common tasks might include totaling columns and computing rates between columns. However, sometimes that is best done in a row-oriented representation (though outside systems may need column oriented, or more denormalized results).<br>
+With fluid data the task is easy:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">controlTable &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+  <span class="op">~</span>group, <span class="op">~</span>purchases,    <span class="op">~</span>rebates,
+  <span class="st">"Q1"</span>,   <span class="st">"Q1purchases"</span>, <span class="st">"Q1rebates"</span>,
+  <span class="st">"Q2"</span>,   <span class="st">"Q2purchases"</span>, <span class="st">"Q2rebates"</span>)
+<span class="kw">print</span>(controlTable)</code></pre></div>
+<pre><code>## # A tibble: 2 x 3
+##   group   purchases   rebates
+##   &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;
+## 1    Q1 Q1purchases Q1rebates
+## 2    Q2 Q2purchases Q2rebates</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">purchasesTall &lt;-<span class="st"> </span><span class="kw"><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ</a></span>(<span class="dt">columnsToCopy =</span> <span class="st">"ID"</span>, 
+                                   <span class="dt">controlTable =</span> controlTable, 
+                                   <span class="dt">wideTableName =</span> <span class="st">"purchaseDat"</span>,
+                                   <span class="dt">my_db =</span> my_db,
+                                   <span class="dt">tempNameGenerator =</span> tng)
+<span class="kw">print</span>(purchasesTall)</code></pre></div>
+<pre><code>## # Source:   table&lt;fdexample_bnuutzwnhlobygdp4exq_0000000011&gt; [?? x 4]
+## # Database: sqlite 3.19.3 [:memory:]
+##      ID group purchases rebates
+##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1    Q1        20       5
+## 2     1    Q2        10       3
+## 3     2    Q1         5      10
+## 4     2    Q2         6      12</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># perform the calculation in one easy step</span>
+calc &lt;-<span class="st"> </span>purchasesTall <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">purchasesPerRebate =</span> purchases<span class="op">/</span>rebates) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/compute.html">compute</a></span>(<span class="dt">name =</span> <span class="st">"purchasesTallC"</span>)
+<span class="kw">print</span>(calc)</code></pre></div>
+<pre><code>## # Source:   table&lt;purchasesTallC&gt; [?? x 5]
+## # Database: sqlite 3.19.3 [:memory:]
+##      ID group purchases rebates purchasesPerRebate
+##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;              &lt;dbl&gt;
+## 1     1    Q1        20       5           4.000000
+## 2     1    Q2        10       3           3.333333
+## 3     2    Q1         5      10           0.500000
+## 4     2    Q2         6      12           0.500000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># move what we want back</span>
+controlTable &lt;-<span class="st"> </span>controlTable <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">purchasesPerRebate =</span> 
+           <span class="kw">paste0</span>(group, <span class="st">"purchasesPerRebate"</span>))
+<span class="kw">print</span>(controlTable)</code></pre></div>
+<pre><code>## # A tibble: 2 x 4
+##   group   purchases   rebates   purchasesPerRebate
+##   &lt;chr&gt;       &lt;chr&gt;     &lt;chr&gt;                &lt;chr&gt;
+## 1    Q1 Q1purchases Q1rebates Q1purchasesPerRebate
+## 2    Q2 Q2purchases Q2rebates Q2purchasesPerRebate</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">result &lt;-<span class="st"> </span><span class="kw"><a href="../reference/moveValuesToColumnsQ.html">moveValuesToColumnsQ</a></span>(<span class="dt">keyColumns =</span> <span class="st">"ID"</span>,
+                               <span class="dt">controlTable =</span> controlTable,
+                               <span class="dt">tallTableName =</span> <span class="st">"purchasesTallC"</span>,
+                               <span class="dt">my_db =</span> my_db,
+                               <span class="dt">tempNameGenerator =</span> tng)
+<span class="kw">print</span>(result)</code></pre></div>
+<pre><code>## # Source:   table&lt;fdexample_bnuutzwnhlobygdp4exq_0000000013&gt; [?? x 7]
+## # Database: sqlite 3.19.3 [:memory:]
+##      ID Q1purchases Q1rebates Q1purchasesPerRebate Q2purchases Q2rebates Q2purchasesPerRebate
+##   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;
+## 1     1          20         5                  4.0          10         3             3.333333
+## 2     2           5        10                  0.5           6        12             0.500000</code></pre>
+<p>The point is: the above can work on a large number of rows and columns (especially on a system such as <code>Spark</code> where row operations are performed in parallel).</p>
 </div>
 </div>
 <div id="conclusion" class="section level1">
@@ -431,6 +516,11 @@ DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation
 <a href="#pivotun-pivot">Pivot/Un-Pivot</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#pivot">Pivot</a></li>
       <li><a href="#un-pivot">Un-Pivot</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#additional-interesting-applications">Additional Interesting Applications</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#row-parallel-dispatch">Row-parallel dispatch</a></li>
       </ul>
 </li>
       <li><a href="#conclusion">Conclusion</a></li>
