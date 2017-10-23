@@ -315,6 +315,11 @@ controlTable <- controlTable %>%
   mutate(purchasesPerRebate = 
            paste0(group, "purchasesPerRebate"))
 print(controlTable)
+
+# notice the step back is not a single
+# pivot or un-pivot
+# due to the larger controlTable
+# (especially if there were more quarters)
 result <- moveValuesToColumnsQ(keyColumns = "ID",
                                controlTable = controlTable,
                                tallTableName = "purchasesTallC",
