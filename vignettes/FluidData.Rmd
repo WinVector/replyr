@@ -307,6 +307,8 @@ purchasesTall <- moveValuesToRowsQ(columnsToCopy = "ID",
                                    my_db = my_db,
                                    tempNameGenerator = tng)
 print(purchasesTall)
+
+# perform the calculation in one easy step
 calc <- purchasesTall %>% 
   mutate(purchasesPerRebate = purchases/rebates) %>%
   compute(name = "purchasesTallC")
