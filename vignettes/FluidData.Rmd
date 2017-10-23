@@ -331,6 +331,16 @@ print(result)
 The point is: the above can work on a large number of rows and columns (especially
 on a system such as `Spark` where row operations are performed in parallel).
 
+## One-hot encoding
+
+Adding indicators or dummy variables (by one-hot encoding, or other methods) are
+essentially special cases of the pivot flavor of `replyr::moveValuesToColumnsQ()`.
+
+## group_by/aggregate
+
+Many operations that look like a complicated pivot in column format are in fact a simple
+row operation followed a group_by/aggregate (and optional format conversion).
+
 
 # Conclusion
 
