@@ -3,7 +3,7 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 #' @importFrom dplyr select mutate one_of
-#' @importFrom wrapr %.>%
+#' @importFrom wrapr %.>% let mapsyms
 #' @importFrom seplyr group_by_se
 #' @importFrom cdata moveValuesToRows moveValuesToColumns
 NULL
