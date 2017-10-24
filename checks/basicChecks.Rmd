@@ -20,7 +20,8 @@ Example trying most of the `replyr` functions on a few data sources.
 ```{r setup}
 suppressPackageStartupMessages(library('dplyr'))
 packageVersion("dplyr")
-#suppressPackageStartupMessages(library('dbplyr'))
+# possibly need this https://github.com/tidyverse/dplyr/issues/3145
+suppressPackageStartupMessages(library('dbplyr'))
 packageVersion("dbplyr")
 suppressPackageStartupMessages(library('sparklyr'))
 packageVersion("sparklyr")
