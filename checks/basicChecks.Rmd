@@ -18,13 +18,12 @@ options(width = 100)
 Example trying most of the `replyr` functions on a few data sources.
 
 ```{r setup}
-library('dplyr')
+suppressPackageStartupMessages(library('dplyr'))
 packageVersion("dplyr")
-library('sparklyr')
+#suppressPackageStartupMessages(library('dbplyr'))
+packageVersion("dbplyr")
+suppressPackageStartupMessages(library('sparklyr'))
 packageVersion("sparklyr")
-if(requireNamespace("dbplyr", quietly = TRUE)) {
-  packageVersion("dbplyr")
-}
 R.Version()$version.string
 library("replyr")
 packageVersion("replyr")
