@@ -96,7 +96,7 @@
       <h1>Fluid Data</h1>
                         <h4 class="author">John Mount, Win-Vector LLC</h4>
             
-            <h4 class="date">2017-10-23</h4>
+            <h4 class="date">2017-10-24</h4>
           </div>
 
     
@@ -129,8 +129,8 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"replyr"</span>))
 <span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"dplyr"</span>))
 <span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">160</span>) 
-tng &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../reference/makeTempNameGenerator.html">makeTempNameGenerator</a></span>(<span class="st">'fdexample'</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">controlTable &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(~group, ~col1, ~col2,
+tng &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator">makeTempNameGenerator</a></span>(<span class="st">'fdexample'</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">controlTable &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(<span class="op">~</span>group, <span class="op">~</span>col1, <span class="op">~</span>col2,
                                <span class="st">'aa'</span>,  <span class="st">'c1'</span>,  <span class="st">'c2'</span>,
                                <span class="st">'bb'</span>,  <span class="st">'c3'</span>,  <span class="st">'c4'</span>)
 <span class="kw">print</span>(controlTable)</code></pre></div>
@@ -142,8 +142,8 @@ tng &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../reference
 <p>Control tables partially specify a change of data shape or change of data cell coordinates.</p>
 <p>The specification is interpreted as follows:</p>
 <p>The region <code>controlTable[ , 2:ncol(controlTable)]</code> specifies partial coordinates of data cells in another table. In our example these partial coordinates are “<code>c1</code>”, “<code>c2</code>”, “<code>c3</code>”, and “<code>c4</code>” treated as column names. For example if our data is:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat1 &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
-  ~ID,          ~c1,          ~c2,          ~c3,          ~c4,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat1 &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+  <span class="op">~</span>ID,          <span class="op">~</span>c1,          <span class="op">~</span>c2,          <span class="op">~</span>c3,          <span class="op">~</span>c4,
   <span class="st">'id1'</span>, <span class="st">'val_id1_c1'</span>, <span class="st">'val_id1_c2'</span>, <span class="st">'val_id1_c3'</span>, <span class="st">'val_id1_c4'</span>,
   <span class="st">'id2'</span>, <span class="st">'val_id2_c1'</span>, <span class="st">'val_id2_c2'</span>, <span class="st">'val_id2_c3'</span>, <span class="st">'val_id2_c4'</span>,
   <span class="st">'id3'</span>, <span class="st">'val_id3_c1'</span>, <span class="st">'val_id3_c2'</span>, <span class="st">'val_id3_c3'</span>, <span class="st">'val_id3_c4'</span> )
@@ -157,23 +157,23 @@ tng &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../reference
 <p>Then each data cell in <code>dat1</code> (excluding the key-columns, in this case “<code>ID</code>”) is named by the row-id (stored in the <code>ID</code> column) plus the column-name (“<code>c1</code>”, “<code>c2</code>”, “<code>c3</code>”, and “<code>c4</code>”). Knowing <code>ID</code> plus the column name unique identifies the data-caring cell in table <code>dat1</code>.</p>
 <p>However, there is an alternate cell naming available from the <code>controlTable</code> notation. Each name in the region <code>controlTable[ , 2:ncol(controlTable)]</code> is itself uniquely named by the <code>group</code> entry and column name of the control table itself. This means we have the following correspondence from the partial names “<code>c1</code>”, “<code>c2</code>”, “<code>c3</code>”, and “<code>c4</code>” to a new set of partial names:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">namePairings &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="kw">seq_len</span>(<span class="kw">nrow</span>(controlTable)), 
-                     <span class="dv">2</span>:<span class="kw">ncol</span>(controlTable))
+                     <span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(controlTable))
 <span class="kw">colnames</span>(namePairings) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"controlI"</span>, <span class="st">"controlJ"</span>)
-namePairings$coords_style1 &lt;-<span class="st"> </span>
+namePairings<span class="op">$</span>coords_style1 &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">vapply</span>(<span class="kw">seq_len</span>(<span class="kw">nrow</span>(namePairings)),
-         function(ii) {
+         <span class="cf">function</span>(ii) {
            <span class="kw">as.character</span>(<span class="kw">paste</span>(<span class="st">"column:"</span>,
-                              controlTable[namePairings$controlI[[ii]], 
-                                           namePairings$controlJ[[ii]]]))
+                              controlTable[namePairings<span class="op">$</span>controlI[[ii]], 
+                                           namePairings<span class="op">$</span>controlJ[[ii]]]))
          },
          <span class="kw">character</span>(<span class="dv">1</span>))
-namePairings$coords_style2 &lt;-<span class="st"> </span>
+namePairings<span class="op">$</span>coords_style2 &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw">vapply</span>(<span class="kw">seq_len</span>(<span class="kw">nrow</span>(namePairings)),
-         function(ii) {
+         <span class="cf">function</span>(ii) {
            <span class="kw">paste</span>(<span class="st">"group:"</span>,
-                 controlTable$group[[namePairings$controlI[[ii]]]],
+                 controlTable<span class="op">$</span>group[[namePairings<span class="op">$</span>controlI[[ii]]]],
                  <span class="st">", column:"</span>,
-                 <span class="kw">colnames</span>(controlTable)[[namePairings$controlJ[[ii]]]])
+                 <span class="kw">colnames</span>(controlTable)[[namePairings<span class="op">$</span>controlJ[[ii]]]])
          },
          <span class="kw">character</span>(<span class="dv">1</span>))
 <span class="kw">as.matrix</span>(namePairings[ , <span class="kw">c</span>(<span class="st">"coords_style1"</span>, <span class="st">"coords_style2"</span>)])</code></pre></div>
@@ -183,16 +183,16 @@ namePairings$coords_style2 &lt;-<span class="st"> </span>
 ## [3,] "column: c2"  "group: aa , column: col2"
 ## [4,] "column: c4"  "group: bb , column: col2"</code></pre>
 <p>The idea is the control table is a very succinct description of the pairing of the <code>namePairings$coords_style1</code> cell partial coordinates and the <code>namePairings$coords_style2</code> cell partial coordinates. As we have said the <code>namePairings$coords_style1</code> cell partial coordinates become full cell coordinates for the data cells in <code>dat1</code> when combined with the <code>dat1</code> <code>ID</code> column. The <code>namePairings$coords_style2</code> are part of a natural naming for the data cells in the following table:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_db &lt;-<span class="st"> </span>DBI::<span class="kw">dbConnect</span>(RSQLite::<span class="kw">SQLite</span>(), <span class="st">":memory:"</span>)
-dat1db &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, dat1, <span class="st">'dat1db'</span>)
-dat2 &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ</a></span>(<span class="dt">controlTable =</span> controlTable,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)
+dat1db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, dat1, <span class="st">'dat1db'</span>)
+dat2 &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ">moveValuesToRowsQ</a></span>(<span class="dt">controlTable =</span> controlTable,
                                   <span class="dt">wideTableName =</span> <span class="st">'dat1db'</span>,
                                   <span class="dt">my_db =</span> my_db,
                                   <span class="dt">columnsToCopy =</span> <span class="st">"ID"</span>,
-                                  <span class="dt">tempNameGenerator =</span> tng) %&gt;%
+                                  <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)
 <span class="kw">print</span>(dat2)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_xq7durh9gsdjpbpoppdh_0000000001&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_lt8mabmfr3s8v7ixeidk_0000000001&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -223,24 +223,24 @@ dat2 &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../referenc
 <a href="#movevaluestorowsq" class="anchor"></a><code><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ()</a></code>
 </h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wideTableName &lt;-<span class="st"> 'dat'</span>
-d &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db,
-      dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
-        ~ID,          ~c1,          ~c2,          ~c3,          ~c4,
+d &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db,
+      dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+        <span class="op">~</span>ID,          <span class="op">~</span>c1,          <span class="op">~</span>c2,          <span class="op">~</span>c3,          <span class="op">~</span>c4,
       <span class="st">'id1'</span>, <span class="st">'val_id1_c1'</span>, <span class="st">'val_id1_c2'</span>, <span class="st">'val_id1_c3'</span>, <span class="st">'val_id1_c4'</span>,
       <span class="st">'id2'</span>, <span class="st">'val_id2_c1'</span>, <span class="st">'val_id2_c2'</span>, <span class="st">'val_id2_c3'</span>, <span class="st">'val_id2_c4'</span>,
       <span class="st">'id3'</span>, <span class="st">'val_id3_c1'</span>, <span class="st">'val_id3_c2'</span>, <span class="st">'val_id3_c3'</span>, <span class="st">'val_id3_c4'</span> ),
              wideTableName, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>, <span class="dt">temporary=</span><span class="ot">TRUE</span>)
-controlTable &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(~group, ~col1, ~col2,
+controlTable &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(<span class="op">~</span>group, <span class="op">~</span>col1, <span class="op">~</span>col2,
                                  <span class="st">'aa'</span>,  <span class="st">'c1'</span>,  <span class="st">'c2'</span>,
                                  <span class="st">'bb'</span>,  <span class="st">'c3'</span>,  <span class="st">'c4'</span>)
 columnsToCopy &lt;-<span class="st"> 'ID'</span>
-replyr::<span class="kw"><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ</a></span>(controlTable,
+replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ">moveValuesToRowsQ</a></span>(controlTable,
                           wideTableName,
                           my_db,
                           <span class="dt">columnsToCopy =</span> columnsToCopy,
-                          <span class="dt">tempNameGenerator =</span> tng) %&gt;%
+                          <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_xq7durh9gsdjpbpoppdh_0000000003&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_lt8mabmfr3s8v7ixeidk_0000000003&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -257,9 +257,9 @@ replyr::<span class="kw"><a href="../reference/moveValuesToRowsQ.html">moveValue
 <a href="#movevaluestocolumnsq" class="anchor"></a><code><a href="../reference/moveValuesToColumnsQ.html">moveValuesToColumnsQ()</a></code>
 </h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tallTableName &lt;-<span class="st"> 'dat'</span>
-d &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db,
-  dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
-   ~ID,   ~group, ~col1,              ~col2,
+d &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db,
+  dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+   <span class="op">~</span>ID,   <span class="op">~</span>group, <span class="op">~</span>col1,              <span class="op">~</span>col2,
    <span class="st">"id1"</span>, <span class="st">"aa"</span>,   <span class="st">"val_id1_gaa_col1"</span>, <span class="st">"val_id1_gaa_col2"</span>,
    <span class="st">"id1"</span>, <span class="st">"bb"</span>,   <span class="st">"val_id1_gbb_col1"</span>, <span class="st">"val_id1_gbb_col2"</span>,
    <span class="st">"id2"</span>, <span class="st">"aa"</span>,   <span class="st">"val_id2_gaa_col1"</span>, <span class="st">"val_id2_gaa_col2"</span>,
@@ -268,17 +268,17 @@ d &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.ti
    <span class="st">"id3"</span>, <span class="st">"bb"</span>,   <span class="st">"val_id3_gbb_col1"</span>, <span class="st">"val_id3_gbb_col2"</span> ),
          tallTableName,
          <span class="dt">overwrite =</span> <span class="ot">TRUE</span>, <span class="dt">temporary=</span><span class="ot">TRUE</span>)
-controlTable &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(~group, ~col1, ~col2,
+controlTable &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(<span class="op">~</span>group, <span class="op">~</span>col1, <span class="op">~</span>col2,
                                  <span class="st">'aa'</span>,  <span class="st">'c1'</span>,  <span class="st">'c2'</span>,
                                  <span class="st">'bb'</span>,  <span class="st">'c3'</span>,  <span class="st">'c4'</span>)
 keyColumns &lt;-<span class="st"> 'ID'</span>
-replyr::<span class="kw"><a href="../reference/moveValuesToColumnsQ.html">moveValuesToColumnsQ</a></span>(keyColumns,
+replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToColumnsQ">moveValuesToColumnsQ</a></span>(keyColumns,
                              controlTable,
                              tallTableName,
                              my_db,
-                             <span class="dt">tempNameGenerator =</span> tng) %&gt;%
+                             <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_xq7durh9gsdjpbpoppdh_0000000005&gt; [?? x 5]
+<pre><code>## # Source:     table&lt;fdexample_lt8mabmfr3s8v7ixeidk_0000000005&gt; [?? x 5]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID
 ##      ID               c1               c2               c3               c4
@@ -310,18 +310,18 @@ replyr::<span class="kw"><a href="../reference/moveValuesToColumnsQ.html">moveVa
 ## 6     3    meas2 m2_3</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::moveValuesToColumns version</span>
 <span class="co"># equivalent to tidyr::spread(d, 'meastype', 'meas')</span>
-cdata::<span class="kw">moveValuesToColumns</span>(d,
+cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns">moveValuesToColumns</a></span>(d,
                            <span class="dt">columnToTakeKeysFrom =</span> <span class="st">'meastype'</span>,
                            <span class="dt">columnToTakeValuesFrom =</span> <span class="st">'meas'</span>,
                            <span class="dt">rowKeyColumns=</span> <span class="st">'index'</span>,
-                           <span class="dt">sep=</span> <span class="st">'_'</span>) %&gt;%
+                           <span class="dt">sep=</span> <span class="st">'_'</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index)</code></pre></div>
 <pre><code>##   index meastype_meas1 meastype_meas2
 ## 1     1           m1_1           m2_1
 ## 2     2           m1_2           m2_2
 ## 3     3           m1_3           m2_3</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the replyr::moveValuesToColumnsQ() version</span>
-controlTable &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../reference/buildPivotControlTable.html">buildPivotControlTable</a></span>(d,
+controlTable &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/buildPivotControlTable">buildPivotControlTable</a></span>(d,
                                                <span class="dt">columnToTakeKeysFrom =</span> <span class="st">'meastype'</span>,
                                                <span class="dt">columnToTakeValuesFrom =</span> <span class="st">'meas'</span>,
                                                <span class="dt">sep =</span> <span class="st">"_"</span>)
@@ -329,14 +329,14 @@ controlTable &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../
 <pre><code>##   meastype           meas
 ## 1    meas1 meastype_meas1
 ## 2    meas2 meastype_meas2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtall &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d, <span class="st">"dtall"</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dtall &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d, <span class="st">"dtall"</span>)
 <span class="kw"><a href="../reference/moveValuesToColumnsQ.html">moveValuesToColumnsQ</a></span>(<span class="dt">keyColumns =</span> <span class="st">"index"</span>,
                      <span class="dt">controlTable =</span> controlTable,
                      <span class="dt">tallTableName =</span> <span class="st">"dtall"</span>,
                      <span class="dt">my_db =</span> my_db,
-                     <span class="dt">tempNameGenerator =</span> tng) %&gt;%<span class="st"> </span>
+                     <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_xq7durh9gsdjpbpoppdh_0000000007&gt; [?? x 3]
+<pre><code>## # Source:     table&lt;fdexample_lt8mabmfr3s8v7ixeidk_0000000007&gt; [?? x 3]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index
 ##   index meastype_meas1 meastype_meas2
@@ -361,10 +361,10 @@ controlTable &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../
 ## 3     3    c  m1_3   2.3</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::moveValuesToRows() version</span>
 <span class="co"># equivalent to tidyr::gather(d, 'meastype', 'meas', c('meas1','meas2'))</span>
-cdata::<span class="kw">moveValuesToRows</span>(d,
+cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows">moveValuesToRows</a></span>(d,
                         <span class="dt">nameForNewKeyColumn=</span> <span class="st">'meastype'</span>,
                         <span class="dt">nameForNewValueColumn=</span> <span class="st">'meas'</span>,
-                        <span class="dt">columnsToTakeFrom=</span> <span class="kw">c</span>(<span class="st">'meas1'</span>,<span class="st">'meas2'</span>)) %&gt;%
+                        <span class="dt">columnsToTakeFrom=</span> <span class="kw">c</span>(<span class="st">'meas1'</span>,<span class="st">'meas2'</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index, info)</code></pre></div>
 <pre><code>##   index info meastype meas
 ## 1     1    a    meas1 m1_1
@@ -382,14 +382,14 @@ controlTable &lt;-<span class="st"> </span><span class="kw"><a href="../referenc
 ## 1    meas1 meas1
 ## 2    meas2 meas2</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keyColumns =<span class="st"> </span><span class="kw">c</span>(<span class="st">'index'</span>, <span class="st">'info'</span>)
-dwide &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d, <span class="st">"dwide"</span>)
+dwide &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d, <span class="st">"dwide"</span>)
 <span class="kw"><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ</a></span>(<span class="dt">controlTable =</span> controlTable,
                   <span class="dt">wideTableName =</span> <span class="st">"dwide"</span>,
                   <span class="dt">my_db =</span> my_db,
                   <span class="dt">columnsToCopy =</span> keyColumns,
-                  <span class="dt">tempNameGenerator =</span> tng) %&gt;%
+                  <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index, info)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_xq7durh9gsdjpbpoppdh_0000000009&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_lt8mabmfr3s8v7ixeidk_0000000009&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index, info
 ##   index  info meastype  meas
@@ -411,8 +411,8 @@ dwide &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dply
 <a href="#row-parallel-dispatch" class="anchor"></a>Row-parallel dispatch</h2>
 <p>A particularly interesting application is converting many column operations into a single operation using a row-parallel dispatch.</p>
 <p>Suppose we had the following data in the following format in our system of record (but with many more column groups and columns):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">purchaseDat &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
-  ~ID, ~Q1purchases, ~Q2purchases, ~Q1rebates, ~Q2rebates,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">purchaseDat &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+  <span class="op">~</span>ID, <span class="op">~</span>Q1purchases, <span class="op">~</span>Q2purchases, <span class="op">~</span>Q1rebates, <span class="op">~</span>Q2rebates,
     <span class="dv">1</span>,           <span class="dv">20</span>,           <span class="dv">10</span>,          <span class="dv">5</span>,          <span class="dv">3</span>,
     <span class="dv">2</span>,            <span class="dv">5</span>,            <span class="dv">6</span>,         <span class="dv">10</span>,         <span class="dv">12</span>),
   <span class="st">'purchaseDat'</span>)
@@ -425,8 +425,8 @@ dwide &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dply
 ## 2     2           5           6        10        12</code></pre>
 <p>Common tasks might include totaling columns and computing rates between columns. However, sometimes that is best done in a row-oriented representation (though outside systems may need column oriented, or more denormalized results).<br>
 With fluid data the task is easy:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">controlTable &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
-  ~group, ~purchases,    ~rebates,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">controlTable &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+  <span class="op">~</span>group, <span class="op">~</span>purchases,    <span class="op">~</span>rebates,
   <span class="st">"Q1"</span>,   <span class="st">"Q1purchases"</span>, <span class="st">"Q1rebates"</span>,
   <span class="st">"Q2"</span>,   <span class="st">"Q2purchases"</span>, <span class="st">"Q2rebates"</span>)
 <span class="kw">print</span>(controlTable)</code></pre></div>
@@ -441,7 +441,7 @@ With fluid data the task is easy:</p>
                                    <span class="dt">my_db =</span> my_db,
                                    <span class="dt">tempNameGenerator =</span> tng)
 <span class="kw">print</span>(purchasesTall)</code></pre></div>
-<pre><code>## # Source:   table&lt;fdexample_xq7durh9gsdjpbpoppdh_0000000011&gt; [?? x 4]
+<pre><code>## # Source:   table&lt;fdexample_lt8mabmfr3s8v7ixeidk_0000000011&gt; [?? x 4]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##      ID group purchases rebates
 ##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -450,8 +450,8 @@ With fluid data the task is easy:</p>
 ## 3     2    Q1         5      10
 ## 4     2    Q2         6      12</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># perform the calculation in one easy step</span>
-calc &lt;-<span class="st"> </span>purchasesTall %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">purchasesPerRebate =</span> purchases/rebates) %&gt;%
+calc &lt;-<span class="st"> </span>purchasesTall <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">purchasesPerRebate =</span> purchases<span class="op">/</span>rebates) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/compute.html">compute</a></span>(<span class="dt">name =</span> <span class="st">"purchasesTallC"</span>)
 <span class="kw">print</span>(calc)</code></pre></div>
 <pre><code>## # Source:   table&lt;purchasesTallC&gt; [?? x 5]
@@ -463,7 +463,7 @@ calc &lt;-<span class="st"> </span>purchasesTall %&gt;%<span class="st"> </span>
 ## 3     2    Q1         5      10           0.500000
 ## 4     2    Q2         6      12           0.500000</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># move what we want back</span>
-controlTable &lt;-<span class="st"> </span>controlTable %&gt;%
+controlTable &lt;-<span class="st"> </span>controlTable <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">purchasesPerRebate =</span> 
            <span class="kw">paste0</span>(group, <span class="st">"purchasesPerRebate"</span>))
 <span class="kw">print</span>(controlTable)</code></pre></div>
@@ -482,7 +482,7 @@ result &lt;-<span class="st"> </span><span class="kw"><a href="../reference/move
                                <span class="dt">my_db =</span> my_db,
                                <span class="dt">tempNameGenerator =</span> tng)
 <span class="kw">print</span>(result)</code></pre></div>
-<pre><code>## # Source:   table&lt;fdexample_xq7durh9gsdjpbpoppdh_0000000013&gt; [?? x 7]
+<pre><code>## # Source:   table&lt;fdexample_lt8mabmfr3s8v7ixeidk_0000000013&gt; [?? x 7]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##      ID Q1purchases Q1rebates Q1purchasesPerRebate Q2purchases Q2rebates Q2purchasesPerRebate
 ##   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;
@@ -505,10 +505,10 @@ result &lt;-<span class="st"> </span><span class="kw"><a href="../reference/move
 <h1 class="hasAnchor">
 <a href="#conclusion" class="anchor"></a>Conclusion</h1>
 <p><code><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ">replyr::moveValuesToRowsQ()</a></code> and <code><a href="http://www.rdocumentation.org/packages/replyr/topics/moveValuesToColumnsQ">replyr::moveValuesToColumnsQ()</a></code> represent two very general “fluid data” or “coordinatized data” operators that have database scale (via <code>DBI/dbplyr/dplyr</code>) and big data scale implementations (via <code>Sparklyr</code>). Some very powerful data transformations can be translated into the above explicit control table terminology. The extra details explicitly managed in the control table notation makes for clear calling interfaces.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(ti in <span class="kw">tng</span>(<span class="dt">dumpList =</span> <span class="ot">TRUE</span>)) {
-  dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/backend_dbplyr.html">db_drop_table</a></span>(my_db, ti)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span>(ti <span class="cf">in</span> <span class="kw">tng</span>(<span class="dt">dumpList =</span> <span class="ot">TRUE</span>)) {
+  dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/backend_dbplyr.html">db_drop_table</a></span>(my_db, ti)
 }
-DBI::<span class="kw">dbDisconnect</span>(my_db)</code></pre></div>
+DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</code></pre></div>
 </div>
 </div>
   </div>

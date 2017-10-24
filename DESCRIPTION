@@ -22,10 +22,11 @@ LazyData: TRUE
 Depends:
   seplyr (>= 0.1.5),
   wrapr (>= 1.0.0),
-  cdata (>= 0.1.6),
+  cdata (>= 0.1.6)
 Imports:
   dplyr (>= 0.7.4),
-  DBI,
+  dbplyr (>= 1.1.0),
+  DBI (>= 0.7),
   RSQLite
 RoxygenNote: 6.0.1
 Suggests: testthat,
