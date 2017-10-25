@@ -126,8 +126,8 @@ and controlTable.</p>
 
     <pre class="usage"><span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>, <span class='no'>wideTableName</span>, <span class='no'>my_db</span>, <span class='no'>...</span>,
   <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"mvtrq"</span>),
-  <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>showQuery</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>literalQuote</span> <span class='kw'>=</span> <span class='st'>"'"</span>)</pre>
+  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"mvtrq"</span>), <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>checkNames</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showQuery</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>literalQuote</span> <span class='kw'>=</span> <span class='st'>"'"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -159,6 +159,10 @@ and controlTable.</p>
     <tr>
       <th>strict</th>
       <td><p>logical, if TRUE check control table contents for uniqueness</p></td>
+    </tr>
+    <tr>
+      <th>checkNames</th>
+      <td><p>logical, if TRUE check names</p></td>
     </tr>
     <tr>
       <th>showQuery</th>

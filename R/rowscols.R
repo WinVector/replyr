@@ -14,7 +14,7 @@ NULL
 
 
 # confirm control table has uniqueness
-checkControlTable <- function(controlTable) {
+checkControlTable <- function(controlTable, strict) {
   if(!is.data.frame(controlTable)) {
     return("control table must be a data.frame")
   }
@@ -34,11 +34,19 @@ checkControlTable <- function(controlTable) {
   )
   for(ci in names(toCheck)) {
     vals <- toCheck[[ci]]
+    if(any(is.na(vals))) {
+      return(paste("all control table", ci, "must not be NA"))
+    }
     if(length(unique(vals))!=length(vals)) {
       return(paste("all control table", ci, "must be distinct"))
     }
-    if(!all(vals==make.names(vals))) {
-      return(paste("all control table", ci ,"must be valid R variable names"))
+    if(strict) {
+      if(length(grep(".", vals, fixed=TRUE))>0) {
+        return(paste("all control table", ci ,"must '.'-free"))
+      }
+      if(!all(vals==make.names(vals))) {
+        return(paste("all control table", ci ,"must be valid R variable names"))
+      }
     }
   }
   return(NULL) # good
@@ -117,6 +125,7 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' @param columnsToCopy character list of column names to copy
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
 #' @param strict logical, if TRUE check control table contents for uniqueness
+#' @param checkNames logical, if TRUE check names
 #' @param showQuery if TRUE print query
 #' @param literalQuote character, quote for string literals
 #' @return long table built by mapping wideTable to one row per group
@@ -161,17 +170,26 @@ moveValuesToRowsQ <- function(controlTable,
                               ...,
                               columnsToCopy = NULL,
                               tempNameGenerator = replyr::makeTempNameGenerator('mvtrq'),
-                              strict = FALSE,
+                              strict = TRUE,
+                              checkNames = TRUE,
                               showQuery=FALSE,
                               literalQuote = "'") {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
   controlTable <- as.data.frame(controlTable)
-  if(strict) {
-    cCheck <- checkControlTable(controlTable)
-    if(!is.null(cCheck)) {
-      stop(paste("replyr::moveValuesToRowsQ", cCheck))
+  cCheck <- checkControlTable(controlTable, strict)
+  if(!is.null(cCheck)) {
+    stop(paste("replyr::moveValuesToRowsQ", cCheck))
+  }
+  if(checkNames) {
+    interiorCells <- as.vector(as.matrix(controlTable[,2:ncol(controlTable)]))
+    interiorCells <- interiorCells[!is.na(interiorCells)]
+    wideTableColnames <- colnames(dplyr::tbl(my_db, wideTableName))
+    badCells <- setdiff(interiorCells, wideTableColnames)
+    if(length(badCells)>0) {
+      stop(paste("replyr::moveValuesToRowsQ: control table entries that are not wideTable column names:",
+                 paste(badCells, collapse = ', ')))
     }
   }
   ctabName <- tempNameGenerator()
@@ -327,6 +345,7 @@ buildPivotControlTable <- function(d,
 #' @param columnsToCopy character list of column names to copy
 #' @param tempNameGenerator a tempNameGenerator from replyr::makeTempNameGenerator()
 #' @param strict logical, if TRUE check control table contents for uniqueness
+#' @param checkNames logical, if TRUE check names
 #' @param showQuery if TRUE print query
 #' @param literalQuote character, quote for string literals
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
@@ -373,17 +392,24 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  ...,
                                  columnsToCopy = NULL,
                                  tempNameGenerator = replyr::makeTempNameGenerator('mvtcq'),
-                                 strict = FALSE,
+                                 strict = TRUE,
+                                 checkNames = TRUE,
                                  showQuery = FALSE,
                                  literalQuote = "'") {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
   controlTable <- as.data.frame(controlTable)
-  if(strict) {
-    cCheck <- checkControlTable(controlTable)
-    if(!is.null(cCheck)) {
-      stop(paste("replyr::moveValuesToColumnsQ", cCheck))
+  cCheck <- checkControlTable(controlTable, strict)
+  if(!is.null(cCheck)) {
+    stop(paste("replyr::moveValuesToColumnsQ", cCheck))
+  }
+  if(checkNames) {
+    tallTableColnames <- colnames(dplyr::tbl(my_db, tallTableName))
+    badCells <- setdiff(colnames(controlTable), tallTableColnames)
+    if(length(badCells)>0) {
+      stop(paste("replyr::moveValuesToColumnsQ: control table column names that are not tallTableName column names:",
+                 paste(badCells, collapse = ', ')))
     }
   }
   ctabName <- tempNameGenerator()

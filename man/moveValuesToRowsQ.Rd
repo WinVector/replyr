@@ -6,8 +6,8 @@
 \usage{
 moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
   columnsToCopy = NULL,
-  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"),
-  strict = FALSE, showQuery = FALSE, literalQuote = "'")
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"), strict = TRUE,
+  checkNames = TRUE, showQuery = FALSE, literalQuote = "'")
 }
 \arguments{
 \item{controlTable}{table specifying mapping (local data frame)}
@@ -23,6 +23,8 @@ moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
 \item{tempNameGenerator}{a tempNameGenerator from replyr::makeTempNameGenerator()}
 
 \item{strict}{logical, if TRUE check control table contents for uniqueness}
+
+\item{checkNames}{logical, if TRUE check names}
 
 \item{showQuery}{if TRUE print query}
 

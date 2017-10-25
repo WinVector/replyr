@@ -1,7 +1,7 @@
 Package: replyr
 Type: Package
 Title: Reliable Adaption of Big Data with R
-Version: 0.8.0
+Version: 0.8.01
 Date: 2017-10-21
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
@@ -33,7 +33,6 @@ Suggests: testthat,
     knitr,
     rmarkdown,
     sparklyr (>= 0.6.3),
-    dbplyr (>= 1.1.0),
     ggplot2,
     RPostgreSQL,
     DiagrammeR,

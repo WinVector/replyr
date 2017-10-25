@@ -1,4 +1,8 @@
 
+# replyr 0.8.01 2017-10-25
+
+ * More checks on pivot/un-pivot.
+ 
 # replyr 0.8.0 2017-10-21
 
  * Bulk SQL row/column ops.

@@ -6,8 +6,8 @@
 \usage{
 moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
   columnsToCopy = NULL,
-  tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"),
-  strict = FALSE, showQuery = FALSE, literalQuote = "'")
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"), strict = TRUE,
+  checkNames = TRUE, showQuery = FALSE, literalQuote = "'")
 }
 \arguments{
 \item{keyColumns}{character list of column defining row groups}
@@ -25,6 +25,8 @@ moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
 \item{tempNameGenerator}{a tempNameGenerator from replyr::makeTempNameGenerator()}
 
 \item{strict}{logical, if TRUE check control table contents for uniqueness}
+
+\item{checkNames}{logical, if TRUE check names}
 
 \item{showQuery}{if TRUE print query}
 
