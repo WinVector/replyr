@@ -177,6 +177,14 @@ moveValuesToRowsQ <- function(controlTable,
   if(length(list(...))>0) {
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
+  if(length(columnsToCopy)>0) {
+    if(!is.character(columnsToCopy)) {
+      stop("moveValuesToRowsQ: columnsToCopy must be character")
+    }
+  }
+  if((!is.character(wideTableName))||(length(wideTableName)!=1)) {
+    stop("moveValuesToRowsQ: wideTableName must be character length 1")
+  }
   controlTable <- as.data.frame(controlTable)
   cCheck <- checkControlTable(controlTable, strict)
   if(!is.null(cCheck)) {
@@ -398,6 +406,19 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  literalQuote = "'") {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
+  }
+  if(length(keyColumns)>0) {
+    if(!is.character(keyColumns)) {
+      stop("moveValuesToColumnsQ: keyColumns must be character")
+    }
+  }
+  if(length(columnsToCopy)>0) {
+    if(!is.character(columnsToCopy)) {
+      stop("moveValuesToColumnsQ: columnsToCopy must be character")
+    }
+  }
+  if((!is.character(tallTableName))||(length(tallTableName)!=1)) {
+    stop("moveValuesToColumnsQ: tallTableName must be character length 1")
   }
   controlTable <- as.data.frame(controlTable)
   cCheck <- checkControlTable(controlTable, strict)
