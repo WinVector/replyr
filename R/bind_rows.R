@@ -332,6 +332,7 @@ replyr_bind_rows <- function(lst,
     return(bind_rowsQ(tableNames, colnames, src,
                       tempNameGenerator = tempNameGenerator))
   }
+  # nasty recursive fall-back
   r_replyr_bind_rows(lst, eagerTempRemoval, TRUE,
                      makeTempNameGenerator("bind_rows_priv"),
                      tempNameGenerator)

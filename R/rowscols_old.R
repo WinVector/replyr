@@ -7,7 +7,7 @@
 
 #' Collect values found in columnsToTakeFrom as tuples (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
 #'
-#' May be deprecated soon, please use \code{\link[cdata]{moveValuesToRows}} or \code{\link{moveValuesToRowsQ}}.
+#' Well be deprecated soon, please use \code{\link[cdata]{moveValuesToRows}} or \code{\link{moveValuesToRowsQ}}.
 #'
 #' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
 #' and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
@@ -25,24 +25,6 @@
 #'
 #' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}, \code{\link{replyr_moveValuesToRows}}, \code{\link{replyr_moveValuesToColumns}}
 #'
-#' @examples
-#'
-#' d <- data.frame(
-#'   index = c(1, 2, 3),
-#'   info = c('a', 'b', 'c'),
-#'   meas1 = c('m1_1', 'm1_2', 'm1_3'),
-#'   meas2 = c(2.1, 2.2, 2.3),
-#'   stringsAsFactors = FALSE)
-#' replyr_moveValuesToRows(d,
-#'               nameForNewKeyColumn= 'meastype',
-#'               nameForNewValueColumn= 'meas',
-#'               columnsToTakeFrom= c('meas1','meas2'),
-#'               nameForNewClassColumn= 'origMeasurementClass')
-#' # cdata::moveValuesToRows(d,
-#' #                         nameForNewKeyColumn= 'meastype',
-#' #                         nameForNewValueColumn= 'meas',
-#' #                         columnsToTakeFrom= c('meas1','meas2'),
-#' #                         nameForNewClassColumn= 'origMeasurementClass')
 #'
 #' @export
 replyr_moveValuesToRows <- function(data,
@@ -164,7 +146,7 @@ replyr_moveValuesToRows <- function(data,
 
 #' Spread values found in rowKeyColumns row groups as new columns (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
 #'
-#' May be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
+#' Will be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
 #'
 #' Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 #' from nameForNewValueColumn.
@@ -184,24 +166,6 @@ replyr_moveValuesToRows <- function(data,
 #' @return data item
 #'
 #' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}, \code{\link{replyr_moveValuesToRows}}, \code{\link{replyr_moveValuesToColumns}}
-#'
-#' @examples
-#'
-#' d <- data.frame(
-#'   index = c(1, 2, 3, 1, 2, 3),
-#'   meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
-#'   meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
-#'   stringsAsFactors = FALSE)
-#' replyr_moveValuesToColumns(d,
-#'                            columnToTakeKeysFrom= 'meastype',
-#'                            columnToTakeValuesFrom= 'meas',
-#'                            rowKeyColumns= 'index',
-#'                            sep= '_')
-#' # cdata::moveValuesToColumns(d,
-#' #                            columnToTakeKeysFrom= 'meastype',
-#' #                            columnToTakeValuesFrom= 'meas',
-#' #                            rowKeyColumns= 'index',
-#' #                            sep= '_')
 #'
 #'
 #' @export

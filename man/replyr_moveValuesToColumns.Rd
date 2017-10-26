@@ -34,33 +34,13 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 data item
 }
 \description{
-May be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
+Will be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
 }
 \details{
 Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 from nameForNewValueColumn.
 This is denormalizing operation, or essentially a \code{tidyr::spread}, \code{dplyr::dcast}, or pivot.
 Similar interface as in the \code{cdata} package (though does not perform pre/post condition checks).
-}
-\examples{
-
-d <- data.frame(
-  index = c(1, 2, 3, 1, 2, 3),
-  meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
-  meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
-  stringsAsFactors = FALSE)
-replyr_moveValuesToColumns(d,
-                           columnToTakeKeysFrom= 'meastype',
-                           columnToTakeValuesFrom= 'meas',
-                           rowKeyColumns= 'index',
-                           sep= '_')
-# cdata::moveValuesToColumns(d,
-#                            columnToTakeKeysFrom= 'meastype',
-#                            columnToTakeValuesFrom= 'meas',
-#                            rowKeyColumns= 'index',
-#                            sep= '_')
-
-
 }
 \seealso{
 \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}, \code{\link{replyr_moveValuesToRows}}, \code{\link{replyr_moveValuesToColumns}}

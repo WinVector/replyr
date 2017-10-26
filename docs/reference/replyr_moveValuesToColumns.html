@@ -120,7 +120,7 @@
     </div>
 
     
-    <p>May be deprecated soon, please use <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code> or <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code>.</p>
+    <p>Will be deprecated soon, please use <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code> or <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code>.</p>
     
 
     <pre class="usage"><span class='fu'>replyr_moveValuesToColumns</span>(<span class='no'>data</span>, <span class='no'>columnToTakeKeysFrom</span>, <span class='no'>columnToTakeValuesFrom</span>,
@@ -189,30 +189,6 @@ Similar interface as in the <code>cdata</code> package (though does not perform 
     <p><a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/cdata</a>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></code>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code>, <code><a href='moveValuesToRowsQ.html'>moveValuesToRowsQ</a></code>, <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code>, <code><a href='replyr_moveValuesToRows.html'>replyr_moveValuesToRows</a></code>, <code>replyr_moveValuesToColumns</code></p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(
-  <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>),
-  <span class='kw'>meastype</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'meas1'</span>,<span class='st'>'meas1'</span>,<span class='st'>'meas1'</span>,<span class='st'>'meas2'</span>,<span class='st'>'meas2'</span>,<span class='st'>'meas2'</span>),
-  <span class='kw'>meas</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'m1_1'</span>, <span class='st'>'m1_2'</span>, <span class='st'>'m1_3'</span>, <span class='st'>'m2_1'</span>, <span class='st'>'m2_2'</span>, <span class='st'>'m2_3'</span>),
-  <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>replyr_moveValuesToColumns</span>(<span class='no'>d</span>,
-                           <span class='kw'>columnToTakeKeysFrom</span><span class='kw'>=</span> <span class='st'>'meastype'</span>,
-                           <span class='kw'>columnToTakeValuesFrom</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
-                           <span class='kw'>rowKeyColumns</span><span class='kw'>=</span> <span class='st'>'index'</span>,
-                           <span class='kw'>sep</span><span class='kw'>=</span> <span class='st'>'_'</span>)</div><div class='output co'>#&gt; # A tibble: 3 x 3
-#&gt;   index meastype_meas1 meastype_meas2
-#&gt;   &lt;dbl&gt;          &lt;chr&gt;          &lt;chr&gt;
-#&gt; 1     1           m1_1           m2_1
-#&gt; 2     2           m1_2           m2_2
-#&gt; 3     3           m1_3           m2_3</div><div class='input'># cdata::moveValuesToColumns(d,
-#                            columnToTakeKeysFrom= 'meastype',
-#                            columnToTakeValuesFrom= 'meas',
-#                            rowKeyColumns= 'index',
-#                            sep= '_')
-
-
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -224,9 +200,7 @@ Similar interface as in the <code>cdata</code> package (though does not perform 
       <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+          </ul>
 
   </div>
 </div>
