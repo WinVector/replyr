@@ -179,6 +179,75 @@ r_replyr_bind_rows <- function(lst,
   res
 }
 
+#' Bind rows by a query. Assumes all tables structured identically.
+#'
+#' @param tableNames names of tables to concatinate (not empty)
+#' @param colNames names of columns
+#' @param my_db connection to where tables live
+#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param ... force later arguments to bind by name
+#' @param origTableColumn character, column to put original table name in.
+#' @param literalQuote character, quote for string literals
+#'
+#' @examples
+#'
+#' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#' tempNameGenerator = makeTempNameGenerator("bind_rowsQ_demo")
+#' d1 <- replyr_copy_to(my_db, data.frame(x=1:2, y= 10:11), 'd1')
+#' d2 <- replyr_copy_to(my_db, data.frame(x=3:4, y= 13:14), 'd2')
+#' bind_rowsQ(c('d1', 'd2'), c('x', 'y'), my_db,
+#'            tempNameGenerator = tempNameGenerator,
+#'            origTableColumn = 'orig_table')
+#'
+#' @export
+#'
+bind_rowsQ <- function(tableNames, colNames, my_db,
+                       tempNameGenerator = makeTempNameGenerator("bind_rowsQ"),
+                       ...,
+                       origTableColumn = NULL,
+                       literalQuote = "'") {
+  if(length(list(...))>0) {
+    stop("replyr::bind_rowsQ unexpected arguments")
+  }
+  nm <- tempNameGenerator()
+  selTerms <- paste(colNames, collapse = ", ")
+  if(!is.null(origTableColumn)) {
+    selTerms <- paste0(selTerms,
+                       ", ",
+                       literalQuote, tableNames[[1]], literalQuote,
+                       " `", origTableColumn, "`")
+  }
+  qc <- paste0("CREATE TEMPORARY TABLE ",
+               nm,
+               " AS SELECT ",
+               selTerms,
+               " FROM ",
+               tableNames[[1]])
+  tryCatch(
+    r <- DBI::dbGetQuery(my_db, qc),
+    warning = function(w) { NULL })
+  if(length(tableNames)>1) {
+    for(i in 2:length(tableNames)) {
+      selTerms <- paste(colNames, collapse = ", ")
+      if(!is.null(origTableColumn)) {
+        selTerms <- paste0(selTerms,
+                           ", ",
+                           literalQuote, tableNames[[i]], literalQuote,
+                           " `", origTableColumn, "`")
+      }
+      qi <- paste0("INSERT INTO ",
+                   nm,
+                   " SELECT ",
+                   selTerms,
+                   " FROM ",
+                   tableNames[[i]])
+      tryCatch(
+        r <- DBI::dbGetQuery(my_db, qi),
+        warning = function(w) { NULL })
+    }
+  }
+  dplyr::tbl(my_db, nm)
+}
 
 #' Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.
 #'
@@ -189,6 +258,7 @@ r_replyr_bind_rows <- function(lst,
 #' @param ... force other arguments to be used by name
 #' @param useDplyrLocal logical if TRUE use dplyr for local data.
 #' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
+#' @param useQBind logical if TRUE try to use query based binding
 #' @param eagerTempRemoval logical if TRUE remove temps early.
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
@@ -203,6 +273,7 @@ replyr_bind_rows <- function(lst,
                              ...,
                              useDplyrLocal= TRUE,
                              useSparkRbind= TRUE,
+                             useQBind= FALSE,  # TODO: switch to TRUE
                              eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
@@ -237,6 +308,29 @@ replyr_bind_rows <- function(lst,
        exists('sdf_bind_rows', where=asNamespace('sparklyr'), mode='function')) {
       return(do.call(rbind, lst))
     }
+  }
+  if(useQBind) {
+    # assuming all tables on same source
+    src <- replyr_get_src(lst[[1]])
+    colnames <- colnames(lst[[1]])
+    tableNames <- lapply(lst,
+                         function(ti) {
+                           nm = tempNameGenerator()
+                           if(replyr_is_local_data(ti)) {
+                             ti %.>%
+                               seplyr::select_se(., colnames) %.>%
+                               replyr_copy_to(src, ., temporary = TRUE,
+                                              name = nm)
+                           } else {
+                             ti %.>%
+                               seplyr::select_se(., colnames) %.>%
+                               dplyr::compute(.,
+                                              name = nm)
+                           }
+                           nm
+                         })
+    return(bind_rowsQ(tableNames, colnames, src,
+                      tempNameGenerator = tempNameGenerator))
   }
   r_replyr_bind_rows(lst, eagerTempRemoval, TRUE,
                      makeTempNameGenerator("bind_rows_priv"),

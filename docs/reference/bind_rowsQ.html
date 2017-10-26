@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected. — replyr_bind_rows • replyr</title>
+<title>Bind rows by a query. Assumes all tables structured identically. — bind_rowsQ • replyr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -116,79 +116,74 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.</h1>
+    <h1>Bind rows by a query. Assumes all tables structured identically.</h1>
     </div>
 
     
-    <p>Can't set <code>eagerTempRemoval=TRUE</code> on platforms that don't correctly implement <code><a href='http://dplyr.tidyverse.org/reference/compute.html'>dplyr::compute</a></code>
-(for instance <code>Sparklyr</code> prior to full resolution of <a href='https://github.com/rstudio/sparklyr/issues/721'>https://github.com/rstudio/sparklyr/issues/721</a>).</p>
+    <p>Bind rows by a query. Assumes all tables structured identically.</p>
     
 
-    <pre class="usage"><span class='fu'>replyr_bind_rows</span>(<span class='no'>lst</span>, <span class='no'>...</span>, <span class='kw'>useDplyrLocal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>useSparkRbind</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>useQBind</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>eagerTempRemoval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='makeTempNameGenerator.html'>makeTempNameGenerator</a></span>(<span class='st'>"replyr_bind_rows"</span>))</pre>
+    <pre class="usage"><span class='fu'>bind_rowsQ</span>(<span class='no'>tableNames</span>, <span class='no'>colNames</span>, <span class='no'>my_db</span>,
+  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='makeTempNameGenerator.html'>makeTempNameGenerator</a></span>(<span class='st'>"bind_rowsQ"</span>), <span class='no'>...</span>,
+  <span class='kw'>origTableColumn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>literalQuote</span> <span class='kw'>=</span> <span class='st'>"'"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>lst</th>
-      <td><p>list of items to combine, must be all in same dplyr data service</p></td>
+      <th>tableNames</th>
+      <td><p>names of tables to concatinate (not empty)</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>force other arguments to be used by name</p></td>
+      <th>colNames</th>
+      <td><p>names of columns</p></td>
     </tr>
     <tr>
-      <th>useDplyrLocal</th>
-      <td><p>logical if TRUE use dplyr for local data.</p></td>
-    </tr>
-    <tr>
-      <th>useSparkRbind</th>
-      <td><p>logical if TRUE try to use rbind on Sparklyr data</p></td>
-    </tr>
-    <tr>
-      <th>useQBind</th>
-      <td><p>logical if TRUE try to use query based binding</p></td>
-    </tr>
-    <tr>
-      <th>eagerTempRemoval</th>
-      <td><p>logical if TRUE remove temps early.</p></td>
+      <th>my_db</th>
+      <td><p>connection to where tables live</p></td>
     </tr>
     <tr>
       <th>tempNameGenerator</th>
       <td><p>temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>force later arguments to bind by name</p></td>
+    </tr>
+    <tr>
+      <th>origTableColumn</th>
+      <td><p>character, column to put original table name in.</p></td>
+    </tr>
+    <tr>
+      <th>literalQuote</th>
+      <td><p>character, quote for string literals</p></td>
+    </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>single data item</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>2</span>)
-<span class='fu'>replyr_bind_rows</span>(<span class='fu'>list</span>(<span class='no'>d</span>,<span class='no'>d</span>,<span class='no'>d</span>,<span class='no'>d</span>,<span class='no'>d</span>), <span class='kw'>useDplyrLocal</span><span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;    x
-#&gt; 1  1
-#&gt; 2  2
-#&gt; 3  1
-#&gt; 4  2
-#&gt; 5  1
-#&gt; 6  2
-#&gt; 7  1
-#&gt; 8  2
-#&gt; 9  1
-#&gt; 10 2</div><div class='input'>
+<span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+<span class='no'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='makeTempNameGenerator.html'>makeTempNameGenerator</a></span>(<span class='st'>"bind_rowsQ_demo"</span>)
+<span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>y</span><span class='kw'>=</span> <span class='fl'>10</span>:<span class='fl'>11</span>), <span class='st'>'d1'</span>)
+<span class='no'>d2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fl'>3</span>:<span class='fl'>4</span>, <span class='kw'>y</span><span class='kw'>=</span> <span class='fl'>13</span>:<span class='fl'>14</span>), <span class='st'>'d2'</span>)
+<span class='fu'>bind_rowsQ</span>(<span class='fu'>c</span>(<span class='st'>'d1'</span>, <span class='st'>'d2'</span>), <span class='fu'>c</span>(<span class='st'>'x'</span>, <span class='st'>'y'</span>), <span class='no'>my_db</span>,
+           <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='no'>tempNameGenerator</span>,
+           <span class='kw'>origTableColumn</span> <span class='kw'>=</span> <span class='st'>'orig_table'</span>)</div><div class='output co'>#&gt; # Source:   table&lt;bind_rowsQ_demo_fzljacertv2kctymzdy8_0000000000&gt; [?? x 3]
+#&gt; # Database: sqlite 3.19.3 [:memory:]
+#&gt;       x     y orig_table
+#&gt;   &lt;int&gt; &lt;int&gt;      &lt;chr&gt;
+#&gt; 1     1    10         d1
+#&gt; 2     2    11         d1
+#&gt; 3     3    13         d2
+#&gt; 4     4    14         d2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
+            
       <li><a href="#examples">Examples</a></li>
     </ul>
 
