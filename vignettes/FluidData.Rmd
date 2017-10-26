@@ -341,6 +341,40 @@ essentially special cases of the pivot flavor of `replyr::moveValuesToColumnsQ()
 Many operations that look like a complicated pivot in column format are in fact a simple
 row operation followed a group_by/aggregate (and optional format conversion).
 
+## Some fun
+
+The structure of the control table is so similar to the data 
+expected by `moveValuesToColumnsQ()` that you can actually send the control
+table through `moveValuesToColumnsQ()` to illustrate the kernel of the
+transformation.
+
+```{r tc}
+controlTable <- dplyr::tribble(~group, ~col1, ~col2,
+                                 'aa',  'c1',  'c2',
+                                 'bb',  'c3',  'c4')
+tallTableName <- 'dc'
+d <- dplyr::copy_to(my_db, controlTable, tallTableName)
+keyColumns <- NULL
+wideTableName <- 'dw'
+dw <- moveValuesToColumnsQ(keyColumns,
+                           controlTable,
+                           tallTableName,
+                           my_db) %>%
+  compute(name = wideTableName)
+print(dw)
+```
+
+The transformed table is essentially an example row of the wide-form.
+
+And we can, of course, map back.
+
+```{r tcr}
+moveValuesToRowsQ(controlTable,
+                  wideTableName,
+                  my_db)
+```
+
+
 
 # Conclusion
 

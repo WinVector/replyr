@@ -478,8 +478,12 @@ moveValuesToColumnsQ <- function(keyColumns,
                 paste(c(groupstmts, copystmts, collectstmts), collapse = ', '),
                 ' FROM ',
                 tallTableName,
-                ' `a` GROUP BY ',
-                paste(groupterms, collapse = ', '))
+                ' `a` ')
+  if(length(groupstmts)>0) {
+    qs <- paste0(qs,
+                 'GROUP BY ',
+                 paste(groupterms, collapse = ', '))
+  }
   q <-  paste0("CREATE TABLE `",
                resName,
                "` AS ",
