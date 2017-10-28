@@ -145,7 +145,7 @@ Spark 2. example (lowest version of Spark we are supporting).
 
 ```{r Spark2example}
 # Can't easilly override Spark version once it is up.
-my_db <- sparklyr::spark_connect(version='2.0.2', 
+my_db <- sparklyr::spark_connect(version='2.2.0', 
    master = "local")
 class(my_db)
 my_db$spark_home

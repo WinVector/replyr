@@ -34,7 +34,7 @@ replyr_moveValuesToColumns(data, columnToTakeKeysFrom, columnToTakeValuesFrom,
 data item
 }
 \description{
-Will be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
+Deprecated, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
 }
 \details{
 Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.

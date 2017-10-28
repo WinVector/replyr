@@ -39,8 +39,8 @@ Primary `replyr` services include:
  * `replyr::replyr_bind_rows`
  * `replyr::gapply`
  * `replyr::replyr_summary`
- * `replyr::replyr_moveValuesToRows`
- * `replyr::replyr_moveValuesToColumns`
+ * `replyr::moveValuesToRowsQ`
+ * `replyr::moveValuesToColumnsQ`
  * `replyr::replyr_*`  
  
 ## `wrapr::let`

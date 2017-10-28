@@ -7,7 +7,7 @@
 
 #' Collect values found in columnsToTakeFrom as tuples (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
 #'
-#' Well be deprecated soon, please use \code{\link[cdata]{moveValuesToRows}} or \code{\link{moveValuesToRowsQ}}.
+#' Deprecated, please use \code{\link[cdata]{moveValuesToRows}} or \code{\link{moveValuesToRowsQ}}.
 #'
 #' Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
 #' and value found (placed in nameForNewValueColumn).  This is essentially a \code{tidyr::gather}, \code{dplyr::melt}, or anti-pivot.
@@ -35,7 +35,7 @@ replyr_moveValuesToRows <- function(data,
                                     na.rm= FALSE,
                                     nameForNewClassColumn= NULL,
                                     tempNameGenerator= makeTempNameGenerator("replyr_moveValuesToRows")) {
-  # .Deprecated(old = "replyr_moveValuesToRows", new = "moveValuesToRowsQ")
+  .Deprecated(old = "replyr_moveValuesToRows", new = "moveValuesToRowsQ")
   if(length(list(...))>0) {
     stop("replyr::replyr_moveValuesToRows unexpected arguments")
   }
@@ -146,7 +146,7 @@ replyr_moveValuesToRows <- function(data,
 
 #' Spread values found in rowKeyColumns row groups as new columns (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).
 #'
-#' Will be deprecated soon, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
+#' Deprecated, please use \code{\link[cdata]{moveValuesToColumns}} or \code{\link{moveValuesToColumnsQ}}.
 #'
 #' Spread values found in \code{columnToTakeValuesFrom} row groups as new columns labeled by \code{columnToTakeKeysFrom}.
 #' from nameForNewValueColumn.
@@ -179,7 +179,7 @@ replyr_moveValuesToColumns <- function(data,
                                        maxcols= 100,
                                        dosummarize= TRUE,
                                        tempNameGenerator= makeTempNameGenerator("replyr_moveValuesToColumns")) {
-  # .Deprecated(old = "replyr_moveValuesToColumns", new = "moveValuesToColumnsQ")
+  .Deprecated(old = "replyr_moveValuesToColumns", new = "moveValuesToColumnsQ")
   if(length(list(...))>0) {
     stop("replyr::replyr_moveValuesToColumns unexpected arguments.")
   }

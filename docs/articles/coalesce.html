@@ -96,7 +96,7 @@
       <h1>coalesce</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-10-26</h4>
+            <h4 class="date">2017-10-28</h4>
           </div>
 
     
@@ -201,20 +201,21 @@ dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class=
 dbSupport &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, support)
 replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_coalesce">replyr_coalesce</a></span>(dbData, dbSupport, 
                         <span class="dt">fills =</span> <span class="kw">list</span>(<span class="dt">count=</span><span class="dv">0</span>))</code></pre></div>
-<pre><code>## # Source:   table&lt;snqxylrziz&gt; [?? x 3]
+<pre><code>## # Source:   table&lt;replyr_coalesce_lpro0eq7rzkjopn3u2yc_0000000006&gt; [?? x
+## #   3]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##     year count  name
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
 ##  1  2005     6     a
 ##  2  2007     1     b
 ##  3  2010    NA     c
-##  4  2005     0     b
-##  5  2005     0     c
-##  6  2005     0     d
-##  7  2006     0     a
-##  8  2006     0     b
-##  9  2006     0     c
-## 10  2006     0     d
+##  4  2006     0     a
+##  5  2007     0     a
+##  6  2008     0     a
+##  7  2009     0     a
+##  8  2010     0     a
+##  9  2005     0     b
+## 10  2006     0     b
 ## # ... with more rows</code></pre>
 <p>As we mentioned <code>replyr_coalesce</code> only alter column that it has added. Under this convention the column “<code>n</code>” is not zeroed in the “<code>c</code>-row”.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="st">'a'</span>,<span class="st">'c'</span>), <span class="dt">n=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="ot">NA</span>), 
@@ -246,8 +247,8 @@ s &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  690074 36.9    1168576 62.5   940480 50.3
-## Vcells 1228117  9.4    2060183 15.8  1560366 12.0</code></pre>
+## Ncells  684813 36.6    1168576 62.5   940480 50.3
+## Vcells 1223408  9.4    2060183 15.8  1561326 12.0</code></pre>
 </div>
   </div>
 

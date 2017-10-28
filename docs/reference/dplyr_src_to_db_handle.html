@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Collect values found in columnsToTakeFrom as tuples (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers). — replyr_moveValuesToRows • replyr</title>
+<title>get the db handle from a dplyr src — dplyr_src_to_db_handle • replyr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -116,69 +116,39 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Collect values found in columnsToTakeFrom as tuples (experimental, only suitable for a moderate number of columns, not fully tested on multiple data suppliers).</h1>
+    <h1>get the db handle from a dplyr src</h1>
     </div>
 
     
-    <p>Deprecated, please use <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></code> or <code><a href='moveValuesToRowsQ.html'>moveValuesToRowsQ</a></code>.</p>
+    <p>Spark2 handles are DBIConnection
+SQLite are not
+this distinciton is going away post dplyr 0.5.0</p>
     
 
-    <pre class="usage"><span class='fu'>replyr_moveValuesToRows</span>(<span class='no'>data</span>, <span class='no'>nameForNewKeyColumn</span>, <span class='no'>nameForNewValueColumn</span>,
-  <span class='no'>columnsToTakeFrom</span>, <span class='no'>...</span>, <span class='kw'>na.rm</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>nameForNewClassColumn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='makeTempNameGenerator.html'>makeTempNameGenerator</a></span>(<span class='st'>"replyr_moveValuesToRows"</span>))</pre>
+    <pre class="usage"><span class='fu'>dplyr_src_to_db_handle</span>(<span class='no'>dplyr_src</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>data.frame to work with.</p></td>
-    </tr>
-    <tr>
-      <th>nameForNewKeyColumn</th>
-      <td><p>character name of column to write new keys in.</p></td>
-    </tr>
-    <tr>
-      <th>nameForNewValueColumn</th>
-      <td><p>character name of column to write new values in.</p></td>
-    </tr>
-    <tr>
-      <th>columnsToTakeFrom</th>
-      <td><p>character array names of columns to take values from.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>force later columns to bind by name.</p></td>
-    </tr>
-    <tr>
-      <th>na.rm</th>
-      <td><p>logical if TRUE remove rows with NA in nameForNewValueColumn.</p></td>
-    </tr>
-    <tr>
-      <th>nameForNewClassColumn</th>
-      <td><p>optional name to land original cell classes to.</p></td>
-    </tr>
-    <tr>
-      <th>tempNameGenerator</th>
-      <td><p>temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.</p></td>
+      <th>dplyr_src</th>
+      <td><p>remote data handle</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data item</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)
-and value found (placed in nameForNewValueColumn).  This is essentially a <code><a href='http://www.rdocumentation.org/packages/tidyr/topics/gather'>tidyr::gather</a></code>, <code>dplyr::melt</code>, or anti-pivot.
-Similar interface as in the <code>cdata</code> package (though does not perform pre/post condition checks).</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <p><a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/cdata</a>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></code>, <code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code>, <code><a href='moveValuesToRowsQ.html'>moveValuesToRowsQ</a></code>, <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code>, <code>replyr_moveValuesToRows</code>, <code><a href='replyr_moveValuesToColumns.html'>replyr_moveValuesToColumns</a></code></p>
+    <p>database connection</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+<span class='co'># my_db &lt;- sparklyr::spark_connect(master = "local")</span>
+<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>)), <span class='st'>'d'</span>,
+     <span class='kw'>overwrite</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='fu'>dplyr_src_to_db_handle</span>(<span class='fu'><a href='replyr_get_src.html'>replyr_get_src</a></span>(<span class='st'>'d'</span>))</div><div class='output co'>#&gt; NULL</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -186,11 +156,9 @@ Similar interface as in the <code>cdata</code> package (though does not perform 
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

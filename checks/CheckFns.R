@@ -223,22 +223,35 @@ runExample <- function(copyToRemote) {
                          group)
   print(dgar)
 
-  print("replyr_moveValuesToColumns")
+  print("moveValuesToColumnsQ")
   dmvtc <- copyToRemote(data.frame(
     index = c(1, 2, 3, 1, 2, 3),
     meastype = c('meas1','meas1','meas1','meas2','meas2','meas2'),
     meas = c('m1_1', 'm1_2', 'm1_3', 'm2_1', 'm2_2', 'm2_3'),
     stringsAsFactors = FALSE),
     'mvtc')
-  dmvtcr <- dplyr::arrange(replyr::replyr_moveValuesToColumns(dmvtc,
-                                       columnToTakeKeysFrom= 'meastype',
-                                       columnToTakeValuesFrom= 'meas',
-                                       rowKeyColumns= 'index',
-                                       sep= '_'),
-                           index)
+  my_db <- replyr::dplyr_src_to_db_handle(replyr::replyr_get_src(dmvtc))
+  if(!is.null(my_db)) {
+    ct <- buildPivotControlTable(dmvtc,
+                                 columnToTakeKeysFrom= 'meastype',
+                                 columnToTakeValuesFrom= 'meas',
+                                 sep= '_')
+    dmvtcr <- dplyr::arrange(replyr::moveValuesToColumnsQ('mvtc',
+                                                          controlTable = ct,
+                                                          keyColumns= 'index',
+                                                          my_db = my_db),
+                             index)
+  } else {
+    dmvtcr <- dplyr::arrange(cdata::moveValuesToColumns(dmvtc,
+                                                        columnToTakeKeysFrom= 'meastype',
+                                                        columnToTakeValuesFrom= 'meas',
+                                                        rowKeyColumns= 'index',
+                                                        sep= '_'),
+                             index)
+  }
   print(dmvtcr)
 
-  print("replyr_moveValuesToRows")
+  print("moveValuesToRowsQ")
   dmvtr <- copyToRemote(data.frame(
     index = c(1, 2, 3),
     info = c('a', 'b', 'c'),
@@ -246,11 +259,22 @@ runExample <- function(copyToRemote) {
     meas2 = c('m2_1', 'm2_2', 'm2_3'),
     stringsAsFactors = FALSE),
     'mvtr')
-  dmvtrr <- dplyr::arrange(replyr::replyr_moveValuesToRows(dmvtr,
-                          nameForNewKeyColumn= 'meastype',
-                          nameForNewValueColumn= 'meas',
-                          columnsToTakeFrom= c('meas1','meas2')),
-                          index, meastype)
+  if(!is.null(my_db)) {
+    ct <- buildUnPivotControlTable(nameForNewKeyColumn= 'meastype',
+                                   nameForNewValueColumn= 'meas',
+                                   columnsToTakeFrom= c('meas1','meas2'))
+    dmvtrr <- dplyr::arrange(replyr::moveValuesToRowsQ('mvtr',
+                                                       controlTable = ct,
+                                                       columnsToCopy = c('index', 'info'),
+                                                       my_db = my_db),
+                             index, meastype)
+  } else {
+    dmvtrr <- dplyr::arrange(cdata::moveValuesToRows(dmvtr,
+                                                       nameForNewKeyColumn= 'meastype',
+                                                       nameForNewValueColumn= 'meas',
+                                                       columnsToTakeFrom= c('meas1','meas2')),
+                             index, meastype)
+  }
   print(dmvtrr)
 
   # pack up results for comparison

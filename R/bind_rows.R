@@ -210,7 +210,7 @@ bind_rowsQ <- function(tableNames, colNames, my_db,
     stop("replyr::bind_rowsQ unexpected arguments")
   }
   nm <- tempNameGenerator()
-  selTerms <- paste(colNames, collapse = ", ")
+  selTerms <- paste(paste0("`", colNames, "`"), collapse = ", ")
   if(!is.null(origTableColumn)) {
     selTerms <- paste0(selTerms,
                        ", ",
@@ -218,7 +218,7 @@ bind_rowsQ <- function(tableNames, colNames, my_db,
                        " `", origTableColumn, "`")
   }
   qc <- paste0("CREATE TEMPORARY TABLE ",
-               nm,
+               "`", nm, "`",
                " AS SELECT ",
                selTerms,
                " FROM ",
@@ -228,7 +228,7 @@ bind_rowsQ <- function(tableNames, colNames, my_db,
     warning = function(w) { NULL })
   if(length(tableNames)>1) {
     for(i in 2:length(tableNames)) {
-      selTerms <- paste(colNames, collapse = ", ")
+      selTerms <- paste(paste0("`", colNames, "`"), collapse = ", ")
       if(!is.null(origTableColumn)) {
         selTerms <- paste0(selTerms,
                            ", ",
@@ -236,7 +236,7 @@ bind_rowsQ <- function(tableNames, colNames, my_db,
                            " `", origTableColumn, "`")
       }
       qi <- paste0("INSERT INTO ",
-                   nm,
+                   "`", nm, "`",
                    " SELECT ",
                    selTerms,
                    " FROM ",
@@ -265,15 +265,21 @@ bind_rowsQ <- function(tableNames, colNames, my_db,
 #'
 #' @examples
 #'
-#' d <- data.frame(x=1:2)
-#' replyr_bind_rows(list(d,d,d,d,d), useDplyrLocal= FALSE)
+#'
+#' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#' # my_db <- sparklyr::spark_connect(master = "local")
+#' d <- replyr_copy_to(my_db, data.frame(x = 1:2), 'd',
+#'                     temporary = TRUE)
+#' # dplyr::bind_rows(list(d, d))
+#' # # Argument 1 must be a data frame or a named atomic vector, not a tbl_dbi/tbl_sql/tbl_lazy/tbl
+#' replyr_bind_rows(list(d, d))
 #'
 #' @export
 replyr_bind_rows <- function(lst,
                              ...,
                              useDplyrLocal= TRUE,
                              useSparkRbind= TRUE,
-                             useQBind= FALSE,  # TODO: switch to TRUE
+                             useQBind= TRUE,
                              eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
@@ -311,7 +317,7 @@ replyr_bind_rows <- function(lst,
   }
   if(useQBind) {
     # assuming all tables on same source
-    src <- replyr_get_src(lst[[1]])
+    src <- dplyr_src_to_db_handle(replyr_get_src(lst[[1]]))
     colnames <- colnames(lst[[1]])
     tableNames <- lapply(lst,
                          function(ti) {

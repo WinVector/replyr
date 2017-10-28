@@ -29,7 +29,7 @@ replyr_moveValuesToRows(data, nameForNewKeyColumn, nameForNewValueColumn,
 data item
 }
 \description{
-Well be deprecated soon, please use \code{\link[cdata]{moveValuesToRows}} or \code{\link{moveValuesToRowsQ}}.
+Deprecated, please use \code{\link[cdata]{moveValuesToRows}} or \code{\link{moveValuesToRowsQ}}.
 }
 \details{
 Collect values found in columnsToTakeFrom as tuples naming which column the value came from (placed in nameForNewKeyColumn)

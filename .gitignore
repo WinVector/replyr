@@ -11,4 +11,5 @@ replyr_sqliteEx.sqlite3
 *.log.*
 *.sqlite3*
 revdep
-
+spark-warehouse
+logs

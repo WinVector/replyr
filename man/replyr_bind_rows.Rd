@@ -5,7 +5,7 @@
 \title{Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.}
 \usage{
 replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
-  useQBind = FALSE, eagerTempRemoval = FALSE,
+  useQBind = TRUE, eagerTempRemoval = FALSE,
   tempNameGenerator = makeTempNameGenerator("replyr_bind_rows"))
 }
 \arguments{
@@ -32,7 +32,13 @@ Can't set \code{eagerTempRemoval=TRUE} on platforms that don't correctly impleme
 }
 \examples{
 
-d <- data.frame(x=1:2)
-replyr_bind_rows(list(d,d,d,d,d), useDplyrLocal= FALSE)
+
+my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+# my_db <- sparklyr::spark_connect(master = "local")
+d <- replyr_copy_to(my_db, data.frame(x = 1:2), 'd',
+                    temporary = TRUE)
+# dplyr::bind_rows(list(d, d))
+# # Argument 1 must be a data frame or a named atomic vector, not a tbl_dbi/tbl_sql/tbl_lazy/tbl
+replyr_bind_rows(list(d, d))
 
 }

@@ -3,13 +3,31 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 
-# get the db handle from a dplyr src
-# Spark2 handles are DBIConnection s
-# SQLite are not
-# this distinciton is going away post dplyr 0.5.0
+#' get the db handle from a dplyr src
+#'
+#' Spark2 handles are DBIConnection
+#' SQLite are not
+#' this distinciton is going away post dplyr 0.5.0
+#'
+#' @param dplyr_src remote data handle
+#' @return database connection
+#'
+#' @examples
+#'
+#' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#' # my_db <- sparklyr::spark_connect(master = "local")
+#' d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
+#'      overwrite=TRUE, temporary=TRUE)
+#' dplyr_src_to_db_handle(replyr_get_src('d'))
+#'
+#' @export
+#'
 dplyr_src_to_db_handle <- function(dplyr_src) {
   if("DBIConnection" %in% class(dplyr_src)) {
     return(dplyr_src)
+  }
+  if(is.character(dplyr_src)) {
+    return(NULL)
   }
   return(dplyr_src$con)
 }
@@ -26,12 +44,11 @@ dplyr_src_to_db_handle <- function(dplyr_src) {
 #'
 #' @examples
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
 #'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
-#'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
+#'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
+#'      overwrite=TRUE, temporary=TRUE)
 #'   print(d)
 #'   replyr_list_tables(my_db)
-#' }
 #'
 #' @export
 #'
