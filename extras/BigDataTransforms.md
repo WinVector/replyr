@@ -16,7 +16,7 @@ But, as we point out in the [`replyr`](https://winvector.github.io/replyr/) [`RE
 -   pivot (moving row values into columns).
 -   un-pivot (moving column values to rows).
 
-I can repeat this. If you are an `R` user used to using one of `dply::bind_rows()` , `base::split()`, `tidyr::spread()`, or `tidyr::gather()`: you will find these functions do not work on remote data sources, but have replacement implementations in the `replyr` package.
+I can repeat this. If you are an `R` user used to using one of `dplyr::bind_rows()` , `base::split()`, `tidyr::spread()`, or `tidyr::gather()`: you will find these functions do not work on remote data sources, but have replacement implementations in the `replyr` package.
 
 For example:
 
