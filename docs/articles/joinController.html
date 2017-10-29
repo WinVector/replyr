@@ -96,7 +96,7 @@
       <h1>Join Controller</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-10-28</h4>
+            <h4 class="date">2017-10-29</h4>
           </div>
 
     
@@ -137,7 +137,7 @@
 </ul>
 <p>The data is given below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load notional example data</span>
-my_db &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, 
+my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, 
                            <span class="dt">create =</span> <span class="ot">TRUE</span>)
 <span class="co"># example data</span>
 <span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,
@@ -166,29 +166,29 @@ trainTables &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr
                                            <span class="st">'names_facts'</span>, 
                                            <span class="st">'meas2_train'</span>))
 <span class="co"># get table references from source by concrete names</span>
-trainTables$handle &lt;-<span class="st"> </span><span class="kw">lapply</span>(trainTables$concreteName,
-                             function(ni) {
+trainTables<span class="op">$</span>handle &lt;-<span class="st"> </span><span class="kw">lapply</span>(trainTables<span class="op">$</span>concreteName,
+                             <span class="cf">function</span>(ni) {
                                <span class="kw"><a href="http://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni)
                              })
 <span class="co"># convert to full description table</span>
 tDesc &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>(
   <span class="kw">lapply</span>(<span class="kw">seq_len</span>(<span class="kw">nrow</span>(trainTables)),
-         function(ri) {
-           ni &lt;-<span class="st"> </span>trainTables$tableName[[ri]]
-           ti &lt;-<span class="st"> </span>trainTables$handle[[ri]]
+         <span class="cf">function</span>(ri) {
+           ni &lt;-<span class="st"> </span>trainTables<span class="op">$</span>tableName[[ri]]
+           ti &lt;-<span class="st"> </span>trainTables<span class="op">$</span>handle[[ri]]
            <span class="kw"><a href="../reference/tableDescription.html">tableDescription</a></span>(ni, ti)
          }
   )
 )</code></pre></div>
 <p><code>tDesc</code> is essentially a slightly enriched version of the data handle concordance described in “<a href="http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/">Managing Spark data handles in R</a>.” We can take a quick look at the stored simplified <a href="http://www.win-vector.com/blog/2017/05/summarizing-big-data-in-r/">summaries</a>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceClass, handle, isEmpty))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceClass, handle, isEmpty))</code></pre></div>
 <pre><code>## # A tibble: 3 x 4
 ##   tableName           sourceClass        handle isEmpty
 ##       &lt;chr&gt;                 &lt;chr&gt;        &lt;list&gt;   &lt;lgl&gt;
 ## 1     meas1 src_dbi, src_sql, src &lt;S3: tbl_dbi&gt;   FALSE
 ## 2     names src_dbi, src_sql, src &lt;S3: tbl_dbi&gt;   FALSE
 ## 3     meas2 src_dbi, src_sql, src &lt;S3: tbl_dbi&gt;   FALSE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc$columns)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc<span class="op">$</span>columns)</code></pre></div>
 <pre><code>## [[1]]
 ## [1] "id"     "date"   "weight" "height"
 ## 
@@ -197,7 +197,7 @@ tDesc &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyv
 ## 
 ## [[3]]
 ## [1] "pid"    "date"   "weight" "width"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc$colClass)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc<span class="op">$</span>colClass)</code></pre></div>
 <pre><code>## [[1]]
 ##        id      date    weight    height 
 ## "numeric" "numeric" "numeric" "numeric" 
@@ -210,8 +210,8 @@ tDesc &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyv
 ##       pid      date    weight     width 
 ## "numeric" "numeric" "numeric" "numeric"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># add names for printing</span>
-<span class="kw">names</span>(tDesc$keys) &lt;-<span class="st"> </span>tDesc$tableName
-<span class="kw">print</span>(tDesc$keys)</code></pre></div>
+<span class="kw">names</span>(tDesc<span class="op">$</span>keys) &lt;-<span class="st"> </span>tDesc<span class="op">$</span>tableName
+<span class="kw">print</span>(tDesc<span class="op">$</span>keys)</code></pre></div>
 <pre><code>## $meas1
 ##       id     date   weight   height 
 ##     "id"   "date" "weight" "height" 
@@ -244,17 +244,17 @@ tDesc &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyv
 <p>The intent is to build a detailed join plan (describing order, column selection, and column re-naming) from the <code>tDesc</code> table. We can try this with the supplied function <code><a href="../reference/buildJoinPlan.html">buildJoinPlan()</a></code>, which in this case tells us our table descriptions are not quite ready to specify a join plan:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tryCatch</span>(
   <span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc),
-  <span class="dt">error =</span> function(e) {e}
+  <span class="dt">error =</span> <span class="cf">function</span>(e) {e}
 )</code></pre></div>
 <pre><code>## &lt;simpleError in buildJoinPlan(tDesc): replyr::buildJoinPlan produced plan issue: key col(s) ( name ) not contained in result cols of previous table(s) for table: names&gt;</code></pre>
 <p>In the above the <code>keys</code> column is wrong in that it claims every column of each table is a table key. The join plan builder noticed this is unsupportable in that when it comes time to join the “<code>names</code>” table not all of the columns that are claimed to be “<code>names</code>” keys are already known from previous tables. That is: the “<code>names$name</code>” column is present in the earlier tables, and so can not be joined on. We can’t check everything, but the join controller tries to “front load” or encounter as many configuration inconsistencies early- before any expensive steps have been started.</p>
 <p>The intent is: the user should edit the “<code>tDesc</code>” keys column and share it with partners for criticism. In our case we declare the primary of the measurement tables to be <code>PatientID</code> and <code>MeasurementDate</code>, and the primary key of the names table to be <code>PatientID</code>. Notice we do this by specifying named lists or vectors mapping desired key names to names actually used in the tables.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># declare keys (and give them consistent names)</span>
-tDesc$keys[[<span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)
-tDesc$keys[[<span class="dv">2</span>]] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>)
-tDesc$keys[[<span class="dv">3</span>]] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">PatientID=</span> <span class="st">'pid'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)
+tDesc<span class="op">$</span>keys[[<span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)
+tDesc<span class="op">$</span>keys[[<span class="dv">2</span>]] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>)
+tDesc<span class="op">$</span>keys[[<span class="dv">3</span>]] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">PatientID=</span> <span class="st">'pid'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)
 
-<span class="kw">print</span>(tDesc$keys)</code></pre></div>
+<span class="kw">print</span>(tDesc<span class="op">$</span>keys)</code></pre></div>
 <pre><code>## $meas1
 ##       PatientID MeasurementDate 
 ##            "id"          "date" 
@@ -276,7 +276,7 @@ tDesc$keys[[<span class="dv">3</span>]] &lt;-<span class="st"> </span><span clas
 <p>A join plan can now be built from our table descriptions:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># build the column join plan</span>
 columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc)
-<span class="kw">print</span>(columnJoinPlan %&gt;%<span class="st"> </span>
+<span class="kw">print</span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ##    tableName sourceColumn    resultColumn isKey  want
@@ -297,13 +297,13 @@ columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../refere
 <p>For example we could decide to exclude the <code>width</code> column by either dropping the row or setting the row’s <code>want</code> column to <code>FALSE</code>.</p>
 <p>Since we have edited the join plan it is a good idea to both look at it and also run it through the <code><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan()</a></code> to look for potential inconsistencies.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># decide we don't want the width column</span>
-columnJoinPlan$want[columnJoinPlan$resultColumn==<span class="st">'width'</span>] &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+columnJoinPlan<span class="op">$</span>want[columnJoinPlan<span class="op">$</span>resultColumn<span class="op">==</span><span class="st">'width'</span>] &lt;-<span class="st"> </span><span class="ot">FALSE</span>
 <span class="co"># double check our plan</span>
-if(!<span class="kw">is.null</span>(<span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, columnJoinPlan))) {
+<span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(<span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, columnJoinPlan))) {
   <span class="kw">stop</span>(<span class="st">"bad join plan"</span>)
 }
 
-<span class="kw">print</span>(columnJoinPlan %&gt;%<span class="st"> </span>
+<span class="kw">print</span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ##    tableName sourceColumn    resultColumn isKey  want
@@ -328,17 +328,17 @@ have &lt;-<span class="st"> </span><span class="kw">c</span>(
   <span class="kw">requireNamespace</span>(<span class="st">'magick'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
   <span class="kw">requireNamespace</span>(<span class="st">'grid'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 )
-if(<span class="kw">all</span>(have)) {
+<span class="cf">if</span>(<span class="kw">all</span>(have)) {
   <span class="kw">tryCatch</span>(
     {
-      png &lt;-<span class="st"> </span>columnJoinPlan %&gt;%
-<span class="st">        </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>() %&gt;%
+      png &lt;-<span class="st"> </span>columnJoinPlan <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>() <span class="op">%&gt;%</span>
 <span class="st">        </span><span class="kw"><a href="../reference/renderJoinDiagram.html">renderJoinDiagram</a></span>()
-      if(!<span class="kw">is.null</span>(png)) {
-        grid::<span class="kw">grid.raster</span>(png)
+      <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(png)) {
+        grid<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/grid/topics/grid.raster">grid.raster</a></span>(png)
       }
     },
-    <span class="dt">error =</span> function(e) { <span class="kw">warning</span>(e); <span class="ot">NULL</span>}
+    <span class="dt">error =</span> <span class="cf">function</span>(e) { <span class="kw">warning</span>(e); <span class="ot">NULL</span>}
   )
 }</code></pre></div>
 <p><img src="joinController_files/figure-html/render1-1.png" width="672"></p>
@@ -351,23 +351,23 @@ tempNameGenerator &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, columnJoinPlan, 
                                <span class="dt">verbose=</span> <span class="ot">TRUE</span>,
                                <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
-<pre><code>## [1] "start meas1 Sat Oct 28 20:57:47 2017"
+<pre><code>## [1] "start meas1 Sun Oct 29 08:12:10 2017"
 ## [1] " rename/restrict meas1"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'MeasurementDate' = 'date'"
 ## [1] "   'meas1_weight' = 'weight'"
 ## [1] "   'height' = 'height'"
 ## [1] " res &lt;- meas1"
-## [1] "done meas1 Sat Oct 28 20:57:48 2017"
-## [1] "start names Sat Oct 28 20:57:48 2017"
+## [1] "done meas1 Sun Oct 29 08:12:10 2017"
+## [1] "start names Sun Oct 29 08:12:10 2017"
 ## [1] " rename/restrict names"
 ## [1] "   'table_names_present' = 'table_names_present'"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'name' = 'name'"
 ## [1] " res &lt;- left_join(res, names,"
 ## [1] "                  by = c( 'PatientID' ))"
-## [1] "done names Sat Oct 28 20:57:48 2017"
-## [1] "start meas2 Sat Oct 28 20:57:48 2017"
+## [1] "done names Sun Oct 29 08:12:10 2017"
+## [1] "start meas2 Sun Oct 29 08:12:10 2017"
 ## [1] " rename/restrict meas2"
 ## [1] "   'table_meas2_present' = 'table_meas2_present'"
 ## [1] "   'PatientID' = 'pid'"
@@ -375,7 +375,7 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 ## [1] "   'meas2_weight' = 'weight'"
 ## [1] " res &lt;- left_join(res, meas2,"
 ## [1] "                  by = c( 'PatientID', 'MeasurementDate' ))"
-## [1] "done meas2 Sat Oct 28 20:57:48 2017"</code></pre>
+## [1] "done meas2 Sun Oct 29 08:12:10 2017"</code></pre>
 <p><code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> takes both a table description table (<code>tDesc</code>, keyed by <code>tableName</code>) and the join plan (<code>columnJoinPlan</code>, keyed by <code>tableName</code> and <code>sourceColumn</code>).</p>
 <p>The separation of concerns is strong: all details about the intended left-join sequence are taken from the <code>columnJoinPlan</code>, and only the mapping from abstract table names to tables (or table references/handles) is taken from <code>tDesc</code>. This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy. <code>tDesc</code> is a runtime entity (as it binds names to live handles, so can’t be serialized: you must save the code steps to produce it; note only the columns <code>tableName</code> and <code>handle</code> are used so there is no point re-editing the <code>keys</code> column after running <code><a href="../reference/tableDescription.html">tableDescription()</a></code> on new tables) and <code>columnJoinPlan</code> is a durable entity (has only information, not handles).</p>
 <p>Basically you:</p>
@@ -386,7 +386,7 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 <li>Re-build new <code>tDesc</code> compatible with the saved <code>columnJoinPlan</code> later when you need to work with tables (note only the columns <code>tableName</code> and <code>handle</code> are used during join execution, so you only need to create those).</li>
 </ul>
 <p>As always: the proof is in the pudding. We should look at results:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(results)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(results)</code></pre></div>
 <pre><code>## Observations: 4
 ## Variables: 8
 ## $ PatientID           &lt;dbl&gt; 1, 1, 2, 2
@@ -402,7 +402,7 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 <p>The executor is then allowed to simply move through the tables left-joining in the order the table names first appear in the plan.</p>
 <p>The <code>columnJoinPlan</code> is meant to be re-usable. In particular we can imaging running it to build training data, possibly re-running it to build test/validation data, and re-running it many times to build data we apply the model to. To facilitate this <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> is generous in what it accepts as a <code>tDesc</code>. All it needs from the <code>tDesc</code> argument is a way to map abstract names (<code>tableName</code>) to concrete data realizations (either <code>data.frame</code>s or <code>dplyr</code> data handles). So by design <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> accepts either a <code>data.frame</code> (and only looks at the <code>tableName</code> and <code>handle</code> columns) or a map. So the following calls to <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> also work:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># hand build table with parallel tableName and handle columns</span>
-tTab &lt;-<span class="st"> </span>trainTables %&gt;%
+tTab &lt;-<span class="st"> </span>trainTables <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, handle)
 <span class="kw">print</span>(tTab)</code></pre></div>
 <pre><code>## # A tibble: 3 x 2
@@ -415,8 +415,8 @@ tTab &lt;-<span class="st"> </span>trainTables %&gt;%
                          <span class="dt">verbose=</span> <span class="ot">FALSE</span>,
                          <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># map of abstract table names to handles</span>
-tMap =<span class="st"> </span>trainTables$handle
-<span class="kw">names</span>(tMap) &lt;-<span class="st"> </span>trainTables$tableName
+tMap =<span class="st"> </span>trainTables<span class="op">$</span>handle
+<span class="kw">names</span>(tMap) &lt;-<span class="st"> </span>trainTables<span class="op">$</span>tableName
 r &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tMap, columnJoinPlan, 
                          <span class="dt">verbose=</span> <span class="ot">FALSE</span>,
                          <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
@@ -424,14 +424,14 @@ r &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLe
 <p>Having to “join a bunch of tables to get the data into simple rows” is a common step in data science. Therefore you do not want this to be a difficult and undocumented task. By using a join controller you essentially make the documentation the executable specification for the task.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># cleanup</span>
 temps &lt;-<span class="st"> </span><span class="kw">tempNameGenerator</span>(<span class="dt">dumpList=</span> <span class="ot">TRUE</span>)
-for(ti in temps) {
+<span class="cf">for</span>(ti <span class="cf">in</span> temps) {
   <span class="kw"><a href="../reference/replyr_drop_table_name.html">replyr_drop_table_name</a></span>(my_db, ti)
 }
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>(<span class="dt">verbose=</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  956621 51.1    1770749 94.6  1770749 94.6
-## Vcells 1492608 11.4    3488470 26.7  3333065 25.5</code></pre>
+## Ncells  956162 51.1    1770749 94.6  1770749 94.6
+## Vcells 1491925 11.4    3487652 26.7  3332918 25.5</code></pre>
 </div>
 </div>
   </div>

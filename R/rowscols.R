@@ -80,8 +80,8 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
   if(length(list(...))>0) {
     stop("replyr::buildUnPivotControlTable unexpected arguments.")
   }
-  controlTable <- data.frame(x = columnsToTakeFrom,
-                             y = columnsToTakeFrom,
+  controlTable <- data.frame(x = as.character(columnsToTakeFrom),
+                             y = as.character(columnsToTakeFrom),
                              stringsAsFactors = FALSE)
   colnames(controlTable) <- c(nameForNewKeyColumn, nameForNewValueColumn)
   controlTable
@@ -238,7 +238,7 @@ moveValuesToRowsQ <- function(controlTable,
   qs <-  paste0(" SELECT ",
                 paste(c(copystmts, groupstmt, casestmts), collapse = ', '),
                 ' FROM ',
-                wideTableName,
+                DBI::dbQuoteIdentifier(my_db, wideTableName),
                 ' a CROSS JOIN ',
                 DBI::dbQuoteIdentifier(my_db, ctabName),
                 ' b ')
@@ -296,6 +296,7 @@ buildPivotControlTable <- function(d,
           dplyr::summarize(., count = n()) %.>%
           dplyr::ungroup(.) %.>%
           dplyr::select(., columnToTakeKeysFrom) %.>%
+          dplyr::mutate(., columnToTakeKeysFrom = as.character(columnToTakeKeysFrom)) %.>%
           dplyr::mutate(., columnToTakeValuesFrom = columnToTakeKeysFrom) %.>%
           dplyr::select(., columnToTakeKeysFrom, columnToTakeValuesFrom)  %.>%
           dplyr::collect(.) %.>%
@@ -476,7 +477,7 @@ moveValuesToColumnsQ <- function(keyColumns,
   qs <-  paste0(" SELECT ",
                 paste(c(groupstmts, copystmts, collectstmts), collapse = ', '),
                 ' FROM ',
-                tallTableName,
+                DBI::dbQuoteIdentifier(my_db, tallTableName),
                 ' a ')
   if(length(groupstmts)>0) {
     qs <- paste0(qs,

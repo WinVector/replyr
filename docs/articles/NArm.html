@@ -96,7 +96,7 @@
       <h1>NA rm</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-10-28</h4>
+            <h4 class="date">2017-10-29</h4>
           </div>
 
     
@@ -129,12 +129,12 @@ d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 <span class="co">#&gt; 2 2  5    a</span>
 <span class="co">#&gt; 3 2 NA    b</span>
 
-if (<span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>)) {
-  my_db &lt;-<span class="st"> </span>dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+<span class="cf">if</span> (<span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>)) {
+  my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
   <span class="co"># my_db &lt;- sparklyr::spark_connect(version='2.0.0', master = "local")</span>
   <span class="kw">class</span>(my_db)
-  dRemote &lt;-<span class="st"> </span>replyr::<span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,d,<span class="st">'d'</span>,<span class="dt">rowNumberColumn=</span><span class="st">'rowNum'</span>)
-} else {
+  dRemote &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_copy_to">replyr_copy_to</a></span>(my_db,d,<span class="st">'d'</span>,<span class="dt">rowNumberColumn=</span><span class="st">'rowNum'</span>)
+} <span class="cf">else</span> {
   dRemote &lt;-<span class="st"> </span>d <span class="co"># local stand in when we can't make remote</span>
 }
 <span class="co">#&gt; Loading required namespace: RSQLite</span>
@@ -156,33 +156,33 @@ if (<span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>))
 <span class="kw">complete.cases</span>(dRemote)
 <span class="co">#&gt; Error in complete.cases(dRemote): invalid 'type' (list) of argument</span></code></pre></div>
 <p>You can’t rely on “stack overflow” solutions that look “dplyr-y” to work on remote data. For example: <a href="http://stackoverflow.com/questions/22353633/filter-for-complete-cases-in-data-frame-using-dplyr-case-wise-deletion" class="uri">http://stackoverflow.com/questions/22353633/filter-for-complete-cases-in-data-frame-using-dplyr-case-wise-deletion</a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">complete.cases</span>(.))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">complete.cases</span>(.))
 <span class="co">#&gt;   x y z</span>
 <span class="co">#&gt; 1 2 5 a</span>
 
-dRemote %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">complete.cases</span>(.))
+dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">complete.cases</span>(.))
 <span class="co">#&gt; Error in UseMethod("escape"): no applicable method for 'escape' applied to an object of class "c('tbl_dbi', 'tbl_sql', 'tbl_lazy', 'tbl')"</span></code></pre></div>
 <p>The solution is to map <code>NA</code> managing functions into the <code>dplyr</code> controlled remote data item.</p>
 <p>We would think can compose this use “pure dplyr operations” as follows, but again we end up with differences in local and remote performance.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d$rowNum &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">nrow</span>(d))
-d %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise_all.html">mutate_all</a></span>(<span class="kw"><a href="http://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(is.na)) %&gt;%
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nNAinRow=</span><span class="kw">rowSums</span>(.)-rowNum)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>rowNum &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">nrow</span>(d))
+d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise_all.html">mutate_all</a></span>(<span class="kw"><a href="http://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(is.na)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nNAinRow=</span><span class="kw">rowSums</span>(.)<span class="op">-</span>rowNum)
 <span class="co">#&gt;       x     y     z rowNum nNAinRow</span>
 <span class="co">#&gt; 1 FALSE FALSE  TRUE  FALSE        1</span>
 <span class="co">#&gt; 2 FALSE FALSE FALSE  FALSE        0</span>
 <span class="co">#&gt; 3 FALSE  TRUE FALSE  FALSE        1</span>
 
-dRemote %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise_all.html">mutate_all</a></span>(<span class="kw"><a href="http://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(is.na)) %&gt;%
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nNAinRow=</span><span class="kw">rowSums</span>(.)-rowNum)
+dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise_all.html">mutate_all</a></span>(<span class="kw"><a href="http://dplyr.tidyverse.org/reference/funs.html">funs</a></span>(is.na)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nNAinRow=</span><span class="kw">rowSums</span>(.)<span class="op">-</span>rowNum)
 <span class="co">#&gt; Error in UseMethod("escape"): no applicable method for 'escape' applied to an object of class "c('tbl_dbi', 'tbl_sql', 'tbl_lazy', 'tbl')"</span></code></pre></div>
 <p>What we see is that “what is pure <code>dplyr</code>” depends on what operators are available on the service providing back-end. For example the <code>mutate_if</code> forms (equivilent to <code>SQL</code> <code>UPDATE WHERE</code>) are currently not available for remote sources:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dRemote %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise_all.html">mutate_if</a></span>(<span class="ot">TRUE</span>,is.na) <span class="co"># not correct code, just to trigger "local sources" msg</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise_all.html">mutate_if</a></span>(<span class="ot">TRUE</span>,is.na) <span class="co"># not correct code, just to trigger "local sources" msg</span>
 <span class="co">#&gt; Error: length(.p) == length(vars) is not TRUE</span></code></pre></div>
 <p>At some point we admit we are going to have to work over the columns by hand (though we will try to keep them remote).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dRemote %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span><span class="dv">0</span>) %&gt;%
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna+<span class="kw">ifelse</span>(<span class="kw">is.na</span>(x),<span class="dv">1</span>,<span class="dv">0</span>)) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna+<span class="kw">ifelse</span>(<span class="kw">is.na</span>(y),<span class="dv">1</span>,<span class="dv">0</span>)) %&gt;%<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna+<span class="kw">ifelse</span>(<span class="kw">is.na</span>(z),<span class="dv">1</span>,<span class="dv">0</span>))  
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span><span class="dv">0</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna<span class="op">+</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(x),<span class="dv">1</span>,<span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna<span class="op">+</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(y),<span class="dv">1</span>,<span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna<span class="op">+</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(z),<span class="dv">1</span>,<span class="dv">0</span>))  
 <span class="co">#&gt; # Source:   lazy query [?? x 5]</span>
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y     z rowNum   nna</span>
@@ -193,10 +193,10 @@ dRemote %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.ti
 <p>Because remote data sources may not have the same value coercion rules as <code>R</code> we should get used to being more careful about types (hence the <code>ifelse</code>).</p>
 <p>This means we have to parameterize variable names to write code like the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cols =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/setops.html">setdiff</a></span>(<span class="kw">colnames</span>(dRemote),<span class="st">'rowNum'</span>)
-dRemote %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span><span class="dv">0</span>) -&gt;<span class="st"> </span>dTmp
-for(ci in cols) {
-  dTmp %&gt;%<span class="st"> </span>
-<span class="st">    </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/se-deprecated.html">mutate_</a></span>(<span class="dt">.dots=</span>stats::<span class="kw">setNames</span>(<span class="kw">paste0</span>(<span class="st">'nna+ifelse(is.na('</span>,ci,<span class="st">'),1,0)'</span>),<span class="st">'nna'</span>)) -&gt;<span class="st"> </span>
+dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span><span class="dv">0</span>) -&gt;<span class="st"> </span>dTmp
+<span class="cf">for</span>(ci <span class="cf">in</span> cols) {
+  dTmp <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/se-deprecated.html">mutate_</a></span>(<span class="dt">.dots=</span>stats<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/stats/topics/setNames">setNames</a></span>(<span class="kw">paste0</span>(<span class="st">'nna+ifelse(is.na('</span>,ci,<span class="st">'),1,0)'</span>),<span class="st">'nna'</span>)) -&gt;<span class="st"> </span>
 <span class="st">    </span>dTmp
 }
 <span class="kw">print</span>(dTmp)
@@ -209,10 +209,10 @@ for(ci in cols) {
 <span class="co">#&gt; 3     2    NA     b      3     1</span></code></pre></div>
 <p>Or using <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cols =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/setops.html">setdiff</a></span>(<span class="kw">colnames</span>(dRemote),<span class="st">'rowNum'</span>)
-dRemote %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span><span class="dv">0</span>) -&gt;<span class="st"> </span>dTmp
-for(ci in cols) {
+dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span><span class="dv">0</span>) -&gt;<span class="st"> </span>dTmp
+<span class="cf">for</span>(ci <span class="cf">in</span> cols) {
   <span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="kw">list</span>(<span class="dt">TARGETCOL=</span>ci),
-      dTmp %&gt;%<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna+<span class="kw">ifelse</span>(<span class="kw">is.na</span>(TARGETCOL),<span class="dv">1</span>,<span class="dv">0</span>)) -&gt;<span class="st"> </span>dTmp
+      dTmp <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna<span class="op">+</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(TARGETCOL),<span class="dv">1</span>,<span class="dv">0</span>)) -&gt;<span class="st"> </span>dTmp
   )
 }
 <span class="kw">print</span>(dTmp)
@@ -249,8 +249,8 @@ for(ci in cols) {
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
 <span class="co">#&gt;           used (Mb) gc trigger (Mb) max used (Mb)</span>
-<span class="co">#&gt; Ncells  680739 36.4    1168576 62.5  1168576 62.5</span>
-<span class="co">#&gt; Vcells 1210354  9.3    2060183 15.8  1497316 11.5</span></code></pre></div>
+<span class="co">#&gt; Ncells  680270 36.4    1168576 62.5  1168576 62.5</span>
+<span class="co">#&gt; Vcells 1209607  9.3    2060183 15.8  1493607 11.4</span></code></pre></div>
 </div>
 </div>
   </div>
