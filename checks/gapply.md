@@ -13,6 +13,9 @@ library('dplyr')
  #  
  #      intersect, setdiff, setequal, union
 library('replyr')
+ #  Loading required package: seplyr
+ #  Loading required package: wrapr
+ #  Loading required package: cdata
 d <- data.frame(group=c(1,1,2,2,2),
                 order=c(.1,.2,.3,.4,.5),
                 values=c(10,20,2,4,8))
@@ -55,7 +58,7 @@ for(partitionMethod in c('group_by','split','extract')) {
 }
  #  [1] "group_by"
  #  [1] "cumulative sum example"
- #  # A tibble: 5 × 4
+ #  # A tibble: 5 x 4
  #    group order values    cv
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10    10
@@ -64,7 +67,7 @@ for(partitionMethod in c('group_by','split','extract')) {
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
  #  [1] "summary example"
- #  # A tibble: 5 × 3
+ #  # A tibble: 5 x 3
  #    group order values
  #    <dbl> <dbl>  <dbl>
  #  1     1   0.1     10
@@ -73,7 +76,7 @@ for(partitionMethod in c('group_by','split','extract')) {
  #  4     2   0.4      4
  #  5     2   0.5      8
  #  [1] "ranking example"
- #  # A tibble: 5 × 4
+ #  # A tibble: 5 x 4
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10     1
@@ -82,7 +85,7 @@ for(partitionMethod in c('group_by','split','extract')) {
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
  #  [1] "ranking example (decreasing)"
- #  # A tibble: 5 × 4
+ #  # A tibble: 5 x 4
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     2   0.5      8     1
@@ -174,9 +177,9 @@ for(partitionMethod in c('group_by','extract')) {
 }
  #  [1] "group_by"
  #  [1] "cumulative sum example"
- #  Source:   query [?? x 4]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:     lazy query [?? x 4]
+ #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  # Ordered by: order, order
  #    group order values    cv
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10    10
@@ -185,9 +188,8 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
  #  [1] "summary example"
- #  Source:   query [?? x 3]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:   lazy query [?? x 3]
+ #  # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #    group order values
  #    <dbl> <dbl>  <dbl>
  #  1     1   0.1     10
@@ -196,9 +198,9 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4
  #  5     2   0.5      8
  #  [1] "ranking example"
- #  Source:   query [?? x 4]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:     lazy query [?? x 4]
+ #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  # Ordered by: order
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10     1
@@ -207,9 +209,9 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
  #  [1] "ranking example (decreasing)"
- #  Source:   query [?? x 4]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:     lazy query [?? x 4]
+ #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
+ #  # Ordered by: desc(order)
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.2     20     1
@@ -219,9 +221,8 @@ for(partitionMethod in c('group_by','extract')) {
  #  5     2   0.3      2     3
  #  [1] "extract"
  #  [1] "cumulative sum example"
- #  Source:   query [?? x 4]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:   table<replyr_gapply_fffbhbfu7iz8bqxduw2k_0000000006> [?? x 4]
+ #  # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #    group order values    cv
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10    10
@@ -230,9 +231,8 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
  #  [1] "summary example"
- #  Source:   query [?? x 3]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:   table<replyr_gapply_ewuqsk6d9fe8yn5hw6sr_0000000006> [?? x 3]
+ #  # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #    group order values
  #    <dbl> <dbl>  <dbl>
  #  1     1   0.1     10
@@ -241,9 +241,8 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4
  #  5     2   0.5      8
  #  [1] "ranking example"
- #  Source:   query [?? x 4]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:   table<replyr_gapply_ezthhdlflok37zwkskl4_0000000006> [?? x 4]
+ #  # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10     1
@@ -252,9 +251,8 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
  #  [1] "ranking example (decreasing)"
- #  Source:   query [?? x 4]
- #  Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  
+ #  # Source:   table<replyr_gapply_kikohbr17d5h2heqoakp_0000000006> [?? x 4]
+ #  # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.2     20     1
@@ -264,21 +262,21 @@ for(partitionMethod in c('group_by','extract')) {
  #  5     2   0.3      2     3
 
 my_db <- NULL; gc();
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 483162 25.9     940480 50.3   750400 40.1
- #  Vcells 745050  5.7    1308461 10.0  1308461 10.0
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  680256 36.4    1168576 62.5  1168576 62.5
+ #  Vcells 1409516 10.8    2552219 19.5  1725079 13.2
 ```
 
 `Spark` example.
 
 ``` r
 #below only works for services which have a cumsum operator
-my_db <- sparklyr::spark_connect(version='2.0.0', 
+my_db <- sparklyr::spark_connect(version='2.2.0', 
                                  master = "local")
 class(my_db)
  #  [1] "spark_connection"       "spark_shell_connection" "DBIConnection"
 my_db$spark_home
- #  [1] "/Users/johnmount/Library/Caches/spark/spark-2.0.0-bin-hadoop2.7"
+ #  [1] "/Users/johnmount/spark/spark-2.2.0-bin-hadoop2.7"
 dS <- replyr_copy_to(my_db,d,'dS')
 
 for(partitionMethod in c('group_by','extract')) {
@@ -298,9 +296,9 @@ for(partitionMethod in c('group_by','extract')) {
 }
  #  [1] "group_by"
  #  [1] "cumulative sum example"
- #  Source:   query [5 x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:     lazy query [?? x 4]
+ #  # Database:   spark_connection
+ #  # Ordered by: order, order
  #    group order values    cv
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10    10
@@ -309,9 +307,8 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
  #  [1] "summary example"
- #  Source:   query [5 x 3]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:   lazy query [?? x 3]
+ #  # Database: spark_connection
  #    group order values
  #    <dbl> <dbl>  <dbl>
  #  1     1   0.1     10
@@ -320,9 +317,9 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4
  #  5     2   0.5      8
  #  [1] "ranking example"
- #  Source:   query [5 x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:     lazy query [?? x 4]
+ #  # Database:   spark_connection
+ #  # Ordered by: order
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10     1
@@ -331,9 +328,9 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4     2
  #  5     2   0.5      8     3
  #  [1] "ranking example (decreasing)"
- #  Source:   query [5 x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:     lazy query [?? x 4]
+ #  # Database:   spark_connection
+ #  # Ordered by: desc(order)
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.2     20     1
@@ -343,20 +340,18 @@ for(partitionMethod in c('group_by','extract')) {
  #  5     2   0.3      2     3
  #  [1] "extract"
  #  [1] "cumulative sum example"
- #  Source:   query [5 x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:   table<sparklyr_tmp_172512f318da6> [?? x 4]
+ #  # Database: spark_connection
  #    group order values    cv
  #    <dbl> <dbl>  <dbl> <dbl>
- #  1     1   0.2     20    30
- #  2     1   0.1     10    10
+ #  1     1   0.1     10    10
+ #  2     1   0.2     20    30
  #  3     2   0.3      2     2
  #  4     2   0.4      4     6
  #  5     2   0.5      8    14
  #  [1] "summary example"
- #  Source:   query [5 x 3]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:   table<sparklyr_tmp_172515e4aa57e> [?? x 3]
+ #  # Database: spark_connection
  #    group order values
  #    <dbl> <dbl>  <dbl>
  #  1     1   0.1     10
@@ -365,29 +360,27 @@ for(partitionMethod in c('group_by','extract')) {
  #  4     2   0.4      4
  #  5     2   0.5      8
  #  [1] "ranking example"
- #  Source:   query [5 x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:   table<sparklyr_tmp_1725176b7238e> [?? x 4]
+ #  # Database: spark_connection
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
  #  1     1   0.1     10     1
- #  2     2   0.4      4     2
+ #  2     1   0.2     20     2
  #  3     2   0.3      2     1
- #  4     1   0.2     20     2
+ #  4     2   0.4      4     2
  #  5     2   0.5      8     3
  #  [1] "ranking example (decreasing)"
- #  Source:   query [5 x 4]
- #  Database: spark connection master=local[4] app=sparklyr local=TRUE
- #  
+ #  # Source:   table<sparklyr_tmp_17251717f7c85> [?? x 4]
+ #  # Database: spark_connection
  #    group order values  rank
  #    <dbl> <dbl>  <dbl> <dbl>
- #  1     2   0.5      8     1
- #  2     2   0.4      4     2
- #  3     1   0.2     20     1
- #  4     1   0.1     10     2
+ #  1     1   0.2     20     1
+ #  2     1   0.1     10     2
+ #  3     2   0.5      8     1
+ #  4     2   0.4      4     2
  #  5     2   0.3      2     3
 my_db <- NULL; gc();
- #           used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells 562302 30.1     940480 50.3   940480 50.3
- #  Vcells 813299  6.3    1650153 12.6  1308461 10.0
+ #            used (Mb) gc trigger (Mb) max used (Mb)
+ #  Ncells  866393 46.3    1442291 77.1  1168576 62.5
+ #  Vcells 1623288 12.4    2552219 19.5  1998199 15.3
 ```

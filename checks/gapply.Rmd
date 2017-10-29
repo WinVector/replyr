@@ -94,7 +94,7 @@ my_db <- NULL; gc();
 
 ```{r spark}
 #below only works for services which have a cumsum operator
-my_db <- sparklyr::spark_connect(version='2.0.0', 
+my_db <- sparklyr::spark_connect(version='2.2.0', 
                                  master = "local")
 class(my_db)
 my_db$spark_home

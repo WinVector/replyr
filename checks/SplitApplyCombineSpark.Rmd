@@ -1,6 +1,6 @@
 ---
 title: "split/apply/combine on Spark"
-output: html_document
+output: github_document
 ---
 
 ```{r}
@@ -8,7 +8,7 @@ library('dplyr')
 library('sparklyr')
 library('replyr')
 
-sc <- sparklyr::spark_connect(version='2.0.0', 
+sc <- sparklyr::spark_connect(version='2.2.0', 
                               master = "local")
 
 d <- copy_to(sc, 
@@ -21,7 +21,7 @@ pieces <- replyr_split(d, 'group', partitionMethod = 'extract')
 print(pieces)
 
 f <- function(pi) {
-  ni <- nrow(pi)
+  ni <- replyr_nrow(pi)
   mutate(pi, n=ni)
 }
 

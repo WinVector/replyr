@@ -21,7 +21,7 @@ Not every package is going to work every time, for every user, across every inst
  * `data.frame`
  * `tbl`
  * `SQLite`
- * `MySQL`
+ * `MySQL` (not currently in out test suite)
  * `PostgreSQL`
  * `Spark` 2.0.0
 
