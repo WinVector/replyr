@@ -82,7 +82,7 @@ library("replyr")
 packageVersion("replyr")
 ```
 
-    ## [1] '0.8.1'
+    ## [1] '0.8.2'
 
 ``` r
 # binding rows
@@ -90,7 +90,7 @@ dB <- replyr_bind_rows(list(d, d))
 print(dB)
 ```
 
-    ## # Source:   table<replyr_bind_rows_ru10d420o9hi6gjqibjf_0000000002> [?? x
+    ## # Source:   table<replyr_bind_rows_jke6fkxtgqc0flj6edix_0000000002> [?? x
     ## #   2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
@@ -106,7 +106,7 @@ replyr_split(dB, 'group')
 ```
 
     ## $g2
-    ## # Source:   table<replyr_gapply_8ezyf6987yfuceiwtiii_0000000001> [?? x 2]
+    ## # Source:   table<replyr_gapply_bogqnrfrzfi7m9amnhcz_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
     ##   <dbl> <chr>
@@ -114,7 +114,7 @@ replyr_split(dB, 'group')
     ## 2     5    g2
     ## 
     ## $g1
-    ## # Source:   table<replyr_gapply_8ezyf6987yfuceiwtiii_0000000003> [?? x 2]
+    ## # Source:   table<replyr_gapply_bogqnrfrzfi7m9amnhcz_0000000003> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
     ##   <dbl> <chr>
@@ -151,14 +151,14 @@ moveValuesToRowsQ(controlTable = unpivotControl,
                   my_db = my_db)
 ```
 
-    ## # Source:   table<mvtrq_pu7tcngiqpybotrekqik_0000000001> [?? x 2]
+    ## # Source:   table<mvtrq_j0vu8nto5jw38f3xmcec_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##      group     x
     ##      <chr> <dbl>
     ## 1 group_g1     1
     ## 2 group_g2     5
 
-The point is: using the `replyr` package you *can* design in terms of higher-order data transforms, even when working with big data in `R`. Designs in terms of these operators tend to be succinct, powerful, and maintainable.
+The point is: using the `replyr` package you *can* design in terms of higher-order data transforms, even when working with big data in `R`. Designs in terms of these operators tend to be succinct, powerful, performant, and maintainable.
 
 To master the terms `moveValuesToRows` and `moveValuesToColumns` I suggest trying the following two articles:
 

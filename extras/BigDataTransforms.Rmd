@@ -103,7 +103,7 @@ moveValuesToRowsQ(controlTable = unpivotControl,
 
 The point is: using the `replyr` package you *can* design in terms of higher-order data transforms, even 
 when working with big data in `R`.  Designs in terms of these operators tend to 
-be succinct, powerful, and maintainable.  
+be succinct, powerful, performant, and maintainable.  
 
 To master the terms `moveValuesToRows` and `moveValuesToColumns` I suggest trying the following
 two articles:

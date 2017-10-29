@@ -1,5 +1,5 @@
 
-# replyr 0.8.01 2017-10-29
+# replyr 0.8.2 2017-10-29
 
  * More checks on pivot/un-pivot.
  * Deprecate older pivot/un-pivot code.
