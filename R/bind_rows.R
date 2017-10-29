@@ -1,7 +1,6 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-# TODO: Q version of bind_rows (and look into split / gapply).
 
 #' Union two tables.
 #'
@@ -187,7 +186,6 @@ r_replyr_bind_rows <- function(lst,
 #' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @param ... force later arguments to bind by name
 #' @param origTableColumn character, column to put original table name in.
-#' @param literalQuote character, quote for string literals
 #'
 #' @examples
 #'
@@ -204,21 +202,25 @@ r_replyr_bind_rows <- function(lst,
 bind_rowsQ <- function(tableNames, colNames, my_db,
                        tempNameGenerator = makeTempNameGenerator("bind_rowsQ"),
                        ...,
-                       origTableColumn = NULL,
-                       literalQuote = "'") {
+                       origTableColumn = NULL) {
   if(length(list(...))>0) {
     stop("replyr::bind_rowsQ unexpected arguments")
   }
   nm <- tempNameGenerator()
-  selTerms <- paste(paste0("`", colNames, "`"), collapse = ", ")
+  qSel <- vapply(colNames,
+                 function(ci) {
+                   DBI::dbQuoteIdentifier(my_db, ci)
+                 }, character(1))
+  selTerms <- paste(qSel, collapse = ", ")
   if(!is.null(origTableColumn)) {
     selTerms <- paste0(selTerms,
                        ", ",
-                       literalQuote, tableNames[[1]], literalQuote,
-                       " `", origTableColumn, "`")
+                       DBI::dbQuoteString(my_db, tableNames[[1]]),
+                       " ",
+                       DBI::dbQuoteIdentifier(my_db, origTableColumn))
   }
   qc <- paste0("CREATE TEMPORARY TABLE ",
-               "`", nm, "`",
+               DBI::dbQuoteIdentifier(my_db, nm),
                " AS SELECT ",
                selTerms,
                " FROM ",
@@ -228,15 +230,16 @@ bind_rowsQ <- function(tableNames, colNames, my_db,
     warning = function(w) { NULL })
   if(length(tableNames)>1) {
     for(i in 2:length(tableNames)) {
-      selTerms <- paste(paste0("`", colNames, "`"), collapse = ", ")
+      selTerms <- paste(qSel, collapse = ", ")
       if(!is.null(origTableColumn)) {
         selTerms <- paste0(selTerms,
                            ", ",
-                           literalQuote, tableNames[[i]], literalQuote,
-                           " `", origTableColumn, "`")
+                           DBI::dbQuoteString(my_db, tableNames[[i]]),
+                           " ",
+                           DBI::dbQuoteIdentifier(my_db, origTableColumn))
       }
       qi <- paste0("INSERT INTO ",
-                   "`", nm, "`",
+                   DBI::dbQuoteIdentifier(my_db,  nm),
                    " SELECT ",
                    selTerms,
                    " FROM ",

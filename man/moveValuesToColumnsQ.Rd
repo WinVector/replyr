@@ -7,7 +7,7 @@
 moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
   columnsToCopy = NULL,
   tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"), strict = TRUE,
-  checkNames = TRUE, showQuery = FALSE, literalQuote = "'")
+  checkNames = TRUE, showQuery = FALSE)
 }
 \arguments{
 \item{keyColumns}{character list of column defining row groups}
@@ -29,8 +29,6 @@ moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
 \item{checkNames}{logical, if TRUE check names}
 
 \item{showQuery}{if TRUE print query}
-
-\item{literalQuote}{character, quote for string literals}
 }
 \value{
 wide table built by mapping key-grouped tallTable rows to one row per group

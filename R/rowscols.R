@@ -127,7 +127,6 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param checkNames logical, if TRUE check names
 #' @param showQuery if TRUE print query
-#' @param literalQuote character, quote for string literals
 #' @return long table built by mapping wideTable to one row per group
 #'
 #' @seealso \code{\link[cdata]{moveValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
@@ -172,8 +171,7 @@ moveValuesToRowsQ <- function(controlTable,
                               tempNameGenerator = replyr::makeTempNameGenerator('mvtrq'),
                               strict = TRUE,
                               checkNames = TRUE,
-                              showQuery=FALSE,
-                              literalQuote = "'") {
+                              showQuery=FALSE) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
@@ -212,13 +210,12 @@ moveValuesToRowsQ <- function(controlTable,
                                           if(is.null(cij) || is.na(cij)) {
                                             return(NULL)
                                           }
-                                          paste0(' WHEN `b`.`',
-                                                 colnames(controlTable)[1],
-                                                 '` = ',
-                                                 literalQuote, controlTable[i,1,drop=TRUE], literalQuote,
-                                                 ' THEN `a`.`',
-                                                 cij,
-                                                 '`' )
+                                          paste0(' WHEN b.',
+                                                 DBI::dbQuoteIdentifier(my_db, colnames(controlTable)[1]),
+                                                 ' = ',
+                                                 DBI::dbQuoteString(my_db, controlTable[i,1,drop=TRUE]),
+                                                 ' THEN a.',
+                                                 DBI::dbQuoteIdentifier(my_db, cij))
                                         })
                         whens <- as.character(Filter(function(x) { !is.null(x) },
                                                      whens))
@@ -227,28 +224,27 @@ moveValuesToRowsQ <- function(controlTable,
                         }
                         casestmt <- paste0('CASE ',
                                            paste(whens, collapse = ' '),
-                                           ' ELSE NULL END AS `',
-                                           colnames(controlTable)[j],
-                                           '`')
+                                           ' ELSE NULL END AS ',
+                                           DBI::dbQuoteIdentifier(my_db, colnames(controlTable)[j]))
                       })
   casestmts <- as.character(Filter(function(x) { !is.null(x) },
                                    casestmts))
   copystmts <- NULL
   if(length(columnsToCopy)>0) {
-    copystmts <- paste0('`a`.`', columnsToCopy, '`')
+    copystmts <- paste0('a.', DBI::dbQuoteIdentifier(my_db, columnsToCopy))
   }
-  groupstmt <- paste0('`b`.`', colnames(controlTable)[1], '`')
+  groupstmt <- paste0('b.', DBI::dbQuoteIdentifier(my_db, colnames(controlTable)[1]))
   # deliberate cross join
   qs <-  paste0(" SELECT ",
                 paste(c(copystmts, groupstmt, casestmts), collapse = ', '),
                 ' FROM ',
                 wideTableName,
-                ' `a` CROSS JOIN `',
-                ctabName,
-                '` `b` ')
-  q <-  paste0("CREATE TABLE `",
-               resName,
-               "` AS ",
+                ' a CROSS JOIN ',
+                DBI::dbQuoteIdentifier(my_db, ctabName),
+                ' b ')
+  q <-  paste0("CREATE TABLE ",
+               DBI::dbQuoteIdentifier(my_db, resName),
+               " AS ",
                qs)
   if(showQuery) {
     print(q)
@@ -355,7 +351,6 @@ buildPivotControlTable <- function(d,
 #' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param checkNames logical, if TRUE check names
 #' @param showQuery if TRUE print query
-#' @param literalQuote character, quote for string literals
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
 #' @seealso \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
@@ -402,8 +397,7 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  tempNameGenerator = replyr::makeTempNameGenerator('mvtcq'),
                                  strict = TRUE,
                                  checkNames = TRUE,
-                                 showQuery = FALSE,
-                                 literalQuote = "'") {
+                                 showQuery = FALSE) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
@@ -445,15 +439,14 @@ moveValuesToColumnsQ <- function(keyColumns,
       cij <- controlTable[i,j,drop=TRUE]
       if((!is.null(cij))&&(!is.na(cij))) {
         collectstmts[[collectN]] <- paste0("MAX( CASE WHEN ", # pseudo aggregator
-                                           "`a`.`",
-                                           colnames(controlTable)[[1]],
-                                           "` = ",
-                                           literalQuote, controlTable[i,1,drop=TRUE], literalQuote,
-                                           " THEN `a`.`",
-                                           colnames(controlTable)[[j]],
-                                           "`  ELSE NULL END ) `",
-                                           cij,
-                                           "`")
+                                           "a.",
+                                           DBI::dbQuoteIdentifier(my_db, colnames(controlTable)[[1]]),
+                                           " = ",
+                                           DBI::dbQuoteString(my_db, controlTable[i,1,drop=TRUE]),
+                                           " THEN a.",
+                                           DBI::dbQuoteIdentifier(my_db, colnames(controlTable)[[j]]),
+                                           " ELSE NULL END ) ",
+                                           DBI::dbQuoteIdentifier(my_db, cij))
       }
       collectN <- collectN + 1
     }
@@ -465,28 +458,34 @@ moveValuesToColumnsQ <- function(keyColumns,
   # paste works on vectors in alligned fashion (not as a cross-product)
   copystmts <- NULL
   if(length(columnsToCopy)>0) {
-    copystmts <- paste0('MAX(`a`.`', columnsToCopy, '`) `', columnsToCopy, '`')
+    copystmts <- paste0('MAX(a.',
+                        DBI::dbQuoteIdentifier(my_db, columnsToCopy),
+                        ') ',
+                        DBI::dbQuoteIdentifier(my_db, columnsToCopy))
   }
   groupterms <- NULL
   groupstmts <- NULL
   if(length(keyColumns)>0) {
-    groupterms <- paste0('`a`.`', keyColumns, '`')
-    groupstmts <- paste0('`a`.`', keyColumns, '` `', keyColumns, '`')
+    groupterms <- paste0('a.', DBI::dbQuoteIdentifier(my_db, keyColumns))
+    groupstmts <- paste0('a.',
+                         DBI::dbQuoteIdentifier(my_db, keyColumns),
+                         ' ',
+                         DBI::dbQuoteIdentifier(my_db, keyColumns))
   }
   # deliberate cross join
   qs <-  paste0(" SELECT ",
                 paste(c(groupstmts, copystmts, collectstmts), collapse = ', '),
                 ' FROM ',
                 tallTableName,
-                ' `a` ')
+                ' a ')
   if(length(groupstmts)>0) {
     qs <- paste0(qs,
                  'GROUP BY ',
                  paste(groupterms, collapse = ', '))
   }
-  q <-  paste0("CREATE TABLE `",
-               resName,
-               "` AS ",
+  q <-  paste0("CREATE TABLE ",
+               DBI::dbQuoteIdentifier(my_db, resName),
+               " AS ",
                qs)
   if(showQuery) {
     print(q)

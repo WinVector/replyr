@@ -114,8 +114,14 @@ rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 
 PostgreSQL example ("docker start pg").
 
-```{r PostgreSQLexample, eval=FALSE}
-my_db <- dplyr::src_postgres(host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
+```{r PostgreSQLexample}
+library('RPostgreSQL')
+my_db <- DBI::dbConnect(dbDriver("PostgreSQL"), 
+                        host = 'localhost',
+                        port = 5432,
+                        user = 'postgres',
+                        password = 'pg')
+
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resPostgreSQL <- runExample(copyToRemote)

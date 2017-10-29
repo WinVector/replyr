@@ -6,7 +6,7 @@
 \usage{
 bind_rowsQ(tableNames, colNames, my_db,
   tempNameGenerator = makeTempNameGenerator("bind_rowsQ"), ...,
-  origTableColumn = NULL, literalQuote = "'")
+  origTableColumn = NULL)
 }
 \arguments{
 \item{tableNames}{names of tables to concatinate (not empty)}
@@ -20,8 +20,6 @@ bind_rowsQ(tableNames, colNames, my_db,
 \item{...}{force later arguments to bind by name}
 
 \item{origTableColumn}{character, column to put original table name in.}
-
-\item{literalQuote}{character, quote for string literals}
 }
 \description{
 Bind rows by a query. Assumes all tables structured identically.

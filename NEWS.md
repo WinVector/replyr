@@ -4,6 +4,7 @@
  * More checks on pivot/un-pivot.
  * Deprecate older pivot/un-pivot code.
  * Switch to insert based bind_rows.
+ * Fix db quoting.
  
 # replyr 0.8.0 2017-10-21
 
