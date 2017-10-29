@@ -70,13 +70,15 @@ failingFrameIndices(resBase, resSQLite)
 if(!listsOfSameData(resBase, resSQLite)) {
   stop("SQLite result differs")
 }
+DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
-MySQL example ("docker start mysql").  Kind of poor as at least the adapted MySql 
+MySQL example ("docker start mysql").  Kind of a poor results as  the adapted MySql 
 has a hard time with `NA`.
 
-Taking MySQL check out, too much trouble to maintain the testing database.
+Taking MySQL check out, too much trouble to maintain the testing database (docker now 
+not sharing ports on the container for MySQL).
 
 ```{r MySQLexample, eval=FALSE}
 my_db <- dplyr::src_mysql('mysql','127.0.0.1',3306,'root','')
@@ -109,6 +111,7 @@ for(i in failures) {
     stop(paste("different result for example", i))
   }
 }
+DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
@@ -128,21 +131,38 @@ resPostgreSQL <- runExample(copyToRemote)
 if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
+DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
-Another PostgreSQL example `devtools::install_github('rstats-db/RPostgres')`.
-Doesn't seem to be wired up to `dplyr 0.5.0` but likely will talk to `dbdplyr`.
+Another PostgreSQL example [`devtools::install_github('rstats-db/RPostgres')`](https://github.com/r-dbi/RPostgres).
+Doesn't seem to work with `dplyr` yet.  The following fails:
+
+```{r RPostgresex, eval=FALSE}
+library("RPostgres")
+my_db <- DBI::dbConnect(RPostgres::Postgres(),
+  host = 'localhost',
+  port = 5432,
+  user = 'postgres',
+  password = 'pg')
+dplyr::copy_to(my_db, data.frame(x=1), 'tmpnm')
+DBI::dbDisconnect(my_db)
+```
 
 ```{r RPostgres, eval=FALSE}
+library("RPostgres")
 my_db <- DBI::dbConnect(RPostgres::Postgres(),
-  host = 'localhost',port = 5432,user = 'postgres',password = 'pg')
+  host = 'localhost',
+  port = 5432,
+  user = 'postgres',
+  password = 'pg')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resPostgreSQL <- runExample(copyToRemote)
 if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("RPostgres result differs")
 }
+DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
