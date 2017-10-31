@@ -209,6 +209,28 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+
+<span class='co'># pivot / tidyr::spread example</span>
+<span class='co'># cdata version</span>
+<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>meas</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'AUC'</span>, <span class='st'>'R2'</span>), <span class='kw'>val</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.6</span>, <span class='fl'>0.2</span>))
+<span class='kw pkg'>cdata</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></span>(<span class='no'>d</span>,
+                           <span class='kw'>columnToTakeKeysFrom</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
+                           <span class='kw'>columnToTakeValuesFrom</span><span class='kw'>=</span> <span class='st'>'val'</span>,
+                           <span class='kw'>rowKeyColumns</span><span class='kw'>=</span> <span class='fu'>c</span>())</div><div class='output co'>#&gt;   AUC  R2
+#&gt; 1 0.6 0.2</div><div class='input'><span class='co'># tidyr version: tidyr::spread(d, key = 'meas', value = 'val')</span>
+<span class='no'>dR</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='no'>d</span>, <span class='st'>'dR'</span>,
+                     <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temporary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>cT</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='buildPivotControlTable.html'>buildPivotControlTable</a></span>(<span class='no'>dR</span>,
+                             <span class='kw'>columnToTakeKeysFrom</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
+                             <span class='kw'>columnToTakeValuesFrom</span><span class='kw'>=</span> <span class='st'>'val'</span>)
+<span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/moveValuesToColumnsQ'>moveValuesToColumnsQ</a></span>(<span class='kw'>keyColumns</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+                             <span class='no'>cT</span>, <span class='st'>'dR'</span>, <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_qenofvv98yctkgewmsev_0000000001&gt; [?? x 2]
+#&gt; # Database: sqlite 3.19.3 [:memory:]
+#&gt;     AUC    R2
+#&gt;   &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1   0.6   0.2</div><div class='input'>
+
+<span class='co'># non-trival transform</span>
 <span class='no'>tallTableName</span> <span class='kw'>&lt;-</span> <span class='st'>'dat'</span>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>my_db</span>,
   <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
@@ -228,7 +250,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='fu'>moveValuesToColumnsQ</span>(<span class='no'>keyColumns</span>,
                      <span class='no'>controlTable</span>,
                      <span class='no'>tallTableName</span>,
-                     <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_qenofvv98yctkgewmsev_0000000001&gt; [?? x 5]
+                     <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_zqjukl6hhrbxbcybxi1x_0000000001&gt; [?? x 5]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
 #&gt;      ID               c1               c2               c3               c4
 #&gt;   &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;
@@ -241,6 +263,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 # 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
 # 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
 # 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
+
 
 </div></pre>
   </div>

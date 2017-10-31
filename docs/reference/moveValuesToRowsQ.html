@@ -205,6 +205,30 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+
+<span class='co'>#' # un-pivot/tidyr::gather example</span>
+<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>AUC</span><span class='kw'>=</span> <span class='fl'>0.6</span>, <span class='kw'>R2</span><span class='kw'>=</span> <span class='fl'>0.2</span>)
+<span class='co'># cdata version</span>
+<span class='kw pkg'>cdata</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></span>(<span class='no'>d</span>,
+                        <span class='kw'>nameForNewKeyColumn</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
+                        <span class='kw'>nameForNewValueColumn</span><span class='kw'>=</span> <span class='st'>'val'</span>,
+                        <span class='kw'>columnsToTakeFrom</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'AUC'</span>, <span class='st'>'R2'</span>))</div><div class='output co'>#&gt;   meas val
+#&gt; 1  AUC 0.6
+#&gt; 2   R2 0.2</div><div class='input'><span class='co'># tidyr version: tidyr::gather(d, key= 'meas', value = 'val')</span>
+<span class='co'># replyr version</span>
+<span class='no'>dR</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='no'>d</span>, <span class='st'>'dR'</span>,
+                     <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temporary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>cT</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/buildUnPivotControlTable'>buildUnPivotControlTable</a></span>(<span class='kw'>nameForNewKeyColumn</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
+                                       <span class='kw'>nameForNewValueColumn</span><span class='kw'>=</span> <span class='st'>'val'</span>,
+                                       <span class='kw'>columnsToTakeFrom</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'AUC'</span>, <span class='st'>'R2'</span>))
+<span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ'>moveValuesToRowsQ</a></span>(<span class='no'>cT</span>, <span class='st'>'dR'</span>, <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_glqrd5ynpd9jg0sohzbd_0000000001&gt; [?? x 2]
+#&gt; # Database: sqlite 3.19.3 [:memory:]
+#&gt;    meas   val
+#&gt;   &lt;chr&gt; &lt;dbl&gt;
+#&gt; 1   AUC   0.6
+#&gt; 2    R2   0.2</div><div class='input'>
+
+<span class='co'># non-trivial example</span>
 <span class='no'>wideTableName</span> <span class='kw'>&lt;-</span> <span class='st'>'dat'</span>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>my_db</span>,
       <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
@@ -220,7 +244,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>,
                   <span class='no'>wideTableName</span>,
                   <span class='no'>my_db</span>,
-                  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='no'>columnsToCopy</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_zqjukl6hhrbxbcybxi1x_0000000001&gt; [?? x 4]
+                  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='no'>columnsToCopy</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_xyznzpfofzr2a39fwwkn_0000000001&gt; [?? x 4]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
 #&gt;      ID group       col1       col2
 #&gt;   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
@@ -239,6 +263,8 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 # 4   id2    bb val_id2_c3 val_id2_c4
 # 5   id3    aa val_id3_c1 val_id3_c2
 # 6   id3    bb val_id3_c3 val_id3_c4
+
+
 
 </div></pre>
   </div>

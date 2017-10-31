@@ -62,6 +62,25 @@ here \url{https://github.com/WinVector/cdata}.
 \examples{
 
 my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+
+#' # un-pivot/tidyr::gather example
+d <- data.frame(AUC= 0.6, R2= 0.2)
+# cdata version
+cdata::moveValuesToRows(d,
+                        nameForNewKeyColumn= 'meas',
+                        nameForNewValueColumn= 'val',
+                        columnsToTakeFrom= c('AUC', 'R2'))
+# tidyr version: tidyr::gather(d, key= 'meas', value = 'val')
+# replyr version
+dR <- replyr_copy_to(my_db, d, 'dR',
+                     overwrite = TRUE, temporary = TRUE)
+cT <- replyr::buildUnPivotControlTable(nameForNewKeyColumn= 'meas',
+                                       nameForNewValueColumn= 'val',
+                                       columnsToTakeFrom= c('AUC', 'R2'))
+replyr::moveValuesToRowsQ(cT, 'dR', my_db)
+
+
+# non-trivial example
 wideTableName <- 'dat'
 d <- dplyr::copy_to(my_db,
       dplyr::tribble(
@@ -88,6 +107,8 @@ moveValuesToRowsQ(controlTable,
 # 4   id2    bb val_id2_c3 val_id2_c4
 # 5   id3    aa val_id3_c1 val_id3_c2
 # 6   id3    bb val_id3_c3 val_id3_c4
+
+
 
 }
 \seealso{

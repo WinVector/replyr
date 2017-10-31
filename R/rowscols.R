@@ -134,6 +134,25 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' @examples
 #'
 #' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' #' # un-pivot/tidyr::gather example
+#' d <- data.frame(AUC= 0.6, R2= 0.2)
+#' # cdata version
+#' cdata::moveValuesToRows(d,
+#'                         nameForNewKeyColumn= 'meas',
+#'                         nameForNewValueColumn= 'val',
+#'                         columnsToTakeFrom= c('AUC', 'R2'))
+#' # tidyr version: tidyr::gather(d, key= 'meas', value = 'val')
+#' # replyr version
+#' dR <- replyr_copy_to(my_db, d, 'dR',
+#'                      overwrite = TRUE, temporary = TRUE)
+#' cT <- replyr::buildUnPivotControlTable(nameForNewKeyColumn= 'meas',
+#'                                        nameForNewValueColumn= 'val',
+#'                                        columnsToTakeFrom= c('AUC', 'R2'))
+#' replyr::moveValuesToRowsQ(cT, 'dR', my_db)
+#'
+#'
+#' # non-trivial example
 #' wideTableName <- 'dat'
 #' d <- dplyr::copy_to(my_db,
 #'       dplyr::tribble(
@@ -160,6 +179,8 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' # 4   id2    bb val_id2_c3 val_id2_c4
 #' # 5   id3    aa val_id3_c1 val_id3_c2
 #' # 6   id3    bb val_id3_c3 val_id3_c4
+#'
+#'
 #'
 #' @export
 #'
@@ -359,6 +380,25 @@ buildPivotControlTable <- function(d,
 #' @examples
 #'
 #' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'
+#' # pivot / tidyr::spread example
+#' # cdata version
+#' d <- data.frame(meas= c('AUC', 'R2'), val= c(0.6, 0.2))
+#' cdata::moveValuesToColumns(d,
+#'                            columnToTakeKeysFrom= 'meas',
+#'                            columnToTakeValuesFrom= 'val',
+#'                            rowKeyColumns= c())
+#' # tidyr version: tidyr::spread(d, key = 'meas', value = 'val')
+#' dR <- replyr_copy_to(my_db, d, 'dR',
+#'                      overwrite = TRUE, temporary = TRUE)
+#' cT <- buildPivotControlTable(dR,
+#'                              columnToTakeKeysFrom= 'meas',
+#'                              columnToTakeValuesFrom= 'val')
+#' replyr::moveValuesToColumnsQ(keyColumns = NULL,
+#'                              cT, 'dR', my_db)
+#'
+#'
+#' # non-trival transform
 #' tallTableName <- 'dat'
 #' d <- dplyr::copy_to(my_db,
 #'   dplyr::tribble(
@@ -386,6 +426,7 @@ buildPivotControlTable <- function(d,
 #' # 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
 #' # 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
 #' # 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
+#'
 #'
 #' @export
 #'

@@ -64,6 +64,25 @@ here \url{https://github.com/WinVector/cdata}.
 \examples{
 
 my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+
+# pivot / tidyr::spread example
+# cdata version
+d <- data.frame(meas= c('AUC', 'R2'), val= c(0.6, 0.2))
+cdata::moveValuesToColumns(d,
+                           columnToTakeKeysFrom= 'meas',
+                           columnToTakeValuesFrom= 'val',
+                           rowKeyColumns= c())
+# tidyr version: tidyr::spread(d, key = 'meas', value = 'val')
+dR <- replyr_copy_to(my_db, d, 'dR',
+                     overwrite = TRUE, temporary = TRUE)
+cT <- buildPivotControlTable(dR,
+                             columnToTakeKeysFrom= 'meas',
+                             columnToTakeValuesFrom= 'val')
+replyr::moveValuesToColumnsQ(keyColumns = NULL,
+                             cT, 'dR', my_db)
+
+
+# non-trival transform
 tallTableName <- 'dat'
 d <- dplyr::copy_to(my_db,
   dplyr::tribble(
@@ -91,6 +110,7 @@ moveValuesToColumnsQ(keyColumns,
 # 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
 # 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
 # 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
+
 
 }
 \seealso{
