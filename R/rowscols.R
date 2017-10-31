@@ -181,7 +181,7 @@ moveValuesToRowsQ <- function(controlTable,
     }
   }
   if((!is.character(wideTableName))||(length(wideTableName)!=1)) {
-    stop("moveValuesToRowsQ: wideTableName must be character length 1")
+    stop("moveValuesToRowsQ: wideTableName must be the name of a remote table")
   }
   controlTable <- as.data.frame(controlTable)
   cCheck <- checkControlTable(controlTable, strict)
@@ -413,7 +413,7 @@ moveValuesToColumnsQ <- function(keyColumns,
     }
   }
   if((!is.character(tallTableName))||(length(tallTableName)!=1)) {
-    stop("moveValuesToColumnsQ: tallTableName must be character length 1")
+    stop("moveValuesToColumnsQ: tallTableName must be the name of a remote table")
   }
   controlTable <- as.data.frame(controlTable)
   cCheck <- checkControlTable(controlTable, strict)
