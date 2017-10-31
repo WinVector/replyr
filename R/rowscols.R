@@ -143,7 +143,7 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #'                         nameForNewValueColumn= 'val',
 #'                         columnsToTakeFrom= c('AUC', 'R2'))
 #' # tidyr version: tidyr::gather(d, key= 'meas', value = 'val')
-#' # replyr version
+#' # replyr moveValuesToRowsQ() version
 #' dR <- replyr_copy_to(my_db, d, 'dR',
 #'                      overwrite = TRUE, temporary = TRUE)
 #' cT <- replyr::buildUnPivotControlTable(nameForNewKeyColumn= 'meas',
@@ -190,7 +190,7 @@ moveValuesToRowsQ <- function(controlTable,
                               ...,
                               columnsToCopy = NULL,
                               tempNameGenerator = replyr::makeTempNameGenerator('mvtrq'),
-                              strict = TRUE,
+                              strict = FALSE,
                               checkNames = TRUE,
                               showQuery=FALSE) {
   if(length(list(...))>0) {
@@ -389,6 +389,7 @@ buildPivotControlTable <- function(d,
 #'                            columnToTakeValuesFrom= 'val',
 #'                            rowKeyColumns= c())
 #' # tidyr version: tidyr::spread(d, key = 'meas', value = 'val')
+#' # replyr moveValuesToColumnsQ() version
 #' dR <- replyr_copy_to(my_db, d, 'dR',
 #'                      overwrite = TRUE, temporary = TRUE)
 #' cT <- buildPivotControlTable(dR,
@@ -437,7 +438,7 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  ...,
                                  columnsToCopy = NULL,
                                  tempNameGenerator = replyr::makeTempNameGenerator('mvtcq'),
-                                 strict = TRUE,
+                                 strict = FALSE,
                                  checkNames = TRUE,
                                  showQuery = FALSE) {
   if(length(list(...))>0) {

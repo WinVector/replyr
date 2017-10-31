@@ -115,13 +115,13 @@
 <pre><code>## Loading required package: seplyr</code></pre>
 <pre><code>## Loading required package: wrapr</code></pre>
 <pre><code>## Loading required package: cdata</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tDesc &lt;-<span class="st"> </span>tableNames <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tDesc &lt;-<span class="st"> </span>tableNames %&gt;%
 <span class="st">  </span><span class="kw">lapply</span>(
-    <span class="cf">function</span>(ni) {
-      replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/tableDescription">tableDescription</a></span>(ni,
-                               dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni),
+    function(ni) {
+      replyr::<span class="kw"><a href="../reference/tableDescription.html">tableDescription</a></span>(ni,
+                               dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni),
                                <span class="dt">keyInspector=</span> key_inspector_sqlite)
-    }) <span class="op">%&gt;%</span>
+    }) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>()
 
 <span class="kw">print</span>(tDesc[, <span class="kw">c</span>(<span class="st">'tableName'</span>, <span class="st">'handle'</span>, <span class="st">'keys'</span>, <span class="st">'columns'</span>), ])</code></pre></div>
@@ -158,7 +158,7 @@
 <li>Find an ordering of the rest of the tables that makes the left join executable or realizable (more on this later).</li>
 </ul>
 <p>First let’s patch up the key structure. This could be done by exporting the <code>columnJoinPlan</code> as a spreadsheet and editing it, but for our example we will just alter it in place.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">columnJoinPlan<span class="op">$</span>resultColumn[columnJoinPlan<span class="op">$</span>sourceColumn<span class="op">==</span><span class="st">'id'</span>] &lt;-<span class="st"> 'eid'</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">columnJoinPlan$resultColumn[columnJoinPlan$sourceColumn==<span class="st">'id'</span>] &lt;-<span class="st"> 'eid'</span>
 <span class="kw">print</span>(columnJoinPlan[, <span class="kw">c</span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</code></pre></div>
 <pre><code>## # A tibble: 13 x 4
 ##          tableName sourceColumn      resultColumn isKey
@@ -192,23 +192,23 @@
 <p>Since not all orders are valid left join plans the task is to find a re-ordering (if there is one) that is a valid left join plan. The requirement that each table’s keys have known values before we join gives us order relations on the tables (we know which tables must be joined before others). Finding an ordering that obeys all the relations is called “topological sorting” We can compute the join path dependencies <em>and</em> re-order the join plan to be realizable as follows (assuming the <code>igraph</code> package is available do perform the topological sorting and plot the directed relations).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sorted &lt;-<span class="st"> </span><span class="ot">NULL</span>
 <span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span>
-<span class="cf">if</span>(<span class="kw">requireNamespace</span>(<span class="st">'igraph'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {
+if(<span class="kw">requireNamespace</span>(<span class="st">'igraph'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {
   sorted &lt;-<span class="st"> </span><span class="kw"><a href="../reference/topoSortTables.html">topoSortTables</a></span>(columnJoinPlan, <span class="st">'employeeanddate'</span>)
-  <span class="kw">plot</span>(sorted<span class="op">$</span>dependencyGraph)
-  <span class="kw">print</span>(sorted<span class="op">$</span>tableOrder)
+  <span class="kw">plot</span>(sorted$dependencyGraph)
+  <span class="kw">print</span>(sorted$tableOrder)
 }</code></pre></div>
 <p><img src="DependencySorting_files/figure-html/sort-1.png" width="672"></p>
 <pre><code>## [1] "employeeanddate" "activity"        "orgtable"        "revenue"</code></pre>
 <p>In the above graph a table can only be joined after all of the tables pointing to it have been joined. See that this captures that the “<code>revenue</code>” table must be joined after the “<code>orgtable</code>” (as “<code>orgtable</code>” is our mapping from employees to departments). We could work on the legibility of the above graph using <code>igraph</code> controls, but I feel that it is just as well to move on to the detailed <code>DiagrammeR</code> based left join diagrams.</p>
 <p>And (again assuming we have the <code>igraph</code> package), we have a new <code>sorted$columnJoinPlan</code> that passes checks:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(sorted)) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">is.null</span>(sorted)) {
   <span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">"issues:"</span>, <span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, 
-                                                 sorted<span class="op">$</span>columnJoinPlan)))
+                                                 sorted$columnJoinPlan)))
 }</code></pre></div>
 <pre><code>## [1] "issues: "</code></pre>
 <p>The new <code>sorted$columnJoinPlan</code> can be re-plotted (needs the suggested packages: <code>DiagrammeR</code>, <code>htmlwidgets</code>, <code>webshot</code>, and <code>magick</code>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span>
-<span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(sorted)) {
+if(!<span class="kw">is.null</span>(sorted)) {
   have &lt;-<span class="st"> </span><span class="kw">c</span>(
     <span class="kw">requireNamespace</span>(<span class="st">'DiagrammeR'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
     <span class="kw">requireNamespace</span>(<span class="st">'htmlwidgets'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
@@ -216,38 +216,38 @@
     <span class="kw">requireNamespace</span>(<span class="st">'magick'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
     <span class="kw">requireNamespace</span>(<span class="st">'grid'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
   )
-  <span class="cf">if</span>(<span class="kw">all</span>(have)) {
+  if(<span class="kw">all</span>(have)) {
     <span class="kw">tryCatch</span>(
       {
-        png &lt;-<span class="st"> </span>sorted<span class="op">$</span>columnJoinPlan <span class="op">%&gt;%</span>
-<span class="st">          </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>() <span class="op">%&gt;%</span>
+        png &lt;-<span class="st"> </span>sorted$columnJoinPlan %&gt;%
+<span class="st">          </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>() %&gt;%
 <span class="st">          </span><span class="kw"><a href="../reference/renderJoinDiagram.html">renderJoinDiagram</a></span>()
-        <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(png)) {
-          grid<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/grid/topics/grid.raster">grid.raster</a></span>(png)
+        if(!<span class="kw">is.null</span>(png)) {
+          grid::<span class="kw">grid.raster</span>(png)
         }
       },
-      <span class="dt">error =</span> <span class="cf">function</span>(e) { <span class="kw">warning</span>(e); <span class="ot">NULL</span>}
+      <span class="dt">error =</span> function(e) { <span class="kw">warning</span>(e); <span class="ot">NULL</span>}
     )
   }
 }</code></pre></div>
 <p><img src="DependencySorting_files/figure-html/render1-1.png" width="672"></p>
 <p>And the new <code>sorted$columnJoinPlan</code> is ready to be executed:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(sorted)) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw">is.null</span>(sorted)) {
   <span class="kw">print</span>(<span class="st">"join plan execution log"</span>)
   res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, 
-                             sorted<span class="op">$</span>columnJoinPlan,
+                             sorted$columnJoinPlan,
                              <span class="dt">verbose =</span> <span class="ot">TRUE</span>)
   <span class="kw">print</span>(<span class="st">"join results"</span>)
-  dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
+  dplyr::<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Tue Oct 31 11:13:48 2017"
+## [1] "start employeeanddate Tue Oct 31 15:42:26 2017"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Tue Oct 31 11:13:48 2017"
-## [1] "start activity Tue Oct 31 11:13:48 2017"
+## [1] "done employeeanddate Tue Oct 31 15:42:26 2017"
+## [1] "start activity Tue Oct 31 15:42:26 2017"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -256,8 +256,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Tue Oct 31 11:13:48 2017"
-## [1] "start orgtable Tue Oct 31 11:13:48 2017"
+## [1] "done activity Tue Oct 31 15:42:27 2017"
+## [1] "start orgtable Tue Oct 31 15:42:27 2017"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -266,8 +266,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Tue Oct 31 11:13:49 2017"
-## [1] "start revenue Tue Oct 31 11:13:49 2017"
+## [1] "done orgtable Tue Oct 31 15:42:27 2017"
+## [1] "start revenue Tue Oct 31 15:42:27 2017"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -275,7 +275,7 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Tue Oct 31 11:13:49 2017"
+## [1] "done revenue Tue Oct 31 15:42:27 2017"
 ## [1] "join results"
 ## Observations: 2
 ## Variables: 10
@@ -300,14 +300,14 @@
 <code>replyr::makeJoinDiagramSpec() %&gt;% replyr::renderJoinDiagram()</code> can then produce and capture a detailed diagram of the final join plan.</li>
 <li>Finally <code><a href="http://www.rdocumentation.org/packages/replyr/topics/executeLeftJoinPlan">replyr::executeLeftJoinPlan()</a></code> can execute the join plan with diagnostics.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span>(ni <span class="cf">in</span> tableNames) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(ni in tableNames) {
   <span class="kw"><a href="../reference/replyr_drop_table_name.html">replyr_drop_table_name</a></span>(my_db, ni)
 }
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  982550 52.5    1770749 94.6  1770749 94.6
-## Vcells 1516569 11.6    4141804 31.6  3384796 25.9</code></pre>
+## Ncells  982949 52.5    1770749 94.6  1770749 94.6
+## Vcells 1517302 11.6    4142782 31.7  3385652 25.9</code></pre>
 </div>
   </div>
 

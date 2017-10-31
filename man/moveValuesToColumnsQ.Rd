@@ -6,8 +6,8 @@
 \usage{
 moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
   columnsToCopy = NULL,
-  tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"), strict = TRUE,
-  checkNames = TRUE, showQuery = FALSE)
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"),
+  strict = FALSE, checkNames = TRUE, showQuery = FALSE)
 }
 \arguments{
 \item{keyColumns}{character list of column defining row groups}
@@ -73,6 +73,7 @@ cdata::moveValuesToColumns(d,
                            columnToTakeValuesFrom= 'val',
                            rowKeyColumns= c())
 # tidyr version: tidyr::spread(d, key = 'meas', value = 'val')
+# replyr moveValuesToColumnsQ() version
 dR <- replyr_copy_to(my_db, d, 'dR',
                      overwrite = TRUE, temporary = TRUE)
 cT <- buildPivotControlTable(dR,

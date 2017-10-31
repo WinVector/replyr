@@ -6,8 +6,8 @@
 \usage{
 moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
   columnsToCopy = NULL,
-  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"), strict = TRUE,
-  checkNames = TRUE, showQuery = FALSE)
+  tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"),
+  strict = FALSE, checkNames = TRUE, showQuery = FALSE)
 }
 \arguments{
 \item{controlTable}{table specifying mapping (local data frame)}
@@ -71,7 +71,7 @@ cdata::moveValuesToRows(d,
                         nameForNewValueColumn= 'val',
                         columnsToTakeFrom= c('AUC', 'R2'))
 # tidyr version: tidyr::gather(d, key= 'meas', value = 'val')
-# replyr version
+# replyr moveValuesToRowsQ() version
 dR <- replyr_copy_to(my_db, d, 'dR',
                      overwrite = TRUE, temporary = TRUE)
 cT <- replyr::buildUnPivotControlTable(nameForNewKeyColumn= 'meas',
