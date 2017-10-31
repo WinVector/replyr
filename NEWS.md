@@ -1,4 +1,10 @@
 
+# replyr 0.8.2 2017-10-31
+
+ * Fix some corner cases in replyr_summary() and replyr_nrow().
+ * Add compute option to replyr_summary().
+ * Strengthen dplyr_src_to_db_handle().
+ 
 # replyr 0.8.2 2017-10-29
 
  * More checks on pivot/un-pivot.

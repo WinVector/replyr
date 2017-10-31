@@ -5,7 +5,7 @@
 \title{Compute usable summary of columns of tbl.}
 \usage{
 replyr_summary(x, ..., countUniqueNum = FALSE, countUniqueNonNum = FALSE,
-  cols = NULL)
+  cols = NULL, compute = TRUE)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
@@ -17,6 +17,8 @@ replyr_summary(x, ..., countUniqueNum = FALSE, countUniqueNonNum = FALSE,
 \item{countUniqueNonNum}{logical, if true include unique non-NA counts for non-numeric cols.}
 
 \item{cols}{if not NULL set of columns to restrict to.}
+
+\item{compute}{logical if TRUE call compute before working}
 }
 \value{
 summary of columns.
@@ -40,6 +42,16 @@ d <- data.frame(p= c(TRUE, FALSE, NA),
                 y= factor(c(3,5,NA)),
                 z= c('a',NA,'z'),
                 stringsAsFactors=FALSE)
+# sc <- sparklyr::spark_connect(version='2.2.0',
+#                                  master = "local")
+# dS <- replyr_copy_to(sc, dplyr::select(d, -r, -t), 'dS',
+#                      temporary=TRUE, overwrite=TRUE)
+# replyr_summary(dS)
+# my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+# RSQLite::initExtension(my_db)
+# dM <- replyr_copy_to(my_db, dplyr::select(d, -r, -t), 'dM',
+#                      temporary=TRUE, overwrite=TRUE)
+# replyr_summary(dM)
 d$q <- list(1,2,3)
 replyr_summary(d)
 

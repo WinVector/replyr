@@ -124,7 +124,7 @@
     
 
     <pre class="usage"><span class='fu'>replyr_summary</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>countUniqueNum</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>countUniqueNonNum</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>compute</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -148,6 +148,10 @@
     <tr>
       <th>cols</th>
       <td><p>if not NULL set of columns to restrict to.</p></td>
+    </tr>
+    <tr>
+      <th>compute</th>
+      <td><p>logical if TRUE call compute before working</p></td>
     </tr>
     </table>
     
@@ -173,6 +177,16 @@ Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (a
                 <span class='kw'>y</span><span class='kw'>=</span> <span class='fu'>factor</span>(<span class='fu'>c</span>(<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>NA</span>)),
                 <span class='kw'>z</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'a'</span>,<span class='fl'>NA</span>,<span class='st'>'z'</span>),
                 <span class='kw'>stringsAsFactors</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='co'># sc &lt;- sparklyr::spark_connect(version='2.2.0',</span>
+<span class='co'>#                                  master = "local")</span>
+<span class='co'># dS &lt;- replyr_copy_to(sc, dplyr::select(d, -r, -t), 'dS',</span>
+<span class='co'>#                      temporary=TRUE, overwrite=TRUE)</span>
+<span class='co'># replyr_summary(dS)</span>
+<span class='co'># my_db &lt;- DBI::dbConnect(RSQLite::SQLite(), ":memory:")</span>
+<span class='co'># RSQLite::initExtension(my_db)</span>
+<span class='co'># dM &lt;- replyr_copy_to(my_db, dplyr::select(d, -r, -t), 'dM',</span>
+<span class='co'>#                      temporary=TRUE, overwrite=TRUE)</span>
+<span class='co'># replyr_summary(dM)</span>
 <span class='no'>d</span>$<span class='no'>q</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>)
 <span class='fu'>replyr_summary</span>(<span class='no'>d</span>)</div><div class='output co'>#&gt;   column index     class nrows nna nunique min  max mean        sd lexmin
 #&gt; 1      p     1   logical     3   1      NA   0    1  0.5 0.7071068   &lt;NA&gt;

@@ -23,11 +23,14 @@
 #' @export
 #'
 dplyr_src_to_db_handle <- function(dplyr_src) {
-  if("DBIConnection" %in% class(dplyr_src)) {
-    return(dplyr_src)
+  if(is.null(dplyr_src)) {
+    return(NULL)
   }
   if(is.character(dplyr_src)) {
     return(NULL)
+  }
+  if("DBIConnection" %in% class(dplyr_src)) {
+    return(dplyr_src)
   }
   return(dplyr_src$con)
 }

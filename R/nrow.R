@@ -33,7 +33,7 @@ replyr_hasrows <- function(d) {
     return(FALSE)
   }
   n <- nrow(dSample)
-  if(is.null(n) || is.na(n) || (n<1)) {
+  if(is.null(n) || is.na(n) || is.nan(n) || (n<1)) {
     return(FALSE)
   }
   return(TRUE)
@@ -60,7 +60,7 @@ replyr_nrow <- function(x) {
   }
   # try for easy case
   n <- nrow(x)
-  if((!is.null(n)) && (!is.na(n))) {
+  if((!is.null(n)) && (!is.na(n)) && (!is.nan(n))) {
     # defend against dplyr issue 2871 https://github.com/tidyverse/dplyr/issues/2871
     return(n)
   }
@@ -76,6 +76,10 @@ replyr_nrow <- function(x) {
     dplyr::summarize(., count = sum(constant)) %.>%
     dplyr::collect(.)  %.>% # I forget if pull is in dplyr 0.5.0
     as.data.frame(.)
-  ctab[1,1,drop=TRUE]
+  n <- ctab[1,1,drop=TRUE]
+  if(is.null(n) || is.na(n) || is.nan(n) || n<1) {
+    return(0)
+  }
+  n
 }
 

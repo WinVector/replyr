@@ -22,6 +22,7 @@ NULL
 #' @param countUniqueNum logical, if true include unique non-NA counts for numeric cols.
 #' @param countUniqueNonNum logical, if true include unique non-NA counts for non-numeric cols.
 #' @param cols if not NULL set of columns to restrict to.
+#' @param compute logical if TRUE call compute before working
 #' @return summary of columns.
 #'
 #' @examples
@@ -35,6 +36,16 @@ NULL
 #'                 y= factor(c(3,5,NA)),
 #'                 z= c('a',NA,'z'),
 #'                 stringsAsFactors=FALSE)
+#' # sc <- sparklyr::spark_connect(version='2.2.0',
+#' #                                  master = "local")
+#' # dS <- replyr_copy_to(sc, dplyr::select(d, -r, -t), 'dS',
+#' #                      temporary=TRUE, overwrite=TRUE)
+#' # replyr_summary(dS)
+#' # my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#' # RSQLite::initExtension(my_db)
+#' # dM <- replyr_copy_to(my_db, dplyr::select(d, -r, -t), 'dM',
+#' #                      temporary=TRUE, overwrite=TRUE)
+#' # replyr_summary(dM)
 #' d$q <- list(1,2,3)
 #' replyr_summary(d)
 #'
@@ -43,11 +54,18 @@ replyr_summary <- function(x,
                            ...,
                            countUniqueNum= FALSE,
                            countUniqueNonNum= FALSE,
-                           cols= NULL) {
+                           cols= NULL,
+                           compute= TRUE) {
   if(length(list(...))>0) {
     stop("replyr::replyr_summary unexpected arguments")
   }
-  x <- dplyr::ungroup(x)
+  tempNameGenerator = makeTempNameGenerator('replyr_summary')
+  x <- x %.>%
+    dplyr::ungroup(.)
+  if(compute) {
+    x <- x %.>%
+      compute(., name = tempNameGenerator())
+  }
   # localSample might not have columns on zero row caes
   #   https://github.com/tidyverse/dplyr/issues/2913
   localSample <- x %.>%
@@ -252,6 +270,12 @@ replyr_summary <- function(x,
   res$class <- classtr[res$column]
   res <- res[order(res$index),]
   rownames(res) <- NULL
+  sc <- dplyr_src_to_db_handle(replyr_get_src(x))
+  if((!is.null(sc)) && (!is.character(sc))) {
+    for(ti in tempNameGenerator(dumpList = TRUE)) {
+      dplyr::db_drop_table(sc, ti)
+    }
+  }
   res
 }
 
