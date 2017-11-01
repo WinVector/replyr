@@ -7,7 +7,8 @@
 moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
   columnsToCopy = NULL,
   tempNameGenerator = replyr::makeTempNameGenerator("mvtrq"),
-  strict = FALSE, checkNames = TRUE, showQuery = FALSE)
+  strict = FALSE, checkNames = TRUE, showQuery = FALSE,
+  defaultValue = NULL)
 }
 \arguments{
 \item{controlTable}{table specifying mapping (local data frame)}
@@ -27,6 +28,8 @@ moveValuesToRowsQ(controlTable, wideTableName, my_db, ...,
 \item{checkNames}{logical, if TRUE check names}
 
 \item{showQuery}{if TRUE print query}
+
+\item{defaultValue}{if not NULL literal to use for non-match values.}
 }
 \value{
 long table built by mapping wideTable to one row per group

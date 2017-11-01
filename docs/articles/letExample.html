@@ -96,7 +96,7 @@
       <h1>let Example</h1>
                         <h4 class="author">Nina Zumel</h4>
             
-            <h4 class="date">2017-10-31</h4>
+            <h4 class="date">2017-11-01</h4>
           </div>
 
     
@@ -113,20 +113,20 @@
 <li>the upper and lower bounds of an interval +/- one-half the IQR around the median.</li>
 </ul>
 <p>The <code>dplyr</code> expression for such a table is easy when the column names are known, but complicated when they are not. We use <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> to write such a function without the use of <code>lazyeval</code> or <code>rlang</code>/<code>tidyeval</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sumstat_intervals =<span class="st"> </span>function(dframe, colname, <span class="dt">groupcolname =</span> <span class="ot">NULL</span>) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sumstat_intervals =<span class="st"> </span><span class="cf">function</span>(dframe, colname, <span class="dt">groupcolname =</span> <span class="ot">NULL</span>) {
   mapping =<span class="st"> </span><span class="kw">list</span>(<span class="dt">col=</span>colname)
-  if(!<span class="kw">is.null</span>(groupcolname)) {
+  <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(groupcolname)) {
     dframe &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/se-deprecated.html">group_by_</a></span>(dframe, groupcolname)
   }
   <span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias =</span> mapping,
       <span class="dt">expr=</span>{
         <span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(dframe, 
-                  <span class="dt">sdlower =</span> <span class="kw">mean</span>(col)-<span class="kw">sd</span>(col),
+                  <span class="dt">sdlower =</span> <span class="kw">mean</span>(col)<span class="op">-</span><span class="kw">sd</span>(col),
                   <span class="dt">mean =</span> <span class="kw">mean</span>(col),
-                  <span class="dt">sdupper =</span> <span class="kw">mean</span>(col) +<span class="st"> </span><span class="kw">sd</span>(col),
-                  <span class="dt">iqrlower =</span> <span class="kw">median</span>(col)-<span class="fl">0.5</span>*<span class="kw">IQR</span>(col),
+                  <span class="dt">sdupper =</span> <span class="kw">mean</span>(col) <span class="op">+</span><span class="st"> </span><span class="kw">sd</span>(col),
+                  <span class="dt">iqrlower =</span> <span class="kw">median</span>(col)<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="kw">IQR</span>(col),
                   <span class="dt">median =</span> <span class="kw">median</span>(col),
-                  <span class="dt">iqrupper =</span> <span class="kw">median</span>(col)+<span class="fl">0.5</span>*<span class="kw">IQR</span>(col))
+                  <span class="dt">iqrupper =</span> <span class="kw">median</span>(col)<span class="op">+</span><span class="fl">0.5</span><span class="op">*</span><span class="kw">IQR</span>(col))
       })
 }</code></pre></div>
 <p>We can test <code>sumstat_intervals</code> on <code>iris</code>:</p>
@@ -150,41 +150,41 @@
 <p>We can also use <code>let</code> to parameterize other functions that specify their parameters via non-standard evaluation. For example, we could write a <code>ggplot2</code> function to plot the information in <code>sumstat_intervals</code> (either the mean-centered interval or the median-centered one) using <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes_">ggplot2::aes_string</a></code>. Or we could use <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_distributions =<span class="st"> </span><span class="ot">NULL</span>
 
-if  (<span class="kw">requireNamespace</span>(<span class="st">"ggplot2"</span>)) {
+<span class="cf">if</span>  (<span class="kw">requireNamespace</span>(<span class="st">"ggplot2"</span>)) {
   <span class="kw">library</span>(<span class="st">"ggplot2"</span>)
-  plot_distributions =<span class="st"> </span>function(dframe, colname, groupcol,
+  plot_distributions =<span class="st"> </span><span class="cf">function</span>(dframe, colname, groupcol,
                                 <span class="dt">intervaltype=</span><span class="st">"mean"</span>, <span class="dt">title=</span><span class="st">""</span>) {
-    if(!(intervaltype %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>)))
+    <span class="cf">if</span>(<span class="op">!</span>(intervaltype <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">"mean"</span>, <span class="st">"median"</span>)))
       <span class="kw">error</span>(<span class="st">"Intervaltype must be one of 'mean' or 'median'"</span>)
     
     sintervals =<span class="st"> </span><span class="kw">sumstat_intervals</span>(dframe, colname, groupcol)
     
     <span class="co"># I could do the following with aes_string, but what the heck</span>
     mapping =<span class="st"> </span><span class="kw">list</span>(<span class="dt">xval=</span>groupcol, <span class="dt">yval=</span>colname, <span class="dt">center=</span>intervaltype)
-    if(intervaltype==<span class="st">"mean"</span>) {
+    <span class="cf">if</span>(intervaltype<span class="op">==</span><span class="st">"mean"</span>) {
       mapping2 =<span class="kw">list</span>(<span class="dt">lower=</span><span class="st">"sdlower"</span>, <span class="dt">upper=</span><span class="st">"sdupper"</span>)
-    } else {
+    } <span class="cf">else</span> {
       mapping2 =<span class="kw">list</span>(<span class="dt">lower=</span><span class="st">"iqrlower"</span>, <span class="dt">upper=</span><span class="st">"iqrupper"</span>)
     }
     mapping =<span class="st"> </span><span class="kw">c</span>(mapping, mapping2)
     
     <span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias=</span>mapping,
         <span class="dt">expr =</span> {
-          <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(dframe, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>xval,<span class="dt">color=</span>xval)) +
-<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_jitter">geom_jitter</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y=</span>yval), <span class="dt">width=</span><span class="fl">0.2</span>, <span class="dt">height=</span><span class="dv">0</span>, <span class="dt">alpha=</span><span class="fl">0.5</span>) +
-<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange">geom_crossbar</a></span>(<span class="dt">data=</span>sintervals, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y=</span>center, <span class="dt">ymin=</span>lower, <span class="dt">ymax=</span>upper)) +
-<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(title) +<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">plot.title=</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/element">element_text</a></span>(<span class="dt">hjust=</span><span class="fl">0.5</span>)) +
+          <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(dframe, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>xval,<span class="dt">color=</span>xval)) <span class="op">+</span>
+<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_jitter">geom_jitter</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y=</span>yval), <span class="dt">width=</span><span class="fl">0.2</span>, <span class="dt">height=</span><span class="dv">0</span>, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">+</span>
+<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange">geom_crossbar</a></span>(<span class="dt">data=</span>sintervals, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y=</span>center, <span class="dt">ymin=</span>lower, <span class="dt">ymax=</span>upper)) <span class="op">+</span>
+<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(title) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">plot.title=</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/element">element_text</a></span>(<span class="dt">hjust=</span><span class="fl">0.5</span>)) <span class="op">+</span>
 <span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer">scale_color_brewer</a></span>(<span class="dt">palette=</span><span class="st">"Dark2"</span>)
         })
   }
 }
  <span class="co">#  Loading required namespace: ggplot2</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!(<span class="st">"NULL"</span>) %in%<span class="st"> </span><span class="kw">class</span>(plot_distributions)) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span>(<span class="st">"NULL"</span>) <span class="op">%in%</span><span class="st"> </span><span class="kw">class</span>(plot_distributions)) {
   <span class="kw">plot_distributions</span>(iris, <span class="st">"Sepal.Length"</span>, <span class="st">"Species"</span>,
                      <span class="dt">title=</span><span class="st">"Iris sepal length with mean +/1 one standard deviation"</span>)
 }</code></pre></div>
 <p><img src="letExample_files/figure-html/ggplot1-1.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!(<span class="st">"NULL"</span>) %in%<span class="st"> </span><span class="kw">class</span>(plot_distributions)) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span>(<span class="st">"NULL"</span>) <span class="op">%in%</span><span class="st"> </span><span class="kw">class</span>(plot_distributions)) {
   <span class="kw">plot_distributions</span>(iris, <span class="st">"Petal.Width"</span>, <span class="st">"Species"</span>,
                      <span class="dt">intervaltype=</span><span class="st">"median"</span>,
                      <span class="dt">title=</span><span class="st">"Iris petal width with median and centered IQR interval"</span>)

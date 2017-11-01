@@ -96,7 +96,7 @@
       <h1>Parametric Programming in R</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-10-31</h4>
+            <h4 class="date">2017-11-01</h4>
           </div>
 
     
@@ -110,7 +110,7 @@
  <span class="co">#  1  1</span>
  <span class="co">#  2 NA</span></code></pre></div>
 <p>Performing an ad hoc analysis is trivial in <code>R</code>: we would just directly write:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d$x_isNA &lt;-<span class="st"> </span><span class="kw">is.na</span>(d$x)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>x_isNA &lt;-<span class="st"> </span><span class="kw">is.na</span>(d<span class="op">$</span>x)</code></pre></div>
 <p>We used the fact that we are looking at the data interactively to note the only column is “<code>x</code>”, and then picked “<code>x_isNA</code>” as our result name. If we want to use <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> the notation remains straightforward:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"dplyr"</span>)
  <span class="co">#  </span>
@@ -159,7 +159,7 @@ rname &lt;-<span class="st"> </span><span class="kw">paste</span>(cname, <span c
 <p>Our advice is to give <a href="https://github.com/WinVector/replyr"><code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code></a> a try. <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> takes a name mapping list (called “<code>alias</code>”) and a code-block (called “<code>expr</code>”). The code-block is re-written so that names in <code>expr</code> appearing on the left hand sides of the <code>alias</code> map are replaced with names appearing on the right hand side of the <code>alias</code> map.</p>
 <p>The code looks like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># wrapr::let solution</span>
-wrapr::<span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias =</span> <span class="kw">list</span>(<span class="dt">cname =</span> cname, <span class="dt">rname =</span> rname),
+wrapr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias =</span> <span class="kw">list</span>(<span class="dt">cname =</span> cname, <span class="dt">rname =</span> rname),
             <span class="dt">expr  =</span> {
               <span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(d, <span class="dt">rname =</span> <span class="kw">is.na</span>(cname))
             })

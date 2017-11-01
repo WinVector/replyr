@@ -1,10 +1,11 @@
 
-# replyr 0.8.2 2017-10-31
+# replyr 0.8.3 2017-11-01
 
  * Fix some corner cases in replyr_summary() and replyr_nrow().
  * Add compute option to replyr_summary().
  * Strengthen dplyr_src_to_db_handle().
  * Default Q() to not strict.
+ * 
  
 # replyr 0.8.2 2017-10-29
 

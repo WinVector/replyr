@@ -127,6 +127,7 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param checkNames logical, if TRUE check names
 #' @param showQuery if TRUE print query
+#' @param defaultValue if not NULL literal to use for non-match values.
 #' @return long table built by mapping wideTable to one row per group
 #'
 #' @seealso \code{\link[cdata]{moveValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
@@ -192,7 +193,8 @@ moveValuesToRowsQ <- function(controlTable,
                               tempNameGenerator = replyr::makeTempNameGenerator('mvtrq'),
                               strict = FALSE,
                               checkNames = TRUE,
-                              showQuery=FALSE) {
+                              showQuery = FALSE,
+                              defaultValue = NULL) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToRowsQ unexpected arguments.")
   }
@@ -223,6 +225,15 @@ moveValuesToRowsQ <- function(controlTable,
   ctab <- copy_to(my_db, controlTable, ctabName,
                   overwrite = TRUE, temporary=TRUE)
   resName <- tempNameGenerator()
+  missingCaseTerm = "NULL"
+  if(!is.null(defaultValue)) {
+    if(is.numeric(defaultValue)) {
+      missingCaseTerm <- as.character(defaultValue)
+    } else {
+      missingCaseTerm <- DBI::dbQuoteString(paste(as.character(defaultValue),
+                                                  collapse = ' '))
+    }
+  }
   casestmts <- lapply(2:ncol(controlTable),
                       function(j) {
                         whens <- lapply(seq_len(nrow(controlTable)),
@@ -245,7 +256,9 @@ moveValuesToRowsQ <- function(controlTable,
                         }
                         casestmt <- paste0('CASE ',
                                            paste(whens, collapse = ' '),
-                                           ' ELSE NULL END AS ',
+                                           ' ELSE ',
+                                           missingCaseTerm,
+                                           ' END AS ',
                                            DBI::dbQuoteIdentifier(my_db, colnames(controlTable)[j]))
                       })
   casestmts <- as.character(Filter(function(x) { !is.null(x) },
@@ -373,6 +386,7 @@ buildPivotControlTable <- function(d,
 #' @param strict logical, if TRUE check control table contents for uniqueness
 #' @param checkNames logical, if TRUE check names
 #' @param showQuery if TRUE print query
+#' @param defaultValue if not NULL literal to use for non-match values.
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
 #' @seealso \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
@@ -440,7 +454,8 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  tempNameGenerator = replyr::makeTempNameGenerator('mvtcq'),
                                  strict = FALSE,
                                  checkNames = TRUE,
-                                 showQuery = FALSE) {
+                                 showQuery = FALSE,
+                                 defaultValue = NULL) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
@@ -474,6 +489,15 @@ moveValuesToColumnsQ <- function(keyColumns,
   ctab <- copy_to(my_db, controlTable, ctabName,
                   overwrite = TRUE, temporary=TRUE)
   resName <- tempNameGenerator()
+  missingCaseTerm = "NULL"
+  if(!is.null(defaultValue)) {
+    if(is.numeric(defaultValue)) {
+      missingCaseTerm <- as.character(defaultValue)
+    } else {
+      missingCaseTerm <- DBI::dbQuoteString(paste(as.character(defaultValue),
+                                                  collapse = ' '))
+    }
+  }
   collectstmts <- vector(mode = 'list',
                          length = nrow(controlTable) * (ncol(controlTable)-1))
   collectN <- 1
@@ -488,7 +512,9 @@ moveValuesToColumnsQ <- function(keyColumns,
                                            DBI::dbQuoteString(my_db, controlTable[i,1,drop=TRUE]),
                                            " THEN a.",
                                            DBI::dbQuoteIdentifier(my_db, colnames(controlTable)[[j]]),
-                                           " ELSE NULL END ) ",
+                                           " ELSE ",
+                                           missingCaseTerm,
+                                           " END ) ",
                                            DBI::dbQuoteIdentifier(my_db, cij))
       }
       collectN <- collectN + 1
