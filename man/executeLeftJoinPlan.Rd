@@ -5,6 +5,7 @@
 \title{Execute an ordered sequence of left joins.}
 \usage{
 executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
+  computeFn = function(x, name) {     dplyr::compute(x, name = name) },
   eagerCompute = TRUE, checkColClasses = FALSE, verbose = FALSE,
   dryRun = FALSE,
   tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
@@ -18,7 +19,9 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
 
 \item{checkColumns}{logical if TRUE confirm column names before starting joins.}
 
-\item{eagerCompute}{logical if TRUE materialize intermediate results with \code{dplyr::compute}.}
+\item{computeFn}{function to call to try and materialize intermediate results.}
+
+\item{eagerCompute}{logical if TRUE materialize intermediate results with computeFn.}
 
 \item{checkColClasses}{logical if true check for exact class name matches}
 

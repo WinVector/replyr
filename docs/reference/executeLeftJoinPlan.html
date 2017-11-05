@@ -124,6 +124,7 @@
     
 
     <pre class="usage"><span class='fu'>executeLeftJoinPlan</span>(<span class='no'>tDesc</span>, <span class='no'>columnJoinPlan</span>, <span class='no'>...</span>, <span class='kw'>checkColumns</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>computeFn</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>, <span class='no'>name</span>) {     <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/compute.html'>compute</a></span>(<span class='no'>x</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='no'>name</span>) },
   <span class='kw'>eagerCompute</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>checkColClasses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>dryRun</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='makeTempNameGenerator.html'>makeTempNameGenerator</a></span>(<span class='st'>"executeLeftJoinPlan"</span>))</pre>
@@ -148,8 +149,12 @@
       <td><p>logical if TRUE confirm column names before starting joins.</p></td>
     </tr>
     <tr>
+      <th>computeFn</th>
+      <td><p>function to call to try and materialize intermediate results.</p></td>
+    </tr>
+    <tr>
       <th>eagerCompute</th>
-      <td><p>logical if TRUE materialize intermediate results with <code><a href='http://dplyr.tidyverse.org/reference/compute.html'>dplyr::compute</a></code>.</p></td>
+      <td><p>logical if TRUE materialize intermediate results with computeFn.</p></td>
     </tr>
     <tr>
       <th>checkColClasses</th>
@@ -207,41 +212,41 @@
 <span class='co'># execute the left joins</span>
 <span class='fu'>executeLeftJoinPlan</span>(<span class='no'>tDesc</span>, <span class='no'>columnJoinPlan</span>,
                     <span class='kw'>checkColClasses</span><span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                    <span class='kw'>verbose</span><span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "start meas1 Wed Nov  1 08:30:02 2017"
+                    <span class='kw'>verbose</span><span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "start meas1 Sat Nov  4 19:07:43 2017"
 #&gt; [1] " rename/restrict meas1"
 #&gt; [1] "   'PatientID' = 'id'"
 #&gt; [1] "   'meas1_weight' = 'weight'"
 #&gt; [1] "   'height' = 'height'"
 #&gt; [1] " res &lt;- meas1"
-#&gt; [1] "done meas1 Wed Nov  1 08:30:02 2017"
-#&gt; [1] "start meas2 Wed Nov  1 08:30:02 2017"
+#&gt; [1] "done meas1 Sat Nov  4 19:07:43 2017"
+#&gt; [1] "start meas2 Sat Nov  4 19:07:43 2017"
 #&gt; [1] " rename/restrict meas2"
 #&gt; [1] "   'table_meas2_present' = 'table_meas2_present'"
 #&gt; [1] "   'PatientID' = 'pid'"
 #&gt; [1] "   'meas2_weight' = 'weight'"
 #&gt; [1] " res &lt;- left_join(res, meas2,"
 #&gt; [1] "                  by = c( 'PatientID' ))"
-#&gt; [1] "done meas2 Wed Nov  1 08:30:02 2017"</div><div class='output co'>#&gt;   PatientID meas1_weight height table_meas2_present meas2_weight
+#&gt; [1] "done meas2 Sat Nov  4 19:07:43 2017"</div><div class='output co'>#&gt;   PatientID meas1_weight height table_meas2_present meas2_weight
 #&gt; 1         1          200     60                   0           NA
 #&gt; 2         2          120     14                   1          105</div><div class='input'><span class='co'># also good</span>
 <span class='fu'>executeLeftJoinPlan</span>(<span class='fu'>list</span>(<span class='st'>'meas1'</span><span class='kw'>=</span><span class='no'>meas1</span>, <span class='st'>'meas2'</span><span class='kw'>=</span><span class='no'>meas2</span>),
                     <span class='no'>columnJoinPlan</span>,
                     <span class='kw'>checkColClasses</span><span class='kw'>=</span> <span class='fl'>TRUE</span>,
-                    <span class='kw'>verbose</span><span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "start meas1 Wed Nov  1 08:30:02 2017"
+                    <span class='kw'>verbose</span><span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] "start meas1 Sat Nov  4 19:07:43 2017"
 #&gt; [1] " rename/restrict meas1"
 #&gt; [1] "   'PatientID' = 'id'"
 #&gt; [1] "   'meas1_weight' = 'weight'"
 #&gt; [1] "   'height' = 'height'"
 #&gt; [1] " res &lt;- meas1"
-#&gt; [1] "done meas1 Wed Nov  1 08:30:02 2017"
-#&gt; [1] "start meas2 Wed Nov  1 08:30:02 2017"
+#&gt; [1] "done meas1 Sat Nov  4 19:07:43 2017"
+#&gt; [1] "start meas2 Sat Nov  4 19:07:43 2017"
 #&gt; [1] " rename/restrict meas2"
 #&gt; [1] "   'table_meas2_present' = 'table_meas2_present'"
 #&gt; [1] "   'PatientID' = 'pid'"
 #&gt; [1] "   'meas2_weight' = 'weight'"
 #&gt; [1] " res &lt;- left_join(res, meas2,"
 #&gt; [1] "                  by = c( 'PatientID' ))"
-#&gt; [1] "done meas2 Wed Nov  1 08:30:02 2017"</div><div class='output co'>#&gt;   PatientID meas1_weight height table_meas2_present meas2_weight
+#&gt; [1] "done meas2 Sat Nov  4 19:07:43 2017"</div><div class='output co'>#&gt;   PatientID meas1_weight height table_meas2_present meas2_weight
 #&gt; 1         1          200     60                   0           NA
 #&gt; 2         2          120     14                   1          105</div><div class='input'>
 </div></pre>

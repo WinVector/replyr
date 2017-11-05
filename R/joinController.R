@@ -938,7 +938,8 @@ strMapToString <- function(m) {
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @param ... force later arguments to bind by name.
 #' @param checkColumns logical if TRUE confirm column names before starting joins.
-#' @param eagerCompute logical if TRUE materialize intermediate results with \code{dplyr::compute}.
+#' @param computeFn function to call to try and materialize intermediate results.
+#' @param eagerCompute logical if TRUE materialize intermediate results with computeFn.
 #' @param checkColClasses logical if true check for exact class name matches
 #' @param verbose logical if TRUE print more.
 #' @param dryRun logical if TRUE do not perform joins, only print steps.
@@ -986,6 +987,9 @@ strMapToString <- function(m) {
 executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 ...,
                                 checkColumns= FALSE,
+                                computeFn= function(x, name) {
+                                  dplyr::compute(x, name=name)
+                                },
                                 eagerCompute= TRUE,
                                 checkColClasses= FALSE,
                                 verbose= FALSE,
@@ -1103,7 +1107,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
         addConstantColumn(., tableIndCol, 1) %.>%
         replyr_mapRestrictCols(., nmap, restrict=TRUE)
       if(eagerCompute) {
-        ti <- dplyr::compute(ti, name=tempNameGenerator())
+        ti <- computeFn(ti, name=tempNameGenerator())
       }
     }
     if(first) {
@@ -1128,7 +1132,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                  ifelse(is.na(REPLYR_TABLE_PRESENT_COL), 0, 1))
         )
         if(eagerCompute) {
-          res <- dplyr::compute(res, name=tempNameGenerator())
+          res <- computeFn(res, name=tempNameGenerator())
         }
       }
     }
