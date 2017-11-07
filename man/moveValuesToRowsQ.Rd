@@ -82,34 +82,23 @@ cT <- replyr::buildUnPivotControlTable(nameForNewKeyColumn= 'meas',
                                        columnsToTakeFrom= c('AUC', 'R2'))
 replyr::moveValuesToRowsQ(cT, 'dR', my_db)
 
-
 # non-trivial example
 wideTableName <- 'dat'
 d <- dplyr::copy_to(my_db,
-      dplyr::tribble(
-        ~ID,          ~c1,          ~c2,          ~c3,          ~c4,
-      'id1', 'val_id1_c1', 'val_id1_c2', 'val_id1_c3', 'val_id1_c4',
-      'id2', 'val_id2_c1', 'val_id2_c2', 'val_id2_c3', 'val_id2_c4',
-      'id3', 'val_id3_c1', 'val_id3_c2', 'val_id3_c3', 'val_id3_c4' ),
-             wideTableName, overwrite = TRUE, temporary=TRUE)
+                    dplyr::tribble(
+                      ~ID,          ~c1,          ~c2,          ~c3,
+                      'id1', 'val_id1_c1', 'val_id1_c2', 'val_id1_c3',
+                      'id2', 'val_id2_c1', 'val_id2_c2', 'val_id2_c3',
+                      'id3', 'val_id3_c1', 'val_id3_c2', 'val_id3_c3' ),
+                    wideTableName, overwrite = TRUE, temporary=TRUE)
 controlTable <- dplyr::tribble(~group, ~col1, ~col2,
-                                 'aa',  'c1',  'c2',
-                                 'bb',  'c3',  'c4')
+                               'aa',  'c1',  'c2',
+                               'bb',  'c1',  'c3')
 columnsToCopy <- 'ID'
 moveValuesToRowsQ(controlTable,
                   wideTableName,
                   my_db,
                   columnsToCopy = columnsToCopy)
-# # Source:   table<mvtrq_tnl6kueh5givlkobcl54_0000000001> [?? x 4]
-# # Database: sqlite 3.19.3 [:memory:]
-#      ID group       col1       col2
-#   <chr> <chr>      <chr>      <chr>
-# 1   id1    aa val_id1_c1 val_id1_c2
-# 2   id1    bb val_id1_c3 val_id1_c4
-# 3   id2    aa val_id2_c1 val_id2_c2
-# 4   id2    bb val_id2_c3 val_id2_c4
-# 5   id3    aa val_id3_c1 val_id3_c2
-# 6   id3    bb val_id3_c3 val_id3_c4
 
 
 

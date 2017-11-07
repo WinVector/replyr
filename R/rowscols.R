@@ -152,34 +152,23 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #'                                        columnsToTakeFrom= c('AUC', 'R2'))
 #' replyr::moveValuesToRowsQ(cT, 'dR', my_db)
 #'
-#'
 #' # non-trivial example
 #' wideTableName <- 'dat'
 #' d <- dplyr::copy_to(my_db,
-#'       dplyr::tribble(
-#'         ~ID,          ~c1,          ~c2,          ~c3,          ~c4,
-#'       'id1', 'val_id1_c1', 'val_id1_c2', 'val_id1_c3', 'val_id1_c4',
-#'       'id2', 'val_id2_c1', 'val_id2_c2', 'val_id2_c3', 'val_id2_c4',
-#'       'id3', 'val_id3_c1', 'val_id3_c2', 'val_id3_c3', 'val_id3_c4' ),
-#'              wideTableName, overwrite = TRUE, temporary=TRUE)
+#'                     dplyr::tribble(
+#'                       ~ID,          ~c1,          ~c2,          ~c3,
+#'                       'id1', 'val_id1_c1', 'val_id1_c2', 'val_id1_c3',
+#'                       'id2', 'val_id2_c1', 'val_id2_c2', 'val_id2_c3',
+#'                       'id3', 'val_id3_c1', 'val_id3_c2', 'val_id3_c3' ),
+#'                     wideTableName, overwrite = TRUE, temporary=TRUE)
 #' controlTable <- dplyr::tribble(~group, ~col1, ~col2,
-#'                                  'aa',  'c1',  'c2',
-#'                                  'bb',  'c3',  'c4')
+#'                                'aa',  'c1',  'c2',
+#'                                'bb',  'c1',  'c3')
 #' columnsToCopy <- 'ID'
 #' moveValuesToRowsQ(controlTable,
 #'                   wideTableName,
 #'                   my_db,
 #'                   columnsToCopy = columnsToCopy)
-#' # # Source:   table<mvtrq_tnl6kueh5givlkobcl54_0000000001> [?? x 4]
-#' # # Database: sqlite 3.19.3 [:memory:]
-#' #      ID group       col1       col2
-#' #   <chr> <chr>      <chr>      <chr>
-#' # 1   id1    aa val_id1_c1 val_id1_c2
-#' # 2   id1    bb val_id1_c3 val_id1_c4
-#' # 3   id2    aa val_id2_c1 val_id2_c2
-#' # 4   id2    bb val_id2_c3 val_id2_c4
-#' # 5   id3    aa val_id3_c1 val_id3_c2
-#' # 6   id3    bb val_id3_c3 val_id3_c4
 #'
 #'
 #'
@@ -387,6 +376,7 @@ buildPivotControlTable <- function(d,
 #' @param checkNames logical, if TRUE check names
 #' @param showQuery if TRUE print query
 #' @param defaultValue if not NULL literal to use for non-match values.
+#' @param dropDups logical if TRUE supress duplicate columns (duplicate determined by name, not content).
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
 #' @seealso \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
@@ -416,31 +406,24 @@ buildPivotControlTable <- function(d,
 #' # non-trival transform
 #' tallTableName <- 'dat'
 #' d <- dplyr::copy_to(my_db,
-#'   dplyr::tribble(
-#'    ~ID,   ~group, ~col1,              ~col2,
-#'    "id1", "aa",   "val_id1_gaa_col1", "val_id1_gaa_col2",
-#'    "id1", "bb",   "val_id1_gbb_col1", "val_id1_gbb_col2",
-#'    "id2", "aa",   "val_id2_gaa_col1", "val_id2_gaa_col2",
-#'    "id2", "bb",   "val_id2_gbb_col1", "val_id2_gbb_col2",
-#'    "id3", "aa",   "val_id3_gaa_col1", "val_id3_gaa_col2",
-#'    "id3", "bb",   "val_id3_gbb_col1", "val_id3_gbb_col2" ),
+#'                     dplyr::tribble(
+#'     ~ID, ~group,       ~col1,       ~col2,
+#'     'id1', 'aa', 'val_id1_c1', 'val_id1_c2',
+#'     'id1', 'bb', 'val_id1_c1', 'val_id1_c3',
+#'     'id2', 'aa', 'val_id2_c1', 'val_id2_c2',
+#'     'id2', 'bb', 'val_id2_c1', 'val_id2_c3',
+#'     'id3', 'aa', 'val_id3_c1', 'val_id3_c2',
+#'     'id3', 'bb', 'val_id3_c1', 'val_id3_c3' ),
 #'          tallTableName,
 #'          overwrite = TRUE, temporary=TRUE)
 #' controlTable <- dplyr::tribble(~group, ~col1, ~col2,
 #'                                  'aa',  'c1',  'c2',
-#'                                  'bb',  'c3',  'c4')
+#'                                  'bb',  NA,    'c3')
 #' keyColumns <- 'ID'
 #' moveValuesToColumnsQ(keyColumns,
 #'                      controlTable,
 #'                      tallTableName,
 #'                      my_db)
-#' # # Source:   table<mvtcq_y579atnjk3zevjqvkeok_0000000001> [?? x 5]
-#' # # Database: sqlite 3.19.3 [:memory:]
-#' #      ID               c1               c2               c3               c4
-#' #   <chr>            <chr>            <chr>            <chr>            <chr>
-#' # 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
-#' # 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
-#' # 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
 #'
 #'
 #' @export
@@ -455,7 +438,8 @@ moveValuesToColumnsQ <- function(keyColumns,
                                  strict = FALSE,
                                  checkNames = TRUE,
                                  showQuery = FALSE,
-                                 defaultValue = NULL) {
+                                 defaultValue = NULL,
+                                 dropDups = FALSE) {
   if(length(list(...))>0) {
     stop("replyr::moveValuesToColumnsQ unexpected arguments.")
   }
@@ -501,9 +485,15 @@ moveValuesToColumnsQ <- function(keyColumns,
   collectstmts <- vector(mode = 'list',
                          length = nrow(controlTable) * (ncol(controlTable)-1))
   collectN <- 1
+  saw <- list()
   for(i in seq_len(nrow(controlTable))) {
     for(j in 2:ncol(controlTable)) {
       cij <- controlTable[i,j,drop=TRUE]
+      if((!is.null(cij))&&(!is.na(cij))) {
+        if(dropDups && (cij %in% names(saw))) {
+          cij <- NA
+        }
+      }
       if((!is.null(cij))&&(!is.na(cij))) {
         collectstmts[[collectN]] <- paste0("MAX( CASE WHEN ", # pseudo aggregator
                                            "a.",
@@ -516,6 +506,7 @@ moveValuesToColumnsQ <- function(keyColumns,
                                            missingCaseTerm,
                                            " END ) ",
                                            DBI::dbQuoteIdentifier(my_db, cij))
+        saw[[cij]] <- TRUE
       }
       collectN <- collectN + 1
     }

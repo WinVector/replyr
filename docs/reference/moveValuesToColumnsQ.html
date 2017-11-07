@@ -128,7 +128,7 @@ and controlTable.</p>
   <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"mvtcq"</span>),
   <span class='kw'>strict</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>checkNames</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>showQuery</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>defaultValue</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>defaultValue</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dropDups</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -176,6 +176,10 @@ and controlTable.</p>
     <tr>
       <th>defaultValue</th>
       <td><p>if not NULL literal to use for non-match values.</p></td>
+    </tr>
+    <tr>
+      <th>dropDups</th>
+      <td><p>logical if TRUE supress duplicate columns (duplicate determined by name, not content).</p></td>
     </tr>
     </table>
     
@@ -239,37 +243,30 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='co'># non-trival transform</span>
 <span class='no'>tallTableName</span> <span class='kw'>&lt;-</span> <span class='st'>'dat'</span>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>my_db</span>,
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
-   ~<span class='no'>ID</span>,   ~<span class='no'>group</span>, ~<span class='no'>col1</span>,              ~<span class='no'>col2</span>,
-   <span class='st'>"id1"</span>, <span class='st'>"aa"</span>,   <span class='st'>"val_id1_gaa_col1"</span>, <span class='st'>"val_id1_gaa_col2"</span>,
-   <span class='st'>"id1"</span>, <span class='st'>"bb"</span>,   <span class='st'>"val_id1_gbb_col1"</span>, <span class='st'>"val_id1_gbb_col2"</span>,
-   <span class='st'>"id2"</span>, <span class='st'>"aa"</span>,   <span class='st'>"val_id2_gaa_col1"</span>, <span class='st'>"val_id2_gaa_col2"</span>,
-   <span class='st'>"id2"</span>, <span class='st'>"bb"</span>,   <span class='st'>"val_id2_gbb_col1"</span>, <span class='st'>"val_id2_gbb_col2"</span>,
-   <span class='st'>"id3"</span>, <span class='st'>"aa"</span>,   <span class='st'>"val_id3_gaa_col1"</span>, <span class='st'>"val_id3_gaa_col2"</span>,
-   <span class='st'>"id3"</span>, <span class='st'>"bb"</span>,   <span class='st'>"val_id3_gbb_col1"</span>, <span class='st'>"val_id3_gbb_col2"</span> ),
+                    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
+    ~<span class='no'>ID</span>, ~<span class='no'>group</span>,       ~<span class='no'>col1</span>,       ~<span class='no'>col2</span>,
+    <span class='st'>'id1'</span>, <span class='st'>'aa'</span>, <span class='st'>'val_id1_c1'</span>, <span class='st'>'val_id1_c2'</span>,
+    <span class='st'>'id1'</span>, <span class='st'>'bb'</span>, <span class='st'>'val_id1_c1'</span>, <span class='st'>'val_id1_c3'</span>,
+    <span class='st'>'id2'</span>, <span class='st'>'aa'</span>, <span class='st'>'val_id2_c1'</span>, <span class='st'>'val_id2_c2'</span>,
+    <span class='st'>'id2'</span>, <span class='st'>'bb'</span>, <span class='st'>'val_id2_c1'</span>, <span class='st'>'val_id2_c3'</span>,
+    <span class='st'>'id3'</span>, <span class='st'>'aa'</span>, <span class='st'>'val_id3_c1'</span>, <span class='st'>'val_id3_c2'</span>,
+    <span class='st'>'id3'</span>, <span class='st'>'bb'</span>, <span class='st'>'val_id3_c1'</span>, <span class='st'>'val_id3_c3'</span> ),
          <span class='no'>tallTableName</span>,
          <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
 <span class='no'>controlTable</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>group</span>, ~<span class='no'>col1</span>, ~<span class='no'>col2</span>,
                                  <span class='st'>'aa'</span>,  <span class='st'>'c1'</span>,  <span class='st'>'c2'</span>,
-                                 <span class='st'>'bb'</span>,  <span class='st'>'c3'</span>,  <span class='st'>'c4'</span>)
+                                 <span class='st'>'bb'</span>,  <span class='fl'>NA</span>,    <span class='st'>'c3'</span>)
 <span class='no'>keyColumns</span> <span class='kw'>&lt;-</span> <span class='st'>'ID'</span>
 <span class='fu'>moveValuesToColumnsQ</span>(<span class='no'>keyColumns</span>,
                      <span class='no'>controlTable</span>,
                      <span class='no'>tallTableName</span>,
-                     <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_zqjukl6hhrbxbcybxi1x_0000000001&gt; [?? x 5]
+                     <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_zqjukl6hhrbxbcybxi1x_0000000001&gt; [?? x 4]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
-#&gt;      ID               c1               c2               c3               c4
-#&gt;   &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;
-#&gt; 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
-#&gt; 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
-#&gt; 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2</div><div class='input'># # Source:   table<mvtcq_y579atnjk3zevjqvkeok_0000000001> [?? x 5]
-# # Database: sqlite 3.19.3 [:memory:]
-#      ID               c1               c2               c3               c4
-#   <chr>            <chr>            <chr>            <chr>            <chr>
-# 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
-# 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
-# 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
-
+#&gt;      ID         c1         c2         c3
+#&gt;   &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
+#&gt; 1   id1 val_id1_c1 val_id1_c2 val_id1_c3
+#&gt; 2   id2 val_id2_c1 val_id2_c2 val_id2_c3
+#&gt; 3   id3 val_id3_c1 val_id3_c2 val_id3_c3</div><div class='input'>
 
 </div></pre>
   </div>

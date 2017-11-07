@@ -232,19 +232,18 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 #&gt;   &lt;chr&gt; &lt;dbl&gt;
 #&gt; 1   AUC   0.6
 #&gt; 2    R2   0.2</div><div class='input'>
-
 <span class='co'># non-trivial example</span>
 <span class='no'>wideTableName</span> <span class='kw'>&lt;-</span> <span class='st'>'dat'</span>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/copy_to.html'>copy_to</a></span>(<span class='no'>my_db</span>,
-      <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
-        ~<span class='no'>ID</span>,          ~<span class='no'>c1</span>,          ~<span class='no'>c2</span>,          ~<span class='no'>c3</span>,          ~<span class='no'>c4</span>,
-      <span class='st'>'id1'</span>, <span class='st'>'val_id1_c1'</span>, <span class='st'>'val_id1_c2'</span>, <span class='st'>'val_id1_c3'</span>, <span class='st'>'val_id1_c4'</span>,
-      <span class='st'>'id2'</span>, <span class='st'>'val_id2_c1'</span>, <span class='st'>'val_id2_c2'</span>, <span class='st'>'val_id2_c3'</span>, <span class='st'>'val_id2_c4'</span>,
-      <span class='st'>'id3'</span>, <span class='st'>'val_id3_c1'</span>, <span class='st'>'val_id3_c2'</span>, <span class='st'>'val_id3_c3'</span>, <span class='st'>'val_id3_c4'</span> ),
-             <span class='no'>wideTableName</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+                    <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(
+                      ~<span class='no'>ID</span>,          ~<span class='no'>c1</span>,          ~<span class='no'>c2</span>,          ~<span class='no'>c3</span>,
+                      <span class='st'>'id1'</span>, <span class='st'>'val_id1_c1'</span>, <span class='st'>'val_id1_c2'</span>, <span class='st'>'val_id1_c3'</span>,
+                      <span class='st'>'id2'</span>, <span class='st'>'val_id2_c1'</span>, <span class='st'>'val_id2_c2'</span>, <span class='st'>'val_id2_c3'</span>,
+                      <span class='st'>'id3'</span>, <span class='st'>'val_id3_c1'</span>, <span class='st'>'val_id3_c2'</span>, <span class='st'>'val_id3_c3'</span> ),
+                    <span class='no'>wideTableName</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
 <span class='no'>controlTable</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/reexports.html'>tribble</a></span>(~<span class='no'>group</span>, ~<span class='no'>col1</span>, ~<span class='no'>col2</span>,
-                                 <span class='st'>'aa'</span>,  <span class='st'>'c1'</span>,  <span class='st'>'c2'</span>,
-                                 <span class='st'>'bb'</span>,  <span class='st'>'c3'</span>,  <span class='st'>'c4'</span>)
+                               <span class='st'>'aa'</span>,  <span class='st'>'c1'</span>,  <span class='st'>'c2'</span>,
+                               <span class='st'>'bb'</span>,  <span class='st'>'c1'</span>,  <span class='st'>'c3'</span>)
 <span class='no'>columnsToCopy</span> <span class='kw'>&lt;-</span> <span class='st'>'ID'</span>
 <span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>,
                   <span class='no'>wideTableName</span>,
@@ -254,21 +253,11 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 #&gt;      ID group       col1       col2
 #&gt;   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
 #&gt; 1   id1    aa val_id1_c1 val_id1_c2
-#&gt; 2   id1    bb val_id1_c3 val_id1_c4
+#&gt; 2   id1    bb val_id1_c1 val_id1_c3
 #&gt; 3   id2    aa val_id2_c1 val_id2_c2
-#&gt; 4   id2    bb val_id2_c3 val_id2_c4
+#&gt; 4   id2    bb val_id2_c1 val_id2_c3
 #&gt; 5   id3    aa val_id3_c1 val_id3_c2
-#&gt; 6   id3    bb val_id3_c3 val_id3_c4</div><div class='input'># # Source:   table<mvtrq_tnl6kueh5givlkobcl54_0000000001> [?? x 4]
-# # Database: sqlite 3.19.3 [:memory:]
-#      ID group       col1       col2
-#   <chr> <chr>      <chr>      <chr>
-# 1   id1    aa val_id1_c1 val_id1_c2
-# 2   id1    bb val_id1_c3 val_id1_c4
-# 3   id2    aa val_id2_c1 val_id2_c2
-# 4   id2    bb val_id2_c3 val_id2_c4
-# 5   id3    aa val_id3_c1 val_id3_c2
-# 6   id3    bb val_id3_c3 val_id3_c4
-
+#&gt; 6   id3    bb val_id3_c1 val_id3_c3</div><div class='input'>
 
 
 </div></pre>

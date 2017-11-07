@@ -8,7 +8,7 @@ moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
   columnsToCopy = NULL,
   tempNameGenerator = replyr::makeTempNameGenerator("mvtcq"),
   strict = FALSE, checkNames = TRUE, showQuery = FALSE,
-  defaultValue = NULL)
+  defaultValue = NULL, dropDups = FALSE)
 }
 \arguments{
 \item{keyColumns}{character list of column defining row groups}
@@ -32,6 +32,8 @@ moveValuesToColumnsQ(keyColumns, controlTable, tallTableName, my_db, ...,
 \item{showQuery}{if TRUE print query}
 
 \item{defaultValue}{if not NULL literal to use for non-match values.}
+
+\item{dropDups}{logical if TRUE supress duplicate columns (duplicate determined by name, not content).}
 }
 \value{
 wide table built by mapping key-grouped tallTable rows to one row per group
@@ -89,31 +91,24 @@ replyr::moveValuesToColumnsQ(keyColumns = NULL,
 # non-trival transform
 tallTableName <- 'dat'
 d <- dplyr::copy_to(my_db,
-  dplyr::tribble(
-   ~ID,   ~group, ~col1,              ~col2,
-   "id1", "aa",   "val_id1_gaa_col1", "val_id1_gaa_col2",
-   "id1", "bb",   "val_id1_gbb_col1", "val_id1_gbb_col2",
-   "id2", "aa",   "val_id2_gaa_col1", "val_id2_gaa_col2",
-   "id2", "bb",   "val_id2_gbb_col1", "val_id2_gbb_col2",
-   "id3", "aa",   "val_id3_gaa_col1", "val_id3_gaa_col2",
-   "id3", "bb",   "val_id3_gbb_col1", "val_id3_gbb_col2" ),
+                    dplyr::tribble(
+    ~ID, ~group,       ~col1,       ~col2,
+    'id1', 'aa', 'val_id1_c1', 'val_id1_c2',
+    'id1', 'bb', 'val_id1_c1', 'val_id1_c3',
+    'id2', 'aa', 'val_id2_c1', 'val_id2_c2',
+    'id2', 'bb', 'val_id2_c1', 'val_id2_c3',
+    'id3', 'aa', 'val_id3_c1', 'val_id3_c2',
+    'id3', 'bb', 'val_id3_c1', 'val_id3_c3' ),
          tallTableName,
          overwrite = TRUE, temporary=TRUE)
 controlTable <- dplyr::tribble(~group, ~col1, ~col2,
                                  'aa',  'c1',  'c2',
-                                 'bb',  'c3',  'c4')
+                                 'bb',  NA,    'c3')
 keyColumns <- 'ID'
 moveValuesToColumnsQ(keyColumns,
                      controlTable,
                      tallTableName,
                      my_db)
-# # Source:   table<mvtcq_y579atnjk3zevjqvkeok_0000000001> [?? x 5]
-# # Database: sqlite 3.19.3 [:memory:]
-#      ID               c1               c2               c3               c4
-#   <chr>            <chr>            <chr>            <chr>            <chr>
-# 1   id1 val_id1_gaa_col1 val_id1_gaa_col2 val_id1_gbb_col1 val_id1_gbb_col2
-# 2   id2 val_id2_gaa_col1 val_id2_gaa_col2 val_id2_gbb_col1 val_id2_gbb_col2
-# 3   id3 val_id3_gaa_col1 val_id3_gaa_col2 val_id3_gbb_col1 val_id3_gbb_col2
 
 
 }
