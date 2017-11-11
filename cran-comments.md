@@ -10,13 +10,14 @@
  * using R Under development (unstable) (2017-09-12 r73242)
  * using platform: x86_64-w64-mingw32 (64-bit)
 
-## R CMD check --as-cran replyr_0.8.2.tar.gz
+## R CMD check --as-cran replyr_0.9.0.tar.gz
 
- * using session charset: UTF-8
- * using option ‘--as-cran’
- * checking for file ‘replyr/DESCRIPTION’ ... OK
- * checking extension type ... Package
- * this is package ‘replyr’ version ‘0.8.2’
+* using session charset: UTF-8
+* using option ‘--as-cran’
+* checking for file ‘replyr/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘replyr’ version ‘0.9.0’
+
 
 Note_to_CRAN_maintainers
 Maintainer: ‘John Mount <jmount@win-vector.com>’
