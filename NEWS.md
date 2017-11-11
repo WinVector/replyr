@@ -1,5 +1,5 @@
 
-# replyr 0.8.3 2017-11-07
+# replyr 0.8.3 2017-11-11
 
  * Fix some corner cases in replyr_summary() and replyr_nrow().
  * Add compute option to replyr_summary().
@@ -7,6 +7,7 @@
  * Default Q() to not strict.
  * Allow choice of compute function in executeLeftJoinPlan().
  * Remove dup columns by name in moveValuesToColumnsQ().
+ * Remove deprecated older pivot/un-pivot code.
  
 # replyr 0.8.2 2017-10-29
 
