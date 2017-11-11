@@ -112,12 +112,12 @@ replyr_union_all <- function(tabA, tabB,
         REPLYRCOLB= paste0(ci,'_b'),
         REPLYRORIGCOL= ci),
       joined <- joined %.>%
-        mutate(., REPLYRORIGCOL =
+        dplyr::mutate(., REPLYRORIGCOL =
                  ifelse(side_x=='a', REPLYRCOLA, REPLYRCOLB)) %.>%
-        select(., -REPLYRCOLA, -REPLYRCOLB)
+        dplyr::select(., -REPLYRCOLA, -REPLYRCOLB)
     )
   }
-  joined <- select(joined, -side_x)
+  joined <- dplyr::select(joined, -side_x)
   # map remaining columns back
   uniqueToA <- setdiff(colsA, colsB)
   if(length(uniqueToA)>0) {

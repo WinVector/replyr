@@ -27,6 +27,8 @@ NULL
 # re-export so old code and demos work (from when functions were here)
 
 #' @importFrom wrapr let
+#' @importFrom seplyr novelName
+#' @importFrom cdata grepdf
 #' @export
 wrapr::let
 

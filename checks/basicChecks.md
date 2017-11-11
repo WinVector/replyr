@@ -17,8 +17,13 @@ library("replyr")
  #  Loading required package: seplyr
  #  Loading required package: wrapr
  #  Loading required package: cdata
+ #  
+ #  Attaching package: 'replyr'
+ #  The following object is masked from 'package:cdata':
+ #  
+ #      makeTempNameGenerator
 packageVersion("replyr")
- #  [1] '0.8.3'
+ #  [1] '0.9.0'
 source('CheckFns.R')
 ```
 
@@ -186,19 +191,6 @@ resBase <- runExample(noopCopy)
  #    cv group
  #  1 20     1
  #  2  8     2
- #  [1] "moveValuesToColumnsQ"
- #    index meastype_meas1 meastype_meas2
- #  1     1           m1_1           m2_1
- #  2     2           m1_2           m2_2
- #  3     3           m1_3           m2_3
- #  [1] "moveValuesToRowsQ"
- #    index info meastype meas
- #  1     1    a    meas1 m1_1
- #  2     1    a    meas2 m2_1
- #  3     2    b    meas1 m1_2
- #  4     2    b    meas2 m2_2
- #  5     3    c    meas1 m1_3
- #  6     3    c    meas2 m2_3
 ```
 
 Local `tbl` example.
@@ -373,23 +365,6 @@ resTbl <- runExample(tblCopy)
  #    <dbl> <dbl>
  #  1    20     1
  #  2     8     2
- #  [1] "moveValuesToColumnsQ"
- #  # A tibble: 3 x 3
- #    index meastype_meas1 meastype_meas2
- #    <dbl>          <chr>          <chr>
- #  1     1           m1_1           m2_1
- #  2     2           m1_2           m2_2
- #  3     3           m1_3           m2_3
- #  [1] "moveValuesToRowsQ"
- #  # A tibble: 6 x 4
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     1     a    meas2  m2_1
- #  3     2     b    meas1  m1_2
- #  4     2     b    meas2  m2_2
- #  5     3     c    meas1  m1_3
- #  6     3     c    meas2  m2_3
 if(!listsOfSameData(resBase, resTbl)) {
   stop("tbl result differs")
 }
@@ -499,7 +474,7 @@ resSQLite <- runExample(copyToRemote)
  #  [1] "a" "c"
  #  
  #  d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) 
- #  # Source:   table<replyr_filter_cqdrpwmipllzow29mzsg_0000000001> [?? x 2]
+ #  # Source:   table<replyr_filter_2x9qnr92gqz6b13po9wj_0000000001> [?? x 2]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y
  #    <chr> <int>
@@ -544,7 +519,7 @@ resSQLite <- runExample(copyToRemote)
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
  #  [1] "coalesce example 1"
- #  # Source:     table<replyr_coalesce_tionsbijxphekvnwy4kn_0000000008> [?? x 3]
+ #  # Source:     table<replyr_coalesce_kwcxnjiyvswkfqnd9mze_0000000008> [?? x 3]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: year, name
  #     year count  name
@@ -556,7 +531,7 @@ resSQLite <- runExample(copyToRemote)
  #  5  2009     0      
  #  6  2010    NA     c
  #  [1] "coalesce example 2"
- #  # Source:     table<replyr_coalesce_rmonvgvoqsuhywqazj7o_0000000006> [?? x 3]
+ #  # Source:     table<replyr_coalesce_ggrfdq7umfwjfcv9rkww_0000000006> [?? x 3]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: year, name
  #      year count  name
@@ -573,7 +548,7 @@ resSQLite <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
- #  # Source:     table<replyr_bind_rows_oy9d74qj6owh4gxyzpte_0000000003> [?? x 3]
+ #  # Source:     table<replyr_bind_rows_7l3h8rmpyi6xblwpptly_0000000003> [?? x 3]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: year
  #     year count  name
@@ -582,34 +557,13 @@ resSQLite <- runExample(copyToRemote)
  #  2  2007     1     b
  #  3  2010    NA     c
  #  [1] "gapply"
- #  # Source:     table<replyr_gapply_5iorlajntotrnxkwl7pu_0000000006> [?? x 2]
+ #  # Source:     table<replyr_gapply_wnm5ebg5glqrwlgsw4oz_0000000006> [?? x 2]
  #  # Database:   sqlite 3.19.3 [:memory:]
  #  # Ordered by: group
  #       cv group
  #    <dbl> <dbl>
  #  1    20     1
  #  2     8     2
- #  [1] "moveValuesToColumnsQ"
- #  # Source:     table<mvtcq_lp7hx1sntt94q4uhrots_0000000001> [?? x 3]
- #  # Database:   sqlite 3.19.3 [:memory:]
- #  # Ordered by: index
- #    index meastype_meas1 meastype_meas2
- #    <dbl>          <chr>          <chr>
- #  1     1           m1_1           m2_1
- #  2     2           m1_2           m2_2
- #  3     3           m1_3           m2_3
- #  [1] "moveValuesToRowsQ"
- #  # Source:     table<mvtrq_tzwlrw8scjhudjmgfcgx_0000000001> [?? x 4]
- #  # Database:   sqlite 3.19.3 [:memory:]
- #  # Ordered by: index, meastype
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     1     a    meas2  m2_1
- #  3     2     b    meas1  m1_2
- #  4     2     b    meas2  m2_2
- #  5     3     c    meas1  m1_3
- #  6     3     c    meas2  m2_3
 failingFrameIndices(resBase, resSQLite)
  #  integer(0)
 if(!listsOfSameData(resBase, resSQLite)) {
@@ -618,8 +572,8 @@ if(!listsOfSameData(resBase, resSQLite)) {
 DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  877954 46.9    1442291 77.1  1442291 77.1
- #  Vcells 1659198 12.7    3142662 24.0  2060183 15.8
+ #  Ncells  858251 45.9    1442291 77.1  1442291 77.1
+ #  Vcells 1637199 12.5    3142662 24.0  2060103 15.8
 ```
 
 MySQL example ("docker start mysql"). Kind of a poor results as the adapted MySql has a hard time with `NA`.
@@ -770,7 +724,7 @@ resPostgreSQL <- runExample(copyToRemote)
  #  [1] "a" "c"
  #  
  #  d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) 
- #  # Source:   table<replyr_filter_oeksnyicoepladalw2p7_0000000001> [?? x 2]
+ #  # Source:   table<replyr_filter_fxs2fqqarhqbhfl4mqtu_0000000001> [?? x 2]
  #  # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
  #        x     y
  #    <chr> <int>
@@ -815,7 +769,7 @@ resPostgreSQL <- runExample(copyToRemote)
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
  #  [1] "coalesce example 1"
- #  # Source:     table<replyr_coalesce_qk9bs0pac15yuuvdczqg_0000000008> [?? x 3]
+ #  # Source:     table<replyr_coalesce_yb9kgtcjolnezk3o8dxd_0000000008> [?? x 3]
  #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  # Ordered by: year, name
  #     year count  name
@@ -827,7 +781,7 @@ resPostgreSQL <- runExample(copyToRemote)
  #  5  2009     0      
  #  6  2010    NA     c
  #  [1] "coalesce example 2"
- #  # Source:     table<replyr_coalesce_plpgce8rlylvxj0obfr1_0000000006> [?? x 3]
+ #  # Source:     table<replyr_coalesce_fihnjryekff0zvkiotws_0000000006> [?? x 3]
  #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  # Ordered by: year, name
  #      year count  name
@@ -844,7 +798,7 @@ resPostgreSQL <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
- #  # Source:     table<replyr_bind_rows_0nv66bhzn5bv52giqkyk_0000000003> [?? x 3]
+ #  # Source:     table<replyr_bind_rows_a6g64hzrkhmrctvik1ol_0000000003> [?? x 3]
  #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  # Ordered by: year
  #     year count  name
@@ -853,34 +807,13 @@ resPostgreSQL <- runExample(copyToRemote)
  #  2  2007     1     b
  #  3  2010    NA     c
  #  [1] "gapply"
- #  # Source:     table<replyr_gapply_8u2ew7uxrgonhjzqs70j_0000000006> [?? x 2]
+ #  # Source:     table<replyr_gapply_iw0o0loxbr3cpr7vtrus_0000000006> [?? x 2]
  #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
  #  # Ordered by: group
  #       cv group
  #    <dbl> <dbl>
  #  1    20     1
  #  2     8     2
- #  [1] "moveValuesToColumnsQ"
- #  # Source:     table<mvtcq_ih3ppwh4g1lxu0jdpfqf_0000000001> [?? x 3]
- #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  # Ordered by: index
- #    index meastype_meas1 meastype_meas2
- #    <dbl>          <chr>          <chr>
- #  1     1           m1_1           m2_1
- #  2     2           m1_2           m2_2
- #  3     3           m1_3           m2_3
- #  [1] "moveValuesToRowsQ"
- #  # Source:     table<mvtrq_n9whs6wlibfqrziipzz3_0000000001> [?? x 4]
- #  # Database:   postgres 9.6.1 [postgres@localhost:5432/postgres]
- #  # Ordered by: index, meastype
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     1     a    meas2  m2_1
- #  3     2     b    meas1  m1_2
- #  4     2     b    meas2  m2_2
- #  5     3     c    meas1  m1_3
- #  6     3     c    meas2  m2_3
 if(!listsOfSameData(resBase, resPostgreSQL)) {
   stop("PostgreSQL result differs")
 }
@@ -888,8 +821,8 @@ DBI::dbDisconnect(my_db)
  #  [1] TRUE
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  916838   49    1442291 77.1  1442291 77.1
- #  Vcells 1703150   13    3142662 24.0  2234621 17.1
+ #  Ncells  897099 48.0    1442291 77.1  1442291 77.1
+ #  Vcells 1680939 12.9    3142662 24.0  2215514 17.0
 ```
 
 Another PostgreSQL example [`devtools::install_github('rstats-db/RPostgres')`](https://github.com/r-dbi/RPostgres). Doesn't seem to work with `dplyr` yet. The following fails:
@@ -1026,7 +959,7 @@ resSpark <- runExample(copyToRemote)
  #  [1] "a" "c"
  #  
  #  d3 %.>% replyr::replyr_filter(., "x",values,verbose=FALSE) 
- #  # Source:   table<replyr_filter_qytocu4p3vtnngtzchvd_0000000001> [?? x 2]
+ #  # Source:   table<replyr_filter_gmw9mqnkmnvlu8tvwupa_0000000001> [?? x 2]
  #  # Database: spark_connection
  #        x     y
  #    <chr> <int>
@@ -1071,7 +1004,7 @@ resSpark <- runExample(copyToRemote)
  #  1          5.8         4.0  setosa     0
  #  2          5.7         4.4  setosa     1
  #  [1] "coalesce example 1"
- #  # Source:     table<sparklyr_tmp_14f286202b957> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_17a7b4b85b77f> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year, name
  #     year count  name
@@ -1083,7 +1016,7 @@ resSpark <- runExample(copyToRemote)
  #  5  2009     0      
  #  6  2010   NaN     c
  #  [1] "coalesce example 2"
- #  # Source:     table<sparklyr_tmp_14f2820d63106> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_17a7b37d21995> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year, name
  #      year count  name
@@ -1100,7 +1033,7 @@ resSpark <- runExample(copyToRemote)
  #  10  2007     1     b
  #  # ... with more rows
  #  [1] "split re-join"
- #  # Source:     table<sparklyr_tmp_14f284e2c91c1> [?? x 3]
+ #  # Source:     table<sparklyr_tmp_17a7b428da1d4> [?? x 3]
  #  # Database:   spark_connection
  #  # Ordered by: year
  #     year count  name
@@ -1109,42 +1042,21 @@ resSpark <- runExample(copyToRemote)
  #  2  2007     1     b
  #  3  2010   NaN     c
  #  [1] "gapply"
- #  # Source:     table<sparklyr_tmp_14f2850153dff> [?? x 2]
+ #  # Source:     table<sparklyr_tmp_17a7b607b876e> [?? x 2]
  #  # Database:   spark_connection
  #  # Ordered by: group
  #       cv group
  #    <dbl> <dbl>
  #  1    20     1
  #  2     8     2
- #  [1] "moveValuesToColumnsQ"
- #  # Source:     table<mvtcq_luvwjfkrrnnfylxsq1ol_0000000001> [?? x 3]
- #  # Database:   spark_connection
- #  # Ordered by: index
- #    index meastype_meas1 meastype_meas2
- #    <dbl>          <chr>          <chr>
- #  1     1           m1_1           m2_1
- #  2     2           m1_2           m2_2
- #  3     3           m1_3           m2_3
- #  [1] "moveValuesToRowsQ"
- #  # Source:     table<mvtrq_swf7nakpifxkafdgqc2k_0000000001> [?? x 4]
- #  # Database:   spark_connection
- #  # Ordered by: index, meastype
- #    index  info meastype  meas
- #    <dbl> <chr>    <chr> <chr>
- #  1     1     a    meas1  m1_1
- #  2     1     a    meas2  m2_1
- #  3     2     b    meas1  m1_2
- #  4     2     b    meas2  m2_2
- #  5     3     c    meas1  m1_3
- #  6     3     c    meas2  m2_3
 if(!listsOfSameData(resBase, resSpark)) {
   stop("Spark result differs")
 }
 spark_disconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  973933 52.1    1770749 94.6  1442291 77.1
- #  Vcells 1775226 13.6    3142662 24.0  2234621 17.1
+ #  Ncells  953241 51.0    1770749 94.6  1442291 77.1
+ #  Vcells 1752264 13.4    3142662 24.0  2215514 17.0
 ```
 
 ``` r
@@ -1153,6 +1065,6 @@ print("all done")
 rm(list=ls())
 gc(verbose = FALSE)
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  972705 52.0    1770749 94.6  1442291 77.1
- #  Vcells 1771167 13.6    3142662 24.0  2234621 17.1
+ #  Ncells  952219 50.9    1770749 94.6  1442291 77.1
+ #  Vcells 1748744 13.4    3142662 24.0  2215514 17.0
 ```

@@ -78,11 +78,18 @@ library("replyr")
 
     ## Loading required package: cdata
 
+    ## 
+    ## Attaching package: 'replyr'
+
+    ## The following object is masked from 'package:cdata':
+    ## 
+    ##     makeTempNameGenerator
+
 ``` r
 packageVersion("replyr")
 ```
 
-    ## [1] '0.8.2'
+    ## [1] '0.9.0'
 
 ``` r
 # binding rows
@@ -90,7 +97,7 @@ dB <- replyr_bind_rows(list(d, d))
 print(dB)
 ```
 
-    ## # Source:   table<replyr_bind_rows_jke6fkxtgqc0flj6edix_0000000002> [?? x
+    ## # Source:   table<replyr_bind_rows_2pyclwm54l27ajckhpsc_0000000002> [?? x
     ## #   2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
@@ -106,7 +113,7 @@ replyr_split(dB, 'group')
 ```
 
     ## $g2
-    ## # Source:   table<replyr_gapply_bogqnrfrzfi7m9amnhcz_0000000001> [?? x 2]
+    ## # Source:   table<replyr_gapply_x76ihzh0ka7pltegsi2w_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
     ##   <dbl> <chr>
@@ -114,7 +121,7 @@ replyr_split(dB, 'group')
     ## 2     5    g2
     ## 
     ## $g1
-    ## # Source:   table<replyr_gapply_bogqnrfrzfi7m9amnhcz_0000000003> [?? x 2]
+    ## # Source:   table<replyr_gapply_x76ihzh0ka7pltegsi2w_0000000003> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
     ##   <dbl> <chr>
@@ -123,19 +130,20 @@ replyr_split(dB, 'group')
 
 ``` r
 # pivoting
-pivotControl <-  buildPivotControlTable(d, 
+pivotControl <-  buildPivotControlTableN('d', 
                                         columnToTakeKeysFrom = 'group', 
                                         columnToTakeValuesFrom = 'x',
-                                        sep = '_')
-dW <- moveValuesToColumnsQ(keyColumns = NULL,
+                                        sep = '_',
+                                        my_db = my_db)
+dWname <- moveValuesToColumnsN(keyColumns = NULL,
                            controlTable = pivotControl,
-                           tallTableName = 'd',
-                           my_db = my_db, strict = FALSE) %>%
-  compute(name = 'dW')
+                           tallTable = 'd',
+                           my_db = my_db, strict = FALSE) 
+dW <- dplyr::tbl(my_db, dWname)
 print(dW)
 ```
 
-    ## # Source:   table<dW> [?? x 2]
+    ## # Source:   table<mvtcq_hknkrbihmlc7wqlv7ssh_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##   group_g1 group_g2
     ##      <dbl>    <dbl>
@@ -146,12 +154,14 @@ print(dW)
 unpivotControl <- buildUnPivotControlTable(nameForNewKeyColumn = 'group',
                                            nameForNewValueColumn = 'x',
                                            columnsToTakeFrom = colnames(dW))
-moveValuesToRowsQ(controlTable = unpivotControl,
-                  wideTableName = 'dW',
-                  my_db = my_db)
+dXname <- moveValuesToRowsN(controlTable = unpivotControl,
+                            wideTable = dWname,
+                            my_db = my_db)
+dX <- dplyr::tbl(my_db, dXname)
+print(dX)
 ```
 
-    ## # Source:   table<mvtrq_j0vu8nto5jw38f3xmcec_0000000001> [?? x 2]
+    ## # Source:   table<mvtrq_eba8smqvfgicqvjj6x5y_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##      group     x
     ##      <chr> <dbl>

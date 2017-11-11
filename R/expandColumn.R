@@ -133,7 +133,7 @@ expandColumn <- function(data, colName,
                                           rowId= ki,
                                           valDest= colName,
                                           idxDest= idxDest)
-                         di <- dplyr::select(di, one_of(copyCols))
+                         di <- dplyr::select(di, dplyr::one_of(copyCols))
                          if((!replyr_is_local_data(di)) && (replyr_is_local_data(vx))) {
                            cn <- replyr_get_src(di)
                            vx <- replyr_copy_to(cn, vx, tempNameGenerator(),
@@ -149,7 +149,7 @@ expandColumn <- function(data, colName,
                                    tempNameGenerator=tempNameGenerator)
   if(needToDropProducedRowID) {
     keepCols <- setdiff(colnames(dres), rowidSource)
-    dres <- dplyr::select(dres, one_of(keepCols))
+    dres <- dplyr::select(dres, dplyr::one_of(keepCols))
   }
   dres
 }

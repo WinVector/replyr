@@ -131,5 +131,5 @@ replyr_group_by <- function(.data, colnames) {
 #' @export
 #'
 replyr_select <- function(.data, colnames) {
-  dplyr::select(.data, one_of(colnames))
+  dplyr::select(.data, dplyr::one_of(colnames))
 }

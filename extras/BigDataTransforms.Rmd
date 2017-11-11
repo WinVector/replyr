@@ -80,15 +80,16 @@ print(dB)
 replyr_split(dB, 'group')
 
 # pivoting
-pivotControl <-  buildPivotControlTable(d, 
+pivotControl <-  buildPivotControlTableN('d', 
                                         columnToTakeKeysFrom = 'group', 
                                         columnToTakeValuesFrom = 'x',
-                                        sep = '_')
-dW <- moveValuesToColumnsQ(keyColumns = NULL,
+                                        sep = '_',
+                                        my_db = my_db)
+dWname <- moveValuesToColumnsN(keyColumns = NULL,
                            controlTable = pivotControl,
-                           tallTableName = 'd',
-                           my_db = my_db, strict = FALSE) %>%
-  compute(name = 'dW')
+                           tallTable = 'd',
+                           my_db = my_db, strict = FALSE) 
+dW <- dplyr::tbl(my_db, dWname)
 print(dW)
                      
 
@@ -96,9 +97,11 @@ print(dW)
 unpivotControl <- buildUnPivotControlTable(nameForNewKeyColumn = 'group',
                                            nameForNewValueColumn = 'x',
                                            columnsToTakeFrom = colnames(dW))
-moveValuesToRowsQ(controlTable = unpivotControl,
-                  wideTableName = 'dW',
-                  my_db = my_db)
+dXname <- moveValuesToRowsN(controlTable = unpivotControl,
+                            wideTable = dWname,
+                            my_db = my_db)
+dX <- dplyr::tbl(my_db, dXname)
+print(dX)
 ```
 
 The point is: using the `replyr` package you *can* design in terms of higher-order data transforms, even 
