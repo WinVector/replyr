@@ -73,7 +73,7 @@ my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 # pivot / tidyr::spread example
 # cdata version
 d <- data.frame(meas= c('AUC', 'R2'), val= c(0.6, 0.2))
-cdata::moveValuesToColumns(d,
+cdata::pivotValuesToColumns(d,
                            columnToTakeKeysFrom= 'meas',
                            columnToTakeValuesFrom= 'val',
                            rowKeyColumns= c())
@@ -113,5 +113,5 @@ moveValuesToColumnsQ(keyColumns,
 
 }
 \seealso{
-\code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
+\code{\link[cdata]{pivotValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
 }

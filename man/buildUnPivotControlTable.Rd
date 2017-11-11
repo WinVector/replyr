@@ -30,5 +30,5 @@ buildUnPivotControlTable("measurmentType", "measurmentValue", c("c1", "c2"))
 
 }
 \seealso{
-\code{\link[cdata]{moveValuesToRows}}, \code{\link{moveValuesToRowsQ}}
+\code{\link[cdata]{unpivotValuesToRows}}, \code{\link{moveValuesToRowsQ}}
 }

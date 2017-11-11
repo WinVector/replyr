@@ -35,5 +35,5 @@ buildPivotControlTable(d, 'measType', 'measValue', sep='_')
 
 }
 \seealso{
-\url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
+\url{https://github.com/WinVector/cdata}, \code{\link[cdata]{unpivotValuesToRows}}, \code{\link[cdata]{pivotValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 }

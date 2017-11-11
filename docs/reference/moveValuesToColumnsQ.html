@@ -212,7 +212,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></code>, <code><a href='moveValuesToRowsQ.html'>moveValuesToRowsQ</a></code>, <code><a href='buildPivotControlTable.html'>buildPivotControlTable</a></code></p>
+    <p><code>pivotValuesToColumns</code>, <code><a href='moveValuesToRowsQ.html'>moveValuesToRowsQ</a></code>, <code><a href='buildPivotControlTable.html'>buildPivotControlTable</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -222,7 +222,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='co'># pivot / tidyr::spread example</span>
 <span class='co'># cdata version</span>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>meas</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'AUC'</span>, <span class='st'>'R2'</span>), <span class='kw'>val</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0.6</span>, <span class='fl'>0.2</span>))
-<span class='kw pkg'>cdata</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns'>moveValuesToColumns</a></span>(<span class='no'>d</span>,
+<span class='kw pkg'>cdata</span><span class='kw ns'>::</span><span class='fu'>pivotValuesToColumns</span>(<span class='no'>d</span>,
                            <span class='kw'>columnToTakeKeysFrom</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
                            <span class='kw'>columnToTakeValuesFrom</span><span class='kw'>=</span> <span class='st'>'val'</span>,
                            <span class='kw'>rowKeyColumns</span><span class='kw'>=</span> <span class='fu'>c</span>())</div><div class='output co'>#&gt;   AUC  R2
@@ -234,7 +234,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
                              <span class='kw'>columnToTakeKeysFrom</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
                              <span class='kw'>columnToTakeValuesFrom</span><span class='kw'>=</span> <span class='st'>'val'</span>)
 <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/moveValuesToColumnsQ'>moveValuesToColumnsQ</a></span>(<span class='kw'>keyColumns</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-                             <span class='no'>cT</span>, <span class='st'>'dR'</span>, <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_qenofvv98yctkgewmsev_0000000001&gt; [?? x 2]
+                             <span class='no'>cT</span>, <span class='st'>'dR'</span>, <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_zqjukl6hhrbxbcybxi1x_0000000001&gt; [?? x 2]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
 #&gt;     AUC    R2
 #&gt;   &lt;dbl&gt; &lt;dbl&gt;
@@ -260,7 +260,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='fu'>moveValuesToColumnsQ</span>(<span class='no'>keyColumns</span>,
                      <span class='no'>controlTable</span>,
                      <span class='no'>tallTableName</span>,
-                     <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_zqjukl6hhrbxbcybxi1x_0000000001&gt; [?? x 4]
+                     <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtcq_glqrd5ynpd9jg0sohzbd_0000000001&gt; [?? x 4]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
 #&gt;      ID         c1         c2         c3
 #&gt;   &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;

@@ -204,7 +204,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></code>, <code><a href='buildUnPivotControlTable.html'>buildUnPivotControlTable</a></code>, <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code></p>
+    <p><code>unpivotValuesToRows</code>, <code><a href='buildUnPivotControlTable.html'>buildUnPivotControlTable</a></code>, <code><a href='moveValuesToColumnsQ.html'>moveValuesToColumnsQ</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -214,7 +214,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='co'>#' # un-pivot/tidyr::gather example</span>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>AUC</span><span class='kw'>=</span> <span class='fl'>0.6</span>, <span class='kw'>R2</span><span class='kw'>=</span> <span class='fl'>0.2</span>)
 <span class='co'># cdata version</span>
-<span class='kw pkg'>cdata</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows'>moveValuesToRows</a></span>(<span class='no'>d</span>,
+<span class='kw pkg'>cdata</span><span class='kw ns'>::</span><span class='fu'>unpivotValuesToRows</span>(<span class='no'>d</span>,
                         <span class='kw'>nameForNewKeyColumn</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
                         <span class='kw'>nameForNewValueColumn</span><span class='kw'>=</span> <span class='st'>'val'</span>,
                         <span class='kw'>columnsToTakeFrom</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'AUC'</span>, <span class='st'>'R2'</span>))</div><div class='output co'>#&gt;   meas val
@@ -226,7 +226,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='no'>cT</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/buildUnPivotControlTable'>buildUnPivotControlTable</a></span>(<span class='kw'>nameForNewKeyColumn</span><span class='kw'>=</span> <span class='st'>'meas'</span>,
                                        <span class='kw'>nameForNewValueColumn</span><span class='kw'>=</span> <span class='st'>'val'</span>,
                                        <span class='kw'>columnsToTakeFrom</span><span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>'AUC'</span>, <span class='st'>'R2'</span>))
-<span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ'>moveValuesToRowsQ</a></span>(<span class='no'>cT</span>, <span class='st'>'dR'</span>, <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_glqrd5ynpd9jg0sohzbd_0000000001&gt; [?? x 2]
+<span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/moveValuesToRowsQ'>moveValuesToRowsQ</a></span>(<span class='no'>cT</span>, <span class='st'>'dR'</span>, <span class='no'>my_db</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_1jp41pyvhmkp15ijqpc4_0000000001&gt; [?? x 2]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
 #&gt;    meas   val
 #&gt;   &lt;chr&gt; &lt;dbl&gt;
@@ -248,7 +248,7 @@ here <a href='https://github.com/WinVector/cdata'>https://github.com/WinVector/c
 <span class='fu'>moveValuesToRowsQ</span>(<span class='no'>controlTable</span>,
                   <span class='no'>wideTableName</span>,
                   <span class='no'>my_db</span>,
-                  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='no'>columnsToCopy</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_xyznzpfofzr2a39fwwkn_0000000001&gt; [?? x 4]
+                  <span class='kw'>columnsToCopy</span> <span class='kw'>=</span> <span class='no'>columnsToCopy</span>)</div><div class='output co'>#&gt; # Source:   table&lt;mvtrq_e9lk4cko4yrntncujpc4_0000000001&gt; [?? x 4]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
 #&gt;      ID group       col1       col2
 #&gt;   &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;

@@ -69,7 +69,7 @@ my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #' # un-pivot/tidyr::gather example
 d <- data.frame(AUC= 0.6, R2= 0.2)
 # cdata version
-cdata::moveValuesToRows(d,
+cdata::unpivotValuesToRows(d,
                         nameForNewKeyColumn= 'meas',
                         nameForNewValueColumn= 'val',
                         columnsToTakeFrom= c('AUC', 'R2'))
@@ -104,5 +104,5 @@ moveValuesToRowsQ(controlTable,
 
 }
 \seealso{
-\code{\link[cdata]{moveValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
+\code{\link[cdata]{unpivotValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
 }

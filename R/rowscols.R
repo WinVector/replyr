@@ -5,7 +5,6 @@
 #' @importFrom dplyr select mutate one_of
 #' @importFrom wrapr %.>% let mapsyms
 #' @importFrom seplyr group_by_se
-#' @importFrom cdata moveValuesToRows moveValuesToColumns
 NULL
 
 
@@ -66,7 +65,7 @@ checkControlTable <- function(controlTable, strict) {
 #' @param ... not used, force later args to be by name
 #' @return control table
 #'
-#' @seealso \code{\link[cdata]{moveValuesToRows}}, \code{\link{moveValuesToRowsQ}}
+#' @seealso \code{\link[cdata]{unpivotValuesToRows}}, \code{\link{moveValuesToRowsQ}}
 #'
 #' @examples
 #'
@@ -130,7 +129,7 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' @param defaultValue if not NULL literal to use for non-match values.
 #' @return long table built by mapping wideTable to one row per group
 #'
-#' @seealso \code{\link[cdata]{moveValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
+#' @seealso \code{\link[cdata]{unpivotValuesToRows}}, \code{\link{buildUnPivotControlTable}}, \code{\link{moveValuesToColumnsQ}}
 #'
 #' @examples
 #'
@@ -139,7 +138,7 @@ buildUnPivotControlTable <- function(nameForNewKeyColumn,
 #' #' # un-pivot/tidyr::gather example
 #' d <- data.frame(AUC= 0.6, R2= 0.2)
 #' # cdata version
-#' cdata::moveValuesToRows(d,
+#' cdata::unpivotValuesToRows(d,
 #'                         nameForNewKeyColumn= 'meas',
 #'                         nameForNewValueColumn= 'val',
 #'                         columnsToTakeFrom= c('AUC', 'R2'))
@@ -291,7 +290,7 @@ moveValuesToRowsQ <- function(controlTable,
 #' @param sep separator to build complex column names.
 #' @return control table
 #'
-#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{moveValuesToRows}}, \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
+#' @seealso \url{https://github.com/WinVector/cdata}, \code{\link[cdata]{unpivotValuesToRows}}, \code{\link[cdata]{pivotValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{moveValuesToColumnsQ}}
 #'
 #' @examples
 #'
@@ -379,7 +378,7 @@ buildPivotControlTable <- function(d,
 #' @param dropDups logical if TRUE supress duplicate columns (duplicate determined by name, not content).
 #' @return wide table built by mapping key-grouped tallTable rows to one row per group
 #'
-#' @seealso \code{\link[cdata]{moveValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
+#' @seealso \code{\link[cdata]{pivotValuesToColumns}}, \code{\link{moveValuesToRowsQ}}, \code{\link{buildPivotControlTable}}
 #'
 #' @examples
 #'
@@ -388,7 +387,7 @@ buildPivotControlTable <- function(d,
 #' # pivot / tidyr::spread example
 #' # cdata version
 #' d <- data.frame(meas= c('AUC', 'R2'), val= c(0.6, 0.2))
-#' cdata::moveValuesToColumns(d,
+#' cdata::pivotValuesToColumns(d,
 #'                            columnToTakeKeysFrom= 'meas',
 #'                            columnToTakeValuesFrom= 'val',
 #'                            rowKeyColumns= c())

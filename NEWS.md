@@ -1,5 +1,9 @@
 
-# replyr 0.8.3 2017-11-11
+# replyr 0.9.0 2017-11-11
+
+ * Re-base on cdata 0.5.0
+
+# replyr 0.8.3 2017-11-10
 
  * Fix some corner cases in replyr_summary() and replyr_nrow().
  * Add compute option to replyr_summary().

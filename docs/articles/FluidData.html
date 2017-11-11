@@ -114,9 +114,9 @@
 <p><code>replyr</code> supplies two general operators for fluid data work at database scale (and <code>Spark</code> big data scale):</p>
 <ol style="list-style-type: decimal">
 <li>
-<a href="https://winvector.github.io/replyr/reference/moveValuesToRowsQ.html"><code><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ()</a></code></a>: an operator centered around <code>SQL</code> <code>cross-join</code> semantics. un-pivot, <code><a href="http://www.rdocumentation.org/packages/tidyr/topics/gather">tidyr::gather()</a></code>, and <a href="https://winvector.github.io/cdata/reference/moveValuesToRows.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows">cdata::moveValuesToRows()</a></code></a> are special cases of this general operator.</li>
+<a href="https://winvector.github.io/replyr/reference/moveValuesToRowsQ.html"><code><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ()</a></code></a>: an operator centered around <code>SQL</code> <code>cross-join</code> semantics. un-pivot, <code><a href="http://www.rdocumentation.org/packages/tidyr/topics/gather">tidyr::gather()</a></code>, and <a href="https://winvector.github.io/cdata/reference/unpivotValuesToRows.html"><code>cdata::unpivotValuesToRows()</code></a> are special cases of this general operator.</li>
 <li>
-<a href="https://winvector.github.io/replyr/reference/moveValuesToColumnsQ.html"><code><a href="../reference/moveValuesToColumnsQ.html">moveValuesToColumnsQ()</a></code></a>: an operator centered around <code>SQL</code> <code>group by</code> semantics. pivot, <code><a href="http://www.rdocumentation.org/packages/tidyr/topics/spread">tidyr::spread()</a></code>, <a href="https://winvector.github.io/cdata/reference/moveValuesToColumns.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns">cdata::moveValuesToColumns()</a></code></a>, and one-hot-encode are special cases of this general operator.</li>
+<a href="https://winvector.github.io/replyr/reference/moveValuesToColumnsQ.html"><code><a href="../reference/moveValuesToColumnsQ.html">moveValuesToColumnsQ()</a></code></a>: an operator centered around <code>SQL</code> <code>group by</code> semantics. pivot, <code><a href="http://www.rdocumentation.org/packages/tidyr/topics/spread">tidyr::spread()</a></code>, <a href="https://winvector.github.io/cdata/reference/pivotValuesToColumns.html"><code>cdata::pivotValuesToColumns()</code></a>, and one-hot-encode are special cases of this general operator.</li>
 </ol>
 <p>Because these operators are powerful, they are fairly general, and at first hard to mentally model (especially if you insist on think of them in only in terms of more a specialized operator such as pivot, instead of more general relational concepts such as “cross join” and “group by”). These operators are thin wrappers populating and enforcing a few invariants over a large <code>SQL</code> statement. That does not mean that these operators are trivial, they are thin because <code>SQL</code> is powerful and we have a good abstraction.</p>
 <p>Due to the very detailed and explicit controls used in these operators- they are very comprehensible once studied. We will follow-up later with additional training material to make quicker comprehension available to more readers. This document is limiting itself to being a mere concise statement of and demonstration of the operators.</p>
@@ -192,7 +192,7 @@ dat2 &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="
                                   <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)
 <span class="kw">print</span>(dat2)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_7p0a9uyk5p6igsadcy9r_0000000001&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_2xdemuzgg9rbgqqrim3m_0000000001&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -240,7 +240,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
                           <span class="dt">columnsToCopy =</span> columnsToCopy,
                           <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID, group)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_7p0a9uyk5p6igsadcy9r_0000000003&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_2xdemuzgg9rbgqqrim3m_0000000003&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID, group
 ##      ID group       col1       col2
@@ -278,7 +278,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
                              my_db,
                              <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(ID)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_7p0a9uyk5p6igsadcy9r_0000000005&gt; [?? x 5]
+<pre><code>## # Source:     table&lt;fdexample_2xdemuzgg9rbgqqrim3m_0000000005&gt; [?? x 5]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: ID
 ##      ID               c1               c2               c3               c4
@@ -308,9 +308,9 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 ## 4     1    meas2 m2_1
 ## 5     2    meas2 m2_2
 ## 6     3    meas2 m2_3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::moveValuesToColumns version</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::pivotValuesToColumns version</span>
 <span class="co"># equivalent to tidyr::spread(d, 'meastype', 'meas')</span>
-cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumns">moveValuesToColumns</a></span>(d,
+cdata<span class="op">::</span><span class="kw">pivotValuesToColumns</span>(d,
                            <span class="dt">columnToTakeKeysFrom =</span> <span class="st">'meastype'</span>,
                            <span class="dt">columnToTakeValuesFrom =</span> <span class="st">'meas'</span>,
                            <span class="dt">rowKeyColumns=</span> <span class="st">'index'</span>,
@@ -336,7 +336,7 @@ controlTable &lt;-<span class="st"> </span>replyr<span class="op">::</span><span
                      <span class="dt">my_db =</span> my_db,
                      <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_7p0a9uyk5p6igsadcy9r_0000000007&gt; [?? x 3]
+<pre><code>## # Source:     table&lt;fdexample_2xdemuzgg9rbgqqrim3m_0000000007&gt; [?? x 3]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index
 ##   index meastype_meas1 meastype_meas2
@@ -359,9 +359,9 @@ controlTable &lt;-<span class="st"> </span>replyr<span class="op">::</span><span
 ## 1     1    a  m1_1   2.1
 ## 2     2    b  m1_2   2.2
 ## 3     3    c  m1_3   2.3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::moveValuesToRows() version</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the cdata::unpivotValuesToRows() version</span>
 <span class="co"># equivalent to tidyr::gather(d, 'meastype', 'meas', c('meas1','meas2'))</span>
-cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRows">moveValuesToRows</a></span>(d,
+cdata<span class="op">::</span><span class="kw">unpivotValuesToRows</span>(d,
                         <span class="dt">nameForNewKeyColumn=</span> <span class="st">'meastype'</span>,
                         <span class="dt">nameForNewValueColumn=</span> <span class="st">'meas'</span>,
                         <span class="dt">columnsToTakeFrom=</span> <span class="kw">c</span>(<span class="st">'meas1'</span>,<span class="st">'meas2'</span>)) <span class="op">%&gt;%</span>
@@ -373,7 +373,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 ## 4     2    b    meas2  2.2
 ## 5     3    c    meas1 m1_3
 ## 6     3    c    meas2  2.3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the replyr::cdata::moveValuesToRows() version</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the replyr::cdata::unpivotValuesToRows() version</span>
 controlTable &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildUnPivotControlTable.html">buildUnPivotControlTable</a></span>(<span class="dt">nameForNewKeyColumn=</span> <span class="st">'meastype'</span>,
                                          <span class="dt">nameForNewValueColumn=</span> <span class="st">'meas'</span>,
                                          <span class="dt">columnsToTakeFrom=</span> <span class="kw">c</span>(<span class="st">'meas1'</span>,<span class="st">'meas2'</span>))
@@ -389,7 +389,7 @@ dwide &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="
                   <span class="dt">columnsToCopy =</span> keyColumns,
                   <span class="dt">tempNameGenerator =</span> tng) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(index, info)</code></pre></div>
-<pre><code>## # Source:     table&lt;fdexample_7p0a9uyk5p6igsadcy9r_0000000009&gt; [?? x 4]
+<pre><code>## # Source:     table&lt;fdexample_2xdemuzgg9rbgqqrim3m_0000000009&gt; [?? x 4]
 ## # Database:   sqlite 3.19.3 [:memory:]
 ## # Ordered by: index, info
 ##   index  info meastype  meas
@@ -441,7 +441,7 @@ With fluid data the task is easy:</p>
                                    <span class="dt">my_db =</span> my_db,
                                    <span class="dt">tempNameGenerator =</span> tng)
 <span class="kw">print</span>(purchasesTall)</code></pre></div>
-<pre><code>## # Source:   table&lt;fdexample_7p0a9uyk5p6igsadcy9r_0000000011&gt; [?? x 4]
+<pre><code>## # Source:   table&lt;fdexample_2xdemuzgg9rbgqqrim3m_0000000011&gt; [?? x 4]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##      ID group purchases rebates
 ##   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -482,7 +482,7 @@ result &lt;-<span class="st"> </span><span class="kw"><a href="../reference/move
                                <span class="dt">my_db =</span> my_db,
                                <span class="dt">tempNameGenerator =</span> tng)
 <span class="kw">print</span>(result)</code></pre></div>
-<pre><code>## # Source:   table&lt;fdexample_7p0a9uyk5p6igsadcy9r_0000000013&gt; [?? x 7]
+<pre><code>## # Source:   table&lt;fdexample_2xdemuzgg9rbgqqrim3m_0000000013&gt; [?? x 7]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##      ID Q1purchases Q1rebates Q1purchasesPerRebate Q2purchases Q2rebates Q2purchasesPerRebate
 ##   &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;                &lt;dbl&gt;
@@ -527,7 +527,7 @@ dw &lt;-<span class="st"> </span><span class="kw"><a href="../reference/moveValu
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/moveValuesToRowsQ.html">moveValuesToRowsQ</a></span>(controlTable,
                   wideTableName,
                   my_db)</code></pre></div>
-<pre><code>## # Source:   table&lt;mvtrq_gidhwfdbaa7ebjq3zhcu_0000000001&gt; [?? x 3]
+<pre><code>## # Source:   table&lt;mvtrq_1wczbv0dumwzu1wbtfee_0000000001&gt; [?? x 3]
 ## # Database: sqlite 3.19.3 [:memory:]
 ##   group  col1  col2
 ##   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
