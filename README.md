@@ -23,8 +23,8 @@ Primary `replyr` services include:
 -   `replyr::replyr_bind_rows`
 -   `replyr::gapply`
 -   `replyr::replyr_summary`
--   `replyr::moveValuesToRowsQ`
--   `replyr::moveValuesToColumnsQ`
+-   `cdata::moveValuesToRows*`
+-   `cdata::moveValuesToColumns*`
 -   `replyr::replyr_*`
 
 `wrapr::let`
@@ -245,7 +245,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_fozbl3aswsfvgdhzlkwr_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_vlw2nlzlxu2z1fkox5cp_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #        x     y     z
  #    <dbl> <dbl> <chr>
@@ -304,8 +304,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  682416 36.5    1168576 62.5   940480 50.3
- #  Vcells 1366483 10.5    2552219 19.5  1608687 12.3
+ #  Ncells  683514 36.6    1168576 62.5   940480 50.3
+ #  Vcells 1367677 10.5    2552219 19.5  1650128 12.6
 ```
 
 Note
