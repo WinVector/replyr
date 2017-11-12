@@ -12,7 +12,7 @@
 #' @param colName character, name of column to add.
 #' @param val scalar, value to add.
 #' @param ... force later arguments to be bound by name.
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return table with new column added.
 #'
 #' @examples

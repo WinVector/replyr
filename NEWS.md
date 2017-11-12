@@ -3,6 +3,7 @@
 # replyr 0.9.01 2017-11-12
 
  * Minor documentation fixes.
+ * Move to cdata 0.5.0.
 
 # replyr 0.9.0 2017-11-11
 

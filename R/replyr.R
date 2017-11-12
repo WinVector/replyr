@@ -28,7 +28,7 @@ NULL
 
 #' @importFrom wrapr let
 #' @importFrom seplyr novelName
-#' @importFrom cdata grepdf
+#' @importFrom cdata grepdf makeTempNameGenerator
 #' @export
 wrapr::let
 

@@ -258,26 +258,38 @@ d <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">
 </h2>
 <p>The <code>replyr::replyr_*</code> functions are all convenience functions supplying common functionality (such as <code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_nrow">replyr::replyr_nrow</a></code>) that works across many data services providers. These are prefixed (instead of being <code>S3</code> or <code>S4</code> methods) so they do not interfere with common methods. Many of these functions can expensive (which is why <code>dplyr</code> does not provide them as a default), or are patching around corner cases (which is why these functions appear to duplicate <code>base::</code> and <code>dplyr::</code> capabilities). The issues <code>replyr::replyr_*</code> claim to patch around have all been filed as issues on the appropriate <code>R</code> packages and are documented <a href="https://github.com/WinVector/replyr/tree/master/issues">here</a> (to confirm they are not phantoms).</p>
 <p>Example: <code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr::replyr_summary</a></code> working on a database service (when <code><a href="http://www.rdocumentation.org/packages/base/topics/summary">base::summary</a></code> does not).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),<span class="dt">z=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">'a'</span>,<span class="st">'b'</span>),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="dv">5</span>),
+                <span class="dt">y=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),
+                <span class="dt">z=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">'a'</span>,<span class="st">'b'</span>),
                 <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-<span class="cf">if</span> (<span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>)) {
-  my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
-  dRemote &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_copy_to">replyr_copy_to</a></span>(my_db,d,<span class="st">'d'</span>)
-} <span class="cf">else</span> {
-  dRemote &lt;-<span class="st"> </span>d <span class="co"># local stand in when we can't make remote</span>
-}
- <span class="co">#  Loading required namespace: RSQLite</span>
+my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)
+RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db) <span class="co"># filed as dplyr issue https://github.com/tidyverse/dplyr/issues/3150</span>
+dRemote &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_copy_to">replyr_copy_to</a></span>(my_db,d,<span class="st">'d'</span>)
 
 <span class="kw">summary</span>(dRemote)
  <span class="co">#      Length Class          Mode</span>
  <span class="co">#  src 2      src_dbi        list</span>
  <span class="co">#  ops 2      op_base_remote list</span>
+<span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dRemote)
+ <span class="co">#  Observations: 15</span>
+ <span class="co">#  Variables: 3</span>
+ <span class="co">#  $ x &lt;dbl&gt; 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2</span>
+ <span class="co">#  $ y &lt;dbl&gt; 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA</span>
+ <span class="co">#  $ z &lt;chr&gt; NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"</span>
 
 replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dRemote)
- <span class="co">#    column index     class nrows nna nunique min max     mean        sd lexmin lexmax</span>
- <span class="co">#  1      x     1   numeric     3   0      NA   1   2 1.666667 0.5773503   &lt;NA&gt;   &lt;NA&gt;</span>
- <span class="co">#  2      y     2   numeric     3   1      NA   3   5 4.000000 1.4142136   &lt;NA&gt;   &lt;NA&gt;</span>
- <span class="co">#  3      z     3 character     3   1      NA  NA  NA       NA        NA      a      b</span></code></pre></div>
+ <span class="co">#    column index     class nrows nna nunique min max     mean       sd lexmin lexmax</span>
+ <span class="co">#  1      x     1   numeric    15   0      NA   1   2 1.666667 0.487950   &lt;NA&gt;   &lt;NA&gt;</span>
+ <span class="co">#  2      y     2   numeric    15   5      NA   3   5 4.000000 1.054093   &lt;NA&gt;   &lt;NA&gt;</span>
+ <span class="co">#  3      z     3 character    15   5      NA  NA  NA       NA       NA      a      b</span>
+cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/cdata/topics/qlook">qlook</a></span>(my_db, <span class="st">'d'</span>)
+ <span class="co">#  table `d` SQLiteConnection </span>
+ <span class="co">#   nrow: 15 </span>
+ <span class="co">#   </span><span class="al">NOTE</span><span class="co">: "obs" below is count of sample, not number of rows of data.</span>
+ <span class="co">#  'data.frame':   10 obs. of  3 variables:</span>
+ <span class="co">#   $ x: num  1 2 2 1 2 2 1 2 2 1</span>
+ <span class="co">#   $ y: num  3 5 NA 3 5 NA 3 5 NA 3</span>
+ <span class="co">#   $ z: chr  NA "a" "b" NA ...</span></code></pre></div>
 <p>Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of <code>replyr</code> is to provide at least some convenient version of typical functions such as: <code>summary</code>, <code>nrow</code>, unique values, and filter rows by values in a set.</p>
 </div>
 <div id="replyr-data-services" class="section level2">
@@ -307,12 +319,21 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_zxcy44ayuwzygdwf5pq7_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_pr5gbvjyvtth0m3vy0os_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.19.3 [:memory:]</span>
- <span class="co">#        x     y     z</span>
- <span class="co">#    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
- <span class="co">#  1     2     5     a</span>
- <span class="co">#  2     2    NA     b</span></code></pre></div>
+ <span class="co">#         x     y     z</span>
+ <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
+ <span class="co">#   1     2     5     a</span>
+ <span class="co">#   2     2    NA     b</span>
+ <span class="co">#   3     2     5     a</span>
+ <span class="co">#   4     2    NA     b</span>
+ <span class="co">#   5     2     5     a</span>
+ <span class="co">#   6     2    NA     b</span>
+ <span class="co">#   7     2     5     a</span>
+ <span class="co">#   8     2    NA     b</span>
+ <span class="co">#   9     2     5     a</span>
+ <span class="co">#  10     2    NA     b</span>
+ <span class="co">#  # ... with more rows</span></code></pre></div>
 </div>
 <div id="commentary" class="section level2">
 <h2 class="hasAnchor">
@@ -361,8 +382,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  728411 39.0    1168576 62.5  1168576 62.5</span>
- <span class="co">#  Vcells 1426065 10.9    2552219 19.5  1788326 13.7</span></code></pre></div>
+ <span class="co">#  Ncells  738850 39.5    1168576 62.5  1168576 62.5</span>
+ <span class="co">#  Vcells 1502275 11.5    2552219 19.5  1790793 13.7</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

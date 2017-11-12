@@ -33,7 +33,7 @@ NULL
 #' @param maxgroups maximum number of groups to work over (intentionally not enforced if \code{partitionMethod=='group_by'})
 #' @param eagerCompute logical, if TRUE call compute on split results
 #' @param restoreGroup logical, if TRUE restore group column after apply when \code{partitionMethod \%in\% c('extract', 'split')}
-#' @param tempNameGenerator temp name generator produced by \code{replyr::makeTempNameGenerator}, used to record \code{dplyr::compute()} effects.
+#' @param tempNameGenerator temp name generator produced by \code{cdata::makeTempNameGenerator}, used to record \code{dplyr::compute()} effects.
 #' @return transformed frame
 #'
 #' @examples

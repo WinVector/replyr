@@ -16,7 +16,7 @@ replyr_quantilec(x, cname, probs = seq(0, 1, 0.25), ...,
 
 \item{...}{force later arguments to bind by name.}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \description{
 NA's filtered out and does not break ties the same as stats::quantile.

@@ -21,7 +21,7 @@ replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
 
 \item{eagerTempRemoval}{logical if TRUE remove temps early.}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 single data item

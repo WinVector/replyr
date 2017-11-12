@@ -13,7 +13,7 @@ NULL
 #' @param values set of values to check set membership of.
 #' @param nname name for new column
 #' @param ... force later parameters to bind by name
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @param verbose logical if TRUE echo warnings
 #' @return table with membership indications.
 #'

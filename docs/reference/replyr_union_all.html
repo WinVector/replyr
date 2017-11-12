@@ -127,7 +127,7 @@ This is an attempt to provide a join-based replacement.</p>
 
     <pre class="usage"><span class='fu'>replyr_union_all</span>(<span class='no'>tabA</span>, <span class='no'>tabB</span>, <span class='no'>...</span>, <span class='kw'>useDplyrLocal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>useSparkRbind</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='makeTempNameGenerator.html'>makeTempNameGenerator</a></span>(<span class='st'>"replyr_union_all"</span>))</pre>
+  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>makeTempNameGenerator</span>(<span class='st'>"replyr_union_all"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -154,7 +154,7 @@ This is an attempt to provide a join-based replacement.</p>
     </tr>
     <tr>
       <th>tempNameGenerator</th>
-      <td><p>temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.</p></td>
+      <td><p>temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.</p></td>
     </tr>
     </table>
     

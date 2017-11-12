@@ -14,7 +14,7 @@
 #' @param ... force later arguments to be bound by name.
 #' @param useDplyrLocal logical if TRUE use dplyr::bind_rows for local data.
 #' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return table with all rows of tabA and tabB (union_all).
 #'
 #' @examples
@@ -183,7 +183,7 @@ r_replyr_bind_rows <- function(lst,
 #' @param tableNames names of tables to concatinate (not empty)
 #' @param colNames names of columns
 #' @param my_db connection to where tables live
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @param ... force later arguments to bind by name
 #' @param origTableColumn character, column to put original table name in.
 #'
@@ -263,7 +263,7 @@ bind_rowsQ <- function(tableNames, colNames, my_db,
 #' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
 #' @param useQBind logical if TRUE try to use query based binding
 #' @param eagerTempRemoval logical if TRUE remove temps early.
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
 #'
 #' @examples

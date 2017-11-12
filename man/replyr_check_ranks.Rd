@@ -21,7 +21,7 @@ replyr_check_ranks(x, GroupColumnName, ValueColumnName, RankColumnName, ...,
 
 \item{decreasing}{if true make order decreasing instead of increasing.}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 summary of quality of ranking.

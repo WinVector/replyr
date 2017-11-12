@@ -18,7 +18,7 @@ replyr_filter(x, cname, values, ..., verbose = TRUE,
 
 \item{verbose}{logical if TRUE echo warnings}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 new tbl with only rows where cname value is in values set.

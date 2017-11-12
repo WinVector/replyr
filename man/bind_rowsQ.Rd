@@ -15,7 +15,7 @@ bind_rowsQ(tableNames, colNames, my_db,
 
 \item{my_db}{connection to where tables live}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
 
 \item{...}{force later arguments to bind by name}
 

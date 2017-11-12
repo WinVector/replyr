@@ -10,7 +10,7 @@
 #' @param fills list default values to fill in columns
 #' @param newRowColumn character if not null name to use for new row indicator
 #' @param copy logical if TRUE copy support to data's source
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return augmented data
 #'
 #' @examples

@@ -943,7 +943,7 @@ strMapToString <- function(m) {
 #' @param checkColClasses logical if true check for exact class name matches
 #' @param verbose logical if TRUE print more.
 #' @param dryRun logical if TRUE do not perform joins, only print steps.
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return joined table
 #'
 #' @examples

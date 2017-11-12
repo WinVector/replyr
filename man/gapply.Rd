@@ -32,7 +32,7 @@ gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{restoreGroup}{logical, if TRUE restore group column after apply when \code{partitionMethod \%in\% c('extract', 'split')}}
 
-\item{tempNameGenerator}{temp name generator produced by \code{replyr::makeTempNameGenerator}, used to record \code{dplyr::compute()} effects.}
+\item{tempNameGenerator}{temp name generator produced by \code{cdata::makeTempNameGenerator}, used to record \code{dplyr::compute()} effects.}
 }
 \value{
 transformed frame

@@ -40,7 +40,7 @@ qsearch <- function(f,fLeft,fRight,ui) {
 #' @param cname column name to compute over
 #' @param probs	numeric vector of probabilities with values in [0,1].
 #' @param ... force later arguments to be bound by name.
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #'
 #' @examples
 #'
@@ -132,7 +132,7 @@ polishQ <- function(nrows,marks,probs) {
 #' @param cname column name to compute over (not 'n' or 'csum')
 #' @param probs	numeric vector of probabilities with values in [0,1].
 #' @param ... force later arguments to bind by name.
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #'
 #' @examples
 #'

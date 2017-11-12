@@ -39,7 +39,7 @@ expandItem <- function(vi, rowidDest, rowId, valDest, idxDest) {
 #' @param rowidSource optional character name of column to take row indices from (rowidDest must be NULL to use this).
 #' @param rowidDest optional character name of column to write row indices to (must not be an existing column name, rowidSource must be NULL to use this).
 #' @param idxDest optional character name of column to write value indices to (must not be an existing column name).
-#' @param tempNameGenerator temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return expanded data frame where each value of colName column is in a new row.
 #'
 #' @examples

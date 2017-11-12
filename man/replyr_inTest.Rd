@@ -19,7 +19,7 @@ replyr_inTest(x, cname, values, nname, ...,
 
 \item{...}{force later parameters to bind by name}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
 
 \item{verbose}{logical if TRUE echo warnings}
 }

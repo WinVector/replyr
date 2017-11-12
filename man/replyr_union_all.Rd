@@ -19,7 +19,7 @@ replyr_union_all(tabA, tabB, ..., useDplyrLocal = TRUE,
 
 \item{useSparkRbind}{logical if TRUE try to use rbind on Sparklyr data}
 
-\item{tempNameGenerator}{temp name generator produced by replyr::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
 }
 \value{
 table with all rows of tabA and tabB (union_all).

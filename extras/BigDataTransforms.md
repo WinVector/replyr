@@ -78,13 +78,6 @@ library("replyr")
 
     ## Loading required package: cdata
 
-    ## 
-    ## Attaching package: 'replyr'
-
-    ## The following object is masked from 'package:cdata':
-    ## 
-    ##     makeTempNameGenerator
-
 ``` r
 packageVersion("replyr")
 ```
@@ -97,7 +90,7 @@ dB <- replyr_bind_rows(list(d, d))
 print(dB)
 ```
 
-    ## # Source:   table<replyr_bind_rows_iezmjf4lcxs7j1syoflc_0000000002> [?? x
+    ## # Source:   table<replyr_bind_rows_evieqjrhopjyxvzl9s4l_0000000002> [?? x
     ## #   2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
@@ -113,7 +106,7 @@ replyr_split(dB, 'group')
 ```
 
     ## $g2
-    ## # Source:   table<replyr_gapply_xpm55f6u2khw2faypcmk_0000000001> [?? x 2]
+    ## # Source:   table<replyr_gapply_mol5hbqczunaokhuaw1y_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
     ##   <dbl> <chr>
@@ -121,7 +114,7 @@ replyr_split(dB, 'group')
     ## 2     5    g2
     ## 
     ## $g1
-    ## # Source:   table<replyr_gapply_xpm55f6u2khw2faypcmk_0000000003> [?? x 2]
+    ## # Source:   table<replyr_gapply_mol5hbqczunaokhuaw1y_0000000003> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##       x group
     ##   <dbl> <chr>
@@ -143,7 +136,7 @@ dW <- dplyr::tbl(my_db, dWname)
 print(dW)
 ```
 
-    ## # Source:   table<mvtcq_3nbkwq5hsqvzvrjltwa5_0000000001> [?? x 2]
+    ## # Source:   table<mvtcq_psmycof96d22cmr3viwa_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##   group_g1 group_g2
     ##      <dbl>    <dbl>
@@ -161,7 +154,7 @@ dX <- dplyr::tbl(my_db, dXname)
 print(dX)
 ```
 
-    ## # Source:   table<mvtrq_4xbv9jxtc7xhihzu1wgw_0000000001> [?? x 2]
+    ## # Source:   table<mvtrq_dzhakbbfxe5kgrpyobvv_0000000001> [?? x 2]
     ## # Database: postgres 9.6.1 [postgres@localhost:5432/postgres]
     ##      group     x
     ##      <chr> <dbl>
