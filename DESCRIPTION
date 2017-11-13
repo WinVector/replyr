@@ -43,5 +43,4 @@ Suggests: testthat,
     grid
 VignetteBuilder: knitr
 ByteCompile: true
-Remotes: WinVector/cdata
 
