@@ -29,6 +29,8 @@ NULL
 #' @importFrom wrapr let
 #' @importFrom seplyr novelName
 #' @importFrom cdata grepdf makeTempNameGenerator
+NULL
+
 #' @export
 wrapr::let
 
@@ -63,6 +65,9 @@ wrapr::DebugPrintFn
 #' @importFrom wrapr DebugPrintFnE
 #' @export
 wrapr::DebugPrintFnE
+
+#' @export
+cdata::makeTempNameGenerator
 
 # so it does not look like an unbound reference in pipes
 . <- NULL

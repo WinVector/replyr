@@ -121,7 +121,7 @@
     
 
     <pre class="usage"><span class='fu'>bind_rowsQ</span>(<span class='no'>tableNames</span>, <span class='no'>colNames</span>, <span class='no'>my_db</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>makeTempNameGenerator</span>(<span class='st'>"bind_rowsQ"</span>), <span class='no'>...</span>,
+  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"bind_rowsQ"</span>), <span class='no'>...</span>,
   <span class='kw'>origTableColumn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -157,7 +157,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
-<span class='no'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>makeTempNameGenerator</span>(<span class='st'>"bind_rowsQ_demo"</span>)
+<span class='no'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"bind_rowsQ_demo"</span>)
 <span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>y</span><span class='kw'>=</span> <span class='fl'>10</span>:<span class='fl'>11</span>), <span class='st'>'d1'</span>)
 <span class='no'>d2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fl'>3</span>:<span class='fl'>4</span>, <span class='kw'>y</span><span class='kw'>=</span> <span class='fl'>13</span>:<span class='fl'>14</span>), <span class='st'>'d2'</span>)
 <span class='fu'>bind_rowsQ</span>(<span class='fu'>c</span>(<span class='st'>'d1'</span>, <span class='st'>'d2'</span>), <span class='fu'>c</span>(<span class='st'>'x'</span>, <span class='st'>'y'</span>), <span class='no'>my_db</span>,
