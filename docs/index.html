@@ -316,7 +316,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_bq7qdhkew7m3zdorrsum_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_awsn7eddj5dnfznhboot_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.19.3 [:memory:]</span>
  <span class="co">#         x     y     z</span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -379,13 +379,14 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  736576 39.4    1168576 62.5  1168576 62.5</span>
- <span class="co">#  Vcells 1492265 11.4    2552219 19.5  1783510 13.7</span></code></pre></div>
+ <span class="co">#  Ncells  736604 39.4    1168576 62.5  1168576 62.5</span>
+ <span class="co">#  Vcells 1492354 11.4    2552219 19.5  1783548 13.7</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">
 <a href="#note" class="anchor"></a>Note</h2>
-<p>Note: <code>replyr</code> is meant only for “tame names”, that is: variables and column names that are also valid <em>simple</em> (without quotes) <code>R</code> variables names. Also <code>replyr</code> tries to be a “source agnostic” package, meaning it minimizes the number of places it checks for data source and uses specialized code, this can mean some operations are slow. For example <code>replyr</code> does not (yet) use <code><a href="http://www.rdocumentation.org/packages/sparklyr/topics/sdf_pivot">sparklyr::sdf_pivot()</a></code>.</p>
+<p>Note: <code>replyr</code> is targeted at data with “tame column names” (column names that are valid both in databases, and as <code>R</code> unquoted variable names) and basic types (column values that are simple <code>R</code> types such as <code>character</code>, <code>numeric</code>, <code>logical</code>, and so on).</p>
+<p>Also <code>replyr</code> tries to be a “source agnostic” package, meaning it minimizes the number of places it checks for data source and uses specialized code, this can mean some operations are slow. For example <code>replyr</code> does not (yet) use <code><a href="http://www.rdocumentation.org/packages/sparklyr/topics/sdf_pivot">sparklyr::sdf_pivot()</a></code>.</p>
 </div>
 </div>
   </div>

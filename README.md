@@ -257,7 +257,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_kfk5atjnp9oza1ve98so_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_t3ojq1xshiobmeihewty_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #         x     y     z
  #     <dbl> <dbl> <chr>
@@ -325,11 +325,13 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  691857   37    1168576 62.5   940480 50.3
- #  Vcells 1434295   11    2552219 19.5  1664471 12.7
+ #  Ncells  691879   37    1168576 62.5   940480 50.3
+ #  Vcells 1434384   11    2552219 19.5  1664557 12.7
 ```
 
 Note
 ----
 
-Note: `replyr` is meant only for "tame names", that is: variables and column names that are also valid *simple* (without quotes) `R` variables names. Also `replyr` tries to be a "source agnostic" package, meaning it minimizes the number of places it checks for data source and uses specialized code, this can mean some operations are slow. For example `replyr` does not (yet) use `sparklyr::sdf_pivot()`.
+Note: `replyr` is targeted at data with "tame column names" (column names that are valid both in databases, and as `R` unquoted variable names) and basic types (column values that are simple `R` types such as `character`, `numeric`, `logical`, and so on).
+
+Also `replyr` tries to be a "source agnostic" package, meaning it minimizes the number of places it checks for data source and uses specialized code, this can mean some operations are slow. For example `replyr` does not (yet) use `sparklyr::sdf_pivot()`.
