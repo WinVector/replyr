@@ -93,7 +93,7 @@
       <h1>replyr</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-11-14</h4>
+            <h4 class="date">2017-11-15</h4>
           </div>
 
     
@@ -111,15 +111,16 @@
 <p><code>replyr</code> uniformly uses standard or parametric interfaces (names of variables as strings) in favor of name capture so that you can easily program <em>over</em> <code>replyr</code>.</p>
 <p>Primary <code>replyr</code> services include:</p>
 <ul>
-<li><code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code></li>
-<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_apply_f_mapped">replyr::replyr_apply_f_mapped</a></code></li>
-<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_split">replyr::replyr_split</a></code></li>
-<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_bind_rows">replyr::replyr_bind_rows</a></code></li>
-<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/gapply">replyr::gapply</a></code></li>
-<li><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr::replyr_summary</a></code></li>
-<li><code>replyr::moveValuesToRowsQ</code></li>
-<li><code>replyr::moveValuesToColumnsQ</code></li>
-<li><code>replyr::replyr_*</code></li>
+<li><a href="https://winvector.github.io/replyr/articles/joinController.html">Join Controller</a></li>
+<li><a href="https://winvector.github.io/replyr/articles/DependencySorting.html">Join Planner</a></li>
+<li><a href="https://winvector.github.io/replyr/reference/replyr_split.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_split">replyr::replyr_split</a></code></a></li>
+<li><a href="https://winvector.github.io/replyr/reference/replyr_bind_rows.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_bind_rows">replyr::replyr_bind_rows</a></code></a></li>
+<li><a href="https://winvector.github.io/replyr/reference/gapply.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/gapply">replyr::gapply</a></code></a></li>
+<li><a href="https://winvector.github.io/replyr/reference/replyr_summary.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr::replyr_summary</a></code></a></li>
+<li><a href="https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_apply_f_mapped">replyr::replyr_apply_f_mapped</a></code></a></li>
+<li><a href="https://winvector.github.io/cdata/reference/moveValuesToRowsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRowsN">cdata::moveValuesToRowsN</a></code></a></li>
+<li><a href="https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumnsN">cdata::moveValuesToColumnsN</a></code></a></li>
+<li><a href="https://winvector.github.io/wrapr/reference/let.html"><code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code></a></li>
 </ul>
 </div>
 <div id="wraprlet" class="section level2">
@@ -158,7 +159,6 @@ d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">Comput
  <span class="co">#  4 4 6 0.6666667</span>
  <span class="co">#  5 5 7 0.7142857</span></code></pre></div>
 <p><code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> makes construction of abstract functions over <code>dplyr</code> controlled data much easier. It is designed for the case where the “<code>expr</code>” block is large sequence of statements and pipelines.</p>
-<p><code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> is based on <code><a href="http://www.rdocumentation.org/packages/gtools/topics/defmacro">gtools::strmacro</a></code> by Gregory R. Warnes.</p>
 </div>
 <div id="replyrreplyr_apply_f_mapped" class="section level2">
 <h2 class="hasAnchor">
@@ -307,7 +307,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_erhs9nmncbfrinmhgy94_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_ldhk0mi8dkhz7stesjsi_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.19.3 [:memory:]</span>
  <span class="co">#        x     y     z</span>
  <span class="co">#    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -355,8 +355,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  688578 36.8    1168576 62.5   940480 50.3</span>
- <span class="co">#  Vcells 1422378 10.9    2552219 19.5  1731568 13.3</span></code></pre></div>
+ <span class="co">#  Ncells  688574 36.8    1168576 62.5   940480 50.3</span>
+ <span class="co">#  Vcells 1422555 10.9    2552219 19.5  1731745 13.3</span></code></pre></div>
 </div>
 </div>
   </div>

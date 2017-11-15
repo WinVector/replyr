@@ -31,16 +31,18 @@ Note: `replyr` is meant only for "tame data frames" that is data frames with non
 
 Primary `replyr` services include:
 
- * `wrapr::let`
- * `replyr::replyr_apply_f_mapped`
- * `replyr::replyr_split`
- * `replyr::replyr_bind_rows`
- * `replyr::gapply`
- * `replyr::replyr_summary`
- * `cdata::moveValuesToRowsN`
- * `cdata::moveValuesToColumnsN`
- * `replyr::replyr_*`  
- 
+ * [Join Controller](https://winvector.github.io/replyr/articles/joinController.html)
+ * [Join Planner](https://winvector.github.io/replyr/articles/DependencySorting.html)
+ * [`replyr::replyr_split`](https://winvector.github.io/replyr/reference/replyr_split.html)
+ * [`replyr::replyr_bind_rows`](https://winvector.github.io/replyr/reference/replyr_bind_rows.html)
+ * [`replyr::gapply`](https://winvector.github.io/replyr/reference/gapply.html)
+ * [`replyr::replyr_summary`](https://winvector.github.io/replyr/reference/replyr_summary.html)
+ * [`replyr::replyr_apply_f_mapped`](https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html)
+ * [`cdata::moveValuesToRowsN`](https://winvector.github.io/cdata/reference/moveValuesToRowsN.html)
+ * [`cdata::moveValuesToColumnsN`](https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html)
+ * [`wrapr::let`](https://winvector.github.io/wrapr/reference/let.html)
+
+
 ## `wrapr::let`
 
 `wrapr::let` allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with `base::substitute` or `base::with`).  This allows the user to write arbitrary `dplyr` code in the case of ["parametric variable names"](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/) (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the `dplyr` "underbar forms"  (and the direct use of `lazyeval::interp`, `.dots=stats::setNames`, or `rlang`/`tidyeval`).
@@ -76,8 +78,6 @@ d %>% ComputeRatioOfColumns('a','b','c')
 ```
 
 `wrapr::let` makes construction of abstract functions over `dplyr` controlled data much easier.  It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
-
-`wrapr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
 
 ## `replyr::replyr_apply_f_mapped`
 

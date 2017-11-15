@@ -33,15 +33,16 @@ It comes as a bit of a shock for [R](https://cran.r-project.org) [`dplyr`](https
 
 Primary `replyr` services include:
 
- * `wrapr::let`
- * `replyr::replyr_apply_f_mapped`
- * `replyr::replyr_split`
- * `replyr::replyr_bind_rows`
- * `replyr::gapply`
- * `replyr::replyr_summary`
- * `replyr::moveValuesToRowsQ`
- * `replyr::moveValuesToColumnsQ`
- * `replyr::replyr_*`  
+ * [Join Controller](https://winvector.github.io/replyr/articles/joinController.html)
+ * [Join Planner](https://winvector.github.io/replyr/articles/DependencySorting.html)
+ * [`replyr::replyr_split`](https://winvector.github.io/replyr/reference/replyr_split.html)
+ * [`replyr::replyr_bind_rows`](https://winvector.github.io/replyr/reference/replyr_bind_rows.html)
+ * [`replyr::gapply`](https://winvector.github.io/replyr/reference/gapply.html)
+ * [`replyr::replyr_summary`](https://winvector.github.io/replyr/reference/replyr_summary.html)
+ * [`replyr::replyr_apply_f_mapped`](https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html)
+ * [`cdata::moveValuesToRowsN`](https://winvector.github.io/cdata/reference/moveValuesToRowsN.html)
+ * [`cdata::moveValuesToColumnsN`](https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html)
+ * [`wrapr::let`](https://winvector.github.io/wrapr/reference/let.html)
  
 ## `wrapr::let`
 
@@ -78,8 +79,6 @@ d %>% ComputeRatioOfColumns('a','b','c')
 ```
 
 `wrapr::let` makes construction of abstract functions over `dplyr` controlled data much easier.  It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
-
-`wrapr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
 
 ## `replyr::replyr_apply_f_mapped`
 

@@ -17,15 +17,16 @@ Note: `replyr` is meant only for "tame data frames" that is data frames with non
 
 Primary `replyr` services include:
 
--   `wrapr::let`
--   `replyr::replyr_apply_f_mapped`
--   `replyr::replyr_split`
--   `replyr::replyr_bind_rows`
--   `replyr::gapply`
--   `replyr::replyr_summary`
--   `cdata::moveValuesToRowsN`
--   `cdata::moveValuesToColumnsN`
--   `replyr::replyr_*`
+-   [Join Controller](https://winvector.github.io/replyr/articles/joinController.html)
+-   [Join Planner](https://winvector.github.io/replyr/articles/DependencySorting.html)
+-   [`replyr::replyr_split`](https://winvector.github.io/replyr/reference/replyr_split.html)
+-   [`replyr::replyr_bind_rows`](https://winvector.github.io/replyr/reference/replyr_bind_rows.html)
+-   [`replyr::gapply`](https://winvector.github.io/replyr/reference/gapply.html)
+-   [`replyr::replyr_summary`](https://winvector.github.io/replyr/reference/replyr_summary.html)
+-   [`replyr::replyr_apply_f_mapped`](https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html)
+-   [`cdata::moveValuesToRowsN`](https://winvector.github.io/cdata/reference/moveValuesToRowsN.html)
+-   [`cdata::moveValuesToColumnsN`](https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html)
+-   [`wrapr::let`](https://winvector.github.io/wrapr/reference/let.html)
 
 `wrapr::let`
 ------------
@@ -70,8 +71,6 @@ d %>% ComputeRatioOfColumns('a','b','c')
 ```
 
 `wrapr::let` makes construction of abstract functions over `dplyr` controlled data much easier. It is designed for the case where the "`expr`" block is large sequence of statements and pipelines.
-
-`wrapr::let` is based on `gtools::strmacro` by Gregory R. Warnes.
 
 `replyr::replyr_apply_f_mapped`
 -------------------------------
@@ -257,7 +256,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_t3ojq1xshiobmeihewty_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_d5altjwcm4a2syqdvt1c_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #         x     y     z
  #     <dbl> <dbl> <chr>
@@ -325,8 +324,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  691879   37    1168576 62.5   940480 50.3
- #  Vcells 1434384   11    2552219 19.5  1664557 12.7
+ #  Ncells  691883   37    1168576 62.5   940480 50.3
+ #  Vcells 1434565   11    2552219 19.5  1664737 12.8
 ```
 
 Note
