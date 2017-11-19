@@ -5,7 +5,7 @@
 #' Find longest ordered not created and used in same block chains.
 #'
 #' @param de frame of expressions
-#' @return data frame with group column
+#' @return ordered list of mutate_se assignment blocks
 #'
 #' @noRd
 #'
@@ -28,8 +28,15 @@ partition_mutate_d <- function(de) {
     }
     group <- group + 1L
   }
-  de %.>%
+  de <- de %.>%
     arrange_se(., c("group", "origOrder"))
+  # break out into mutate_se blocks
+  res <- rep(list(character(0)), max(de$group))
+  for(i in 1:n) {
+    gi <- de$group[[i]]
+    res[[gi]] <- c(res[[gi]], de$lhs[[i]] := de$rhs[[i]])
+  }
+  res
 }
 
 
@@ -96,7 +103,15 @@ partition_mutate_se <- function(exprs) {
 #'
 #' @examples
 #'
-#' partition_mutate_nse(a1 := 1, b1 := a1, a2 := 2, b2 := a1 + a2)
+#' plan <- partition_mutate_nse(a1 := 1, b1 := a1, a2 := 2, b2 := a1 + a2)
+#' print(plan)
+#' d <- data.frame(x = 1)
+#' for(si in plan) {
+#'    print(si)
+#'    d <- mutate_se(d, si)
+#' }
+#' print(d)
+#'
 #'
 #' @export
 #'
@@ -114,7 +129,7 @@ partition_mutate_nse <- function(...) {
       }
       lhs[[i-1]] <- as.character(ei[[2]])[[1]]
       syms[[i-1]] <- find_symbols(ei[[3]])
-      rhs[[i-1]] <- deparse(ei[[3]])[[1]]
+      rhs[[i-1]] <- paste(deparse(ei[[3]]), collapse = "\n")
     }
   }
   res <- data.frame(lhs = lhs,

@@ -17,6 +17,14 @@ Partition a sequence of mutate commands into longest ordered no create/use block
 }
 \examples{
 
-partition_mutate_nse(a1 := 1, b1 := a1, a2 := 2, b2 := a1 + a2)
+plan <- partition_mutate_nse(a1 := 1, b1 := a1, a2 := 2, b2 := a1 + a2)
+print(plan)
+d <- data.frame(x = 1)
+for(si in plan) {
+   print(si)
+   d <- mutate_se(d, si)
+}
+print(d)
+
 
 }
