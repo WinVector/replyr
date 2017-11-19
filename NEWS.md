@@ -4,7 +4,6 @@
 
  * Minor documentation fixes.
  * Move to cdata 0.5.0.
- * Add mutate() partitioner.
 
 # replyr 0.9.0 2017-11-11
 
