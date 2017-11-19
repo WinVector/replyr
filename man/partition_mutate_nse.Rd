@@ -10,7 +10,7 @@ partition_mutate_nse(...)
 \item{...}{mutate expressions}
 }
 \value{
-
+ordered list of mutate_se assignment blocks
 }
 \description{
 Partition a sequence of mutate commands into longest ordered no create/use blocks.

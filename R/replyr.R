@@ -26,8 +26,8 @@ NULL
 
 # re-export so old code and demos work (from when functions were here)
 
-#' @importFrom wrapr let
-#' @importFrom seplyr novelName
+#' @importFrom wrapr let %.>% :=
+#' @importFrom seplyr novelName arrange_se
 #' @importFrom cdata grepdf makeTempNameGenerator
 NULL
 

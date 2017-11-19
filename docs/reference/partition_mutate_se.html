@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Authors • replyr</title>
+<title>Partition a sequence of mutate commands into longest ordered no create/use blocks. — partition_mutate_se • replyr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -20,9 +20,9 @@
 
 
 <!-- pkgdown -->
-<link href="pkgdown.css" rel="stylesheet">
-<script src="jquery.sticky-kit.min.js"></script>
-<script src="pkgdown.js"></script>
+<link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script>
+<script src="../pkgdown.js"></script>
   
   
 <!-- mathjax -->
@@ -37,7 +37,7 @@
   </head>
 
   <body>
-    <div class="container template-authors">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -47,21 +47,21 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">replyr</a>
+      <a class="navbar-brand" href="../index.html">replyr</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="/index.html">
+  <a href="..//index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="articles/replyr.html">Get Started</a>
+  <a href="../articles/replyr.html">Get Started</a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -71,30 +71,30 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="articles/coalesce.html">coalesce</a>
+      <a href="../articles/coalesce.html">coalesce</a>
     </li>
     <li>
-      <a href="articles/DependencySorting.html">Join Dependency Sorting</a>
+      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
     </li>
     <li>
-      <a href="articles/joinController.html">Join Controller</a>
+      <a href="../articles/joinController.html">Join Controller</a>
     </li>
     <li>
-      <a href="articles/letExample.html">let Example</a>
+      <a href="../articles/letExample.html">let Example</a>
     </li>
     <li>
-      <a href="articles/NArm.html">NA rm</a>
+      <a href="../articles/NArm.html">NA rm</a>
     </li>
     <li>
-      <a href="articles/ParametricExample.html">Parametric Programming in R</a>
+      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
     </li>
     <li>
-      <a href="articles/summary.html">summary</a>
+      <a href="../articles/summary.html">summary</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="news/index.html">News</a>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
@@ -111,30 +111,55 @@
       </header>
 
       <div class="row">
-  <div class="contents col-md-12">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Authors</h1>
+    <h1>Partition a sequence of mutate commands into longest ordered no create/use blocks.</h1>
     </div>
 
-    <ul class="list-unstyled">
-      <li>
-        <p><strong>John Mount</strong>. Author, maintainer.
-        </p>
-      </li>
-      <li>
-        <p><strong>Nina Zumel</strong>. Author.
-        </p>
-      </li>
-      <li>
-        <p><strong> Win-Vector LLC</strong>. Copyright&nbsp;holder.
-        </p>
-      </li>
+    
+    <p>Partition a sequence of mutate commands into longest ordered no create/use blocks.</p>
+    
+
+    <pre class="usage"><span class='fu'>partition_mutate_se</span>(<span class='no'>exprs</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>exprs</th>
+      <td><p>source of mutate expressions as an assignment list</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>ordered list of mutate_se assignment blocks</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>partition_mutate_se</span>(<span class='fu'>c</span>(<span class='st'>"a1"</span> <span class='kw'>:=</span> <span class='st'>"1"</span>, <span class='st'>"b1"</span> <span class='kw'>:=</span> <span class='st'>"a1"</span>, <span class='st'>"a2"</span> <span class='kw'>:=</span> <span class='st'>"2"</span>, <span class='st'>"b2"</span> <span class='kw'>:=</span> <span class='st'>"a1 + a2"</span>))</div><div class='output co'>#&gt; [[1]]
+#&gt;  a1  a2 
+#&gt; "1" "2" 
+#&gt; 
+#&gt; [[2]]
+#&gt;        b1        b2 
+#&gt;      "a1" "a1 + a2" 
+#&gt; </div><div class='input'>
+</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
-
 </div>
-
 
       <footer>
       <div class="copyright">

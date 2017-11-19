@@ -76,7 +76,7 @@ find_symbols <- function(nexpr) {
 #' Partition a sequence of mutate commands into longest ordered no create/use blocks.
 #'
 #' @param exprs source of mutate expressions as an assignment list
-#' @return
+#' @return ordered list of mutate_se assignment blocks
 #'
 #' @examples
 #'
@@ -99,7 +99,7 @@ partition_mutate_se <- function(exprs) {
 #' Partition a sequence of mutate commands into longest ordered no create/use blocks.
 #'
 #' @param ... mutate expressions
-#' @return
+#' @return ordered list of mutate_se assignment blocks
 #'
 #' @examples
 #'
