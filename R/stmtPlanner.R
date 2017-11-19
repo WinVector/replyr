@@ -1,30 +1,35 @@
 
 
-#' sort expressions
+#' partition expressions
+#'
+#' Find longest ordered not created and used in same block chains.
 #'
 #' @param de frame of expressions
-#' @return list of data frames of expressions (dependency sorted)
+#' @return data frame with group column
 #'
 #' @noRd
 #'
-sort_mutate_d <- function(de) {
+partition_mutate_d <- function(de) {
   n <- nrow(de)
-  g <- igraph::make_empty_graph()
-  v <- paste0('v', 1:n)
-  for(i in 1:n) {
-    g <- g + igraph::vertex(v[[i]])
-  }
-  for(i in 1:n) {
-    for(j in 1:n) {
-      if(i!=j) {
-        if(de$lhs[[i]] %in% de$rhs[[j]]) {
-          g <- g + igraph::edge(v[[i]], v[[j]])
-        }
+  de$origOrder = 1:n
+  de$group <- 0L
+  group <- 1L
+  while(any(de$group<=0)) {
+    # sweep forward in order greedily taking anything
+    # that has not been formed
+    # in this group.
+    formed <- NULL
+    for(i in 1:n) {
+      if( (de$group[[i]]<=0) &&
+         (length(intersect(de$syms[[i]], formed))<=0) ) {
+        formed <- c(formed, de$lhs[[i]])
+        de$group[[i]] <- group
       }
     }
+    group <- group + 1L
   }
-  steporder <- as.numeric(igraph::topo_sort(g))
-  # TODO: also split up
+  de %.>%
+    arrange_se(., c("group", "origOrder"))
 }
 
 
@@ -61,18 +66,18 @@ find_symbols <- function(nexpr) {
 
 
 
-
+#' Partition a sequence of mutate commands into longest ordered no create/use blocks.
 #'
 #' @param exprs source of mutate expressions as an assignment list
 #' @return
 #'
 #' @examples
 #'
-#' sort_mutate_se(c("a1" := "1", "b1" := "a1", "a2" := "2", "b2" := "a1 + a2"))
+#' partition_mutate_se(c("a1" := "1", "b1" := "a1", "a2" := "2", "b2" := "a1 + a2"))
 #'
 #' @export
 #'
-sort_mutate_se <- function(exprs) {
+partition_mutate_se <- function(exprs) {
   res <- data.frame(lhs = names(exprs),
                     rhs = as.character(exprs),
                     stringsAsFactors = FALSE)
@@ -80,21 +85,22 @@ sort_mutate_se <- function(exprs) {
                      function(ei) {
                        find_symbols(parse(text = ei))
                      })
-  sort_mutate_d(res)
+  partition_mutate_d(res)
 }
 
 
+#' Partition a sequence of mutate commands into longest ordered no create/use blocks.
 #'
 #' @param ... mutate expressions
 #' @return
 #'
 #' @examples
 #'
-#' sort_mutate_nse(a1 := 1, b1 := a1, a2 := 2, b2 := a1 + a2)
+#' partition_mutate_nse(a1 := 1, b1 := a1, a2 := 2, b2 := a1 + a2)
 #'
 #' @export
 #'
-sort_mutate_nse <- function(...) {
+partition_mutate_nse <- function(...) {
   mutateTerms <- substitute(list(...))
   len <- length(mutateTerms) # first slot is "list"
   if(len>1) {
@@ -104,7 +110,7 @@ sort_mutate_nse <- function(...) {
     for(i in (2:len)) {
       ei <- mutateTerms[[i]]
       if((length(ei)!=3)||(as.character(ei[[1]])!=':=')) {
-        stop("sort_mutate_nse terms must be of the form: sym := expr")
+        stop("partition_mutate_nse terms must be of the form: sym := expr")
       }
       lhs[[i-1]] <- as.character(ei[[2]])[[1]]
       syms[[i-1]] <- find_symbols(ei[[3]])
@@ -115,6 +121,6 @@ sort_mutate_nse <- function(...) {
                     rhs = rhs,
                     stringsAsFactors = FALSE)
   res$syms <- syms
-  sort_mutate_d(res)
+  partition_mutate_d(res)
 }
 

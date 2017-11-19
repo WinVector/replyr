@@ -27,8 +27,7 @@ Imports:
   dplyr (>= 0.7.4),
   dbplyr (>= 1.1.0),
   DBI (>= 0.7),
-  RSQLite,
-  igraph
+  RSQLite
 RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,
@@ -36,6 +35,7 @@ Suggests: testthat,
     sparklyr (>= 0.6.3),
     ggplot2,
     RPostgreSQL,
+    igraph,
     DiagrammeR,
     htmlwidgets,
     webshot,
