@@ -20,7 +20,7 @@ Description: Methods to use 'dplyr' remote data sources ('SQL' databases,
 License: GPL-3
 LazyData: TRUE
 Depends:
-  seplyr (>= 0.1.6),
+  seplyr (>= 0.5.0),
   wrapr (>= 1.0.1),
   cdata (>= 0.5.0)
 Imports:
