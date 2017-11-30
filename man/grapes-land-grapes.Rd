@@ -28,7 +28,6 @@ value
 right hand side.
 \%land_\% and \%->_\% copy a pipeline value to
 a variable named by the value referenced by its right hand side argument.
-These operators try to use eager evaluation.
 }
 \details{
 Technically these operators are

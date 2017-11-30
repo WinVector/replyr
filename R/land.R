@@ -6,14 +6,6 @@ isValidAndUnreservedName <- function(string) {
     (make.names(string,unique = FALSE, allow_ = TRUE) == string)
 }
 
-toToMakeEager <- function(value) {
-  force(value)
-  if('tbl' %in% class(value)) {
-    # try to make eager
-    throwAway <- collect(head(value))
-  }
-  value
-}
 
 #' Land a value to variable from a pipeline.
 #'
@@ -21,7 +13,6 @@ toToMakeEager <- function(value) {
 #' right hand side.
 #' \%land_\% and \%->_\% copy a pipeline value to
 #' a variable named by the value referenced by its right hand side argument.
-#' These operators try to use eager evaluation.
 #'
 #'
 #'
@@ -47,7 +38,6 @@ toToMakeEager <- function(value) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%land%` name argument must be a valid potential variable name")
   }
-  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -63,7 +53,6 @@ toToMakeEager <- function(value) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%->%` name argument must be a valid potential variable name")
   }
-  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -81,7 +70,6 @@ toToMakeEager <- function(value) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%->_%` name argument must be a valid potential variable name")
   }
-  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,
@@ -99,7 +87,6 @@ toToMakeEager <- function(value) {
      (!isValidAndUnreservedName(name))) {
     stop("replyr::`%land_%` name argument must be a valid potential variable name")
   }
-  value <- toToMakeEager(value)
   envir <- parent.frame(1)
   assign(name, value,
          pos = envir,

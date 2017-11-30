@@ -1,9 +1,9 @@
 
 
-# replyr 0.9.1 2017-11-18
+# replyr 0.9.1 2017-11-30
 
  * Minor documentation fixes.
- * Move to cdata 0.5.0.
+ * Don't try to make land eager.
 
 # replyr 0.9.0 2017-11-11
 
