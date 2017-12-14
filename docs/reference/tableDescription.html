@@ -162,10 +162,9 @@ Note: one usually needs to alter the keys column which is just populated with al
     <pre class="examples"><div class='input'>
 <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fl'>1</span>:<span class='fl'>3</span>, <span class='kw'>y</span><span class='kw'>=</span><span class='fl'>NA</span>)
 <span class='fu'>tableDescription</span>(<span class='st'>'d'</span>, <span class='no'>d</span>)</div><div class='output co'>#&gt; # A tibble: 1 x 8
-#&gt;   tableName               handle   columns      keys  colClass sourceClass
-#&gt;       &lt;chr&gt;               &lt;list&gt;    &lt;list&gt;    &lt;list&gt;    &lt;list&gt;       &lt;chr&gt;
-#&gt; 1         d &lt;data.frame [3 x 2]&gt; &lt;chr [2]&gt; &lt;chr [2]&gt; &lt;chr [2]&gt;  data.frame
-#&gt; # ... with 2 more variables: isEmpty &lt;lgl&gt;, indicatorColumn &lt;chr&gt;</div><div class='input'>
+#&gt;   tableName handle               columns   keys      colCl… sourc… isEm… indic…
+#&gt;   &lt;chr&gt;     &lt;list&gt;               &lt;list&gt;    &lt;list&gt;    &lt;list&gt; &lt;chr&gt;  &lt;lgl&gt; &lt;chr&gt; 
+#&gt; 1 d         &lt;data.frame [3 × 2]&gt; &lt;chr [2]&gt; &lt;chr [2]&gt; &lt;chr … data.… F     table…</div><div class='input'>
 
 </div></pre>
   </div>

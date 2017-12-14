@@ -93,7 +93,7 @@
       <h1>Join Controller</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-11-30</h4>
+            <h4 class="date">2017-12-14</h4>
           </div>
 
     
@@ -180,11 +180,11 @@ tDesc &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyv
 <p><code>tDesc</code> is essentially a slightly enriched version of the data handle concordance described in “<a href="http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/">Managing Spark data handles in R</a>.” We can take a quick look at the stored simplified <a href="http://www.win-vector.com/blog/2017/05/summarizing-big-data-in-r/">summaries</a>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceClass, handle, isEmpty))</code></pre></div>
 <pre><code>## # A tibble: 3 x 4
-##   tableName           sourceClass        handle isEmpty
-##       &lt;chr&gt;                 &lt;chr&gt;        &lt;list&gt;   &lt;lgl&gt;
-## 1     meas1 src_dbi, src_sql, src &lt;S3: tbl_dbi&gt;   FALSE
-## 2     names src_dbi, src_sql, src &lt;S3: tbl_dbi&gt;   FALSE
-## 3     meas2 src_dbi, src_sql, src &lt;S3: tbl_dbi&gt;   FALSE</code></pre>
+##   tableName sourceClass           handle        isEmpty
+##   &lt;chr&gt;     &lt;chr&gt;                 &lt;list&gt;        &lt;lgl&gt;  
+## 1 meas1     src_dbi, src_sql, src &lt;S3: tbl_dbi&gt; F      
+## 2 names     src_dbi, src_sql, src &lt;S3: tbl_dbi&gt; F      
+## 3 meas2     src_dbi, src_sql, src &lt;S3: tbl_dbi&gt; F</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(tDesc<span class="op">$</span>columns)</code></pre></div>
 <pre><code>## [[1]]
 ## [1] "id"     "date"   "weight" "height"
@@ -276,18 +276,18 @@ columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../refere
 <span class="kw">print</span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
-##    tableName sourceColumn    resultColumn isKey  want
-##        &lt;chr&gt;        &lt;chr&gt;           &lt;chr&gt; &lt;lgl&gt; &lt;lgl&gt;
-##  1     meas1           id       PatientID  TRUE  TRUE
-##  2     meas1         date MeasurementDate  TRUE  TRUE
-##  3     meas1       weight    meas1_weight FALSE  TRUE
-##  4     meas1       height          height FALSE  TRUE
-##  5     names           id       PatientID  TRUE  TRUE
-##  6     names         name            name FALSE  TRUE
-##  7     meas2          pid       PatientID  TRUE  TRUE
-##  8     meas2         date MeasurementDate  TRUE  TRUE
-##  9     meas2       weight    meas2_weight FALSE  TRUE
-## 10     meas2        width           width FALSE  TRUE</code></pre>
+##    tableName sourceColumn resultColumn    isKey want 
+##    &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;           &lt;lgl&gt; &lt;lgl&gt;
+##  1 meas1     id           PatientID       T     T    
+##  2 meas1     date         MeasurementDate T     T    
+##  3 meas1     weight       meas1_weight    F     T    
+##  4 meas1     height       height          F     T    
+##  5 names     id           PatientID       T     T    
+##  6 names     name         name            F     T    
+##  7 meas2     pid          PatientID       T     T    
+##  8 meas2     date         MeasurementDate T     T    
+##  9 meas2     weight       meas2_weight    F     T    
+## 10 meas2     width        width           F     T</code></pre>
 <p>Essentially the join plan is an unnest of the columns from the table descriptions. This was anticipated in our article <a href="http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/">“Managing Spark Data Handles”</a>.</p>
 <p>We then alter the join plan to meet our needs (either through <code>R</code> commands or by exporting the plan to a spreadsheet and editing it there).</p>
 <p>Only columns named in the join plan with a value of <code>TRUE</code> in the <code>want</code> column are kept in the join (columns marked <code>isKey</code> must also have <code>want</code> set to TRUE). This is very useful as systems of record often have very wide tables (with hundreds of columns) of which we only want a few columns for analysis.</p>
@@ -303,18 +303,18 @@ columnJoinPlan<span class="op">$</span>want[columnJoinPlan<span class="op">$</sp
 <span class="kw">print</span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</code></pre></div>
 <pre><code>## # A tibble: 10 x 5
-##    tableName sourceColumn    resultColumn isKey  want
-##        &lt;chr&gt;        &lt;chr&gt;           &lt;chr&gt; &lt;lgl&gt; &lt;lgl&gt;
-##  1     meas1           id       PatientID  TRUE  TRUE
-##  2     meas1         date MeasurementDate  TRUE  TRUE
-##  3     meas1       weight    meas1_weight FALSE  TRUE
-##  4     meas1       height          height FALSE  TRUE
-##  5     names           id       PatientID  TRUE  TRUE
-##  6     names         name            name FALSE  TRUE
-##  7     meas2          pid       PatientID  TRUE  TRUE
-##  8     meas2         date MeasurementDate  TRUE  TRUE
-##  9     meas2       weight    meas2_weight FALSE  TRUE
-## 10     meas2        width           width FALSE FALSE</code></pre>
+##    tableName sourceColumn resultColumn    isKey want 
+##    &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;           &lt;lgl&gt; &lt;lgl&gt;
+##  1 meas1     id           PatientID       T     T    
+##  2 meas1     date         MeasurementDate T     T    
+##  3 meas1     weight       meas1_weight    F     T    
+##  4 meas1     height       height          F     T    
+##  5 names     id           PatientID       T     T    
+##  6 names     name         name            F     T    
+##  7 meas2     pid          PatientID       T     T    
+##  8 meas2     date         MeasurementDate T     T    
+##  9 meas2     weight       meas2_weight    F     T    
+## 10 meas2     width        width           F     F</code></pre>
 <p>The join plan is the neglected (and often missing) piece of documentation key to non-trivial data science projects. We strongly suggest putting it under source control, and circulating it to project partners for comment.</p>
 <p>As a diagram the key structure of the join plan looks like the following:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span>
@@ -348,23 +348,23 @@ tempNameGenerator &lt;-<span class="st"> </span><span class="kw"><a href="http:/
 results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, columnJoinPlan, 
                                <span class="dt">verbose=</span> <span class="ot">TRUE</span>,
                                <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
-<pre><code>## [1] "start meas1 Thu Nov 30 05:44:04 2017"
+<pre><code>## [1] "start meas1 Thu Dec 14 09:15:39 2017"
 ## [1] " rename/restrict meas1"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'MeasurementDate' = 'date'"
 ## [1] "   'meas1_weight' = 'weight'"
 ## [1] "   'height' = 'height'"
 ## [1] " res &lt;- meas1"
-## [1] "done meas1 Thu Nov 30 05:44:04 2017"
-## [1] "start names Thu Nov 30 05:44:04 2017"
+## [1] "done meas1 Thu Dec 14 09:15:39 2017"
+## [1] "start names Thu Dec 14 09:15:39 2017"
 ## [1] " rename/restrict names"
 ## [1] "   'table_names_present' = 'table_names_present'"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'name' = 'name'"
 ## [1] " res &lt;- left_join(res, names,"
 ## [1] "                  by = c( 'PatientID' ))"
-## [1] "done names Thu Nov 30 05:44:05 2017"
-## [1] "start meas2 Thu Nov 30 05:44:05 2017"
+## [1] "done names Thu Dec 14 09:15:39 2017"
+## [1] "start meas2 Thu Dec 14 09:15:39 2017"
 ## [1] " rename/restrict meas2"
 ## [1] "   'table_meas2_present' = 'table_meas2_present'"
 ## [1] "   'PatientID' = 'pid'"
@@ -372,7 +372,7 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 ## [1] "   'meas2_weight' = 'weight'"
 ## [1] " res &lt;- left_join(res, meas2,"
 ## [1] "                  by = c( 'PatientID', 'MeasurementDate' ))"
-## [1] "done meas2 Thu Nov 30 05:44:05 2017"</code></pre>
+## [1] "done meas2 Thu Dec 14 09:15:40 2017"</code></pre>
 <p><code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> takes both a table description table (<code>tDesc</code>, keyed by <code>tableName</code>) and the join plan (<code>columnJoinPlan</code>, keyed by <code>tableName</code> and <code>sourceColumn</code>).</p>
 <p>The separation of concerns is strong: all details about the intended left-join sequence are taken from the <code>columnJoinPlan</code>, and only the mapping from abstract table names to tables (or table references/handles) is taken from <code>tDesc</code>. This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy. <code>tDesc</code> is a runtime entity (as it binds names to live handles, so can’t be serialized: you must save the code steps to produce it; note only the columns <code>tableName</code> and <code>handle</code> are used so there is no point re-editing the <code>keys</code> column after running <code><a href="../reference/tableDescription.html">tableDescription()</a></code> on new tables) and <code>columnJoinPlan</code> is a durable entity (has only information, not handles).</p>
 <p>Basically you:</p>
@@ -403,11 +403,11 @@ tTab &lt;-<span class="st"> </span>trainTables <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, handle)
 <span class="kw">print</span>(tTab)</code></pre></div>
 <pre><code>## # A tibble: 3 x 2
-##   tableName        handle
-##       &lt;chr&gt;        &lt;list&gt;
-## 1     meas1 &lt;S3: tbl_dbi&gt;
-## 2     names &lt;S3: tbl_dbi&gt;
-## 3     meas2 &lt;S3: tbl_dbi&gt;</code></pre>
+##   tableName handle       
+##   &lt;chr&gt;     &lt;list&gt;       
+## 1 meas1     &lt;S3: tbl_dbi&gt;
+## 2 names     &lt;S3: tbl_dbi&gt;
+## 3 meas2     &lt;S3: tbl_dbi&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tTab, columnJoinPlan, 
                          <span class="dt">verbose=</span> <span class="ot">FALSE</span>,
                          <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
@@ -427,8 +427,8 @@ temps &lt;-<span class="st"> </span><span class="kw">tempNameGenerator</span>(<s
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>(<span class="dt">verbose=</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  959306 51.3    1770749 94.6  1770749 94.6
-## Vcells 1541270 11.8    4338512 33.2  3547498 27.1</code></pre>
+## Ncells  973837 52.1    1770749 94.6  1770749 94.6
+## Vcells 1545399 11.8    4347922 33.2  3554033 27.2</code></pre>
 </div>
 </div>
   </div>

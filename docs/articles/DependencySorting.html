@@ -93,7 +93,7 @@
       <h1>Join Dependency Sorting</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2017-11-30</h4>
+            <h4 class="date">2017-12-14</h4>
           </div>
 
     
@@ -123,31 +123,31 @@
 
 <span class="kw">print</span>(tDesc[, <span class="kw">c</span>(<span class="st">'tableName'</span>, <span class="st">'handle'</span>, <span class="st">'keys'</span>, <span class="st">'columns'</span>), ])</code></pre></div>
 <pre><code>## # A tibble: 4 x 4
-##         tableName        handle      keys   columns
-##             &lt;chr&gt;        &lt;list&gt;    &lt;list&gt;    &lt;list&gt;
+##   tableName       handle        keys      columns  
+##   &lt;chr&gt;           &lt;list&gt;        &lt;list&gt;    &lt;list&gt;   
 ## 1 employeeanddate &lt;S3: tbl_dbi&gt; &lt;chr [0]&gt; &lt;chr [2]&gt;
-## 2         revenue &lt;S3: tbl_dbi&gt; &lt;chr [2]&gt; &lt;chr [3]&gt;
-## 3        activity &lt;S3: tbl_dbi&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;
-## 4        orgtable &lt;S3: tbl_dbi&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;</code></pre>
+## 2 revenue         &lt;S3: tbl_dbi&gt; &lt;chr [2]&gt; &lt;chr [3]&gt;
+## 3 activity        &lt;S3: tbl_dbi&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;
+## 4 orgtable        &lt;S3: tbl_dbi&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;</code></pre>
 <p>This is more legible if we turn it into a column join plan.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc, <span class="dt">check=</span> <span class="ot">FALSE</span>)
 <span class="kw">print</span>(columnJoinPlan[, <span class="kw">c</span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</code></pre></div>
 <pre><code>## # A tibble: 13 x 4
-##          tableName sourceColumn      resultColumn isKey
-##              &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt; &lt;lgl&gt;
-##  1 employeeanddate           id                id FALSE
-##  2 employeeanddate         date              date FALSE
-##  3         revenue         date              date  TRUE
-##  4         revenue         dept              dept  TRUE
-##  5         revenue          rev               rev FALSE
-##  6        activity          eid               eid  TRUE
-##  7        activity         date              date  TRUE
-##  8        activity        hours             hours FALSE
-##  9        activity     location activity_location FALSE
-## 10        orgtable          eid               eid  TRUE
-## 11        orgtable         date              date  TRUE
-## 12        orgtable         dept              dept FALSE
-## 13        orgtable     location orgtable_location FALSE</code></pre>
+##    tableName       sourceColumn resultColumn      isKey
+##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;             &lt;lgl&gt;
+##  1 employeeanddate id           id                F    
+##  2 employeeanddate date         date              F    
+##  3 revenue         date         date              T    
+##  4 revenue         dept         dept              T    
+##  5 revenue         rev          rev               F    
+##  6 activity        eid          eid               T    
+##  7 activity        date         date              T    
+##  8 activity        hours        hours             F    
+##  9 activity        location     activity_location F    
+## 10 orgtable        eid          eid               T    
+## 11 orgtable        date         date              T    
+## 12 orgtable        dept         dept              F    
+## 13 orgtable        location     orgtable_location F</code></pre>
 <p>At this point we are <em>almost</em> ready to execute a left join plan on these four tables (as detailed in <code><a href="https://cran.rstudio.com/web/packages/replyr/vignettes/joinController.html">vignette('joinController', package= 'replyr')</a></code>). What we need to do is:</p>
 <ul>
 <li>Regularize the key structure of the tables. In our example the analyst would have the domain knowledge that the <code>id</code> column in the <code>employeeanddate</code> table is an “employee id” and mean to match the <code>eid</code> columns in other tables.</li>
@@ -158,21 +158,21 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">columnJoinPlan<span class="op">$</span>resultColumn[columnJoinPlan<span class="op">$</span>sourceColumn<span class="op">==</span><span class="st">'id'</span>] &lt;-<span class="st"> 'eid'</span>
 <span class="kw">print</span>(columnJoinPlan[, <span class="kw">c</span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</code></pre></div>
 <pre><code>## # A tibble: 13 x 4
-##          tableName sourceColumn      resultColumn isKey
-##              &lt;chr&gt;        &lt;chr&gt;             &lt;chr&gt; &lt;lgl&gt;
-##  1 employeeanddate           id               eid FALSE
-##  2 employeeanddate         date              date FALSE
-##  3         revenue         date              date  TRUE
-##  4         revenue         dept              dept  TRUE
-##  5         revenue          rev               rev FALSE
-##  6        activity          eid               eid  TRUE
-##  7        activity         date              date  TRUE
-##  8        activity        hours             hours FALSE
-##  9        activity     location activity_location FALSE
-## 10        orgtable          eid               eid  TRUE
-## 11        orgtable         date              date  TRUE
-## 12        orgtable         dept              dept FALSE
-## 13        orgtable     location orgtable_location FALSE</code></pre>
+##    tableName       sourceColumn resultColumn      isKey
+##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;             &lt;lgl&gt;
+##  1 employeeanddate id           eid               F    
+##  2 employeeanddate date         date              F    
+##  3 revenue         date         date              T    
+##  4 revenue         dept         dept              T    
+##  5 revenue         rev          rev               F    
+##  6 activity        eid          eid               T    
+##  7 activity        date         date              T    
+##  8 activity        hours        hours             F    
+##  9 activity        location     activity_location F    
+## 10 orgtable        eid          eid               T    
+## 11 orgtable        date         date              T    
+## 12 orgtable        dept         dept              F    
+## 13 orgtable        location     orgtable_location F</code></pre>
 <p>Now we can worry about left join order.</p>
 <p>The most important choice in a left join plan is which table is left-most. If all the other tables are addressed by primary keys (i.e., there is not more than one row matching any row of the left-table) then the left-most table completely determines the set of rows in the left join result, no matter how many tables we are joining in. The order the rest of the tables are joined becomes irrelevant assuming it is an order we can execute.</p>
 <p>What prevents a proposed left join order from being executable is trying to join in a table that has a key that we do not yet have values for. Let’s show this as part of our example. Suppose we know that we want the table “<code>employeeanddate</code>” to be the left-most table in our left join sequence (and again, this is the one important choice). We can see our current left join plan (<code>columnJoinPlan</code>) is not executable in the order it is currently specifying:</p>
@@ -238,13 +238,13 @@
   dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Thu Nov 30 05:43:57 2017"
+## [1] "start employeeanddate Thu Dec 14 09:15:31 2017"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Thu Nov 30 05:43:57 2017"
-## [1] "start activity Thu Nov 30 05:43:57 2017"
+## [1] "done employeeanddate Thu Dec 14 09:15:31 2017"
+## [1] "start activity Thu Dec 14 09:15:31 2017"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -253,8 +253,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Thu Nov 30 05:43:58 2017"
-## [1] "start orgtable Thu Nov 30 05:43:58 2017"
+## [1] "done activity Thu Dec 14 09:15:31 2017"
+## [1] "start orgtable Thu Dec 14 09:15:31 2017"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -263,8 +263,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Thu Nov 30 05:43:58 2017"
-## [1] "start revenue Thu Nov 30 05:43:58 2017"
+## [1] "done orgtable Thu Dec 14 09:15:32 2017"
+## [1] "start revenue Thu Dec 14 09:15:32 2017"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -272,7 +272,7 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Thu Nov 30 05:43:58 2017"
+## [1] "done revenue Thu Dec 14 09:15:32 2017"
 ## [1] "join results"
 ## Observations: 2
 ## Variables: 10
@@ -303,8 +303,8 @@
 <span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>(<span class="dt">verbose =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  985504 52.7    1770749 94.6  1770749 94.6
-## Vcells 1565168 12.0    4213884 32.2  3444903 26.3</code></pre>
+## Ncells  999237 53.4    1770749 94.6  1770749 94.6
+## Vcells 1567270 12.0    4222011 32.3  3451517 26.4</code></pre>
 </div>
   </div>
 

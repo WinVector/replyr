@@ -1,9 +1,10 @@
 
 
-# replyr 0.9.1 2017-11-30
+# replyr 0.9.1 2017-12-14
 
  * Minor documentation fixes.
  * Don't try to make land eager.
+ * Move to wrapr 1.0.2
 
 # replyr 0.9.0 2017-11-11
 

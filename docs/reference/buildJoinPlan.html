@@ -156,12 +156,12 @@
 <span class='no'>tDesc</span>$<span class='no'>keys</span><span class='kw'>[[</span><span class='fl'>1</span>]] <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>PrimaryKey</span><span class='kw'>=</span> <span class='st'>'id'</span>)
 <span class='no'>tDesc</span>$<span class='no'>keys</span><span class='kw'>[[</span><span class='fl'>2</span>]] <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>PrimaryKey</span><span class='kw'>=</span> <span class='st'>'id'</span>)
 <span class='fu'>buildJoinPlan</span>(<span class='no'>tDesc</span>)</div><div class='output co'>#&gt; # A tibble: 4 x 6
-#&gt;   tableName sourceColumn sourceClass resultColumn isKey  want
-#&gt;       &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt; &lt;lgl&gt; &lt;lgl&gt;
-#&gt; 1        d1           id     integer   PrimaryKey  TRUE  TRUE
-#&gt; 2        d1       weight     numeric    d1_weight FALSE  TRUE
-#&gt; 3        d2           id     integer   PrimaryKey  TRUE  TRUE
-#&gt; 4        d2       weight     numeric    d2_weight FALSE  TRUE</div><div class='input'>
+#&gt;   tableName sourceColumn sourceClass resultColumn isKey want 
+#&gt;   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;        &lt;lgl&gt; &lt;lgl&gt;
+#&gt; 1 d1        id           integer     PrimaryKey   T     T    
+#&gt; 2 d1        weight       numeric     d1_weight    F     T    
+#&gt; 3 d2        id           integer     PrimaryKey   T     T    
+#&gt; 4 d2        weight       numeric     d2_weight    F     T    </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
