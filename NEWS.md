@@ -1,6 +1,6 @@
 
 
-# replyr 0.9.1 2017-12-14
+# replyr 0.9.1 2017-12-21
 
  * Minor documentation fixes.
  * Don't try to make land eager.
