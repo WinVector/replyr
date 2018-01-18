@@ -5,7 +5,7 @@
 \title{Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.}
 \usage{
 replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
-  useQBind = TRUE, eagerTempRemoval = FALSE,
+  useUnionALL = TRUE, eagerTempRemoval = FALSE,
   tempNameGenerator = makeTempNameGenerator("replyr_bind_rows"))
 }
 \arguments{
@@ -17,7 +17,7 @@ replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
 
 \item{useSparkRbind}{logical if TRUE try to use rbind on Sparklyr data}
 
-\item{useQBind}{logical if TRUE try to use query based binding}
+\item{useUnionALL}{logical if TRUE try to use union all binding}
 
 \item{eagerTempRemoval}{logical if TRUE remove temps early.}
 

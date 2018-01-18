@@ -115,8 +115,8 @@
 <li><a href="https://winvector.github.io/replyr/reference/gapply.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/gapply">replyr::gapply</a></code></a></li>
 <li><a href="https://winvector.github.io/replyr/reference/replyr_summary.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr::replyr_summary</a></code></a></li>
 <li><a href="https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_apply_f_mapped">replyr::replyr_apply_f_mapped</a></code></a></li>
-<li><a href="https://winvector.github.io/cdata/reference/moveValuesToRowsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToRowsN">cdata::moveValuesToRowsN</a></code></a></li>
-<li><a href="https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/moveValuesToColumnsN">cdata::moveValuesToColumnsN</a></code></a></li>
+<li><a href="https://winvector.github.io/cdata/reference/moveValuesToRowsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/rowrecs_to_blocks_q">cdata::moveValuesToRowsN</a></code></a></li>
+<li><a href="https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/blocks_to_rowrecs_q">cdata::moveValuesToColumnsN</a></code></a></li>
 <li><a href="https://winvector.github.io/wrapr/reference/let.html"><code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code></a></li>
 </ul>
 </div>
@@ -268,13 +268,15 @@ dRemote &lt;-<span class="st"> </span>replyr<span class="op">::</span><span clas
  <span class="co">#  src 2      src_dbi        list</span>
  <span class="co">#  ops 2      op_base_remote list</span>
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dRemote)
- <span class="co">#  Observations: 15</span>
+ <span class="co">#  Observations: NA</span>
  <span class="co">#  Variables: 3</span>
  <span class="co">#  $ x &lt;dbl&gt; 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2</span>
  <span class="co">#  $ y &lt;dbl&gt; 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA</span>
  <span class="co">#  $ z &lt;chr&gt; NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"</span>
 
 replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dRemote)
+ <span class="co">#  Warning: Missing values are always removed in SQL.</span>
+ <span class="co">#  Use `SUM(x, na.rm = TRUE)` to silence this warning</span>
  <span class="co">#    column index     class nrows nna nunique min max     mean       sd lexmin lexmax</span>
  <span class="co">#  1      x     1   numeric    15   0      NA   1   2 1.666667 0.487950   &lt;NA&gt;   &lt;NA&gt;</span>
  <span class="co">#  2      y     2   numeric    15   5      NA   3   5 4.000000 1.054093   &lt;NA&gt;   &lt;NA&gt;</span>
@@ -316,7 +318,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source: table&lt;replyr_filter_7kalgfgqcrxhqfgchrb6_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source: table&lt;replyr_filter_ovagifpyqnrco7lbifdz_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.19.3 [:memory:]</span>
  <span class="co">#         x     y z    </span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -379,8 +381,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  750742 40.1    1442291 77.1  1168576 62.5</span>
- <span class="co">#  Vcells 1501526 11.5    2552219 19.5  1855275 14.2</span></code></pre></div>
+ <span class="co">#  Ncells  761877 40.7    1442291 77.1  1168576 62.5</span>
+ <span class="co">#  Vcells 1519233 11.6    2552219 19.5  1821201 13.9</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

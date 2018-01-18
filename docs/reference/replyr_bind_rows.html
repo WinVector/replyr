@@ -122,7 +122,7 @@
     
 
     <pre class="usage"><span class='fu'>replyr_bind_rows</span>(<span class='no'>lst</span>, <span class='no'>...</span>, <span class='kw'>useDplyrLocal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>useSparkRbind</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>useQBind</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>eagerTempRemoval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>useUnionALL</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>eagerTempRemoval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"replyr_bind_rows"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -145,8 +145,8 @@
       <td><p>logical if TRUE try to use rbind on Sparklyr data</p></td>
     </tr>
     <tr>
-      <th>useQBind</th>
-      <td><p>logical if TRUE try to use query based binding</p></td>
+      <th>useUnionALL</th>
+      <td><p>logical if TRUE try to use union all binding</p></td>
     </tr>
     <tr>
       <th>eagerTempRemoval</th>
@@ -172,7 +172,7 @@
                     <span class='kw'>temporary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='co'># dplyr::bind_rows(list(d, d))</span>
 <span class='co'># # Argument 1 must be a data frame or a named atomic vector, not a tbl_dbi/tbl_sql/tbl_lazy/tbl</span>
-<span class='fu'>replyr_bind_rows</span>(<span class='fu'>list</span>(<span class='no'>d</span>, <span class='no'>d</span>))</div><div class='output co'>#&gt; # Source: table&lt;replyr_bind_rows_fzljacertv2kctymzdy8_0000000002&gt; [?? x 1]
+<span class='fu'>replyr_bind_rows</span>(<span class='fu'>list</span>(<span class='no'>d</span>, <span class='no'>d</span>))</div><div class='output co'>#&gt; # Source: lazy query [?? x 1]
 #&gt; # Database: sqlite 3.19.3 [:memory:]
 #&gt;       x
 #&gt;   &lt;int&gt;

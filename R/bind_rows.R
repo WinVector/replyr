@@ -178,88 +178,6 @@ r_replyr_bind_rows <- function(lst,
   res
 }
 
-#' Bind rows by a query. Assumes all tables structured identically.
-#'
-#' TODO: use cdata version
-#'
-#' @param tableNames names of tables to concatinate (not empty)
-#' @param colNames names of columns
-#' @param my_db connection to where tables live
-#' @param resultTableName name of result table
-#' @param ... force later arguments to bind by name
-#' @param origTableColumn character, column to put original table name in.
-#' @return resultTableName
-#'
-#' @examples
-#'
-#' my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-#' d1 <- replyr_copy_to(my_db, data.frame(x=1:2, y= 10:11), 'd1')
-#' d2 <- replyr_copy_to(my_db, data.frame(x=3:4, y= 13:14), 'd2')
-#' bind_rowsQ(tableNames = c('d1', 'd2'),
-#'            colNames = c('x', 'y'),
-#'            my_db = my_db,
-#'            resultTableName = 'res1',
-#'            origTableColumn = 'orig_table')
-#' cdata::qlook(my_db, 'res1')
-#'
-#' @noRd
-#'
-bind_rowsQr <- function(tableNames, colNames, my_db,
-                       resultTableName,
-                       ...,
-                       origTableColumn = NULL) {
-  if(length(list(...))>0) {
-    stop("replyr::bind_rowsQ unexpected arguments")
-  }
-  qSel <- vapply(colNames,
-                 function(ci) {
-                   DBI::dbQuoteIdentifier(my_db, ci)
-                 }, character(1))
-  selTerms <- paste(qSel, collapse = ", ")
-  if(!is.null(origTableColumn)) {
-    selTerms <- paste0(selTerms,
-                       ", ",
-                       DBI::dbQuoteString(my_db, tableNames[[1]]),
-                       " ",
-                       DBI::dbQuoteIdentifier(my_db, origTableColumn))
-  }
-  qd <- paste0("DROP TABLE IF EXISTS ",
-               DBI::dbQuoteIdentifier(my_db, resultTableName))
-  tryCatch(
-    r <- DBI::dbGetQuery(my_db, qd),
-    warning = function(w) { NULL })
-  qc <- paste0("CREATE TABLE ",
-               DBI::dbQuoteIdentifier(my_db, resultTableName),
-               " AS SELECT ",
-               selTerms,
-               " FROM ",
-               tableNames[[1]])
-  tryCatch(
-    r <- DBI::dbGetQuery(my_db, qc),
-    warning = function(w) { NULL })
-  if(length(tableNames)>1) {
-    for(i in 2:length(tableNames)) {
-      selTerms <- paste(qSel, collapse = ", ")
-      if(!is.null(origTableColumn)) {
-        selTerms <- paste0(selTerms,
-                           ", ",
-                           DBI::dbQuoteString(my_db, tableNames[[i]]),
-                           " ",
-                           DBI::dbQuoteIdentifier(my_db, origTableColumn))
-      }
-      qi <- paste0("INSERT INTO ",
-                   DBI::dbQuoteIdentifier(my_db,  resultTableName),
-                   " SELECT ",
-                   selTerms,
-                   " FROM ",
-                   tableNames[[i]])
-      tryCatch(
-        r <- DBI::dbGetQuery(my_db, qi),
-        warning = function(w) { NULL })
-    }
-  }
-  resultTableName
-}
 
 #' Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.
 #'
@@ -270,7 +188,7 @@ bind_rowsQr <- function(tableNames, colNames, my_db,
 #' @param ... force other arguments to be used by name
 #' @param useDplyrLocal logical if TRUE use dplyr for local data.
 #' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
-#' @param useQBind logical if TRUE try to use query based binding
+#' @param useUnionALL logical if TRUE try to use union all binding
 #' @param eagerTempRemoval logical if TRUE remove temps early.
 #' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
 #' @return single data item
@@ -291,7 +209,7 @@ replyr_bind_rows <- function(lst,
                              ...,
                              useDplyrLocal= TRUE,
                              useSparkRbind= TRUE,
-                             useQBind= TRUE,
+                             useUnionALL= TRUE,
                              eagerTempRemoval= FALSE,
                              tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
   if(length(list(...))>0) {
@@ -327,33 +245,15 @@ replyr_bind_rows <- function(lst,
       return(do.call(rbind, lst))
     }
   }
-  if(useQBind) {
+  if(useUnionALL) {
     # assuming all tables on same source
-    src <- dplyr_src_to_db_handle(replyr_get_src(lst[[1]]))
-    colnames <- colnames(lst[[1]])
-    tableNames <- lapply(lst,
-                         function(ti) {
-                           nm = tempNameGenerator()
-                           if(replyr_is_local_data(ti)) {
-                             ti %.>%
-                               seplyr::select_se(., colnames) %.>%
-                               replyr_copy_to(src, ., temporary = TRUE,
-                                              name = nm)
-                           } else {
-                             ti %.>%
-                               seplyr::select_se(., colnames) %.>%
-                               dplyr::compute(.,
-                                              name = nm)
-                           }
-                           nm
-                         })
-    nm <- tempNameGenerator()
-    # TODO: switch to cdata 0.5.1 version.
-    bind_rowsQr(tableNames = tableNames,
-               colNames = colnames,
-               my_db = src,
-               resultTableName = nm)
-    return(dplyr::tbl(src, nm))
+    res <- lst[[1]]
+    if(length(lst)>1) {
+      for(i in 2:length(lst)) {
+        res <- dplyr::union_all(res, lst[[i]])
+      }
+    }
+    return(res)
   }
   # nasty recursive fall-back
   r_replyr_bind_rows(lst, eagerTempRemoval, TRUE,

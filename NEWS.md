@@ -1,10 +1,11 @@
 
 
-# replyr 0.9.1 2017-12-21
+# replyr 0.9.1 2018-01-18
 
  * Minor documentation fixes.
  * Don't try to make land eager.
- * Move to wrapr 1.0.2
+ * Move to wrapr 1.1.0
+ * Remove query bind rows.
 
 # replyr 0.9.0 2017-11-11
 

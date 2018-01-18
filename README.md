@@ -203,13 +203,15 @@ summary(dRemote)
  #  src 2      src_dbi        list
  #  ops 2      op_base_remote list
 glimpse(dRemote)
- #  Observations: 15
+ #  Observations: NA
  #  Variables: 3
  #  $ x <dbl> 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2
  #  $ y <dbl> 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA
  #  $ z <chr> NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"
 
 replyr::replyr_summary(dRemote)
+ #  Warning: Missing values are always removed in SQL.
+ #  Use `SUM(x, na.rm = TRUE)` to silence this warning
  #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
  #  1      x     1   numeric    15   0      NA   1   2 1.666667 0.487950   <NA>   <NA>
  #  2      y     2   numeric    15   5      NA   3   5 4.000000 1.054093   <NA>   <NA>
@@ -256,7 +258,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source: table<replyr_filter_recsuv8ksg7gzq3jopou_0000000001> [?? x 3]
+ #  # Source: table<replyr_filter_mspipri8qnl7yh8ufhtc_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -324,8 +326,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  707935 37.9    1168576 62.5   940480 50.3
- #  Vcells 1445580 11.1    2552219 19.5  1691989 13.0
+ #  Ncells  719590 38.5    1168576 62.5   940480 50.3
+ #  Vcells 1464449 11.2    2552219 19.5  1724397 13.2
 ```
 
 Note
