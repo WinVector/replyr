@@ -3,14 +3,14 @@
 ## Test environments
 
  * OSX build/check
- * using R version 3.4.2 (2017-09-28)
+ * using R version 3.4.3 (2017-11-30)
  * using platform: x86_64-apple-darwin15.6.0 (64-bit)
- 
+
  * win-builder 
  * using R Under development (unstable) (2017-09-12 r73242)
  * using platform: x86_64-w64-mingw32 (64-bit)
 
-## R CMD check --as-cran replyr_0.9.0.tar.gz
+## R CMD check --as-cran replyr_0.9.1.tar.gz
 
 * using session charset: UTF-8
 * using option ‘--as-cran’

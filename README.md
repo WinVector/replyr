@@ -24,8 +24,6 @@ Primary `replyr` services include:
 -   [`replyr::gapply`](https://winvector.github.io/replyr/reference/gapply.html)
 -   [`replyr::replyr_summary`](https://winvector.github.io/replyr/reference/replyr_summary.html)
 -   [`replyr::replyr_apply_f_mapped`](https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html)
--   [`cdata::moveValuesToRowsN`](https://winvector.github.io/cdata/reference/moveValuesToRowsN.html)
--   [`cdata::moveValuesToColumnsN`](https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html)
 -   [`wrapr::let`](https://winvector.github.io/wrapr/reference/let.html)
 
 `wrapr::let`
@@ -258,7 +256,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source: table<replyr_filter_mspipri8qnl7yh8ufhtc_0000000001> [?? x 3]
+ #  # Source: table<replyr_filter_z2jaq3d3uesusj7tzouf_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -326,8 +324,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  719590 38.5    1168576 62.5   940480 50.3
- #  Vcells 1464449 11.2    2552219 19.5  1724397 13.2
+ #  Ncells  719633 38.5    1168576 62.5  1168576 62.5
+ #  Vcells 1466905 11.2    2552219 19.5  1816205 13.9
 ```
 
 Note

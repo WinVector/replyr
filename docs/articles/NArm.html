@@ -93,7 +93,7 @@
       <h1>NA rm</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2018-01-18</h4>
+            <h4 class="date">2018-01-20</h4>
           </div>
 
     
@@ -134,7 +134,6 @@ d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 } <span class="cf">else</span> {
   dRemote &lt;-<span class="st"> </span>d <span class="co"># local stand in when we can't make remote</span>
 }
-<span class="co">#&gt; Loading required namespace: RSQLite</span>
 <span class="kw">print</span>(dRemote)
 <span class="co">#&gt; # Source: table&lt;d&gt; [?? x 4]</span>
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
@@ -246,8 +245,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
 <span class="co">#&gt;           used (Mb) gc trigger (Mb) max used (Mb)</span>
-<span class="co">#&gt; Ncells  697710 37.3    1168576 62.5  1168576 62.5</span>
-<span class="co">#&gt; Vcells 1273195  9.8    2060183 15.8  1770191 13.6</span></code></pre></div>
+<span class="co">#&gt; Ncells  697849 37.3    1168576 62.5  1168576 62.5</span>
+<span class="co">#&gt; Vcells 1275959  9.8    2060183 15.8  1774405 13.6</span></code></pre></div>
 </div>
 </div>
   </div>

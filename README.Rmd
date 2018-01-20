@@ -38,8 +38,6 @@ Primary `replyr` services include:
  * [`replyr::gapply`](https://winvector.github.io/replyr/reference/gapply.html)
  * [`replyr::replyr_summary`](https://winvector.github.io/replyr/reference/replyr_summary.html)
  * [`replyr::replyr_apply_f_mapped`](https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html)
- * [`cdata::moveValuesToRowsN`](https://winvector.github.io/cdata/reference/moveValuesToRowsN.html)
- * [`cdata::moveValuesToColumnsN`](https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html)
  * [`wrapr::let`](https://winvector.github.io/wrapr/reference/let.html)
 
 

@@ -115,8 +115,6 @@
 <li><a href="https://winvector.github.io/replyr/reference/gapply.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/gapply">replyr::gapply</a></code></a></li>
 <li><a href="https://winvector.github.io/replyr/reference/replyr_summary.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr::replyr_summary</a></code></a></li>
 <li><a href="https://winvector.github.io/replyr/reference/replyr_apply_f_mapped.html"><code><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_apply_f_mapped">replyr::replyr_apply_f_mapped</a></code></a></li>
-<li><a href="https://winvector.github.io/cdata/reference/moveValuesToRowsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/rowrecs_to_blocks_q">cdata::moveValuesToRowsN</a></code></a></li>
-<li><a href="https://winvector.github.io/cdata/reference/moveValuesToColumnsN.html"><code><a href="http://www.rdocumentation.org/packages/cdata/topics/blocks_to_rowrecs_q">cdata::moveValuesToColumnsN</a></code></a></li>
 <li><a href="https://winvector.github.io/wrapr/reference/let.html"><code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code></a></li>
 </ul>
 </div>
@@ -318,7 +316,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source: table&lt;replyr_filter_ovagifpyqnrco7lbifdz_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source: table&lt;replyr_filter_rkekfxvv4pkemmzl2yxb_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.19.3 [:memory:]</span>
  <span class="co">#         x     y z    </span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -381,8 +379,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  761877 40.7    1442291 77.1  1168576 62.5</span>
- <span class="co">#  Vcells 1519233 11.6    2552219 19.5  1821201 13.9</span></code></pre></div>
+ <span class="co">#  Ncells  764562 40.9    1442291 77.1  1168576 62.5</span>
+ <span class="co">#  Vcells 1532657 11.7    2552219 19.5  2017535 15.4</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">
