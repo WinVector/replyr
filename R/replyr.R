@@ -29,6 +29,8 @@ NULL
 #' @importFrom wrapr let %.>% :=
 #' @importFrom seplyr novelName arrange_se
 #' @importFrom cdata grepdf makeTempNameGenerator
+#' @importFrom RSQLite dbDisconnect
+#' @importFrom dbplyr as.sql
 NULL
 
 #' @export
