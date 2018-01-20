@@ -7,7 +7,7 @@
  * using platform: x86_64-apple-darwin15.6.0 (64-bit)
 
  * win-builder 
- * using R Under development (unstable) (2017-09-12 r73242)
+ * using R Under development (unstable) (2018-01-19 r74138)
  * using platform: x86_64-w64-mingw32 (64-bit)
 
 ## R CMD check --as-cran replyr_0.9.1.tar.gz
