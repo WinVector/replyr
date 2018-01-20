@@ -25,14 +25,14 @@ Depends:
   cdata (>= 0.5.1)
 Imports:
   dplyr (>= 0.7.4),
-  dbplyr (>= 1.2.0),
-  DBI (>= 0.7),
+  dbplyr,
+  DBI,
   RSQLite
 RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,
     rmarkdown,
-    sparklyr (>= 0.6.3),
+    sparklyr,
     ggplot2,
     RPostgreSQL,
     igraph,
