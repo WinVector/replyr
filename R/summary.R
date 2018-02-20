@@ -59,7 +59,7 @@ replyr_summary <- function(x,
   if(length(list(...))>0) {
     stop("replyr::replyr_summary unexpected arguments")
   }
-  tempNameGenerator = makeTempNameGenerator('replyr_summary')
+  tempNameGenerator = mk_tmp_name_source('replyr_summary')
   x <- x %.>%
     dplyr::ungroup(.)
   if(compute) {

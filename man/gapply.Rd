@@ -7,7 +7,7 @@
 gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
   partitionMethod = "split", bindrows = TRUE, maxgroups = 100,
   eagerCompute = FALSE, restoreGroup = FALSE,
-  tempNameGenerator = makeTempNameGenerator("replyr_gapply"))
+  tempNameGenerator = mk_tmp_name_source("replyr_gapply"))
 }
 \arguments{
 \item{df}{remote dplyr data item}
@@ -32,7 +32,7 @@ gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{restoreGroup}{logical, if TRUE restore group column after apply when \code{partitionMethod \%in\% c('extract', 'split')}}
 
-\item{tempNameGenerator}{temp name generator produced by \code{cdata::makeTempNameGenerator}, used to record \code{dplyr::compute()} effects.}
+\item{tempNameGenerator}{temp name generator produced by \code{wrapr::mk_tmp_name_source}, used to record \code{dplyr::compute()} effects.}
 }
 \value{
 transformed frame

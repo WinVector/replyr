@@ -266,7 +266,7 @@ dRemote &lt;-<span class="st"> </span>replyr<span class="op">::</span><span clas
  <span class="co">#  src 2      src_dbi        list</span>
  <span class="co">#  ops 2      op_base_remote list</span>
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dRemote)
- <span class="co">#  Observations: NA</span>
+ <span class="co">#  Observations: ??</span>
  <span class="co">#  Variables: 3</span>
  <span class="co">#  $ x &lt;dbl&gt; 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2</span>
  <span class="co">#  $ y &lt;dbl&gt; 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA</span>
@@ -316,7 +316,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source: table&lt;replyr_filter_rkekfxvv4pkemmzl2yxb_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_65302317862250739277_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.19.3 [:memory:]</span>
  <span class="co">#         x     y z    </span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -379,8 +379,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  764562 40.9    1442291 77.1  1168576 62.5</span>
- <span class="co">#  Vcells 1532657 11.7    2552219 19.5  2017535 15.4</span></code></pre></div>
+ <span class="co">#  Ncells  763092 40.8    1442291 77.1  1168576 62.5</span>
+ <span class="co">#  Vcells 1525261 11.7    2552219 19.5  1934959 14.8</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

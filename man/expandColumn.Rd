@@ -6,7 +6,7 @@
 \usage{
 expandColumn(data, colName, ..., rowidSource = NULL, rowidDest = NULL,
   idxDest = NULL,
-  tempNameGenerator = makeTempNameGenerator("replyr_expandColumn"))
+  tempNameGenerator = mk_tmp_name_source("replyr_expandColumn"))
 }
 \arguments{
 \item{data}{data.frame to work with.}
@@ -21,7 +21,7 @@ expandColumn(data, colName, ..., rowidSource = NULL, rowidDest = NULL,
 
 \item{idxDest}{optional character name of column to write value indices to (must not be an existing column name).}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 expanded data frame where each value of colName column is in a new row.

@@ -5,7 +5,7 @@
 \title{Compute quantiles on remote column (NA's filtered out) using cumsum.}
 \usage{
 replyr_quantilec(x, cname, probs = seq(0, 1, 0.25), ...,
-  tempNameGenerator = makeTempNameGenerator("replyr_quantilec"))
+  tempNameGenerator = mk_tmp_name_source("replyr_quantilec"))
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
@@ -16,7 +16,7 @@ replyr_quantilec(x, cname, probs = seq(0, 1, 0.25), ...,
 
 \item{...}{force later arguments to bind by name.}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \description{
 NA's filtered out and does not break ties the same as stats::quantile.

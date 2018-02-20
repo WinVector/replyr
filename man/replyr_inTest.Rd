@@ -5,8 +5,7 @@
 \title{Product a column noting if another columns values are in a given set.}
 \usage{
 replyr_inTest(x, cname, values, nname, ...,
-  tempNameGenerator = makeTempNameGenerator("replyr_inTest"),
-  verbose = TRUE)
+  tempNameGenerator = mk_tmp_name_source("replyr_inTest"), verbose = TRUE)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
@@ -19,7 +18,7 @@ replyr_inTest(x, cname, values, nname, ...,
 
 \item{...}{force later parameters to bind by name}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 
 \item{verbose}{logical if TRUE echo warnings}
 }

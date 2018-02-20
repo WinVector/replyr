@@ -84,7 +84,7 @@ replyr_ranksummaries <- function(x,
 #' @param ValueColumnName column determining order
 #' @param RankColumnName column having proposed rank (function of order)
 #' @param ... force later arguments to bind by name
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #' @param decreasing if true make order decreasing instead of increasing.
 #' @return summary of quality of ranking.
 #'
@@ -99,7 +99,7 @@ replyr_check_ranks <- function(x,
                                GroupColumnName,ValueColumnName,RankColumnName,
                                ...,
                                decreasing= FALSE,
-                               tempNameGenerator= makeTempNameGenerator("replyr_check_ranks")) {
+                               tempNameGenerator= mk_tmp_name_source("replyr_check_ranks")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_check_ranks unexpected arguments.")
   }

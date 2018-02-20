@@ -20,8 +20,6 @@
 \alias{DebugPrintFn}
 \alias{reexports}
 \alias{DebugPrintFnE}
-\alias{reexports}
-\alias{makeTempNameGenerator}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -29,8 +27,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{cdata}{\code{\link[cdata]{makeTempNameGenerator}}}
-
   \item{wrapr}{\code{\link[wrapr]{let}}, \code{\link[wrapr]{restrictToNameAssignments}}, \code{\link[wrapr]{\%.>\%}}, \code{\link[wrapr]{DebugFn}}, \code{\link[wrapr]{DebugFnE}}, \code{\link[wrapr]{DebugFnW}}, \code{\link[wrapr]{DebugFnWE}}, \code{\link[wrapr]{DebugPrintFn}}, \code{\link[wrapr]{DebugPrintFnE}}}
 }}
 

@@ -6,7 +6,7 @@
 \usage{
 replyr_union_all(tabA, tabB, ..., useDplyrLocal = TRUE,
   useSparkRbind = TRUE,
-  tempNameGenerator = makeTempNameGenerator("replyr_union_all"))
+  tempNameGenerator = mk_tmp_name_source("replyr_union_all"))
 }
 \arguments{
 \item{tabA}{not-NULL table with at least 1 row.}
@@ -19,7 +19,7 @@ replyr_union_all(tabA, tabB, ..., useDplyrLocal = TRUE,
 
 \item{useSparkRbind}{logical if TRUE try to use rbind on Sparklyr data}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 table with all rows of tabA and tabB (union_all).

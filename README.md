@@ -201,7 +201,7 @@ summary(dRemote)
  #  src 2      src_dbi        list
  #  ops 2      op_base_remote list
 glimpse(dRemote)
- #  Observations: NA
+ #  Observations: ??
  #  Variables: 3
  #  $ x <dbl> 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2
  #  $ y <dbl> 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA
@@ -256,7 +256,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source: table<replyr_filter_z2jaq3d3uesusj7tzouf_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_34925143797273876277_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -324,8 +324,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  719633 38.5    1168576 62.5  1168576 62.5
- #  Vcells 1466905 11.2    2552219 19.5  1816205 13.9
+ #  Ncells  720635 38.5    1168576 62.5  1168576 62.5
+ #  Vcells 1470044 11.3    2552219 19.5  1973236 15.1
 ```
 
 Note

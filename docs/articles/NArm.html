@@ -93,7 +93,7 @@
       <h1>NA rm</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2018-01-20</h4>
+            <h4 class="date">2018-02-20</h4>
           </div>
 
     
@@ -113,9 +113,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     intersect, setdiff, setequal, union</span>
 <span class="kw">library</span>(<span class="st">'replyr'</span>)
-<span class="co">#&gt; Loading required package: seplyr</span>
 <span class="co">#&gt; Loading required package: wrapr</span>
-<span class="co">#&gt; Loading required package: cdata</span>
 d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),
                 <span class="dt">y=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),
                 <span class="dt">z=</span><span class="kw">c</span>(<span class="ot">NA</span>,<span class="st">'a'</span>,<span class="st">'b'</span>),
@@ -135,7 +133,7 @@ d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
   dRemote &lt;-<span class="st"> </span>d <span class="co"># local stand in when we can't make remote</span>
 }
 <span class="kw">print</span>(dRemote)
-<span class="co">#&gt; # Source: table&lt;d&gt; [?? x 4]</span>
+<span class="co">#&gt; # Source:   table&lt;d&gt; [?? x 4]</span>
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt;</span>
@@ -179,7 +177,7 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna<span class="op">+</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(x),<span class="dv">1</span>,<span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna<span class="op">+</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(y),<span class="dv">1</span>,<span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">nna=</span>nna<span class="op">+</span><span class="kw">ifelse</span>(<span class="kw">is.na</span>(z),<span class="dv">1</span>,<span class="dv">0</span>))  
-<span class="co">#&gt; # Source: lazy query [?? x 5]</span>
+<span class="co">#&gt; # Source:   lazy query [?? x 5]</span>
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum   nna</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;</span>
@@ -196,7 +194,7 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="st">    </span>dTmp
 }
 <span class="kw">print</span>(dTmp)
-<span class="co">#&gt; # Source: lazy query [?? x 5]</span>
+<span class="co">#&gt; # Source:   lazy query [?? x 5]</span>
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum   nna</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;</span>
@@ -212,7 +210,7 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
   )
 }
 <span class="kw">print</span>(dTmp)
-<span class="co">#&gt; # Source: lazy query [?? x 5]</span>
+<span class="co">#&gt; # Source:   lazy query [?? x 5]</span>
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum   nna</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;</span>
@@ -229,7 +227,7 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="co">#&gt; 2 2 5 a      2</span>
 
 <span class="kw">na.omit</span>(dRemote)
-<span class="co">#&gt; # Source: table&lt;d&gt; [?? x 4]</span>
+<span class="co">#&gt; # Source:   table&lt;d&gt; [?? x 4]</span>
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt;</span>
@@ -245,8 +243,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
 <span class="co">#&gt;           used (Mb) gc trigger (Mb) max used (Mb)</span>
-<span class="co">#&gt; Ncells  697849 37.3    1168576 62.5  1168576 62.5</span>
-<span class="co">#&gt; Vcells 1275959  9.8    2060183 15.8  1774405 13.6</span></code></pre></div>
+<span class="co">#&gt; Ncells  695846 37.2    1168576 62.5  1168576 62.5</span>
+<span class="co">#&gt; Vcells 1214529  9.3    2060183 15.8  1705041 13.1</span></code></pre></div>
 </div>
 </div>
   </div>

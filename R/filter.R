@@ -13,7 +13,7 @@ NULL
 #' @param values set of values to check set membership of.
 #' @param ... force later arguments to bind by name.
 #' @param verbose logical if TRUE echo warnings
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #' @return new tbl with only rows where cname value is in values set.
 #'
 #' @examples
@@ -27,7 +27,7 @@ NULL
 replyr_filter <- function(x,cname,values,
                           ...,
                           verbose=TRUE,
-                          tempNameGenerator= makeTempNameGenerator("replyr_filter")) {
+                          tempNameGenerator= mk_tmp_name_source("replyr_filter")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_filter unexpected arguments.")
   }

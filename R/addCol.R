@@ -12,7 +12,7 @@
 #' @param colName character, name of column to add.
 #' @param val scalar, value to add.
 #' @param ... force later arguments to be bound by name.
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #' @return table with new column added.
 #'
 #' @examples
@@ -24,7 +24,7 @@
 addConstantColumn <- function(d,
                               colName, val,
                               ...,
-                              tempNameGenerator= makeTempNameGenerator("replyr_addConstantColumn")) {
+                              tempNameGenerator= mk_tmp_name_source("replyr_addConstantColumn")) {
   # PostgresSQL and Spark1.6.2 don't like blank character values
   # hope dplyr lazyeval carries the cast over to the database
   # And MySQL can't accept the SQL dplyr emits with character cast

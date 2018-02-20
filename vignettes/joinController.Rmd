@@ -225,7 +225,7 @@ Once you have a good join plan executing it is a one-line command with `executeL
 ```{r run}
 # manage the temp names as in:
 #  http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/
-tempNameGenerator <- makeTempNameGenerator("extmps")
+tempNameGenerator <- mk_tmp_name_source("extmps")
 
 # execute the left joins
 results <- executeLeftJoinPlan(tDesc, columnJoinPlan, 

@@ -5,7 +5,7 @@
 \title{Augment a data frame by adding additional rows.}
 \usage{
 replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL,
-  copy = TRUE, tempNameGenerator = makeTempNameGenerator("replyr_coalesce"))
+  copy = TRUE, tempNameGenerator = mk_tmp_name_source("replyr_coalesce"))
 }
 \arguments{
 \item{data}{data.frame data to augment}
@@ -20,7 +20,7 @@ replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL,
 
 \item{copy}{logical if TRUE copy support to data's source}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 augmented data

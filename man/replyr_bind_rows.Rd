@@ -6,7 +6,7 @@
 \usage{
 replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
   useUnionALL = TRUE, eagerTempRemoval = FALSE,
-  tempNameGenerator = makeTempNameGenerator("replyr_bind_rows"))
+  tempNameGenerator = mk_tmp_name_source("replyr_bind_rows"))
 }
 \arguments{
 \item{lst}{list of items to combine, must be all in same dplyr data service}
@@ -21,7 +21,7 @@ replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
 
 \item{eagerTempRemoval}{logical if TRUE remove temps early.}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 single data item

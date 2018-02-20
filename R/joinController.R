@@ -943,7 +943,7 @@ strMapToString <- function(m) {
 #' @param checkColClasses logical if true check for exact class name matches
 #' @param verbose logical if TRUE print more.
 #' @param dryRun logical if TRUE do not perform joins, only print steps.
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #' @return joined table
 #'
 #' @examples
@@ -994,7 +994,7 @@ executeLeftJoinPlan <- function(tDesc, columnJoinPlan,
                                 checkColClasses= FALSE,
                                 verbose= FALSE,
                                 dryRun= FALSE,
-                                tempNameGenerator= makeTempNameGenerator("executeLeftJoinPlan")) {
+                                tempNameGenerator= mk_tmp_name_source("executeLeftJoinPlan")) {
   # sanity check (if there is an obvious config problem fail before doing potentially expensive work)
   columnJoinPlan <- inspectAndLimitJoinPlan(columnJoinPlan,
                                             checkColClasses=checkColClasses)

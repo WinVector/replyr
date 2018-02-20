@@ -5,7 +5,7 @@
 \title{Add constant to a table.}
 \usage{
 addConstantColumn(d, colName, val, ...,
-  tempNameGenerator = makeTempNameGenerator("replyr_addConstantColumn"))
+  tempNameGenerator = mk_tmp_name_source("replyr_addConstantColumn"))
 }
 \arguments{
 \item{d}{data.frame like object to add column to.}
@@ -16,7 +16,7 @@ addConstantColumn(d, colName, val, ...,
 
 \item{...}{force later arguments to be bound by name.}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 table with new column added.

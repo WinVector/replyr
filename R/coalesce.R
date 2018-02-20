@@ -10,7 +10,7 @@
 #' @param fills list default values to fill in columns
 #' @param newRowColumn character if not null name to use for new row indicator
 #' @param copy logical if TRUE copy support to data's source
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #' @return augmented data
 #'
 #' @examples
@@ -47,7 +47,7 @@ replyr_coalesce <- function(data, support,
                             fills= NULL,
                             newRowColumn= NULL,
                             copy= TRUE,
-                            tempNameGenerator= makeTempNameGenerator("replyr_coalesce")) {
+                            tempNameGenerator= mk_tmp_name_source("replyr_coalesce")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_coalesce unexpected arugments")
   }

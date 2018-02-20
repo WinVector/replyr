@@ -121,7 +121,7 @@
     
 
     <pre class="usage"><span class='fu'>replyr_quantile</span>(<span class='no'>x</span>, <span class='no'>cname</span>, <span class='kw'>probs</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>0.25</span>), <span class='no'>...</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/cdata/topics/makeTempNameGenerator'>makeTempNameGenerator</a></span>(<span class='st'>"replyr_quantile"</span>))</pre>
+  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>mk_tmp_name_source</span>(<span class='st'>"replyr_quantile"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -144,7 +144,7 @@
     </tr>
     <tr>
       <th>tempNameGenerator</th>
-      <td><p>temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.</p></td>
+      <td><p>temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.</p></td>
     </tr>
     </table>
     

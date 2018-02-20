@@ -5,7 +5,7 @@
 \title{Filter a tbl on a column having values in a given set.}
 \usage{
 replyr_filter(x, cname, values, ..., verbose = TRUE,
-  tempNameGenerator = makeTempNameGenerator("replyr_filter"))
+  tempNameGenerator = mk_tmp_name_source("replyr_filter"))
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}
@@ -18,7 +18,7 @@ replyr_filter(x, cname, values, ..., verbose = TRUE,
 
 \item{verbose}{logical if TRUE echo warnings}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 new tbl with only rows where cname value is in values set.

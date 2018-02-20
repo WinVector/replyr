@@ -8,7 +8,7 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
   computeFn = function(x, name) {     dplyr::compute(x, name = name) },
   eagerCompute = TRUE, checkColClasses = FALSE, verbose = FALSE,
   dryRun = FALSE,
-  tempNameGenerator = makeTempNameGenerator("executeLeftJoinPlan"))
+  tempNameGenerator = mk_tmp_name_source("executeLeftJoinPlan"))
 }
 \arguments{
 \item{tDesc}{description of tables, either a \code{data.frame} from \code{\link{tableDescription}}, or a list mapping from names to handles/frames.  Only used to map table names to data.}
@@ -29,7 +29,7 @@ executeLeftJoinPlan(tDesc, columnJoinPlan, ..., checkColumns = FALSE,
 
 \item{dryRun}{logical if TRUE do not perform joins, only print steps.}
 
-\item{tempNameGenerator}{temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.}
+\item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 joined table

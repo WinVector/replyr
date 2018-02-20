@@ -40,7 +40,7 @@ qsearch <- function(f,fLeft,fRight,ui) {
 #' @param cname column name to compute over
 #' @param probs	numeric vector of probabilities with values in [0,1].
 #' @param ... force later arguments to be bound by name.
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #'
 #' @examples
 #'
@@ -51,7 +51,7 @@ qsearch <- function(f,fLeft,fRight,ui) {
 replyr_quantile <- function(x,cname,
                             probs = seq(0, 1, 0.25),
                             ...,
-                            tempNameGenerator= makeTempNameGenerator("replyr_quantile")) {
+                            tempNameGenerator= mk_tmp_name_source("replyr_quantile")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_quantile unexpected arguments")
   }
@@ -132,7 +132,7 @@ polishQ <- function(nrows,marks,probs) {
 #' @param cname column name to compute over (not 'n' or 'csum')
 #' @param probs	numeric vector of probabilities with values in [0,1].
 #' @param ... force later arguments to bind by name.
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #'
 #' @examples
 #'
@@ -142,7 +142,7 @@ polishQ <- function(nrows,marks,probs) {
 #' @export
 replyr_quantilec <- function(x,cname,probs = seq(0, 1, 0.25),
                              ...,
-                             tempNameGenerator= makeTempNameGenerator("replyr_quantilec")) {
+                             tempNameGenerator= mk_tmp_name_source("replyr_quantilec")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_quantilec unexpected arguments.")
   }

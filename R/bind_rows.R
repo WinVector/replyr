@@ -14,7 +14,7 @@
 #' @param ... force later arguments to be bound by name.
 #' @param useDplyrLocal logical if TRUE use dplyr::bind_rows for local data.
 #' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #' @return table with all rows of tabA and tabB (union_all).
 #'
 #' @examples
@@ -28,7 +28,7 @@ replyr_union_all <- function(tabA, tabB,
                              ...,
                              useDplyrLocal= TRUE,
                              useSparkRbind= TRUE,
-                             tempNameGenerator= makeTempNameGenerator("replyr_union_all")) {
+                             tempNameGenerator= mk_tmp_name_source("replyr_union_all")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_union_all unexpected arguments.")
   }
@@ -190,7 +190,7 @@ r_replyr_bind_rows <- function(lst,
 #' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data
 #' @param useUnionALL logical if TRUE try to use union all binding
 #' @param eagerTempRemoval logical if TRUE remove temps early.
-#' @param tempNameGenerator temp name generator produced by cdata::makeTempNameGenerator, used to record dplyr::compute() effects.
+#' @param tempNameGenerator temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.
 #' @return single data item
 #'
 #' @examples
@@ -211,7 +211,7 @@ replyr_bind_rows <- function(lst,
                              useSparkRbind= TRUE,
                              useUnionALL= TRUE,
                              eagerTempRemoval= FALSE,
-                             tempNameGenerator= makeTempNameGenerator("replyr_bind_rows")) {
+                             tempNameGenerator= mk_tmp_name_source("replyr_bind_rows")) {
   if(length(list(...))>0) {
     stop("replyr::replyr_bind_rows unexpected arguments")
   }
@@ -257,6 +257,6 @@ replyr_bind_rows <- function(lst,
   }
   # nasty recursive fall-back
   r_replyr_bind_rows(lst, eagerTempRemoval, TRUE,
-                     makeTempNameGenerator("bind_rows_priv"),
+                     mk_tmp_name_source("bind_rows_priv"),
                      tempNameGenerator)
 }
