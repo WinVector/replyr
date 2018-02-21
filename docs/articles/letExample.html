@@ -93,7 +93,7 @@
       <h1>let Example</h1>
                         <h4 class="author">Nina Zumel</h4>
             
-            <h4 class="date">2018-02-20</h4>
+            <h4 class="date">2018-02-21</h4>
           </div>
 
     
@@ -111,19 +111,20 @@
 </ul>
 <p>The <code>dplyr</code> expression for such a table is easy when the column names are known, but complicated when they are not. We use <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> to write such a function without the use of <code>lazyeval</code> or <code>rlang</code>/<code>tidyeval</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sumstat_intervals =<span class="st"> </span><span class="cf">function</span>(dframe, colname, <span class="dt">groupcolname =</span> <span class="ot">NULL</span>) {
-  mapping =<span class="st"> </span><span class="kw">list</span>(<span class="dt">col=</span>colname)
-  <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(groupcolname)) {
-    dframe &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/se-deprecated.html">group_by_</a></span>(dframe, groupcolname)
-  }
+  mapping =<span class="st"> </span><span class="kw">list</span>(<span class="dt">COLNAME  =</span>colname,
+                 <span class="dt">GROUPCOLNAME =</span> groupcolname)
   <span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias =</span> mapping,
-      <span class="dt">expr=</span>{
+      {
+        <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(groupcolname)) {
+          dframe &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(dframe, GROUPCOLNAME)
+        }
         <span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span>(dframe, 
-                  <span class="dt">sdlower =</span> <span class="kw">mean</span>(col)<span class="op">-</span><span class="kw">sd</span>(col),
-                  <span class="dt">mean =</span> <span class="kw">mean</span>(col),
-                  <span class="dt">sdupper =</span> <span class="kw">mean</span>(col) <span class="op">+</span><span class="st"> </span><span class="kw">sd</span>(col),
-                  <span class="dt">iqrlower =</span> <span class="kw">median</span>(col)<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="kw">IQR</span>(col),
-                  <span class="dt">median =</span> <span class="kw">median</span>(col),
-                  <span class="dt">iqrupper =</span> <span class="kw">median</span>(col)<span class="op">+</span><span class="fl">0.5</span><span class="op">*</span><span class="kw">IQR</span>(col))
+                  <span class="dt">sdlower =</span> <span class="kw">mean</span>(COLNAME)<span class="op">-</span><span class="kw">sd</span>(COLNAME),
+                  <span class="dt">mean =</span> <span class="kw">mean</span>(COLNAME),
+                  <span class="dt">sdupper =</span> <span class="kw">mean</span>(COLNAME) <span class="op">+</span><span class="st"> </span><span class="kw">sd</span>(COLNAME),
+                  <span class="dt">iqrlower =</span> <span class="kw">median</span>(COLNAME)<span class="op">-</span><span class="fl">0.5</span><span class="op">*</span><span class="kw">IQR</span>(COLNAME),
+                  <span class="dt">median =</span> <span class="kw">median</span>(COLNAME),
+                  <span class="dt">iqrupper =</span> <span class="kw">median</span>(COLNAME)<span class="op">+</span><span class="fl">0.5</span><span class="op">*</span><span class="kw">IQR</span>(COLNAME))
       })
 }</code></pre></div>
 <p>We can test <code>sumstat_intervals</code> on <code>iris</code>:</p>

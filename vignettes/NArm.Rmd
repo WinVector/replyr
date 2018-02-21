@@ -95,20 +95,7 @@ dRemote %>% mutate(nna=0) %>%
 Because remote data sources may not have the same value coercion rules as `R` we
 should get used to being more careful about types (hence the `ifelse`).
 
-This means we have to parameterize variable names to write code like the following:
-
-```{r countforloop}
-cols = setdiff(colnames(dRemote),'rowNum')
-dRemote %>% mutate(nna=0) -> dTmp
-for(ci in cols) {
-  dTmp %>% 
-    mutate_(.dots=stats::setNames(paste0('nna+ifelse(is.na(',ci,'),1,0)'),'nna')) -> 
-    dTmp
-}
-print(dTmp)
-```
-
-Or using `wrapr::let`:
+This means we have to parameterize variable names, the way to do that is: `wrapr::let()`.
 
 ```{r countforloopr}
 cols = setdiff(colnames(dRemote),'rowNum')

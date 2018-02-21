@@ -40,19 +40,20 @@ function without the use of `lazyeval` or `rlang`/`tidyeval`.
 
 ```{r sumstat_intervals}
 sumstat_intervals = function(dframe, colname, groupcolname = NULL) {
-  mapping = list(col=colname)
-  if(!is.null(groupcolname)) {
-    dframe <- group_by_(dframe, groupcolname)
-  }
+  mapping = list(COLNAME  =colname,
+                 GROUPCOLNAME = groupcolname)
   let(alias = mapping,
-      expr={
+      {
+        if(!is.null(groupcolname)) {
+          dframe <- group_by(dframe, GROUPCOLNAME)
+        }
         summarize(dframe, 
-                  sdlower = mean(col)-sd(col),
-                  mean = mean(col),
-                  sdupper = mean(col) + sd(col),
-                  iqrlower = median(col)-0.5*IQR(col),
-                  median = median(col),
-                  iqrupper = median(col)+0.5*IQR(col))
+                  sdlower = mean(COLNAME)-sd(COLNAME),
+                  mean = mean(COLNAME),
+                  sdupper = mean(COLNAME) + sd(COLNAME),
+                  iqrlower = median(COLNAME)-0.5*IQR(COLNAME),
+                  median = median(COLNAME),
+                  iqrupper = median(COLNAME)+0.5*IQR(COLNAME))
       })
 }
 ```
