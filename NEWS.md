@@ -1,5 +1,5 @@
 
-# replyr 0.9.2 2018-02-21
+# replyr 0.9.2 2018-02-28
 
  * Move to wrapr 1.2.0
  * Get rid of use of old underbar forms (futureproof code).
