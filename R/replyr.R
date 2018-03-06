@@ -28,7 +28,6 @@ NULL
 
 #' @importFrom wrapr let %.>% := mk_tmp_name_source
 #' @importFrom RSQLite dbDisconnect
-#' @importFrom dbplyr as.sql
 NULL
 
 #' @export

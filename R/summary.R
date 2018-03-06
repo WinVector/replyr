@@ -7,7 +7,7 @@
 #' @importFrom utils capture.output head
 NULL
 
-
+# Can not use sumarize_at due to: https://github.com/tidyverse/dplyr/issues/3399
 
 #' Compute usable summary of columns of tbl.
 #'

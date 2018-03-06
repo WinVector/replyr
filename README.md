@@ -208,8 +208,6 @@ glimpse(dRemote)
  #  $ z <chr> NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"
 
 replyr::replyr_summary(dRemote)
- #  Warning: Missing values are always removed in SQL.
- #  Use `SUM(x, na.rm = TRUE)` to silence this warning
  #    column index     class nrows nna nunique min max     mean       sd lexmin lexmax
  #  1      x     1   numeric    15   0      NA   1   2 1.666667 0.487950   <NA>   <NA>
  #  2      y     2   numeric    15   5      NA   3   5 4.000000 1.054093   <NA>   <NA>
@@ -256,7 +254,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_70374590279619381889_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_03654227600188279262_0000000001> [?? x 3]
  #  # Database: sqlite 3.19.3 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -324,8 +322,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  726251 38.8    1168576 62.5  1168576 62.5
- #  Vcells 1480345 11.3    2552219 19.5  2029589 15.5
+ #  Ncells  727700 38.9    1168576 62.5  1168576 62.5
+ #  Vcells 1515591 11.6    2552219 19.5  1905391 14.6
 ```
 
 Note

@@ -73,8 +73,8 @@ replyr_nrow <- function(x) {
   ctab <- x %.>%
     dplyr::ungroup(.) %.>%
     dplyr::transmute(., constant = 1.0) %.>%  # collumn we can count, not named n
-    dplyr::summarize(., count = sum(constant)) %.>%
-    dplyr::collect(.)  %.>% # I forget if pull is in dplyr 0.5.0
+    dplyr::summarize(., count = sum(constant, na.rm = TRUE)) %.>%
+    dplyr::collect(.)  %.>%
     as.data.frame(.)
   n <- ctab[1,1,drop=TRUE]
   if(is.null(n) || is.na(n) || is.nan(n) || n<1) {
