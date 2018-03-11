@@ -2,7 +2,7 @@ Package: replyr
 Type: Package
 Title: Reliable Plying of Remote or Big Data with R
 Version: 0.9.2
-Date: 2018-03-06
+Date: 2018-03-11
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
     person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),

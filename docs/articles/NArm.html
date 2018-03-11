@@ -93,7 +93,7 @@
       <h1>NA rm</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2018-03-06</h4>
+            <h4 class="date">2018-03-11</h4>
           </div>
 
     
@@ -137,9 +137,9 @@ d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt;</span>
-<span class="co">#&gt; 1  1.00  3.00 &lt;NA&gt;       1</span>
-<span class="co">#&gt; 2  2.00  5.00 a          2</span>
-<span class="co">#&gt; 3  2.00 NA    b          3</span></code></pre></div>
+<span class="co">#&gt; 1    1.    3. &lt;NA&gt;       1</span>
+<span class="co">#&gt; 2    2.    5. a          2</span>
+<span class="co">#&gt; 3    2.   NA  b          3</span></code></pre></div>
 <p><code>na.omit</code> and <code>complete.cases</code> are the usual ways to detect and eliminate <code>NA</code>s in a local <code>data.frame</code> (Note: we don’t consider removal a correct solution when building predictive models, see please <a href="https://arxiv.org/abs/1611.09477">here</a> for some discussion on other data cleaning strategies.) However, they do not work on remote <code>tbl</code> types:</p>
 <div id="complete-cases" class="section level3">
 <h3 class="hasAnchor">
@@ -181,9 +181,9 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum   nna</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  1.00  3.00 &lt;NA&gt;       1  1.00</span>
-<span class="co">#&gt; 2  2.00  5.00 a          2  0   </span>
-<span class="co">#&gt; 3  2.00 NA    b          3  1.00</span></code></pre></div>
+<span class="co">#&gt; 1    1.    3. &lt;NA&gt;       1    1.</span>
+<span class="co">#&gt; 2    2.    5. a          2    0.</span>
+<span class="co">#&gt; 3    2.   NA  b          3    1.</span></code></pre></div>
 <p>Because remote data sources may not have the same value coercion rules as <code>R</code> we should get used to being more careful about types (hence the <code>ifelse</code>).</p>
 <p>This means we have to parameterize variable names, the way to do that is: <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cols =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/setops.html">setdiff</a></span>(<span class="kw">colnames</span>(dRemote),<span class="st">'rowNum'</span>)
@@ -198,9 +198,9 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum   nna</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  1.00  3.00 &lt;NA&gt;       1  1.00</span>
-<span class="co">#&gt; 2  2.00  5.00 a          2  0   </span>
-<span class="co">#&gt; 3  2.00 NA    b          3  1.00</span></code></pre></div>
+<span class="co">#&gt; 1    1.    3. &lt;NA&gt;       1    1.</span>
+<span class="co">#&gt; 2    2.    5. a          2    0.</span>
+<span class="co">#&gt; 3    2.   NA  b          3    1.</span></code></pre></div>
 <p>What we see is that “what is pure <code>dplyr</code>” depends on what operators are available on the service providing back-end.</p>
 </div>
 <div id="na-omit" class="section level3">
@@ -215,9 +215,9 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <span class="co">#&gt; # Database: sqlite 3.19.3 [:memory:]</span>
 <span class="co">#&gt;       x     y z     rowNum</span>
 <span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;int&gt;</span>
-<span class="co">#&gt; 1  1.00  3.00 &lt;NA&gt;       1</span>
-<span class="co">#&gt; 2  2.00  5.00 a          2</span>
-<span class="co">#&gt; 3  2.00 NA    b          3</span></code></pre></div>
+<span class="co">#&gt; 1    1.    3. &lt;NA&gt;       1</span>
+<span class="co">#&gt; 2    2.    5. a          2</span>
+<span class="co">#&gt; 3    2.   NA  b          3</span></code></pre></div>
 <p>It is fairly clear how we can build <code>na.omit</code> from <code>complete.cases</code>.</p>
 </div>
 </div>
@@ -227,8 +227,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
 <span class="co">#&gt;           used (Mb) gc trigger (Mb) max used (Mb)</span>
-<span class="co">#&gt; Ncells  701470 37.5    1168576 62.5  1168576 62.5</span>
-<span class="co">#&gt; Vcells 1231921  9.4    2060183 15.8  1746993 13.4</span></code></pre></div>
+<span class="co">#&gt; Ncells  704435 37.7    1168576 62.5  1168576 62.5</span>
+<span class="co">#&gt; Vcells 1234489  9.5    2060183 15.8  1532394 11.7</span></code></pre></div>
 </div>
 </div>
   </div>

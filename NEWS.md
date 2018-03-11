@@ -1,9 +1,10 @@
 
-# replyr 0.9.2 2018-03-06
+# replyr 0.9.2 2018-03-11
 
  * Move to wrapr 1.2.0
  * Get rid of use of old underbar forms (futureproof code).
  * Improve replyr_summary().
+ * Reduce dependencies.
 
 # replyr 0.9.1 2018-01-20
 
