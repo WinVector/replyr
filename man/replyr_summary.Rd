@@ -47,12 +47,19 @@ d <- data.frame(p= c(TRUE, FALSE, NA),
 # dS <- replyr_copy_to(sc, dplyr::select(d, -r, -t), 'dS',
 #                      temporary=TRUE, overwrite=TRUE)
 # replyr_summary(dS)
-# my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-# RSQLite::initExtension(my_db)
-# dM <- replyr_copy_to(my_db, dplyr::select(d, -r, -t), 'dM',
-#                      temporary=TRUE, overwrite=TRUE)
-# replyr_summary(dM)
+# sparklyr::spark_disconnect(sc)
+if (requireNamespace("RSQLite", quietly = TRUE)) {
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+  RSQLite::initExtension(my_db)
+  dM <- replyr_copy_to(my_db, dplyr::select(d, -r, -t), 'dM',
+                       temporary=TRUE, overwrite=TRUE)
+  replyr_summary(dM)
+  DBI::dbDisconnect(my_db)
+}
 d$q <- list(1,2,3)
 replyr_summary(d)
 
+}
+\seealso{
+\code{\link[rquery]{rsummary}}
 }

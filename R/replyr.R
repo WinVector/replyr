@@ -27,7 +27,6 @@ NULL
 # re-export so old code and demos work (from when functions were here)
 
 #' @importFrom wrapr let %.>% := mk_tmp_name_source
-#' @importFrom RSQLite dbDisconnect
 NULL
 
 #' @export

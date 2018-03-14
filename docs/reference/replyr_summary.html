@@ -162,6 +162,10 @@
 Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (as is typcial for <code>R</code>, e.g.,
 <code>is.na(NaN)</code>).  And note: <code>replyr_summary()</code> currently skips "raw" columns.</p>
     
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <p><code><a href='http://www.rdocumentation.org/packages/rquery/topics/rsummary'>rsummary</a></code></p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -179,11 +183,15 @@ Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (a
 <span class='co'># dS &lt;- replyr_copy_to(sc, dplyr::select(d, -r, -t), 'dS',</span>
 <span class='co'>#                      temporary=TRUE, overwrite=TRUE)</span>
 <span class='co'># replyr_summary(dS)</span>
-<span class='co'># my_db &lt;- DBI::dbConnect(RSQLite::SQLite(), ":memory:")</span>
-<span class='co'># RSQLite::initExtension(my_db)</span>
-<span class='co'># dM &lt;- replyr_copy_to(my_db, dplyr::select(d, -r, -t), 'dM',</span>
-<span class='co'>#                      temporary=TRUE, overwrite=TRUE)</span>
-<span class='co'># replyr_summary(dM)</span>
+<span class='co'># sparklyr::spark_disconnect(sc)</span>
+<span class='kw'>if</span> (<span class='fu'>requireNamespace</span>(<span class='st'>"RSQLite"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) {
+  <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+  <span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/initExtension'>initExtension</a></span>(<span class='no'>my_db</span>)
+  <span class='no'>dM</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>d</span>, -<span class='no'>r</span>, -<span class='no'>t</span>), <span class='st'>'dM'</span>,
+                       <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>overwrite</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+  <span class='fu'>replyr_summary</span>(<span class='no'>dM</span>)
+  <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbDisconnect'>dbDisconnect</a></span>(<span class='no'>my_db</span>)
+}
 <span class='no'>d</span>$<span class='no'>q</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>)
 <span class='fu'>replyr_summary</span>(<span class='no'>d</span>)</div><div class='output co'>#&gt;   column index     class nrows nna nunique min  max mean        sd lexmin
 #&gt; 1      p     1   logical     3   1      NA   0    1  0.5 0.7071068   &lt;NA&gt;
@@ -215,6 +223,8 @@ Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (a
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#see-also">See also</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

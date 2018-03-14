@@ -2,6 +2,7 @@
 # replyr 0.9.3 2018-03-14
 
  * Attempt work around dependency errors.
+ * Further reduce direct dependencies.
 
 # replyr 0.9.2 2018-03-11
 

@@ -165,22 +165,17 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-
-<span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
-<span class='co'># my_db &lt;- sparklyr::spark_connect(master = "local")</span>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>), <span class='st'>'d'</span>,
-                    <span class='kw'>temporary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='co'># dplyr::bind_rows(list(d, d))</span>
-<span class='co'># # Argument 1 must be a data frame or a named atomic vector, not a tbl_dbi/tbl_sql/tbl_lazy/tbl</span>
-<span class='fu'>replyr_bind_rows</span>(<span class='fu'>list</span>(<span class='no'>d</span>, <span class='no'>d</span>))</div><div class='output co'>#&gt; # Source:   lazy query [?? x 1]
-#&gt; # Database: sqlite 3.19.3 [:memory:]
-#&gt;       x
-#&gt;   &lt;int&gt;
-#&gt; 1     1
-#&gt; 2     2
-#&gt; 3     1
-#&gt; 4     2</div><div class='input'>
-</div></pre>
+<span class='kw'>if</span> (<span class='fu'>requireNamespace</span>(<span class='st'>"RSQLite"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) {
+  <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+  <span class='co'># my_db &lt;- sparklyr::spark_connect(master = "local")</span>
+  <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>), <span class='st'>'d'</span>,
+                      <span class='kw'>temporary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='co'># dplyr::bind_rows(list(d, d))</span>
+  <span class='co'># # Argument 1 must be a data frame or a named atomic vector,</span>
+  <span class='co'># # not a tbl_dbi/tbl_sql/tbl_lazy/tbl</span>
+  <span class='fu'>replyr_bind_rows</span>(<span class='fu'>list</span>(<span class='no'>d</span>, <span class='no'>d</span>))
+  <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbDisconnect'>dbDisconnect</a></span>(<span class='no'>my_db</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

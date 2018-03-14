@@ -24,8 +24,7 @@ Depends:
   wrapr (>= 1.3.0)
 Imports:
   dplyr (>= 0.7.0),
-  DBI,
-  RSQLite
+  DBI
 RoxygenNote: 6.0.1
 Suggests: testthat,
     knitr,
@@ -37,7 +36,8 @@ Suggests: testthat,
     htmlwidgets,
     webshot,
     magick,
-    grid
+    grid,
+    RSQLite
 VignetteBuilder: knitr
 ByteCompile: true
 
