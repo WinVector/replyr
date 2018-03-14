@@ -1,4 +1,8 @@
 
+# replyr 0.9.3 2018-03-14
+
+ * Attempt work around dependency errors.
+
 # replyr 0.9.2 2018-03-11
 
  * Move to wrapr 1.2.0

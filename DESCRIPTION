@@ -1,8 +1,8 @@
 Package: replyr
 Type: Package
 Title: Reliable Plying of Remote or Big Data with R
-Version: 0.9.2
-Date: 2018-03-11
+Version: 0.9.3
+Date: 2018-03-14
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
     person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),
@@ -20,9 +20,10 @@ Description: Methods to use 'dplyr' remote data sources ('SQL' databases,
 License: GPL-3
 LazyData: TRUE
 Depends:
-  wrapr (>= 1.2.0)
+  R (>= 3.4.0),
+  wrapr (>= 1.3.0)
 Imports:
-  dplyr (>= 0.7.4),
+  dplyr (>= 0.7.0),
   DBI,
   RSQLite
 RoxygenNote: 6.0.1
