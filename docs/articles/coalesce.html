@@ -191,6 +191,7 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
 ## 2    Colusa County      Colusa 3
 ## 3    Colusa County    Williams 0</code></pre>
 <p>Re-running and example in a database:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">execute_vignette &lt;-<span class="st"> </span><span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
 dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, data)
 dbSupport &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, support)
@@ -241,8 +242,8 @@ s &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()</code></pre></div>
 <pre><code>##           used (Mb) gc trigger (Mb) max used (Mb)
-## Ncells  715260 38.2    1168576 62.5   940480 50.3
-## Vcells 1326640 10.2    2552219 19.5  1600380 12.3</code></pre>
+## Ncells  715276 38.2    1168576 62.5   940480 50.3
+## Vcells 1326772 10.2    2552219 19.5  1615718 12.4</code></pre>
 </div>
   </div>
 

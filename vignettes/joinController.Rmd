@@ -40,6 +40,7 @@ suppressPackageStartupMessages(library("dplyr"))
 packageVersion("dplyr")
 library("replyr")
 packageVersion("replyr")
+execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
 ```
 
 Now let's load some notional example data.  For our example we have:
@@ -50,7 +51,7 @@ Now let's load some notional example data.  For our example we have:
 
 The data is given below:
 
-```{r data}
+```{r data, eval=execute_vignette}
 # load notional example data
 my_db <- dplyr::src_sqlite(":memory:", 
                            create = TRUE)
@@ -76,7 +77,7 @@ replyr_copy_to(my_db,
 
 An important (and very neglected) step in data science tasks is documenting roles of tables, especially their key-structure (which we also call "stride" in the sense it describes how you move from row to row).  `replyr::tableDescription()` is a function that builds an initial description of the tables. (Note: `replyr::tableDescription()` is misspelled in the current release version of `replyr`, we have fixed this in [dev](https://github.com/WinVector/replyr)).
 
-```{r defs}
+```{r defs, eval=execute_vignette}
 # map from abstract names to realized names
 trainTables <- data_frame(tableName = c('meas1', 
                                         'names', 
@@ -104,7 +105,7 @@ tDesc <- bind_rows(
 `tDesc` is essentially a slightly enriched version of the data handle concordance described in "[Managing Spark data handles in R](http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/)."  We can take a quick look at the stored simplified [summaries](http://www.win-vector.com/blog/2017/05/summarizing-big-data-in-r/):
 
 
-```{r lookdesc}
+```{r lookdesc, eval=execute_vignette}
 print(tDesc %>% select(tableName, sourceClass, handle, isEmpty))
 print(tDesc$columns)
 print(tDesc$colClass)
@@ -128,7 +129,7 @@ print(tDesc$keys)
  
 The intent is to build a detailed join plan (describing order, column selection, and column re-naming) from the `tDesc` table.  We can try this with the supplied function `buildJoinPlan()`, which in this case tells us our table descriptions are not quite ready to specify a join plan:
 
-```{r badjoinplan}
+```{r badjoinplan, eval=execute_vignette}
 tryCatch(
   buildJoinPlan(tDesc),
   error = function(e) {e}
@@ -139,7 +140,7 @@ In the above the `keys` column is wrong in that it claims every column of each t
 
 The intent is: the user should edit the "`tDesc`" keys column and share it with partners for criticism.  In our case we declare the primary of the measurement tables to be `PatientID` and `MeasurementDate`, and the primary key of the names table to be `PatientID`.  Notice we do this by specifying named lists or vectors mapping desired key names to names actually used in the tables.
 
-```{r keys}
+```{r keys, eval=execute_vignette}
 # declare keys (and give them consistent names)
 tDesc$keys[[1]] <- c(PatientID= 'id', MeasurementDate= 'date')
 tDesc$keys[[2]] <- c(PatientID= 'id')
@@ -152,7 +153,7 @@ The above key mapping could then be circulated to partners for comments and help
 
 It is worth confirming the keying as as expected (else some rows can reproduce in bad ways during joining).  This is a potentially expensive operation, but it can be done as follows:
 
-```{r keycheck}
+```{r keycheck, eval=execute_vignette}
 keysAreUnique(tDesc)
 ```
 
@@ -162,7 +163,7 @@ In practice, when preparing data for predictive analytics or machine learning th
 
 A join plan can now be built from our table descriptions:
 
-```{r plan}
+```{r plan, eval=execute_vignette}
 # build the column join plan
 columnJoinPlan <- buildJoinPlan(tDesc)
 print(columnJoinPlan %>% 
@@ -179,7 +180,7 @@ For example we could decide to exclude the `width` column by either dropping the
 
 Since we have edited the join plan it is a good idea to both look at it and also run it through the `inspectDescrAndJoinPlan()` to look for potential inconsistencies.
 
-```{r plan2}
+```{r plan2, eval=execute_vignette}
 # decide we don't want the width column
 columnJoinPlan$want[columnJoinPlan$resultColumn=='width'] <- FALSE
 # double check our plan
@@ -195,7 +196,7 @@ The join plan is the neglected (and often missing) piece of documentation key to
 
 As a diagram the key structure of the join plan looks like the following:
 
-```{r render1}
+```{r render1, eval=execute_vignette}
 # requireNamespace checks just for strict warning hygiene in vignette
 have <- c(
   requireNamespace('DiagrammeR', quietly = TRUE),
@@ -222,7 +223,7 @@ if(all(have)) {
 
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 
-```{r run}
+```{r run, eval=execute_vignette}
 # manage the temp names as in:
 #  http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/
 tempNameGenerator <- mk_tmp_name_source("extmps")
@@ -246,7 +247,7 @@ Basically you:
  
 As always: the proof is in the pudding.  We should look at results: 
 
-```{r print}
+```{r print, eval=execute_vignette}
 dplyr::glimpse(results)
 ```
 
@@ -258,7 +259,7 @@ The executor is then allowed to simply move through the tables left-joining in t
 
 The `columnJoinPlan` is meant to be re-usable. In particular we can imaging running it to build training data, possibly re-running it to build test/validation data, and re-running it many times to build data we apply the model to.  To facilitate this `executeLeftJoinPlan()` is generous in what it accepts as a `tDesc`.  All it needs from the `tDesc` argument is a way to map abstract names (`tableName`) to concrete data realizations (either `data.frame`s or `dplyr` data handles).  So by design  `executeLeftJoinPlan()` accepts either a `data.frame` (and only looks at the `tableName` and `handle` columns) or a map.  So the following calls to `executeLeftJoinPlan()` also work:
 
-```{r execpartialtab}
+```{r execpartialtab, eval=execute_vignette}
 # hand build table with parallel tableName and handle columns
 tTab <- trainTables %>%
   select(tableName, handle)
@@ -268,7 +269,7 @@ r <- executeLeftJoinPlan(tTab, columnJoinPlan,
                          tempNameGenerator= tempNameGenerator)
 ```
 
-```{r listmap}
+```{r listmap, eval=execute_vignette}
 # map of abstract table names to handles
 tMap = trainTables$handle
 names(tMap) <- trainTables$tableName
@@ -281,7 +282,7 @@ The above facilities are not intended to re-run the original training data, but 
 
 Having to "join a bunch of tables to get the data into simple rows" is a common step in data science.  Therefore you do not want this to be a difficult and undocumented task.  By using a join controller you essentially make the documentation the executable specification for the task.
 
-```{r cleanup}
+```{r cleanup, eval=execute_vignette}
 # cleanup
 temps <- tempNameGenerator(dumpList= TRUE)
 for(ti in temps) {

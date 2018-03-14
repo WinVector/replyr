@@ -119,21 +119,18 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
  <span class="co">#  1      x     1 character     2   1      NA  NA  NA   NA NA      b      b</span>
  <span class="co">#  2      y     2   numeric     2   1      NA   1   1    1 NA   &lt;NA&gt;   &lt;NA&gt;</span>
 
-my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
-dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d)
-
-<span class="kw">summary</span>(dbData)
- <span class="co">#      Length Class          Mode</span>
- <span class="co">#  src 2      src_dbi        list</span>
- <span class="co">#  ops 2      op_base_remote list</span>
-
-replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dbData)
- <span class="co">#    column index     class nrows nna nunique min max mean sd lexmin lexmax</span>
- <span class="co">#  1      x     1 character     2   1      NA  NA  NA   NA NA      b      b</span>
- <span class="co">#  2      y     2   numeric     2   1      NA   1   1    1 NA   &lt;NA&gt;   &lt;NA&gt;</span>
-
-<span class="co"># glimpse works more like str or head</span>
-dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dbData)
+execute_vignette &lt;-<span class="st"> </span><span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="cf">if</span>(execute_vignette) {
+  my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+  dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d)
+  
+  <span class="kw">summary</span>(dbData)
+  
+  replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dbData)
+  
+  <span class="co"># glimpse works more like str or head</span>
+  dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dbData)
+}
  <span class="co">#  Observations: ??</span>
  <span class="co">#  Variables: 2</span>
  <span class="co">#  $ x &lt;chr&gt; NA, "b"</span>
@@ -141,8 +138,8 @@ dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  693309 37.1    1168576 62.5   940480 50.3</span>
- <span class="co">#  Vcells 1295275  9.9    2552219 19.5  1678725 12.9</span></code></pre></div>
+ <span class="co">#  Ncells  693035 37.1    1168576 62.5   940480 50.3</span>
+ <span class="co">#  Vcells 1294649  9.9    2552219 19.5  1556126 11.9</span></code></pre></div>
 </div>
   </div>
 

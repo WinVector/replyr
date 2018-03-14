@@ -25,33 +25,35 @@ Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vi
 \examples{
 
 
-# note: employeeanddate is likely built as a cross-product
-#       join of an employee table and set of dates of interest
-#       before getting to the join controller step.  We call
-#       such a table "row control" or "experimental design."
+if (requireNamespace("RSQLite", quietly = TRUE)) {
+  # note: employeeanddate is likely built as a cross-product
+  #       join of an employee table and set of dates of interest
+  #       before getting to the join controller step.  We call
+  #       such a table "row control" or "experimental design."
 
-my_db <- dplyr::src_sqlite(":memory:",
-                           create = TRUE)
-tDesc <- replyr:::example_employeeAndDate(my_db)
-# fix order by hand, please see replyr::topoSortTables for
-# how to automate this.
-ord <- match(c('employeeanddate', 'orgtable', 'activity', 'revenue'),
-             tDesc$tableName)
-tDesc <- tDesc[ord, , drop=FALSE]
-columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
-# unify keys
-columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'
-# look at plan defects
-print(paste('problems:',
-            inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
-diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
-# to render as JavaScript:
-#   DiagrammeR::grViz(diagramSpec)
-# or as a PNG:
-#   renderJoinDiagram(diagramSpec)
-#
-DBI::dbDisconnect(my_db$con)
-my_db <- NULL
+  my_db <- dplyr::src_sqlite(":memory:",
+                             create = TRUE)
+  tDesc <- replyr:::example_employeeAndDate(my_db)
+  # fix order by hand, please see replyr::topoSortTables for
+  # how to automate this.
+  ord <- match(c('employeeanddate', 'orgtable', 'activity', 'revenue'),
+               tDesc$tableName)
+  tDesc <- tDesc[ord, , drop=FALSE]
+  columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
+  # unify keys
+  columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'
+  # look at plan defects
+  print(paste('problems:',
+              inspectDescrAndJoinPlan(tDesc, columnJoinPlan)))
+  diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
+  # to render as JavaScript:
+  #   DiagrammeR::grViz(diagramSpec)
+  # or as a PNG:
+  #   renderJoinDiagram(diagramSpec)
+  #
+  DBI::dbDisconnect(my_db$con)
+  my_db <- NULL
+}
 
 }
 \seealso{

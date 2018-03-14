@@ -87,7 +87,12 @@ replyr::replyr_coalesce(counts, def, fills = list(n=0))
 
 Re-running and example in a database:
 
-```{r dbexample}
+```{r checkpkg}
+execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
+```
+
+```{r dbexample, eval=execute_vignette}
+
 my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 dbData <- dplyr::copy_to(my_db, data)
 dbSupport <- dplyr::copy_to(my_db, support)
@@ -97,7 +102,7 @@ replyr::replyr_coalesce(dbData, dbSupport,
 
 As we mentioned <code>replyr_coalesce</code> only alter column that it has added.  Under this convention the column "<code>n</code>" is not zeroed in the "<code>c</code>-row".
 
-```{r fill}
+```{r fill, eval=execute_vignette}
 d <- data.frame(x=c('a','c'), n=c(1,NA), 
                 stringsAsFactors=FALSE)
 s <- data.frame(x=c('a','b','c'), 
@@ -111,7 +116,7 @@ replyr::replyr_coalesce(d,s,
 
 Also <code>replyr_coalesce</code> intentionally throws if the join discovers new rows in `data`.  This is to help defend against silent data loss.
 
-```{r detect}
+```{r detect, eval=execute_vignette}
 d <- data.frame(x=c('a','c'), n=c(1,NA), 
                 stringsAsFactors=FALSE)
 s <- data.frame(x=c('a','b'), 
