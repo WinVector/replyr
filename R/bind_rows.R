@@ -1,3 +1,5 @@
+
+
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
@@ -203,7 +205,7 @@ r_replyr_bind_rows <- function(lst,
 #'   # dplyr::bind_rows(list(d, d))
 #'   # # Argument 1 must be a data frame or a named atomic vector,
 #'   # # not a tbl_dbi/tbl_sql/tbl_lazy/tbl
-#'   replyr_bind_rows(list(d, d))
+#'   print(replyr_bind_rows(list(d, d)))
 #'   DBI::dbDisconnect(my_db)
 #' }
 #'

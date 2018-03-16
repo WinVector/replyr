@@ -23,7 +23,7 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
   print(d)
-  replyr_has_table(my_db, 'd')
+  print(replyr_has_table(my_db, 'd'))
 }
 
 }

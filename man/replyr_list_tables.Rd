@@ -22,7 +22,7 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
                       overwrite=TRUE, temporary=TRUE)
   print(d)
-  replyr_list_tables(my_db)
+  print(replyr_list_tables(my_db))
 }
 
 }

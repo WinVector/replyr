@@ -40,7 +40,7 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
   # dplyr::bind_rows(list(d, d))
   # # Argument 1 must be a data frame or a named atomic vector,
   # # not a tbl_dbi/tbl_sql/tbl_lazy/tbl
-  replyr_bind_rows(list(d, d))
+  print(replyr_bind_rows(list(d, d)))
   DBI::dbDisconnect(my_db)
 }
 

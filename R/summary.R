@@ -49,7 +49,7 @@ NULL
 #'   RSQLite::initExtension(my_db)
 #'   dM <- replyr_copy_to(my_db, dplyr::select(d, -r, -t), 'dM',
 #'                        temporary=TRUE, overwrite=TRUE)
-#'   replyr_summary(dM)
+#'   print(replyr_summary(dM))
 #'   DBI::dbDisconnect(my_db)
 #' }
 #' d$q <- list(1,2,3)

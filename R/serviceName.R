@@ -19,7 +19,7 @@
 #'    # my_db <- sparklyr::spark_connect(master = "local")
 #'    d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
 #'         overwrite=TRUE, temporary=TRUE)
-#'    dplyr_src_to_db_handle(replyr_get_src('d'))
+#'    print(dplyr_src_to_db_handle(replyr_get_src('d')))
 #' }
 #'
 #' @export
@@ -54,7 +54,7 @@ dplyr_src_to_db_handle <- function(dplyr_src) {
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
 #'                       overwrite=TRUE, temporary=TRUE)
 #'   print(d)
-#'   replyr_list_tables(my_db)
+#'   print(replyr_list_tables(my_db))
 #' }
 #'
 #' @export
@@ -79,7 +79,7 @@ replyr_list_tables <- function(con) {
 #'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
 #'   print(d)
-#'   replyr_has_table(my_db, 'd')
+#'   print(replyr_has_table(my_db, 'd'))
 #' }
 #'
 #' @export
