@@ -74,7 +74,7 @@ DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
-MySQL example ("docker start mysql").  Kind of a poor results as  the adapted MySql 
+MySQL example ("docker start mysql").  Kind of a poor results as the adapted MySql 
 has a hard time with `NA`.
 
 Taking MySQL check out, too much trouble to maintain the testing database (docker now 
@@ -115,15 +115,15 @@ DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
-PostgreSQL example ("docker start pg").
+PostgreSQL example.
 
 ```{r PostgreSQLexample}
 library('RPostgreSQL')
 my_db <- DBI::dbConnect(dbDriver("PostgreSQL"), 
                         host = 'localhost',
                         port = 5432,
-                        user = 'postgres',
-                        password = 'pg')
+                        user = 'johnmount',
+                        password = '')
 
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
@@ -135,27 +135,15 @@ DBI::dbDisconnect(my_db)
 rm(list=c('my_db','copyToRemote')); gc(verbose = FALSE) # disconnect
 ```
 
-Another PostgreSQL example [`devtools::install_github('rstats-db/RPostgres')`](https://github.com/r-dbi/RPostgres).
-Doesn't seem to work with `dplyr` yet.  The following fails:
+RPostgres example.  
 
-```{r RPostgresex, eval=FALSE}
+```{r RPostgres}
 library("RPostgres")
 my_db <- DBI::dbConnect(RPostgres::Postgres(),
   host = 'localhost',
   port = 5432,
-  user = 'postgres',
-  password = 'pg')
-dplyr::copy_to(my_db, data.frame(x=1), 'tmpnm')
-DBI::dbDisconnect(my_db)
-```
-
-```{r RPostgres, eval=FALSE}
-library("RPostgres")
-my_db <- DBI::dbConnect(RPostgres::Postgres(),
-  host = 'localhost',
-  port = 5432,
-  user = 'postgres',
-  password = 'pg')
+  user = 'johnmount',
+  password = '')
 class(my_db)
 copyToRemote <- remoteCopy(my_db)
 resPostgreSQL <- runExample(copyToRemote)

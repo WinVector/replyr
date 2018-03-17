@@ -76,8 +76,8 @@ replyr_nrow <- function(x) {
     dplyr::summarize(., count = sum(constant, na.rm = TRUE)) %.>%
     dplyr::collect(.)  %.>%
     as.data.frame(.)
-  n <- ctab[1,1,drop=TRUE]
-  if(is.null(n) || is.na(n) || is.nan(n) || n<1) {
+  n <- as.numeric(ctab[1,1,drop=TRUE])
+  if(is.null(n) || is.na(n) || is.nan(n) || (n<1)) {
     return(0)
   }
   n
