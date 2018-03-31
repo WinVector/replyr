@@ -30,6 +30,7 @@ replyr_add_ids <- function(df, idColName) {
   row_number <- function(...) { NULL } # declare not unbound function
   # using dplyr::row_number() throws:  Error in UseMethod("escape") :
   #   no applicable method for 'escape' applied to an object of class "function"
+  # Also https://github.com/tidyverse/dplyr/issues/3008
   wrapr::let(
     c(REPLYRIDCOLNAME= idColName),
     df <-
