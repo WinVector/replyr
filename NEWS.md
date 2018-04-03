@@ -1,9 +1,10 @@
 
-# replyr 0.9.3 2018-03-24
+# replyr 0.9.3 2018-04-03
 
  * Attempt work around dependency errors.
  * Further reduce direct dependencies.
  * Clean SQL up a bit.
+ * Fix defective example caught on CRAN.
 
 # replyr 0.9.2 2018-03-11
 

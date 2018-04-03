@@ -16,10 +16,10 @@
 #'
 #' if (requireNamespace("RSQLite", quietly = TRUE)) {
 #'    my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-#'    # my_db <- sparklyr::spark_connect(master = "local")
 #'    d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
 #'         overwrite=TRUE, temporary=TRUE)
-#'    print(dplyr_src_to_db_handle(replyr_get_src('d')))
+#'    print(dplyr_src_to_db_handle(replyr_get_src(d)))
+#'    DBI::dbDisconnect(my_db)
 #' }
 #'
 #' @export
