@@ -6,6 +6,7 @@ output: github_document
 
 
 
+
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -14,7 +15,25 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
+
+`replyr` is going into maintenance mode.  It has been hard to track
+shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`.
+Most of what it does is now done better in one of the newer non-monolithic packages:
+
+  * Programming and meta-programming tools: [`wrapr`](https://CRAN.R-project.org/package=wrapr).
+  * Adapting \code{dplyr} to standard evaluation interfaces: [`seplyr`](https://CRAN.R-project.org/package=seplyr).
+  * Big data data manipulation: [`rquery`](https://CRAN.R-project.org/package=rquery) and [`cdata`](https://CRAN.R-project.org/package=cdata).
+  
+The other functions (join planner/controller and grouped ordered apply) will be eventually ported to one of these packages.
+
+
+-------------------
+
+
+
 This document describes `replyr`, an [R](https://cran.r-project.org) package available from [Github](https://github.com/WinVector/replyr) and  [CRAN](https://CRAN.R-project.org/package=replyr).
+
+
 
 
 ## Introduction

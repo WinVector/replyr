@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reliable Plying of Remote or Big Data with R • replyr</title>
+<title>Patches to Use 'dplyr' on Remote Data Sources • replyr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
@@ -92,6 +92,14 @@
     
 <div class="contents">
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<p><code>replyr</code> is going into maintenance mode. It has been hard to track shifting <code>dplyr</code>/<code>dbplyr</code>/<code>rlang</code> APIs and data structures post <code>dplyr</code> <code>0.5</code>. Most of what it does is now done better in one of the newer non-monolithic packages:</p>
+<ul>
+<li>Programming and meta-programming tools: <a href="https://CRAN.R-project.org/package=wrapr"><code>wrapr</code></a>.</li>
+<li>Adapting  to standard evaluation interfaces: <a href="https://CRAN.R-project.org/package=seplyr"><code>seplyr</code></a>.</li>
+<li>Big data data manipulation: <a href="https://CRAN.R-project.org/package=rquery"><code>rquery</code></a> and <a href="https://CRAN.R-project.org/package=cdata"><code>cdata</code></a>.</li>
+</ul>
+<p>The other functions (join planner/controller and grouped ordered apply) will be eventually ported to one of these packages.</p>
+<hr>
 <p>This document describes <code>replyr</code>, an <a href="https://cran.r-project.org">R</a> package available from <a href="https://github.com/WinVector/replyr">Github</a> and <a href="https://CRAN.R-project.org/package=replyr">CRAN</a>.</p>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
@@ -311,7 +319,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_43738812721037003738_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_88382877073150875443_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.22.0 [:memory:]</span>
  <span class="co">#         x     y z    </span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -374,8 +382,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  781024 41.8    1442291 77.1  1168576 62.5</span>
- <span class="co">#  Vcells 1584761 12.1    2552219 19.5  1918824 14.7</span></code></pre></div>
+ <span class="co">#  Ncells  780055 41.7    1442291 77.1  1168576 62.5</span>
+ <span class="co">#  Vcells 1579414 12.1    2552219 19.5  1991540 15.2</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

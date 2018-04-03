@@ -88,12 +88,14 @@ replyr::replyr_coalesce(counts, def, fills = list(n=0))
 Re-running and example in a database:
 
 ```{r checkpkg}
-execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
+execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
+  requireNamespace("dbplyr", quietly = TRUE)
 ```
 
 ```{r dbexample, eval=execute_vignette}
 
-my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+RSQLite::initExtension(my_db)
 dbData <- dplyr::copy_to(my_db, data)
 dbSupport <- dplyr::copy_to(my_db, support)
 replyr::replyr_coalesce(dbData, dbSupport, 
@@ -130,6 +132,7 @@ tryCatch(
 Cleaning up:
 
 ```{r cleanup}
+DBI::dbDisconnect(my_db)
 rm(list=ls())
 gc()
 ```

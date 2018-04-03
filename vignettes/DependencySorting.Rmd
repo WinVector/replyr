@@ -10,10 +10,11 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
+execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
+  requireNamespace("dbplyr", quietly = TRUE)
 if(execute_vignette) {
-  my_db <- dplyr::src_sqlite(":memory:",
-                             create = TRUE)
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+  RSQLite::initExtension(my_db)
   exDesc <- replyr:::example_employeeAndDate(my_db)
 }
 ```
@@ -165,10 +166,6 @@ And this is how we use tools to do the heavy lifting in building a left join pla
   * Finally `replyr::executeLeftJoinPlan()` can execute the join plan with diagnostics.
 
 ```{r cleanup, eval=execute_vignette}
-for(ni in tableNames) {
-  replyr_drop_table_name(my_db, ni)
-}
-rm(list=ls())
-gc(verbose = FALSE)
+DBI::dbDisconnect(my_db)
 ```
 

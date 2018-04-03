@@ -5,7 +5,7 @@
 \title{Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.}
 \usage{
 replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
-  useUnionALL = TRUE, eagerTempRemoval = FALSE,
+  useUnionALL = TRUE,
   tempNameGenerator = mk_tmp_name_source("replyr_bind_rows"))
 }
 \arguments{
@@ -19,16 +19,13 @@ replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
 
 \item{useUnionALL}{logical if TRUE try to use union all binding}
 
-\item{eagerTempRemoval}{logical if TRUE remove temps early.}
-
 \item{tempNameGenerator}{temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.}
 }
 \value{
 single data item
 }
 \description{
-Can't set \code{eagerTempRemoval=TRUE} on platforms that don't correctly implement \code{dplyr::compute}
-(for instance \code{Sparklyr} prior to full resolution of \url{https://github.com/rstudio/sparklyr/issues/721}).
+Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.
 }
 \examples{
 

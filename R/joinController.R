@@ -6,14 +6,14 @@ getConcreteTableName <- function(handle) {
   concreteName <- as.character(handle$ops$x)
 }
 
-example_employeeAndDate <- function(my_db) {
+example_employeeAndDate <- function(con) {
   . <- NULL # Declare not an unbound varaible
   # note: employeeanddate is likely built as a cross-product
   #       join of an employee table and set of dates of interest
   #       before getting to the join controller step.  We call
   #       such a table "row control" or "experimental design."
   keymap <- list()
-  DBI::dbExecute(my_db$con, "
+  DBI::dbExecute(con, "
   CREATE TABLE employeeanddate (
                  id TEXT,
                  date INTEGER
@@ -22,8 +22,8 @@ example_employeeAndDate <- function(my_db) {
   keymap[['employeeanddate']] = c()
   data.frame(id= c('i4', 'i4'),
              date = c(20140501, 20140601)) %.>%
-    DBI::dbWriteTable(my_db$con, 'employeeanddate', value=., append=TRUE)
-  DBI::dbExecute(my_db$con, "
+    DBI::dbWriteTable(con, 'employeeanddate', value=., append=TRUE)
+  DBI::dbExecute(con, "
                  CREATE TABLE orgtable (
                  eid TEXT,
                  date INTEGER,
@@ -37,8 +37,8 @@ example_employeeAndDate <- function(my_db) {
              date = c(20140501, 20140601),
              dept = c('IT', 'SL'),
              location = c('CA', 'TX')) %.>%
-    DBI::dbWriteTable(my_db$con, 'orgtable', value=., append=TRUE)
-  DBI::dbExecute(my_db$con, "
+    DBI::dbWriteTable(con, 'orgtable', value=., append=TRUE)
+  DBI::dbExecute(con, "
                  CREATE TABLE revenue (
                  date INTEGER,
                  dept TEXT,
@@ -50,8 +50,8 @@ example_employeeAndDate <- function(my_db) {
   data.frame(date = c(20140501, 20140601),
              dept = c('SL', 'SL'),
              rev = c(1000, 2000)) %.>%
-    DBI::dbWriteTable(my_db$con, 'revenue', value=., append=TRUE)
-  DBI::dbExecute(my_db$con, "
+    DBI::dbWriteTable(con, 'revenue', value=., append=TRUE)
+  DBI::dbExecute(con, "
                  CREATE TABLE activity (
                  eid TEXT,
                  date INTEGER,
@@ -65,7 +65,7 @@ example_employeeAndDate <- function(my_db) {
              date = c(20140501, 20140601),
              hours = c(50, 3),
              location = c('office', 'client')) %.>%
-    DBI::dbWriteTable(my_db$con, 'activity', value=., append=TRUE)
+    DBI::dbWriteTable(con, 'activity', value=., append=TRUE)
   tableNames <- c('employeeanddate',
                   'revenue',
                   'activity',
@@ -80,7 +80,7 @@ example_employeeAndDate <- function(my_db) {
     lapply(.,
       function(ni) {
         replyr::tableDescription(ni,
-                                 dplyr::tbl(my_db, ni),
+                                 dplyr::tbl(con, ni),
                                  keyInspector = key_inspector_by_name)
       }) %.>%
     dplyr::bind_rows(.)
@@ -254,12 +254,6 @@ tableDescription <- function(tableName,
                                   collapse=', ')
                     }, character(1))
   source <- replyr_get_src(handle)
-  if(!is.character(source)) {
-    source <- class(source)
-  }
-  if(length(source)>1) {
-    source <- paste(source, collapse = ', ')
-  }
   keys <- keyInspector(handle)
   tableIndColNames <- makeTableIndMap(tableName)
   if(length(intersect(tableIndColNames, cols))>0) {
@@ -270,7 +264,7 @@ tableDescription <- function(tableName,
                     columns= list(cols),
                     keys= list(keys),
                     colClass= list(classes),
-                    sourceClass= source,
+                    sourceClass= paste(class(source), collapse = " "),
                     isEmpty= replyr_nrow(sample)<=0,
                     indicatorColumn= tableIndColNames[[1]])
 }
@@ -433,14 +427,14 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'
 #' @examples
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
+#' if (requireNamespace("RSQLite", quietly = TRUE) &&
+#'   requireNamespace("dbplyr", quietly = TRUE)) {
 #'   # note: employeeanddate is likely built as a cross-product
 #'   #       join of an employee table and set of dates of interest
 #'   #       before getting to the join controller step.  We call
 #'   #       such a table "row control" or "experimental design."
-#'
-#'   my_db <- dplyr::src_sqlite(":memory:",
-#'                              create = TRUE)
+#'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'   RSQLite::initExtension(my_db)
 #'   tDesc <- replyr:::example_employeeAndDate(my_db)
 #'   columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
 #'   # unify keys
@@ -455,7 +449,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'                 inspectDescrAndJoinPlan(tDesc, sorted$columnJoinPlan)))
 #'     # plot(sorted$dependencyGraph)
 #'   }
-#'   DBI::dbDisconnect(my_db$con)
+#'   DBI::dbDisconnect(my_db)
 #'   my_db <- NULL
 #' }
 #'
@@ -520,14 +514,14 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #' @examples
 #'
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
+#' if (requireNamespace("RSQLite", quietly = TRUE) &&
+#'   requireNamespace("dbplyr", quietly = TRUE)) {
 #'   # note: employeeanddate is likely built as a cross-product
 #'   #       join of an employee table and set of dates of interest
 #'   #       before getting to the join controller step.  We call
 #'   #       such a table "row control" or "experimental design."
-#'
-#'   my_db <- dplyr::src_sqlite(":memory:",
-#'                              create = TRUE)
+#'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'   RSQLite::initExtension(my_db)
 #'   tDesc <- replyr:::example_employeeAndDate(my_db)
 #'   # fix order by hand, please see replyr::topoSortTables for
 #'   # how to automate this.
@@ -546,7 +540,7 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #'   # or as a PNG:
 #'   #   renderJoinDiagram(diagramSpec)
 #'   #
-#'   DBI::dbDisconnect(my_db$con)
+#'   DBI::dbDisconnect(my_db)
 #'   my_db <- NULL
 #' }
 #'

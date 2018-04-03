@@ -3,38 +3,16 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 
-#' get the db handle from a dplyr src
-#'
-#' Spark2 handles are DBIConnection
-#' SQLite are not
-#' this distinciton is going away post dplyr 0.5.0
+#' Obsolete with dplyr 0.7.0 and forward
 #'
 #' @param dplyr_src remote data handle
-#' @return database connection
+#' @return dplyr_src
 #'
-#' @examples
-#'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
-#'    my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-#'    d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
-#'         overwrite=TRUE, temporary=TRUE)
-#'    print(dplyr_src_to_db_handle(replyr_get_src(d)))
-#'    DBI::dbDisconnect(my_db)
-#' }
 #'
 #' @export
 #'
 dplyr_src_to_db_handle <- function(dplyr_src) {
-  if(is.null(dplyr_src)) {
-    return(NULL)
-  }
-  if(is.character(dplyr_src)) {
-    return(NULL)
-  }
-  if("DBIConnection" %in% class(dplyr_src)) {
-    return(dplyr_src)
-  }
-  return(dplyr_src$con)
+  return(dplyr_src)
 }
 
 
@@ -49,12 +27,15 @@ dplyr_src_to_db_handle <- function(dplyr_src) {
 #'
 #' @examples
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
-#'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+#' if (requireNamespace("RSQLite", quietly = TRUE) &&
+#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#'    my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'    RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
 #'                       overwrite=TRUE, temporary=TRUE)
 #'   print(d)
 #'   print(replyr_list_tables(my_db))
+#'   DBI::dbDisconnect(my_db)
 #' }
 #'
 #' @export
@@ -75,11 +56,14 @@ replyr_list_tables <- function(con) {
 #'
 #' @examples
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
-#'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+#' if (requireNamespace("RSQLite", quietly = TRUE) &&
+#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'   RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
 #'   print(d)
 #'   print(replyr_has_table(my_db, 'd'))
+#'   DBI::dbDisconnect(my_db)
 #' }
 #'
 #' @export
@@ -121,6 +105,9 @@ replyr_get_src <- function(df) {
   }
   # fall back to common slots
   if('src' %in% names(df)) {
+    if('con' %in% names(df$src)) {
+      return(df$src$con)
+    }
     return(df$src)
   }
   # unknown
@@ -166,11 +153,13 @@ replyr_is_Spark_data <- function(d) {
   if(is.null(sc) || is.character(sc)) {
     return(FALSE)
   }
-  if(length(grep('spark_', tolower(class(sc$con))))>0) {
-    return(TRUE)
-  }
   if(length(grep('spark_', tolower(class(sc))))>0) {
     return(TRUE)
+  }
+  if('con' %in% names(sc)) {
+    if(length(grep('spark_', tolower(class(sc$con))))>0) {
+      return(TRUE)
+    }
   }
   return(FALSE)
 }
@@ -193,11 +182,13 @@ replyr_is_MySQL_data <- function(d) {
   if(is.null(sc) || is.character(sc)) {
     return(FALSE)
   }
-  if(length(grep('mysql', tolower(class(sc$con))))>0) {
-    return(TRUE)
-  }
   if(length(grep('mysql', tolower(class(sc))))>0) {
     return(TRUE)
+  }
+  if('con' %in% names(sc)) {
+    if(length(grep('mysql', tolower(class(sc$con))))>0) {
+      return(TRUE)
+    }
   }
   return(FALSE)
 }

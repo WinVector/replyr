@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>replyr: Diligent Use of Big Data for R — replyr • replyr</title>
+<title>replyr: Patches to Use dplyr on Remote Data Sources — replyr • replyr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -110,28 +110,32 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>replyr: Diligent Use of Big Data for R</h1>
+    <h1>replyr: Patches to Use dplyr on Remote Data Sources</h1>
     </div>
 
     
-    <p>Methods to reliably use 'dplyr' remote data sources in R ('SQL' databases,
-'Spark' 2.0.0 and above) in a generic fashion. REmote PLYing of big data for R.
-Adds convenience functions to make big data tasks more like
-working with an in-memory R 'data.frame'.
-Results do depend on which 'dplyr' data service provider used.</p>
+    <p>Methods to reliably use <code>dplyr</code> on remote data sources in <code>R</code> (<code>SQL</code> databases,
+<code>Spark</code> <code>2.0.0</code> and above) in a generic fashion.</p>
     
 
         
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>replyr</code> helps with the following:</p><ul>
+    <p><code>replyr</code> is going into maintenance mode.  It has been hard to track
+shifting <code>dplyr</code>/<code>dbplyr</code>/<code>rlang</code> APIs and data structures post <code>dplyr</code> <code>0.5</code>.
+Most of what it does is now done better in one of the newer non-monolithic packages:</p><ul>
+<li><p>Programming and meta-programming tools: <code>wrapr</code> <a href='https://CRAN.R-project.org/package=wrapr'>https://CRAN.R-project.org/package=wrapr</a>.</p></li>
+<li><p>Adapting <code>dplyr</code> to standard evaluation interfaces: <code>seplyr</code> <a href='https://CRAN.R-project.org/package=seplyr'>https://CRAN.R-project.org/package=seplyr</a>.</p></li>
+<li><p>Big data data manipulation: <code>rquery</code> <a href='https://CRAN.R-project.org/package=rquery'>https://CRAN.R-project.org/package=rquery</a> and <code>cdata</code> <a href='https://CRAN.R-project.org/package=cdata'>https://CRAN.R-project.org/package=cdata</a>.</p></li>
+</ul><p><code>replyr</code> helps with the following:</p><ul>
 <li><p>Summarizing remote data (via <code>replyr_summarize</code>).</p></li>
 <li><p>Facilitating writing "source generic" code that works similarly on multiple 'dplyr' data sources.</p></li>
 <li><p>Providing big data versions of functions for splitting data, binding rows, pivoting, adding row-ids, ranking, and completing experimental designs.</p></li>
 <li><p>Packaging common data manipulation tasks into operators  such as the <code><a href='gapply.html'>gapply</a></code> function.</p></li>
 <li><p>Providing support code for common <code>SparklyR</code> tasks, such as tracking temporary handle IDs.</p></li>
 </ul>
-    <p>To learn more about replyr, please start with the vignette:
+    <p>The other functions (join planner/controller and grouped ordered apply) will be eventually ported to one of these packages.</p>
+<p>To learn more about replyr, please start with the vignette:
 <code><a href='https://cran.rstudio.com/web/packages/replyr/vignettes/replyr.html'>vignette('replyr','replyr')</a></code></p>
     
 

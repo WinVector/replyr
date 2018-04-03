@@ -3,64 +3,11 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 #' @importFrom dplyr collect copy_to db_drop_table
+#' @importFrom dbplyr src_dbi
 NULL
 
 
 
-#' Drop a table from a source
-#'
-#' @param dest remote data source
-#' @param name name of table to drop
-#' @return logical TRUE if table was present
-#'
-#' @examples
-#'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
-#'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
-#'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
-#'   print(d)
-#'   print(replyr_list_tables(my_db))
-#'   replyr_drop_table_name(my_db, 'd')
-#'   print(replyr_list_tables(my_db))
-#' }
-#'
-#' @export
-#'
-replyr_drop_table_name <- function(dest, name) {
-  if(length(name)<=0) {
-    return(FALSE)
-  }
-  if((!is.character(name))||(length(name)!=1)||(nchar(name)<1)) {
-    stop('replyr::replyr_drop_table_name name must be a single non-empty string')
-  }
-  if(is.null(dest) || is.character(dest)) {
-    # special "no destination" case
-    return(FALSE)
-  }
-  if('tbl' %in% class(dest)) {
-    # dest was actually another data object, get its source
-    dest <- dest$src
-    if(is.null(dest)) {
-      stop("replyr::replyr_drop_table_name unexpected dest")
-    }
-  }
-  # MySQL doesn't seem to always obey overwrite=TRUE
-  # not filing this as MySQL isn't a preferred back end.
-  found = FALSE
-  tryCatch(
-    {
-      cn <- dplyr_src_to_db_handle(dest)
-      if(!is.null(cn)) {
-        if(dplyr::db_has_table(cn, name)) {
-          found = TRUE
-          dplyr::db_drop_table(cn, name)
-        }
-      }
-    },
-    error=function(x) { warning(x); NULL }
-  )
-  found
-}
 
 
 #' Copy data to remote service.
@@ -73,16 +20,18 @@ replyr_drop_table_name <- function(dest, name) {
 #' @param temporary logical, if TRUE try to create a temporary table
 #' @param overwrite logical, if TRUE try to overwrite
 #' @param maxrow max rows to allow in a remote to remote copy.
-#' @param forceDelete logical, if TRUE try to delete table.
 #' @return remote handle
 #'
 #' @examples
 #'
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
-#'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+#' if (requireNamespace("RSQLite", quietly = TRUE) &&
+#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'   RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
 #'   print(d)
+#'   DBI::dbDisconnect(my_db)
 #' }
 #'
 #' @export
@@ -92,8 +41,7 @@ replyr_copy_to <- function(dest,
                            rowNumberColumn= NULL,
                            temporary= FALSE,
                            overwrite= TRUE,
-                           maxrow= 1000000,
-                           forceDelete= FALSE) {
+                           maxrow= 1000000) {
   # try to force any errors early, and try to fail prior to side-effects
   if(length(list(...))>0) {
     stop('replyr::replyr_copy_to unexpected arguments')
@@ -112,18 +60,8 @@ replyr_copy_to <- function(dest,
   if(is.null(df)) {
     stop("NULL df to replyr::replyr_copy_to")
   }
-  if('tbl' %in% class(dest)) {
-    # dest was actually another data object, get its source
-    dest <- dest$src
-    if(is.null(dest)) {
-      stop("replyr::replyr_copy_to unexpected dest")
-    }
-  }
   if((!is.character(name))||(length(name)!=1)||(nchar(name)<1)) {
     stop('replyr::replyr_copy_to name must be a single non-empty string')
-  }
-  if(forceDelete) {
-    replyr_drop_table_name(dest, name)
   }
   if(!is.null(rowNumberColumn)) {
     df[[rowNumberColumn]] <- seq_len(replyr_nrow(df))
@@ -142,11 +80,14 @@ replyr_copy_to <- function(dest,
 #' @examples
 #'
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE)) {
-#'   my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+#' if (requireNamespace("RSQLite", quietly = TRUE) &&
+#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+#'   RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')
 #'   d2 <- replyr_copy_from(d)
 #'   print(d2)
+#'   DBI::dbDisconnect(my_db)
 #' }
 #'
 #' @export

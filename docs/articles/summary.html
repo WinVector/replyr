@@ -116,9 +116,11 @@ replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentat
  <span class="co">#  1      x     1 character     2   1      NA  NA  NA   NA NA      b      b</span>
  <span class="co">#  2      y     2   numeric     2   1      NA   1   1    1 NA   &lt;NA&gt;   &lt;NA&gt;</span>
 
-execute_vignette &lt;-<span class="st"> </span><span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+execute_vignette &lt;-<span class="st"> </span><span class="kw">requireNamespace</span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>) <span class="op">&amp;&amp;</span>
+<span class="st">  </span><span class="kw">requireNamespace</span>(<span class="st">"dbplyr"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="cf">if</span>(execute_vignette) {
-  my_db &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/src_dbi.html">src_sqlite</a></span>(<span class="st">":memory:"</span>, <span class="dt">create =</span> <span class="ot">TRUE</span>)
+  my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)
+  RSQLite<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db)
   dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d)
   
   <span class="kw">summary</span>(dbData)
@@ -132,11 +134,12 @@ execute_vignette &lt;-<span class="st"> </span><span class="kw">requireNamespace
  <span class="co">#  Variables: 2</span>
  <span class="co">#  $ x &lt;chr&gt; NA, "b"</span>
  <span class="co">#  $ y &lt;dbl&gt; 1, NA</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)
+<span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  697329 37.3    1168576 62.5   940480 50.3</span>
- <span class="co">#  Vcells 1301337 10.0    2552219 19.5  1651643 12.7</span></code></pre></div>
+ <span class="co">#  Ncells  697091 37.3    1168576 62.5  1168576 62.5</span>
+ <span class="co">#  Vcells 1300225 10.0    2552219 19.5  1732068 13.3</span></code></pre></div>
 </div>
   </div>
 

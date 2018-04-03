@@ -40,7 +40,8 @@ suppressPackageStartupMessages(library("dplyr"))
 packageVersion("dplyr")
 library("replyr")
 packageVersion("replyr")
-execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
+execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
+   requireNamespace("dbplyr", quietly = TRUE)
 ```
 
 Now let's load some notional example data.  For our example we have:
@@ -53,8 +54,8 @@ The data is given below:
 
 ```{r data, eval=execute_vignette}
 # load notional example data
-my_db <- dplyr::src_sqlite(":memory:", 
-                           create = TRUE)
+my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+RSQLite::initExtension(my_db)
 # example data
 replyr_copy_to(my_db,
                data.frame(id= c(1,1,2,2),
@@ -284,11 +285,6 @@ Having to "join a bunch of tables to get the data into simple rows" is a common 
 
 ```{r cleanup, eval=execute_vignette}
 # cleanup
-temps <- tempNameGenerator(dumpList= TRUE)
-for(ti in temps) {
-  replyr_drop_table_name(my_db, ti)
-}
-rm(list=ls())
-gc(verbose= FALSE)
+DBI::dbDisconnect(my_db)
 ```
 

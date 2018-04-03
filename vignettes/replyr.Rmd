@@ -18,6 +18,21 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
+`replyr` is going into maintenance mode.  It has been hard to track
+shifting `dplyr` APIs and data structures post `dplyr` `0.5`.
+Most of what it does is now done better in one of the newer non-monolithic packages:
+
+  * Programming and meta-programming tools: [`wrapr`](https://CRAN.R-project.org/package=wrapr).
+  * Adapting \code{dplyr} to standard evaluation interfaces: [`seplyr`](https://CRAN.R-project.org/package=seplyr).
+  * Big data data manipulation: [`rquery`](https://CRAN.R-project.org/package=rquery) and [`cdata`](https://CRAN.R-project.org/package=cdata).
+  
+The other functions (join planner/controller and grouped ordered apply) will be eventually ported to one of these packages.
+
+
+-------------------
+
+
+
 This document describes `replyr`, an [R](https://cran.r-project.org) package available from [Github](https://github.com/WinVector/replyr) and  [CRAN](https://CRAN.R-project.org/package=replyr).
 
 
@@ -187,8 +202,10 @@ Example: `replyr::replyr_summary` working on a database service (when `base::sum
 ```{r summaryexample}
 d <- data.frame(x=c(1,2,2),y=c(3,5,NA),z=c(NA,'a','b'),
                 stringsAsFactors = FALSE)
-if (requireNamespace("RSQLite")) {
-  my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+if (requireNamespace("RSQLite", quietly = TRUE) && 
+    requireNamespace("dbplyr", quietly = TRUE)) {
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+  RSQLite::initExtension(my_db)
   dRemote <- replyr::replyr_copy_to(my_db,d,'d')
 } else {
   dRemote <- d # local stand in when we can't make remote
@@ -270,6 +287,7 @@ Additional desired capabilities of interest include:
 ## Clean up
 
 ```{r}
+DBI::dbDisconnect(my_db)
 rm(list=ls())
 gc()
 ```

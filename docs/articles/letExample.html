@@ -110,7 +110,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sumstat_intervals =<span class="st"> </span><span class="cf">function</span>(dframe, colname, <span class="dt">groupcolname =</span> <span class="ot">NULL</span>) {
   mapping =<span class="st"> </span><span class="kw">list</span>(<span class="dt">COLNAME  =</span>colname,
                  <span class="dt">GROUPCOLNAME =</span> groupcolname)
-  <span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias =</span> mapping,
+  <span class="kw">let</span>(<span class="dt">alias =</span> mapping,
       {
         <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(groupcolname)) {
           dframe &lt;-<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(dframe, GROUPCOLNAME)
@@ -163,7 +163,7 @@
     }
     mapping =<span class="st"> </span><span class="kw">c</span>(mapping, mapping2)
     
-    <span class="kw"><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias=</span>mapping,
+    <span class="kw">let</span>(<span class="dt">alias=</span>mapping,
         <span class="dt">expr =</span> {
           <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(dframe, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>xval,<span class="dt">color=</span>xval)) <span class="op">+</span>
 <span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_jitter">geom_jitter</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y=</span>yval), <span class="dt">width=</span><span class="fl">0.2</span>, <span class="dt">height=</span><span class="dv">0</span>, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">+</span>

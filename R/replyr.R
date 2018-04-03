@@ -1,10 +1,18 @@
-#' replyr: Diligent Use of Big Data for R
+#' replyr: Patches to Use dplyr on Remote Data Sources
 #'
-#' Methods to reliably use 'dplyr' remote data sources in R ('SQL' databases,
-#' 'Spark' 2.0.0 and above) in a generic fashion. REmote PLYing of big data for R.
-#' Adds convenience functions to make big data tasks more like
-#' working with an in-memory R 'data.frame'.
-#' Results do depend on which 'dplyr' data service provider used.
+#' Methods to reliably use \code{dplyr} on remote data sources in \code{R} (\code{SQL} databases,
+#' \code{Spark} \code{2.0.0} and above) in a generic fashion.
+#'
+#' \code{replyr} is going into maintenance mode.  It has been hard to track
+#' shifting \code{dplyr}/\code{dbplyr}/\code{rlang} APIs and data structures post \code{dplyr} \code{0.5}.
+#' Most of what it does is now done better in one of the newer non-monolithic packages:
+#'
+#' \itemize{
+#' \item Programming and meta-programming tools: \code{wrapr} \url{https://CRAN.R-project.org/package=wrapr}.
+#' \item Adapting \code{dplyr} to standard evaluation interfaces: \code{seplyr} \url{https://CRAN.R-project.org/package=seplyr}.
+#' \item Big data data manipulation: \code{rquery} \url{https://CRAN.R-project.org/package=rquery} and \code{cdata} \url{https://CRAN.R-project.org/package=cdata}.
+#' }
+#'
 #'
 #' \code{replyr} helps with the following:
 #'
@@ -15,6 +23,9 @@
 #' \item Packaging common data manipulation tasks into operators  such as the \code{\link{gapply}} function.
 #' \item Providing support code for common \code{SparklyR} tasks, such as tracking temporary handle IDs.
 #' }
+#'
+#' The other functions (join planner/controller and grouped ordered apply) will be eventually ported to one of these packages.
+#'
 #'
 #' To learn more about replyr, please start with the vignette:
 #' \code{vignette('replyr','replyr')}
@@ -28,41 +39,6 @@ NULL
 
 #' @importFrom wrapr let %.>% := mk_tmp_name_source
 NULL
-
-#' @export
-wrapr::let
-
-#' @importFrom wrapr restrictToNameAssignments
-#' @export
-wrapr::restrictToNameAssignments
-
-#' @importFrom wrapr %.>%
-#' @export
-wrapr::`%.>%`
-
-#' @importFrom wrapr DebugFn
-#' @export
-wrapr::DebugFn
-
-#' @importFrom wrapr DebugFnE
-#' @export
-wrapr::DebugFnE
-
-#' @importFrom wrapr DebugFnW
-#' @export
-wrapr::DebugFnW
-
-#' @importFrom wrapr DebugFnWE
-#' @export
-wrapr::DebugFnWE
-
-#' @importFrom wrapr DebugPrintFn
-#' @export
-wrapr::DebugPrintFn
-
-#' @importFrom wrapr DebugPrintFnE
-#' @export
-wrapr::DebugPrintFnE
 
 
 # so it does not look like an unbound reference in pipes

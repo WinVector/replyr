@@ -2,7 +2,7 @@
 % Please edit documentation in R/serviceName.R
 \name{dplyr_src_to_db_handle}
 \alias{dplyr_src_to_db_handle}
-\title{get the db handle from a dplyr src}
+\title{Obsolete with dplyr 0.7.0 and forward}
 \usage{
 dplyr_src_to_db_handle(dplyr_src)
 }
@@ -10,21 +10,8 @@ dplyr_src_to_db_handle(dplyr_src)
 \item{dplyr_src}{remote data handle}
 }
 \value{
-database connection
+dplyr_src
 }
 \description{
-Spark2 handles are DBIConnection
-SQLite are not
-this distinciton is going away post dplyr 0.5.0
-}
-\examples{
-
-if (requireNamespace("RSQLite", quietly = TRUE)) {
-   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
-        overwrite=TRUE, temporary=TRUE)
-   print(dplyr_src_to_db_handle(replyr_get_src(d)))
-   DBI::dbDisconnect(my_db)
-}
-
+Obsolete with dplyr 0.7.0 and forward
 }

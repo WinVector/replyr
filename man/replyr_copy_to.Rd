@@ -6,7 +6,7 @@
 \usage{
 replyr_copy_to(dest, df, name = paste(deparse(substitute(df)), collapse =
   " "), ..., rowNumberColumn = NULL, temporary = FALSE, overwrite = TRUE,
-  maxrow = 1e+06, forceDelete = FALSE)
+  maxrow = 1e+06)
 }
 \arguments{
 \item{dest}{remote data source}
@@ -24,8 +24,6 @@ replyr_copy_to(dest, df, name = paste(deparse(substitute(df)), collapse =
 \item{overwrite}{logical, if TRUE try to overwrite}
 
 \item{maxrow}{max rows to allow in a remote to remote copy.}
-
-\item{forceDelete}{logical, if TRUE try to delete table.}
 }
 \value{
 remote handle
@@ -36,10 +34,13 @@ Copy data to remote service.
 \examples{
 
 
-if (requireNamespace("RSQLite", quietly = TRUE)) {
-  my_db <- dplyr::src_sqlite(":memory:", create = TRUE)
+if (requireNamespace("RSQLite", quietly = TRUE) &&
+    requireNamespace("dbplyr", quietly = TRUE)) {
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
+  RSQLite::initExtension(my_db)
   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
   print(d)
+  DBI::dbDisconnect(my_db)
 }
 
 }

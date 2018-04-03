@@ -119,7 +119,7 @@
 
     <pre class="usage"><span class='fu'>replyr_copy_to</span>(<span class='no'>dest</span>, <span class='no'>df</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'>paste</span>(<span class='fu'>deparse</span>(<span class='fu'>substitute</span>(<span class='no'>df</span>)), <span class='kw'>collapse</span> <span class='kw'>=</span>
   <span class='st'>" "</span>), <span class='no'>...</span>, <span class='kw'>rowNumberColumn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>temporary</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>maxrow</span> <span class='kw'>=</span> <span class='fl'>1e+06</span>, <span class='kw'>forceDelete</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>maxrow</span> <span class='kw'>=</span> <span class='fl'>1e+06</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -156,10 +156,6 @@
       <th>maxrow</th>
       <td><p>max rows to allow in a remote to remote copy.</p></td>
     </tr>
-    <tr>
-      <th>forceDelete</th>
-      <td><p>logical, if TRUE try to delete table.</p></td>
-    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -170,10 +166,13 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 
-<span class='kw'>if</span> (<span class='fu'>requireNamespace</span>(<span class='st'>"RSQLite"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) {
-  <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/src_dbi.html'>src_sqlite</a></span>(<span class='st'>":memory:"</span>, <span class='kw'>create</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='kw'>if</span> (<span class='fu'>requireNamespace</span>(<span class='st'>"RSQLite"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&amp;&amp;</span>
+    <span class='fu'>requireNamespace</span>(<span class='st'>"dbplyr"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) {
+  <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbConnect'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/SQLite'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+  <span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/RSQLite/topics/initExtension'>initExtension</a></span>(<span class='no'>my_db</span>)
   <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>replyr_copy_to</span>(<span class='no'>my_db</span>, <span class='fu'>data.frame</span>(<span class='kw'>x</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>2</span>)), <span class='st'>'d'</span>)
   <span class='fu'>print</span>(<span class='no'>d</span>)
+  <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbDisconnect'>dbDisconnect</a></span>(<span class='no'>my_db</span>)
 }</div><div class='output co'>#&gt; # Source:   table&lt;d&gt; [?? x 1]
 #&gt; # Database: sqlite 3.22.0 [:memory:]
 #&gt;       x

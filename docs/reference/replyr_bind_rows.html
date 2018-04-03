@@ -114,12 +114,11 @@
     </div>
 
     
-    <p>Can't set <code>eagerTempRemoval=TRUE</code> on platforms that don't correctly implement <code><a href='http://dplyr.tidyverse.org/reference/compute.html'>dplyr::compute</a></code>
-(for instance <code>Sparklyr</code> prior to full resolution of <a href='https://github.com/rstudio/sparklyr/issues/721'>https://github.com/rstudio/sparklyr/issues/721</a>).</p>
+    <p>Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.</p>
     
 
     <pre class="usage"><span class='fu'>replyr_bind_rows</span>(<span class='no'>lst</span>, <span class='no'>...</span>, <span class='kw'>useDplyrLocal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>useSparkRbind</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>useUnionALL</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>eagerTempRemoval</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>useUnionALL</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>mk_tmp_name_source</span>(<span class='st'>"replyr_bind_rows"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -144,10 +143,6 @@
     <tr>
       <th>useUnionALL</th>
       <td><p>logical if TRUE try to use union all binding</p></td>
-    </tr>
-    <tr>
-      <th>eagerTempRemoval</th>
-      <td><p>logical if TRUE remove temps early.</p></td>
     </tr>
     <tr>
       <th>tempNameGenerator</th>
