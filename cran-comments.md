@@ -15,6 +15,9 @@ and cdata.
 
 
   * win-builder 
+  * using R version 3.5.0 alpha (2018-03-30 r74499)
+  * using platform: x86_64-w64-mingw32 (64-bit)
+
 
 ## R CMD check --as-cran replyr_0.9.3.tar.gz 
 

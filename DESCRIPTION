@@ -14,7 +14,7 @@ BugReports: https://github.com/WinVector/replyr/issues
 Description: Patches to use 'dplyr' on remote data sources ('SQL' databases,
    'Spark' 2.0.0 and above) in a reliable "generic" fashion (generic meaning
    user code works similarly on all such sources, without needing per-source
-   adaption).  Due to the fluctuating nature of 'dplyr'/'dbplyr'/'rlang' APIs this package
+   adaption).  Due to the fluctuating nature of 'dplyr'/'dbplyr'/'rlang' 'APIs' this package
    is going into maintenance mode.  Most of the 'replyr' functions are already 
    done better by one of the non-monolithic replacement packages: 'wrapr', 'seplyr', 'rquery',
    or 'cdata'.
