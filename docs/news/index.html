@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>All news • replyr</title>
+<title>Changelog • replyr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,16 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Changelog" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +35,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +52,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">replyr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">replyr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -58,7 +67,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/replyr.html">Get Started</a>
+  <a href="../articles/replyr.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -71,10 +80,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/coalesce.html">coalesce</a>
+      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
     </li>
     <li>
-      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
+      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
+    </li>
+    <li>
+      <a href="../articles/coalesce.html">coalesce</a>
     </li>
     <li>
       <a href="../articles/joinController.html">Join Controller</a>
@@ -83,15 +95,12 @@
       <a href="../articles/letExample.html">let Example</a>
     </li>
     <li>
-      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
-    </li>
-    <li>
       <a href="../articles/summary.html">summary</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -100,6 +109,7 @@
   <a href="http://www.win-vector.com/">Sponsor: Win-Vector LLC</a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,17 +117,25 @@
       
       </header>
 
-      <div class="row">
-
-  <div class="col-md-9">
+<div class="row">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Change log <small>All releases</small></h1>
+      <h1>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="contents">
+    <div id="replyr-0-9-3-2018-04-11" class="section level1">
+<h1 class="page-header">
+<a href="#replyr-0-9-3-2018-04-11" class="anchor"></a>replyr 0.9.3 2018-04-11<small> 2018-04-03 </small>
+</h1>
+<ul>
+<li>Try to avoid the API breakage dplyr 0.7.5 is sending out.</li>
+</ul>
+</div>
     <div id="replyr-0-9-3-2018-04-03" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-9-3-2018-04-03" class="anchor"></a>replyr 0.9.3 2018-04-03</h1>
+<h1 class="page-header">
+<a href="#replyr-0-9-3-2018-04-03" class="anchor"></a>replyr 0.9.3 2018-04-03<small> 2018-04-03 </small>
+</h1>
 <ul>
 <li>Demote replyr to maintenance mode.</li>
 <li>Attempt work around dependency errors.</li>
@@ -128,8 +146,9 @@
 </ul>
 </div>
     <div id="replyr-0-9-2-2018-03-11" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-9-2-2018-03-11" class="anchor"></a>replyr 0.9.2 2018-03-11</h1>
+<h1 class="page-header">
+<a href="#replyr-0-9-2-2018-03-11" class="anchor"></a>replyr 0.9.2 2018-03-11<small> 2018-03-12 </small>
+</h1>
 <ul>
 <li>Move to wrapr 1.2.0</li>
 <li>Get rid of use of old underbar forms (futureproof code).</li>
@@ -138,8 +157,9 @@
 </ul>
 </div>
     <div id="replyr-0-9-1-2018-01-20" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-9-1-2018-01-20" class="anchor"></a>replyr 0.9.1 2018-01-20</h1>
+<h1 class="page-header">
+<a href="#replyr-0-9-1-2018-01-20" class="anchor"></a>replyr 0.9.1 2018-01-20<small> 2018-01-20 </small>
+</h1>
 <ul>
 <li>Minor documentation fixes.</li>
 <li>Don’t try to make land eager.</li>
@@ -148,15 +168,17 @@
 </ul>
 </div>
     <div id="replyr-0-9-0-2017-11-11" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-9-0-2017-11-11" class="anchor"></a>replyr 0.9.0 2017-11-11</h1>
+<h1 class="page-header">
+<a href="#replyr-0-9-0-2017-11-11" class="anchor"></a>replyr 0.9.0 2017-11-11<small> 2017-11-12 </small>
+</h1>
 <ul>
 <li>Re-base on cdata 0.5.0</li>
 </ul>
 </div>
     <div id="replyr-0-8-3-2017-11-10" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-8-3-2017-11-10" class="anchor"></a>replyr 0.8.3 2017-11-10</h1>
+<h1 class="page-header">
+<a href="#replyr-0-8-3-2017-11-10" class="anchor"></a>replyr 0.8.3 2017-11-10<small> Unreleased </small>
+</h1>
 <ul>
 <li>Fix some corner cases in replyr_summary() and replyr_nrow().</li>
 <li>Add compute option to replyr_summary().</li>
@@ -168,8 +190,9 @@
 </ul>
 </div>
     <div id="replyr-0-8-2-2017-10-29" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-8-2-2017-10-29" class="anchor"></a>replyr 0.8.2 2017-10-29</h1>
+<h1 class="page-header">
+<a href="#replyr-0-8-2-2017-10-29" class="anchor"></a>replyr 0.8.2 2017-10-29<small> 2017-10-29 </small>
+</h1>
 <ul>
 <li>More checks on pivot/un-pivot.</li>
 <li>Deprecate older pivot/un-pivot code.</li>
@@ -178,16 +201,18 @@
 </ul>
 </div>
     <div id="replyr-0-8-0-2017-10-21" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-8-0-2017-10-21" class="anchor"></a>replyr 0.8.0 2017-10-21</h1>
+<h1 class="page-header">
+<a href="#replyr-0-8-0-2017-10-21" class="anchor"></a>replyr 0.8.0 2017-10-21<small> Unreleased </small>
+</h1>
 <ul>
 <li>Bulk SQL row/column ops.</li>
 <li>Bump up dependencies.</li>
 </ul>
 </div>
     <div id="replyr-0-5-4-2017-10-19" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-5-4-2017-10-19" class="anchor"></a>replyr 0.5.4 2017-10-19</h1>
+<h1 class="page-header">
+<a href="#replyr-0-5-4-2017-10-19" class="anchor"></a>replyr 0.5.4 2017-10-19<small> 2017-10-19 </small>
+</h1>
 <ul>
 <li>Work around ncol() issue.</li>
 <li>Work around many nrow() issues.</li>
@@ -195,8 +220,9 @@
 </ul>
 </div>
     <div id="replyr-0-5-3-2017-08-28" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-5-3-2017-08-28" class="anchor"></a>replyr 0.5.3 2017-08-28</h1>
+<h1 class="page-header">
+<a href="#replyr-0-5-3-2017-08-28" class="anchor"></a>replyr 0.5.3 2017-08-28<small> 2017-08-29 </small>
+</h1>
 <ul>
 <li>Fix column selector in replyr_summarize().</li>
 <li>Fix graph layout a bit.</li>
@@ -205,29 +231,33 @@
 </ul>
 </div>
     <div id="replyr-0-5-2-2017-07-31" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-5-2-2017-07-31" class="anchor"></a>replyr 0.5.2 2017-07-31</h1>
+<h1 class="page-header">
+<a href="#replyr-0-5-2-2017-07-31" class="anchor"></a>replyr 0.5.2 2017-07-31<small> 2017-08-01 </small>
+</h1>
 <ul>
 <li>More forgiving mapping fn.</li>
 </ul>
 </div>
     <div id="replyr-0-5-1-2017-07-12" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-5-1-2017-07-12" class="anchor"></a>replyr 0.5.1 2017-07-12</h1>
+<h1 class="page-header">
+<a href="#replyr-0-5-1-2017-07-12" class="anchor"></a>replyr 0.5.1 2017-07-12<small> Unreleased </small>
+</h1>
 <ul>
 <li>Allow non-strict names in some cases.</li>
 </ul>
 </div>
     <div id="replyr-0-5-0-2017-07-08" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-5-0-2017-07-08" class="anchor"></a>replyr 0.5.0 2017-07-08</h1>
+<h1 class="page-header">
+<a href="#replyr-0-5-0-2017-07-08" class="anchor"></a>replyr 0.5.0 2017-07-08<small> Unreleased </small>
+</h1>
 <ul>
 <li>Start switch over to dot block pipe.</li>
 </ul>
 </div>
     <div id="replyr-0-4-2-2017-07-05" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-4-2-2017-07-05" class="anchor"></a>replyr 0.4.2 2017-07-05</h1>
+<h1 class="page-header">
+<a href="#replyr-0-4-2-2017-07-05" class="anchor"></a>replyr 0.4.2 2017-07-05<small> 2017-07-06 </small>
+</h1>
 <ul>
 <li>fix spelling of tableDescription()</li>
 <li>add diagrams to join controller.</li>
@@ -235,8 +265,9 @@
 </ul>
 </div>
     <div id="replyr-0-4-0-2017-06-12" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-4-0-2017-06-12" class="anchor"></a>replyr 0.4.0 2017-06-12</h1>
+<h1 class="page-header">
+<a href="#replyr-0-4-0-2017-06-12" class="anchor"></a>replyr 0.4.0 2017-06-12<small> 2017-06-12 </small>
+</h1>
 <ul>
 <li>Introduce executeLeftJoinPlan join controller.</li>
 <li>Introduce replyr::replyr_apply_f_mapped.</li>
@@ -248,16 +279,18 @@
 </ul>
 </div>
     <div id="replyr-0-3-01-2017-05-13" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-3-01-2017-05-13" class="anchor"></a>replyr 0.3.01 2017-05-13</h1>
+<h1 class="page-header">
+<a href="#replyr-0-3-01-2017-05-13" class="anchor"></a>replyr 0.3.01 2017-05-13<small> 2017-05-14 </small>
+</h1>
 <ul>
 <li>much better tracking of temp-handle names.</li>
 <li>more tests/checks.</li>
 </ul>
 </div>
     <div id="replyr-0-2-6-2017-05-08" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-2-6-2017-05-08" class="anchor"></a>replyr 0.2.6 2017-05-08</h1>
+<h1 class="page-header">
+<a href="#replyr-0-2-6-2017-05-08" class="anchor"></a>replyr 0.2.6 2017-05-08<small> Unreleased </small>
+</h1>
 <ul>
 <li>use dplyr::ungroup a few places.</li>
 <li>add replyr::expandColumn.</li>
@@ -265,16 +298,18 @@
 </ul>
 </div>
     <div id="replyr-0-2-5-2017-04-14" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-2-5-2017-04-14" class="anchor"></a>replyr 0.2.5 2017-04-14</h1>
+<h1 class="page-header">
+<a href="#replyr-0-2-5-2017-04-14" class="anchor"></a>replyr 0.2.5 2017-04-14<small> 2017-04-14 </small>
+</h1>
 <ul>
 <li>Remove all use of dplyr underbar/underscore forms to future proof as these are already deprecated in dev ( <a href="https://github.com/hadley/dplyr/blob/master/R/manip.r" class="uri">https://github.com/hadley/dplyr/blob/master/R/manip.r</a> 33d0b1ecaa22644e0d78345b13d5f8aca5d949b ).</li>
 <li>re-introduce moving values between rows and columns.</li>
 </ul>
 </div>
     <div id="replyr-0-2-4-2017-03-13" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-2-4-2017-03-13" class="anchor"></a>replyr 0.2.4 2017-03-13</h1>
+<h1 class="page-header">
+<a href="#replyr-0-2-4-2017-03-13" class="anchor"></a>replyr 0.2.4 2017-03-13<small> 2017-03-14 </small>
+</h1>
 <ul>
 <li>Respond to “CRAN packages maintained by you” request (images in root dir).</li>
 <li>Fix unique_values can’t use “n” issue.</li>
@@ -282,8 +317,9 @@
 </ul>
 </div>
     <div id="replyr-0-2-3-2017-02-20" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-2-3-2017-02-20" class="anchor"></a>replyr 0.2.3 2017-02-20</h1>
+<h1 class="page-header">
+<a href="#replyr-0-2-3-2017-02-20" class="anchor"></a>replyr 0.2.3 2017-02-20<small> 2017-02-21 </small>
+</h1>
 <ul>
 <li>Move “let()” to wrapr <a href="https://github.com/WinVector/wrapr" class="uri">https://github.com/WinVector/wrapr</a> .</li>
 <li>add replyr_coalesce.</li>
@@ -293,15 +329,17 @@
 </ul>
 </div>
     <div id="replyr-0-2-2-2017-02-04" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-2-2-2017-02-04" class="anchor"></a>replyr 0.2.2 2017-02-04</h1>
+<h1 class="page-header">
+<a href="#replyr-0-2-2-2017-02-04" class="anchor"></a>replyr 0.2.2 2017-02-04<small> Unreleased </small>
+</h1>
 <ul>
 <li>Add Debug* functions.</li>
 </ul>
 </div>
     <div id="replyr-0-2-1-2017-01-21" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-2-1-2017-01-21" class="anchor"></a>replyr 0.2.1 2017-01-21</h1>
+<h1 class="page-header">
+<a href="#replyr-0-2-1-2017-01-21" class="anchor"></a>replyr 0.2.1 2017-01-21<small> 2017-01-21 </small>
+</h1>
 <ul>
 <li>Excise direct use of lazyeval.</li>
 <li>Drop gather/spread simulations.</li>
@@ -309,15 +347,17 @@
 </ul>
 </div>
     <div id="replyr-0-2-0-2016-12-14" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-2-0-2016-12-14" class="anchor"></a>replyr 0.2.0 2016-12-14</h1>
+<h1 class="page-header">
+<a href="#replyr-0-2-0-2016-12-14" class="anchor"></a>replyr 0.2.0 2016-12-14<small> 2016-12-22 </small>
+</h1>
 <ul>
 <li>Don’t wrap let-return, instead eval it (removes need for one set of parenthesis).</li>
 </ul>
 </div>
     <div id="replyr-0-1-11-2016-12-14" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-1-11-2016-12-14" class="anchor"></a>replyr 0.1.11 2016-12-14</h1>
+<h1 class="page-header">
+<a href="#replyr-0-1-11-2016-12-14" class="anchor"></a>replyr 0.1.11 2016-12-14<small> Unreleased </small>
+</h1>
 <ul>
 <li>Fix column permutation bug in replyr_summary.</li>
 <li>Stop replyr_colClasses and replyr_testCols bringing over whole data.frame.</li>
@@ -325,19 +365,20 @@
 </ul>
 </div>
     <div id="replyr-0-1-10-2016-12-08" class="section level1">
-<h1 class="hasAnchor">
-<a href="#replyr-0-1-10-2016-12-08" class="anchor"></a>replyr 0.1.10 2016-12-08</h1>
+<h1 class="page-header">
+<a href="#replyr-0-1-10-2016-12-08" class="anchor"></a>replyr 0.1.10 2016-12-08<small> Unreleased </small>
+</h1>
 <ul>
 <li>First CRAN submission.</li>
 </ul>
 </div>
-    </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#replyr-0-9-3-2018-04-11">0.9.3</a></li>
         <li><a href="#replyr-0-9-3-2018-04-03">0.9.3</a></li>
         <li><a href="#replyr-0-9-2-2018-03-11">0.9.2</a></li>
         <li><a href="#replyr-0-9-1-2018-01-20">0.9.1</a></li>
@@ -374,11 +415,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

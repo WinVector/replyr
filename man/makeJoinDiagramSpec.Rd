@@ -25,8 +25,7 @@ Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vi
 \examples{
 
 
-if (requireNamespace("RSQLite", quietly = TRUE) &&
-  requireNamespace("dbplyr", quietly = TRUE)) {
+if (requireNamespace("RSQLite", quietly = TRUE)) {
   # note: employeeanddate is likely built as a cross-product
   #       join of an employee table and set of dates of interest
   #       before getting to the join controller step.  We call

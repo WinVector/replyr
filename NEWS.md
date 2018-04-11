@@ -1,4 +1,8 @@
 
+# replyr 0.9.3 2018-04-11
+
+ * Try to avoid the API breakage dplyr 0.7.5 is sending out.
+
 # replyr 0.9.3 2018-04-03
 
  * Demote replyr to maintenance mode.

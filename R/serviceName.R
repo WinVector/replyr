@@ -27,8 +27,7 @@ dplyr_src_to_db_handle <- function(dplyr_src) {
 #'
 #' @examples
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE) &&
-#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
 #'    my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #'    RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd',
@@ -56,8 +55,7 @@ replyr_list_tables <- function(con) {
 #'
 #' @examples
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE) &&
-#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
 #'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #'   RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')

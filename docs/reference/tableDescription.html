@@ -18,13 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Build a nice description of a table. — tableDescription" />
+
+<meta property="og:description" content="Please see http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/ for details.
+Note: one usually needs to alter the keys column which is just populated with all columns." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +39,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">replyr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">replyr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -58,7 +71,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/replyr.html">Get Started</a>
+  <a href="../articles/replyr.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -71,10 +84,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/coalesce.html">coalesce</a>
+      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
     </li>
     <li>
-      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
+      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
+    </li>
+    <li>
+      <a href="../articles/coalesce.html">coalesce</a>
     </li>
     <li>
       <a href="../articles/joinController.html">Join Controller</a>
@@ -83,15 +99,12 @@
       <a href="../articles/letExample.html">let Example</a>
     </li>
     <li>
-      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
-    </li>
-    <li>
       <a href="../articles/summary.html">summary</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -100,6 +113,7 @@
   <a href="http://www.win-vector.com/">Sponsor: Win-Vector LLC</a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,10 +121,12 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Build a nice description of a table.</h1>
+    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/joinController.R'><code>R/joinController.R</code></a></small>
+    <div class="hidden name"><code>tableDescription.Rd</code></div>
     </div>
 
     
@@ -121,7 +137,7 @@ Note: one usually needs to alter the keys column which is just populated with al
     <pre class="usage"><span class='fu'>tableDescription</span>(<span class='no'>tableName</span>, <span class='no'>handle</span>, <span class='no'>...</span>,
   <span class='kw'>keyInspector</span> <span class='kw'>=</span> <span class='no'>key_inspector_all_cols</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -148,11 +164,11 @@ Note: one usually needs to alter the keys column which is just populated with al
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Please see <code><a href='https://cran.rstudio.com/web/packages/replyr/vignettes/DependencySorting.html'>vignette('DependencySorting', package = 'replyr')</a></code> and <code><a href='https://cran.rstudio.com/web/packages/replyr/vignettes/joinController.html'>vignette('joinController', package= 'replyr')</a></code> for more details.</p>
+    <p>Please see <code><a href='../articles/DependencySorting.html'>vignette('DependencySorting', package = 'replyr')</a></code> and <code><a href='../articles/joinController.html'>vignette('joinController', package= 'replyr')</a></code> for more details.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='buildJoinPlan.html'>buildJoinPlan</a></code>, <code><a href='keysAreUnique.html'>keysAreUnique</a></code>, <code><a href='makeJoinDiagramSpec.html'>makeJoinDiagramSpec</a></code>, <code><a href='executeLeftJoinPlan.html'>executeLeftJoinPlan</a></code></p>
+    <div class='dont-index'><p><code><a href='buildJoinPlan.html'>buildJoinPlan</a></code>, <code><a href='keysAreUnique.html'>keysAreUnique</a></code>, <code><a href='makeJoinDiagramSpec.html'>makeJoinDiagramSpec</a></code>, <code><a href='executeLeftJoinPlan.html'>executeLeftJoinPlan</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -188,11 +204,14 @@ Note: one usually needs to alter the keys column which is just populated with al
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

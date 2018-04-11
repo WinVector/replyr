@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Apply a function to a re-mapped data frame. — replyr_apply_f_mapped" />
+
+<meta property="og:description" content="Apply a function to a re-mapped data frame." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +38,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +55,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">replyr</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">replyr</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.4</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -58,7 +70,7 @@
   </a>
 </li>
 <li>
-  <a href="../articles/replyr.html">Get Started</a>
+  <a href="../articles/replyr.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -71,10 +83,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/coalesce.html">coalesce</a>
+      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
     </li>
     <li>
-      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
+      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
+    </li>
+    <li>
+      <a href="../articles/coalesce.html">coalesce</a>
     </li>
     <li>
       <a href="../articles/joinController.html">Join Controller</a>
@@ -83,15 +98,12 @@
       <a href="../articles/letExample.html">let Example</a>
     </li>
     <li>
-      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
-    </li>
-    <li>
       <a href="../articles/summary.html">summary</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">News</a>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -100,6 +112,7 @@
   <a href="http://www.win-vector.com/">Sponsor: Win-Vector LLC</a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,10 +120,12 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Apply a function to a re-mapped data frame.</h1>
+    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/renameRestrictCols.R'><code>R/renameRestrictCols.R</code></a></small>
+    <div class="hidden name"><code>replyr_apply_f_mapped.Rd</code></div>
     </div>
 
     
@@ -120,7 +135,7 @@
     <pre class="usage"><span class='fu'>replyr_apply_f_mapped</span>(<span class='no'>d</span>, <span class='no'>f</span>, <span class='no'>nmap</span>, <span class='no'>...</span>, <span class='kw'>restrictMapIn</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>rmap</span> <span class='kw'>=</span> <span class='kw pkg'>replyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/replyr/topics/replyr_reverseMap'>replyr_reverseMap</a></span>(<span class='no'>nmap</span>), <span class='kw'>restrictMapOut</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -155,7 +170,7 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code>let</code>, <code><a href='replyr_reverseMap.html'>replyr_reverseMap</a></code>, <code><a href='replyr_mapRestrictCols.html'>replyr_mapRestrictCols</a></code></p>
+    <div class='dont-index'><p><code>let</code>, <code><a href='replyr_reverseMap.html'>replyr_reverseMap</a></code>, <code><a href='replyr_mapRestrictCols.html'>replyr_mapRestrictCols</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -207,11 +222,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

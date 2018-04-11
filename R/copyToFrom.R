@@ -2,8 +2,7 @@
 # Contributed by John Mount jmount@win-vector.com , ownership assigned to Win-Vector LLC.
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
-#' @importFrom dplyr collect copy_to db_drop_table
-#' @importFrom dbplyr src_dbi
+#' @importFrom dplyr collect
 NULL
 
 
@@ -25,8 +24,7 @@ NULL
 #' @examples
 #'
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE) &&
-#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
 #'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #'   RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db, data.frame(x=c(1,2)), 'd')
@@ -80,8 +78,7 @@ replyr_copy_to <- function(dest,
 #' @examples
 #'
 #'
-#' if (requireNamespace("RSQLite", quietly = TRUE) &&
-#'     requireNamespace("dbplyr", quietly = TRUE)) {
+#' if (requireNamespace("RSQLite", quietly = TRUE)) {
 #'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #'   RSQLite::initExtension(my_db)
 #'   d <- replyr_copy_to(my_db,data.frame(x=c(1,2)),'d')

@@ -88,8 +88,7 @@ replyr::replyr_coalesce(counts, def, fills = list(n=0))
 Re-running and example in a database:
 
 ```{r checkpkg}
-execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
-  requireNamespace("dbplyr", quietly = TRUE)
+execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
 ```
 
 ```{r dbexample, eval=execute_vignette}
