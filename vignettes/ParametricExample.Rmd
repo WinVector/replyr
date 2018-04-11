@@ -135,4 +135,3 @@ Our group has been writing *a lot* on `wrapr::let`.  It is new code, yet somethi
  * [The original proposal](http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/)
  * [A non-trivial example](http://www.win-vector.com/blog/2016/12/using-replyrlet-to-parameterize-dplyr-expressions/)
  * [The `wrapr::let` help documentation](http://www.win-vector.com/blog/2016/12/helplet-packagereplyr/)
- * [The `replyr` package README](https://github.com/WinVector/replyr/blob/master/README.md).

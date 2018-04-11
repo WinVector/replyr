@@ -1,11 +1,5 @@
 
-This is a maintenance release to work around errors
-seen on the CRAN results page.  Also we are declaring
-the package in maintenance mode: we will continue to
-support it but are also encouraging users to move on
-to our newer non-monolithic
-re-implementations: wrapr, seplyr, rquery, 
-and cdata.
+This is a maintenance release to work issues introduced in upcoming dplyr 0.7.5 release ( https://github.com/WinVector/replyr/issues/10 ).
 
 ## Test environments
 
@@ -15,20 +9,17 @@ and cdata.
 
 
   * win-builder 
-  * using R version 3.5.0 alpha (2018-03-30 r74499)
-  * using platform: x86_64-w64-mingw32 (64-bit)
 
 
-## R CMD check --as-cran replyr_0.9.3.tar.gz 
+## R CMD check --as-cran replyr_0.9.4.tar.gz 
 
   * using option ‘--as-cran’
   * checking for file ‘replyr/DESCRIPTION’ ... OK
   * checking extension type ... Package
-  * this is package ‘replyr’ version ‘0.9.3’
-  * checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
+  * this is package ‘replyr’ version ‘0.9.4’
+  * checking CRAN incoming feasibility ... NOTE
   Maintainer: ‘John Mount <jmount@win-vector.com>’
-  
-  Status: OK
+
 
 ## Downstream dependencies
 
