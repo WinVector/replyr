@@ -1,5 +1,5 @@
 
-This is a maintenance release to work issues introduced in upcoming dplyr 0.7.5 release ( https://github.com/WinVector/replyr/issues/10 ).
+This is a maintenance release to move out of the way of issues introduced in upcoming dplyr 0.7.5 release ( https://github.com/WinVector/replyr/issues/10 ).
 
 ## Test environments
 
@@ -9,7 +9,8 @@ This is a maintenance release to work issues introduced in upcoming dplyr 0.7.5 
 
 
   * win-builder 
-
+  * using R version 3.5.0 beta (2018-04-10 r74581)
+  * using platform: x86_64-w64-mingw32 (64-bit)
 
 ## R CMD check --as-cran replyr_0.9.4.tar.gz 
 
