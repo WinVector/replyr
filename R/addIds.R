@@ -27,7 +27,7 @@ replyr_add_ids <- function(df, idColName) {
   df <- eval(parse(text= colsort))
   # dplyr style, throws if not ordered
   REPLYRIDCOLNAME <- NULL # indicate not an unbound variable
-  row_number <- function(...) { NULL } # declare not unbound function
+  row_number <- dplyr::row_number # declare not unbound function
   # using dplyr::row_number() throws:  Error in UseMethod("escape") :
   #   no applicable method for 'escape' applied to an object of class "function"
   # Also https://github.com/tidyverse/dplyr/issues/3008

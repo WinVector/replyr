@@ -62,7 +62,7 @@ replyr_rename <- function(.data,
 replyr_arrange <- function(.data, colname, descending = FALSE) {
   colname <- as.character(colname) # remove any names
   REPLYR_PRIVATE_NEWNAME <- NULL # declare not an unbound name
-  desc <- function(.) {.} # declare not an unbound name
+  desc <- dplyr::desc # declare not an unbound name
   if(descending) {
     wrapr::let(
       c(REPLYR_PRIVATE_NEWNAME=colname),

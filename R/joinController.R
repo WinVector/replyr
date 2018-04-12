@@ -291,7 +291,7 @@ tableDescription <- function(tableName,
 #' @export
 #'
 keysAreUnique <- function(tDesc) {
-  n <- function(...) {} # declare not  unbound
+  n <- dplyr::n # declare not  unbound
   isunique <- vapply(seq_len(replyr_nrow(tDesc)),
                      function(i) {
                        gi <- tDesc$handle[[i]]
@@ -810,7 +810,7 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
 buildJoinPlan <- function(tDesc,
                           ...,
                           check= TRUE) {
-  n <- function(...) {} # declare not an unbound ref
+  n <- dplyr::n # declare not an unbound ref
   count <- NULL # declare not an unbound ref
   ntab <- replyr_nrow(tDesc)
   if(length(unique(tDesc$tableName))!=ntab) {

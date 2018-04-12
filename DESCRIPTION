@@ -23,7 +23,7 @@ LazyData: TRUE
 Depends:
   wrapr (>= 1.4.0)
 Imports:
-  dplyr (>= 0.7.0),
+  dplyr (>= 0.7.4),
   DBI
 RoxygenNote: 6.0.1
 Suggests: testthat,
