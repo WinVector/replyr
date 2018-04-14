@@ -1,5 +1,9 @@
 
-# replyr 0.9.3 2018-04-12
+# replyr 0.9.5 2018-04-15
+
+ * Work on diagram rendering in vingettes.
+ 
+# replyr 0.9.4 2018-04-12
 
  * Try to avoid the API breakage dplyr 0.7.5 is sending out.
 

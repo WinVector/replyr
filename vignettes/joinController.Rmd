@@ -196,7 +196,7 @@ The join plan is the neglected (and often missing) piece of documentation key to
 
 As a diagram the key structure of the join plan looks like the following:
 
-```{r render1, eval=execute_vignette}
+```{r render1, eval=execute_vignette, fig.width=8, fig.height=8}
 # requireNamespace checks just for strict warning hygiene in vignette
 have <- c(
   requireNamespace('DiagrammeR', quietly = TRUE),
@@ -208,12 +208,15 @@ have <- c(
 if(all(have)) {
   tryCatch(
     {
-      png <- columnJoinPlan %>%
-        makeJoinDiagramSpec() %>%
-        renderJoinDiagram()
-      if(!is.null(png)) {
-        grid::grid.raster(png)
-      }
+      columnJoinPlan %.>%
+        makeJoinDiagramSpec(.) %.>%
+        DiagrammeR::grViz(.)
+      # png <- columnJoinPlan %>%
+      #   makeJoinDiagramSpec() %>%
+      #   renderJoinDiagram()
+      # if(!is.null(png)) {
+      #   grid::grid.raster(png)
+      # }
     },
     error = function(e) { warning(e); NULL}
   )
