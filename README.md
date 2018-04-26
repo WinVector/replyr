@@ -1,12 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-`replyr` is going into maintenance mode. It has been hard to track shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`. Most of what it does is now done better in one of the newer non-monolithic packages:
+`replyr` is going into maintenance mode. It has been hard to track shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`. Most of what it does is now done better in one of our newer non-monolithic packages:
 
 -   Programming and meta-programming tools: [`wrapr`](https://CRAN.R-project.org/package=wrapr).
 -   Adapting to standard evaluation interfaces: [`seplyr`](https://CRAN.R-project.org/package=seplyr).
 -   Big data data manipulation: [`rquery`](https://CRAN.R-project.org/package=rquery) and [`cdata`](https://CRAN.R-project.org/package=cdata).
-
-The other functions (join planner/controller and grouped ordered apply) will be eventually ported to one of these packages.
 
 ------------------------------------------------------------------------
 
@@ -264,7 +262,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_95979750773082512982_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_30859190123110209129_0000000001> [?? x 3]
  #  # Database: sqlite 3.22.0 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -284,9 +282,7 @@ dRemote %>% replyr::replyr_filter('x', values)
 Commentary
 ----------
 
-I would like this to become a bit of a ["stone soup"](https://en.wikipedia.org/wiki/Stone_Soup) project. If you have a neat function you want to add please contribute a pull request with your attribution and assignment of ownership to [Win-Vector LLC](http://www.win-vector.com/) (so Win-Vector LLC can control the code, which we are currently distributing under a GPL3 license) in the code comments.
-
-There are a few (somewhat incompatible) goals for `replyr`:
+There are a few goals for `replyr`:
 
 -   Providing missing convenience functions that work well over all common `dplyr` service providers. Examples include `replyr_summary`, `replyr_filter`, and `replyr_nrow`.
 -   Providing a basis for "row number free" data analysis. SQL back-ends don't commonly supply row number indexing (or even deterministic order of rows), so a lot of tasks you could do in memory by adjoining columns have to be done through formal key-based joins.
@@ -332,8 +328,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) max used (Mb)
- #  Ncells  735932 39.4    1168576 62.5   940480 50.3
- #  Vcells 1520847 11.7    2552219 19.5  1855543 14.2
+ #  Ncells  736077 39.4    1168576 62.5  1168576 62.5
+ #  Vcells 1524051 11.7    2552219 19.5  1785489 13.7
 ```
 
 Note
