@@ -9,17 +9,17 @@ This is a maintenance release to move out of the way of issues introduced in upc
 
 
   * win-builder 
-  * using R version 3.5.0 beta (2018-04-10 r74581)
-  * using platform: x86_64-w64-mingw32 (64-bit)
 
-## R CMD check --as-cran replyr_0.9.4.tar.gz 
+## R CMD check --as-cran replyr_0.9.5.tar.gz 
 
+  * using session charset: UTF-8
   * using option ‘--as-cran’
   * checking for file ‘replyr/DESCRIPTION’ ... OK
   * checking extension type ... Package
-  * this is package ‘replyr’ version ‘0.9.4’
-  * checking CRAN incoming feasibility ... NOTE
+  * this is package ‘replyr’ version ‘0.9.5’
+  * checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
   Maintainer: ‘John Mount <jmount@win-vector.com>’
+
 
 
 ## Downstream dependencies
@@ -27,4 +27,4 @@ This is a maintenance release to move out of the way of issues introduced in upc
 No declared dependencies.
 
     devtools::revdep()
-    character(0)
+    

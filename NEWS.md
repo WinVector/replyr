@@ -1,5 +1,5 @@
 
-# replyr 0.9.5 2018-04-26
+# replyr 0.9.5 2018-05-11
 
  * Work on diagram rendering in vingettes.
  
