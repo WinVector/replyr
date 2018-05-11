@@ -1,5 +1,5 @@
 
-This is a maintenance release to move out of the way of issues introduced in upcoming dplyr 0.7.5 release ( https://github.com/WinVector/replyr/issues/10 ).
+Maintenance release to try and clear up vignette issues.
 
 ## Test environments
 
@@ -9,6 +9,8 @@ This is a maintenance release to move out of the way of issues introduced in upc
 
 
   * win-builder 
+  * using R Under development (unstable) (2018-05-05 r74699)
+  * using platform: x86_64-w64-mingw32 (64-bit)
 
 ## R CMD check --as-cran replyr_0.9.5.tar.gz 
 
@@ -27,4 +29,5 @@ This is a maintenance release to move out of the way of issues introduced in upc
 No declared dependencies.
 
     devtools::revdep()
-    
+    character(0)
+
