@@ -112,32 +112,12 @@ if(!is.null(sorted)) {
 }
 ```
 
-The new `sorted$columnJoinPlan` can be re-plotted (needs the suggested packages:  `DiagrammeR`, `htmlwidgets`, `webshot`, and `magick`): 
+The new `sorted$columnJoinPlan` can be re-plotted as follows:
 
-```{r render1, eval=execute_vignette}
-# requireNamespace checks just for strict warning hygiene in vignette
-if(!is.null(sorted)) {
-  have <- c(
-    requireNamespace('DiagrammeR', quietly = TRUE),
-    requireNamespace('htmlwidgets', quietly = TRUE),
-    requireNamespace('webshot', quietly = TRUE),
-    requireNamespace('magick', quietly = TRUE),
-    requireNamespace('grid', quietly = TRUE)
-  )
-  if(all(have)) {
-    tryCatch(
-      {
-        png <- sorted$columnJoinPlan %>%
-          makeJoinDiagramSpec() %>%
-          renderJoinDiagram()
-        if(!is.null(png)) {
-          grid::grid.raster(png)
-        }
-      },
-      error = function(e) { warning(e); NULL}
-    )
-  }
-}
+```
+sorted$columnJoinPlan %>%
+        makeJoinDiagramSpec(.) %>%
+        DiagrammeR::grViz(.)
 ```
 
 
@@ -161,7 +141,7 @@ And this is how we use tools to do the heavy lifting in building a left join pla
   * The column names can be disambiguated by `replyr::buildJoinPlan()`.
   * The user can then export `columnJoinPlan` and refine the definition of table keys using an editor or spreadsheet software.  This is key documentation that should be shared with other groups and kept under source-control.
   * `replyr::topoSortTables()` can then reorder `columnJoinPlan` to bring the tables together in a realizable order.
-  * `replyr::makeJoinDiagramSpec() %>% replyr::renderJoinDiagram()` can then produce and capture a detailed diagram of the final join plan.
+  * `replyr::makeJoinDiagramSpec() %>% DiagrammeR::grViz(.)` can then produce and capture a detailed diagram of the final join plan.
   * Finally `replyr::executeLeftJoinPlan()` can execute the join plan with diagnostics.
 
 ```{r cleanup, eval=execute_vignette}

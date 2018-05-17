@@ -194,33 +194,12 @@ print(columnJoinPlan %>%
 
 The join plan is the neglected (and often missing) piece of documentation key to non-trivial data science projects.  We strongly suggest putting it under source control, and circulating it to project partners for comment.
 
-As a diagram the key structure of the join plan looks like the following:
+As a diagram the key structure of can be produced as follows:
 
-```{r render1, eval=execute_vignette, fig.width=8, fig.height=8}
-# requireNamespace checks just for strict warning hygiene in vignette
-have <- c(
-  requireNamespace('DiagrammeR', quietly = TRUE),
-  requireNamespace('htmlwidgets', quietly = TRUE),
-  requireNamespace('webshot', quietly = TRUE),
-  requireNamespace('magick', quietly = TRUE),
-  requireNamespace('grid', quietly = TRUE)
-)
-if(all(have)) {
-  tryCatch(
-    {
-      columnJoinPlan %.>%
+```
+   columnJoinPlan %.>%
         makeJoinDiagramSpec(.) %.>%
         DiagrammeR::grViz(.)
-      # png <- columnJoinPlan %>%
-      #   makeJoinDiagramSpec() %>%
-      #   renderJoinDiagram()
-      # if(!is.null(png)) {
-      #   grid::grid.raster(png)
-      # }
-    },
-    error = function(e) { warning(e); NULL}
-  )
-}
 ```
 
 

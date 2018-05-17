@@ -1,7 +1,7 @@
 
-# replyr 0.9.5 2018-05-11
+# replyr 0.9.5 2018-05-17
 
- * Work on diagram rendering in vingettes.
+ * Remove diagram rendering in vingettes.
  
 # replyr 0.9.4 2018-04-12
 

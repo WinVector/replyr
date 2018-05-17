@@ -47,14 +47,11 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
   diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
   # to render as JavaScript:
   #   DiagrammeR::grViz(diagramSpec)
-  # or as a PNG:
-  #   renderJoinDiagram(diagramSpec)
-  #
   DBI::dbDisconnect(my_db)
   my_db <- NULL
 }
 
 }
 \seealso{
-\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}
+\code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{executeLeftJoinPlan}}
 }

@@ -502,7 +502,7 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #'
 #' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #'
-#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{renderJoinDiagram}}, \code{\link{executeLeftJoinPlan}}
+#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{executeLeftJoinPlan}}
 #'
 #' @param columnJoinPlan join plan
 #' @param ... force later arguments to bind by name
@@ -535,9 +535,6 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #'   diagramSpec <- makeJoinDiagramSpec(columnJoinPlan)
 #'   # to render as JavaScript:
 #'   #   DiagrammeR::grViz(diagramSpec)
-#'   # or as a PNG:
-#'   #   renderJoinDiagram(diagramSpec)
-#'   #
 #'   DBI::dbDisconnect(my_db)
 #'   my_db <- NULL
 #' }
@@ -637,71 +634,6 @@ makeJoinDiagramSpec <- function(columnJoinPlan, ...,
 
 
 
-
-#' Render a diagram spec from \code{\link{makeJoinDiagramSpec}} as a PNG graphics item.
-#'
-#' Requires packages \code{DiagrammeR} properly installed to use.
-#' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
-#'
-#' This PNG can be smaller than directly including a grViz rendering in markdown.
-#' Requires all of \code{DiagrammeR}, \code{htmlwidgets}, \code{webshot}, and \code{magick} to be installed with all external dependencies properly installed and configured.
-#'
-#' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{makeJoinDiagramSpec}}, \code{\link{executeLeftJoinPlan}}
-#'
-#' @param diagramSpec diagram specification from \code{\link{makeJoinDiagramSpec}}.
-#' @param ... force later arguments to bind by name.
-#' @param pngFileName character, if not null where to write PNG
-#' @param tempDir character, if not null tempDir to create/use
-#' @return DiagrammeR::grViz result as a PNG
-#'
-#'
-#' @export
-#'
-#'
-renderJoinDiagram <- function(diagramSpec,
-                              ...,
-                              pngFileName = NULL,
-                              tempDir = tempdir()) {
-  needs <- c('DiagrammeR', 'htmlwidgets', 'webshot', 'magick' )
-  have <- vapply(needs,
-                 function(pi) {
-                   requireNamespace(pi, quietly = TRUE)
-                 }, logical(1))
-  if(any(!have)) {
-    warning(paste("replyr::renderJoinDiagram needs all of the packages: ",
-                  paste(needs, collapse = ', '),
-                  "installed and does not have:",
-                  paste(needs[!have], collapse = ', ')))
-    return(NULL)
-  }
-  img <- NULL
-  tryCatch(
-    {
-      diagram <- DiagrammeR::grViz(diagramSpec)
-      tempPath <- paste(tempDir, 'joinPlanTemp.html', sep= '/')
-      pngTempFileName <- paste(tempDir, 'joinPlanTemp.png', sep= '/')
-      htmlwidgets::saveWidget(diagram, tempPath, selfcontained = FALSE)
-      webshot::webshot(tempPath, file = pngTempFileName,
-                       cliprect = "viewport")
-      img <- magick::image_read(pngTempFileName)
-      img <- magick::image_trim(img)
-      if(!is.null(pngFileName)) {
-        magick::image_write(img, path = pngFileName, format = "png")
-      }
-      # # intentionally not removing the temp directory, as it could be dangerous
-      # # Command would be:
-      #   unlink(tempDir, recursive = TRUE)
-    },
-    error = function(e) {
-      warning(paste("replyr::renderJoinDiagram caught ",
-                    paste(as.character(e), collapse = ' '),
-                    "likely one of",
-                    paste(needs, collapse = ', '),
-                    "has uninstalled/unconfigured external dependencies"))
-    }
-  )
-  img
-}
 
 
 
