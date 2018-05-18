@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Build a drawable specification of the join diagram — makeJoinDiagramSpec" />
 
 <meta property="og:description" content="Please see vignette('DependencySorting', package = 'replyr') and vignette('joinController', package= 'replyr') for more details." />
@@ -38,8 +41,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -124,13 +125,15 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Build a drawable specification of the join diagram</h1>
-    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/joinController.R'><code>R/joinController.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/WinVector/replyr//blob/master/R/joinController.R'><code>R/joinController.R</code></a></small>
     <div class="hidden name"><code>makeJoinDiagramSpec.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Please see <code><a href='../articles/DependencySorting.html'>vignette('DependencySorting', package = 'replyr')</a></code> and <code><a href='../articles/joinController.html'>vignette('joinController', package= 'replyr')</a></code> for more details.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>makeJoinDiagramSpec</span>(<span class='no'>columnJoinPlan</span>, <span class='no'>...</span>, <span class='kw'>groupByKeys</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>graphOpts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
@@ -162,7 +165,7 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='tableDescription.html'>tableDescription</a></code>, <code><a href='buildJoinPlan.html'>buildJoinPlan</a></code>, <code><a href='renderJoinDiagram.html'>renderJoinDiagram</a></code>, <code><a href='executeLeftJoinPlan.html'>executeLeftJoinPlan</a></code></p></div>
+    <div class='dont-index'><p><code><a href='tableDescription.html'>tableDescription</a></code>, <code><a href='buildJoinPlan.html'>buildJoinPlan</a></code>, <code><a href='executeLeftJoinPlan.html'>executeLeftJoinPlan</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -190,9 +193,6 @@
   <span class='no'>diagramSpec</span> <span class='kw'>&lt;-</span> <span class='fu'>makeJoinDiagramSpec</span>(<span class='no'>columnJoinPlan</span>)
   <span class='co'># to render as JavaScript:</span>
   <span class='co'>#   DiagrammeR::grViz(diagramSpec)</span>
-  <span class='co'># or as a PNG:</span>
-  <span class='co'>#   renderJoinDiagram(diagramSpec)</span>
-  <span class='co'>#</span>
   <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/DBI/topics/dbDisconnect'>dbDisconnect</a></span>(<span class='no'>my_db</span>)
   <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw'>NULL</span>
 }</div><div class='output co'>#&gt; [1] "problems: "</div><div class='input'>

@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Add constant to a table. — addConstantColumn" />
 
 <meta property="og:description" content="Work around different treatment of character types accross remote
@@ -41,8 +44,6 @@ requiring a charcater-cast and MySQL not allowing such." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -127,16 +128,18 @@ requiring a charcater-cast and MySQL not allowing such." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Add constant to a table.</h1>
-    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/addCol.R'><code>R/addCol.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/WinVector/replyr//blob/master/R/addCol.R'><code>R/addCol.R</code></a></small>
     <div class="hidden name"><code>addConstantColumn.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Work around different treatment of character types accross remote
 data soures when adding a
 constant column to a table.  Deals with issues such as Postgresql
 requiring a charcater-cast and MySQL not allowing such.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>addConstantColumn</span>(<span class='no'>d</span>, <span class='no'>colName</span>, <span class='no'>val</span>, <span class='no'>...</span>,
   <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>mk_tmp_name_source</span>(<span class='st'>"replyr_addConstantColumn"</span>))</pre>

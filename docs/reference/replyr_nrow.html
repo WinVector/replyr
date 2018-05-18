@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Compute number of rows of a tbl. — replyr_nrow" />
 
 <meta property="og:description" content="Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
@@ -40,8 +43,6 @@ In particular work around dplyr issue 2871 https://github.com/tidyverse/dplyr/is
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -126,15 +127,17 @@ In particular work around dplyr issue 2871 https://github.com/tidyverse/dplyr/is
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Compute number of rows of a tbl.</h1>
-    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/nrow.R'><code>R/nrow.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/WinVector/replyr//blob/master/R/nrow.R'><code>R/nrow.R</code></a></small>
     <div class="hidden name"><code>replyr_nrow.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Number of row in a table.  This function is not "group aware" it returns the total number of rows, not rows per dplyr group.
 Also <code>replyr_nrow</code> depends on data being returned to count, so some corner cases (such as zero columns) will count as zero rows.
 In particular work around dplyr issue 2871 <a href='https://github.com/tidyverse/dplyr/issues/2871'>https://github.com/tidyverse/dplyr/issues/2871</a>.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>replyr_nrow</span>(<span class='no'>x</span>)</pre>
     

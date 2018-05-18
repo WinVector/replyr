@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="grouped ordered apply — gapply" />
 
 <meta property="og:description" content="Partitions from by values in grouping column, applies a generic transform
@@ -43,8 +46,6 @@ https://www.jstatsoft.org/article/view/v040i01" />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -129,10 +130,11 @@ https://www.jstatsoft.org/article/view/v040i01" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>grouped ordered apply</h1>
-    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/groupedApply.R'><code>R/groupedApply.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/WinVector/replyr//blob/master/R/groupedApply.R'><code>R/groupedApply.R</code></a></small>
     <div class="hidden name"><code>gapply.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Partitions from by values in grouping column, applies a generic transform
 to each group and then binds the groups back together.  Only advised for a
@@ -141,6 +143,7 @@ This is powerfull
 enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 https://www.jstatsoft.org/article/view/v040i01</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>gapply</span>(<span class='no'>df</span>, <span class='no'>gcolumn</span>, <span class='no'>f</span>, <span class='no'>...</span>, <span class='kw'>ocolumn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>decreasing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>partitionMethod</span> <span class='kw'>=</span> <span class='st'>"split"</span>, <span class='kw'>bindrows</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>maxgroups</span> <span class='kw'>=</span> <span class='fl'>100</span>,
@@ -268,29 +271,29 @@ in situations where <code>f</code> itself is fairly complicated and/or expensive
 #&gt; # A tibble: 5 x 4
 #&gt;   group order values    cv
 #&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1    1. 0.100    10.   10.
-#&gt; 2    1. 0.200    20.   30.
-#&gt; 3    2. 0.300     2.    2.
-#&gt; 4    2. 0.400     4.    6.
-#&gt; 5    2. 0.500     8.   14.
+#&gt; 1     1   0.1     10    10
+#&gt; 2     1   0.2     20    30
+#&gt; 3     2   0.3      2     2
+#&gt; 4     2   0.4      4     6
+#&gt; 5     2   0.5      8    14
 #&gt; [1] "ranking example"
 #&gt; # A tibble: 5 x 4
 #&gt;   group order values  rank
 #&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1    1. 0.100    10.    1.
-#&gt; 2    1. 0.200    20.    2.
-#&gt; 3    2. 0.300     2.    1.
-#&gt; 4    2. 0.400     4.    2.
-#&gt; 5    2. 0.500     8.    3.
+#&gt; 1     1   0.1     10     1
+#&gt; 2     1   0.2     20     2
+#&gt; 3     2   0.3      2     1
+#&gt; 4     2   0.4      4     2
+#&gt; 5     2   0.5      8     3
 #&gt; [1] "ranking example (decreasing)"
 #&gt; # A tibble: 5 x 4
 #&gt;   group order values  rank
 #&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1    2. 0.500     8.    1.
-#&gt; 2    2. 0.400     4.    2.
-#&gt; 3    2. 0.300     2.    3.
-#&gt; 4    1. 0.200    20.    1.
-#&gt; 5    1. 0.100    10.    2.
+#&gt; 1     2   0.5      8     1
+#&gt; 2     2   0.4      4     2
+#&gt; 3     2   0.3      2     3
+#&gt; 4     1   0.2     20     1
+#&gt; 5     1   0.1     10     2
 #&gt; [1] "split"
 #&gt; [1] "cumulative sum example"
 #&gt;   group order values cv

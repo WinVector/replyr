@@ -325,20 +325,20 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_49858266529731931283_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_84266218687395747513_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.22.0 [:memory:]</span>
  <span class="co">#         x     y z    </span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
- <span class="co">#   1    2.    5. a    </span>
- <span class="co">#   2    2.   NA  b    </span>
- <span class="co">#   3    2.    5. a    </span>
- <span class="co">#   4    2.   NA  b    </span>
- <span class="co">#   5    2.    5. a    </span>
- <span class="co">#   6    2.   NA  b    </span>
- <span class="co">#   7    2.    5. a    </span>
- <span class="co">#   8    2.   NA  b    </span>
- <span class="co">#   9    2.    5. a    </span>
- <span class="co">#  10    2.   NA  b    </span>
+ <span class="co">#   1     2     5 a    </span>
+ <span class="co">#   2     2    NA b    </span>
+ <span class="co">#   3     2     5 a    </span>
+ <span class="co">#   4     2    NA b    </span>
+ <span class="co">#   5     2     5 a    </span>
+ <span class="co">#   6     2    NA b    </span>
+ <span class="co">#   7     2     5 a    </span>
+ <span class="co">#   8     2    NA b    </span>
+ <span class="co">#   9     2     5 a    </span>
+ <span class="co">#  10     2    NA b    </span>
  <span class="co">#  # ... with more rows</span></code></pre></div>
 </div>
 <div id="commentary" class="section level2">
@@ -387,8 +387,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  824157 44.1    1442291 77.1  1168576 62.5</span>
- <span class="co">#  Vcells 1635269 12.5    2552219 19.5  1954430 15.0</span></code></pre></div>
+ <span class="co">#  Ncells  819062 43.8    1442291 77.1  1168576 62.5</span>
+ <span class="co">#  Vcells 1629630 12.5    2552219 19.5  2000507 15.3</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

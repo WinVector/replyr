@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="split a data item by values in a column. — replyr_split" />
 
 <meta property="og:description" content="Partitions from by values in grouping column, and returns list.  Only advised for a
@@ -42,8 +45,6 @@ https://www.jstatsoft.org/article/view/v040i01" />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -128,10 +129,11 @@ https://www.jstatsoft.org/article/view/v040i01" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>split a data item by values in a column.</h1>
-    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/groupedApply.R'><code>R/groupedApply.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/WinVector/replyr//blob/master/R/groupedApply.R'><code>R/groupedApply.R</code></a></small>
     <div class="hidden name"><code>replyr_split.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Partitions from by values in grouping column, and returns list.  Only advised for a
 moderate number of groups and better if grouping column is an index.
@@ -139,6 +141,7 @@ This plus lapply and replyr::bind_rows is powerful
 enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 https://www.jstatsoft.org/article/view/v040i01</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>replyr_split</span>(<span class='no'>df</span>, <span class='no'>gcolumn</span>, <span class='no'>...</span>, <span class='kw'>ocolumn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>decreasing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>partitionMethod</span> <span class='kw'>=</span> <span class='st'>"extract"</span>, <span class='kw'>maxgroups</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>eagerCompute</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>

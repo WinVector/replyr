@@ -97,9 +97,9 @@
       <h1>let Example</h1>
                         <h4 class="author">Nina Zumel</h4>
             
-            <h4 class="date">2018-04-26</h4>
+            <h4 class="date">2018-05-18</h4>
       
-      <small>Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/letExample.Rmd"><code>vignettes/letExample.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/letExample.Rmd"><code>vignettes/letExample.Rmd</code></a></small>
       <div class="hidden name"><code>letExample.Rmd</code></div>
 
     </div>
@@ -142,14 +142,14 @@
  <span class="co">#  # A tibble: 3 x 7</span>
  <span class="co">#    Species    sdlower  mean sdupper iqrlower median iqrupper</span>
  <span class="co">#    &lt;fct&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
- <span class="co">#  1 setosa        4.65  5.01    5.36     4.80   5.00     5.20</span>
- <span class="co">#  2 versicolor    5.42  5.94    6.45     5.55   5.90     6.25</span>
- <span class="co">#  3 virginica     5.95  6.59    7.22     6.16   6.50     6.84</span></code></pre></div>
+ <span class="co">#  1 setosa        4.65  5.01    5.36     4.8     5       5.2 </span>
+ <span class="co">#  2 versicolor    5.42  5.94    6.45     5.55    5.9     6.25</span>
+ <span class="co">#  3 virginica     5.95  6.59    7.22     6.16    6.5     6.84</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sumstat_intervals</span>(iris, <span class="st">"Petal.Length"</span>, <span class="st">"Species"</span>)
  <span class="co">#  # A tibble: 3 x 7</span>
  <span class="co">#    Species    sdlower  mean sdupper iqrlower median iqrupper</span>
  <span class="co">#    &lt;fct&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span>
- <span class="co">#  1 setosa        1.29  1.46    1.64     1.41   1.50     1.59</span>
+ <span class="co">#  1 setosa        1.29  1.46    1.64     1.41   1.5      1.59</span>
  <span class="co">#  2 versicolor    3.79  4.26    4.73     4.05   4.35     4.65</span>
  <span class="co">#  3 virginica     5.00  5.55    6.10     5.16   5.55     5.94</span></code></pre></div>
 <p>We can also use <code>let</code> to parameterize other functions that specify their parameters via non-standard evaluation. For example, we could write a <code>ggplot2</code> function to plot the information in <code>sumstat_intervals</code> (either the mean-centered interval or the median-centered one) using <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes_">ggplot2::aes_string</a></code>. Or we could use <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code>.</p>

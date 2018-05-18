@@ -97,9 +97,9 @@
       <h1>Join Dependency Sorting</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2018-04-26</h4>
+            <h4 class="date">2018-05-18</h4>
       
-      <small>Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/DependencySorting.Rmd"><code>vignettes/DependencySorting.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/DependencySorting.Rmd"><code>vignettes/DependencySorting.Rmd</code></a></small>
       <div class="hidden name"><code>DependencySorting.Rmd</code></div>
 
     </div>
@@ -208,31 +208,10 @@
                                                  sorted<span class="op">$</span>columnJoinPlan)))
 }</code></pre></div>
 <pre><code>## [1] "issues: "</code></pre>
-<p>The new <code>sorted$columnJoinPlan</code> can be re-plotted (needs the suggested packages: <code>DiagrammeR</code>, <code>htmlwidgets</code>, <code>webshot</code>, and <code>magick</code>):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span>
-<span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(sorted)) {
-  have &lt;-<span class="st"> </span><span class="kw">c</span>(
-    <span class="kw">requireNamespace</span>(<span class="st">'DiagrammeR'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
-    <span class="kw">requireNamespace</span>(<span class="st">'htmlwidgets'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
-    <span class="kw">requireNamespace</span>(<span class="st">'webshot'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
-    <span class="kw">requireNamespace</span>(<span class="st">'magick'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>),
-    <span class="kw">requireNamespace</span>(<span class="st">'grid'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
-  )
-  <span class="cf">if</span>(<span class="kw">all</span>(have)) {
-    <span class="kw">tryCatch</span>(
-      {
-        png &lt;-<span class="st"> </span>sorted<span class="op">$</span>columnJoinPlan <span class="op">%&gt;%</span>
-<span class="st">          </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>() <span class="op">%&gt;%</span>
-<span class="st">          </span><span class="kw"><a href="../reference/renderJoinDiagram.html">renderJoinDiagram</a></span>()
-        <span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(png)) {
-          grid<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/grid/topics/grid.raster">grid.raster</a></span>(png)
-        }
-      },
-      <span class="dt">error =</span> <span class="cf">function</span>(e) { <span class="kw">warning</span>(e); <span class="ot">NULL</span>}
-    )
-  }
-}</code></pre></div>
-<p><img src="DependencySorting_files/figure-html/render1-1.png" width="700"></p>
+<p>The new <code>sorted$columnJoinPlan</code> can be re-plotted as follows:</p>
+<pre><code>sorted$columnJoinPlan %&gt;%
+        makeJoinDiagramSpec(.) %&gt;%
+        DiagrammeR::grViz(.)</code></pre>
 <p>And the new <code>sorted$columnJoinPlan</code> is ready to be executed:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span><span class="kw">is.null</span>(sorted)) {
   <span class="kw">print</span>(<span class="st">"join plan execution log"</span>)
@@ -243,13 +222,13 @@
   dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Thu Apr 26 07:09:01 2018"
+## [1] "start employeeanddate Fri May 18 08:20:13 2018"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Thu Apr 26 07:09:01 2018"
-## [1] "start activity Thu Apr 26 07:09:01 2018"
+## [1] "done employeeanddate Fri May 18 08:20:13 2018"
+## [1] "start activity Fri May 18 08:20:13 2018"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -258,8 +237,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Thu Apr 26 07:09:01 2018"
-## [1] "start orgtable Thu Apr 26 07:09:01 2018"
+## [1] "done activity Fri May 18 08:20:13 2018"
+## [1] "start orgtable Fri May 18 08:20:13 2018"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -268,8 +247,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Thu Apr 26 07:09:01 2018"
-## [1] "start revenue Thu Apr 26 07:09:01 2018"
+## [1] "done orgtable Fri May 18 08:20:13 2018"
+## [1] "start revenue Fri May 18 08:20:13 2018"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -277,7 +256,7 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Thu Apr 26 07:09:01 2018"
+## [1] "done revenue Fri May 18 08:20:13 2018"
 ## [1] "join results"
 ## Observations: ??
 ## Variables: 10
@@ -299,7 +278,7 @@
 <li>
 <code><a href="../reference/topoSortTables.html">replyr::topoSortTables()</a></code> can then reorder <code>columnJoinPlan</code> to bring the tables together in a realizable order.</li>
 <li>
-<code>replyr::makeJoinDiagramSpec() %&gt;% replyr::renderJoinDiagram()</code> can then produce and capture a detailed diagram of the final join plan.</li>
+<code>replyr::makeJoinDiagramSpec() %&gt;% DiagrammeR::grViz(.)</code> can then produce and capture a detailed diagram of the final join plan.</li>
 <li>Finally <code><a href="../reference/executeLeftJoinPlan.html">replyr::executeLeftJoinPlan()</a></code> can execute the join plan with diagnostics.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</code></pre></div>

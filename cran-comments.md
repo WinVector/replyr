@@ -1,5 +1,5 @@
 
-Maintenance release to try and clear up vignette issues.
+Maintenance release to try and result CRAN check warning in r-release-osx-x86_64 vignettes.
 
 ## Test environments
 

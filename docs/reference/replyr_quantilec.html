@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Compute quantiles on remote column (NA's filtered out) using cumsum. — replyr_quantilec" />
 
 <meta property="og:description" content="NA's filtered out and does not break ties the same as stats::quantile." />
@@ -38,8 +41,6 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
-
-
 
 
   </head>
@@ -124,13 +125,15 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Compute quantiles on remote column (NA's filtered out) using cumsum.</h1>
-    <small>Source: <a href='https://github.com/WinVector/replyr//blob/master/R/quantile.R'><code>R/quantile.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/WinVector/replyr//blob/master/R/quantile.R'><code>R/quantile.R</code></a></small>
     <div class="hidden name"><code>replyr_quantilec.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>NA's filtered out and does not break ties the same as stats::quantile.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>replyr_quantilec</span>(<span class='no'>x</span>, <span class='no'>cname</span>, <span class='kw'>probs</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>0.25</span>), <span class='no'>...</span>,
   <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>mk_tmp_name_source</span>(<span class='st'>"replyr_quantilec"</span>))</pre>
