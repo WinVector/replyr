@@ -7,9 +7,12 @@
 replyr_group_by(.data, colnames)
 }
 \arguments{
-\item{.data}{data object to work on}
+\item{.data}{data.frame}
 
-\item{colnames}{character column name (can be a vector)}
+\item{colnames}{character vector of column names to group by.}
+}
+\value{
+.data grouped by columns named in colnames
 }
 \description{
 See also: \url{https://gist.github.com/skranz/9681509}
@@ -21,4 +24,7 @@ d <- data.frame(Sepal_Length= c(5.8,5.7),
                 Species= 'setosa')
 replyr_group_by(d, 'Species')
 
+}
+\seealso{
+\code{\link[dplyr]{group_by}}, \code{\link[dplyr]{group_by_at}}
 }

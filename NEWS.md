@@ -1,7 +1,8 @@
 
-# replyr 0.9.5 2018-05-18
+# replyr 0.9.5 2018-05-20
 
  * Remove diagram rendering in vingettes.
+ * Get rid of eval() calls.
  
 # replyr 0.9.4 2018-04-12
 

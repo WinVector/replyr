@@ -2,7 +2,7 @@ Package: replyr
 Type: Package
 Title: Patches to Use 'dplyr' on Remote Data Sources
 Version: 0.9.5
-Date: 2018-05-18
+Date: 2018-05-20
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
     person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),
@@ -25,6 +25,7 @@ Depends:
   wrapr (>= 1.4.1)
 Imports:
   dplyr (>= 0.7.0),
+  rlang,
   DBI
 RoxygenNote: 6.0.1
 Suggests: testthat,

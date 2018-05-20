@@ -79,13 +79,16 @@ replyr_arrange <- function(.data, colname, descending = FALSE) {
   .data
 }
 
+#' @importFrom rlang syms
+NULL
 
 #' group_by columns
 #'
 #' See also: \url{https://gist.github.com/skranz/9681509}
 #'
-#' @param .data data object to work on
-#' @param colnames character column name (can be a vector)
+#' @param .data data.frame
+#' @param colnames character vector of column names to group by.
+#' @return .data grouped by columns named in colnames
 #'
 #' @examples
 #'
@@ -94,26 +97,19 @@ replyr_arrange <- function(.data, colname, descending = FALSE) {
 #'                 Species= 'setosa')
 #' replyr_group_by(d, 'Species')
 #'
+#' @seealso \code{\link[dplyr]{group_by}}, \code{\link[dplyr]{group_by_at}}
+#'
 #' @export
 #'
 replyr_group_by <- function(.data, colnames) {
-  .data <- dplyr::ungroup(.data) # make sure no other grouping
-  colnames <- as.character(colnames) # remove any names
-  if(length(colnames)>1) {
-    expr <- paste('dplyr::group_by( .data ,',
-                  paste(colnames, collapse=', '),
-                  ')')
-    .data <- eval(parse(text= expr))
-  } else {
-    REPLYR_PRIVATE_NEWNAME <- NULL # declare not an unbound name
-    wrapr::let(
-      c(REPLYR_PRIVATE_NEWNAME= colnames), # strip off any outside names
-      .data <- dplyr::group_by(.data,
-                               REPLYR_PRIVATE_NEWNAME)
-    )
+  if(!(is.data.frame(.data) || dplyr::is.tbl(.data))) {
+    stop("replyr::replyr_group_by first argument must be a data.frame or tbl")
   }
-  .data
+  # convert char vector into spliceable vector
+  groupingSyms <- rlang::syms(as.character(colnames))
+  dplyr::group_by(ungroup(.data), !!!groupingSyms)
 }
+
 
 
 #' select columns
