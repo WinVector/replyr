@@ -21,7 +21,7 @@ Description: Patches to use 'dplyr' on remote data sources ('SQL' databases,
 License: GPL-3
 LazyData: TRUE
 Depends:
-  R (>= 3.0.0),
+  R (>= 3.2.1),
   wrapr (>= 1.4.1)
 Imports:
   dplyr (>= 0.7.0),
