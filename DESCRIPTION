@@ -1,8 +1,8 @@
 Package: replyr
 Type: Package
 Title: Patches to Use 'dplyr' on Remote Data Sources
-Version: 0.9.5
-Date: 2018-05-20
+Version: 0.9.6
+Date: 2018-06-15
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
     person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),
@@ -22,7 +22,7 @@ License: GPL-3
 LazyData: TRUE
 Depends:
   R (>= 3.2.1),
-  wrapr (>= 1.4.1)
+  wrapr (>= 1.5.0)
 Imports:
   dplyr (>= 0.7.0),
   rlang,

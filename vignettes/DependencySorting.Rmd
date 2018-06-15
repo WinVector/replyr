@@ -14,7 +14,7 @@ execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
 if(execute_vignette) {
   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   RSQLite::initExtension(my_db)
-  exDesc <- replyr:::example_employeeAndDate(my_db)
+  exDesc <- replyr::example_employeeAndDate(my_db)
 }
 ```
 

@@ -6,6 +6,14 @@ getConcreteTableName <- function(handle) {
   concreteName <- as.character(handle$ops$x)
 }
 
+#' build some example tables
+#'
+#' @param con db connection
+#' @return example tables
+#'
+#'
+#' @export
+#
 example_employeeAndDate <- function(con) {
   . <- NULL # Declare not an unbound varaible
   # note: employeeanddate is likely built as a cross-product
@@ -434,7 +442,7 @@ inspectAndLimitJoinPlan <- function(columnJoinPlan, checkColClasses) {
 #'   #       such a table "row control" or "experimental design."
 #'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #'   RSQLite::initExtension(my_db)
-#'   tDesc <- replyr:::example_employeeAndDate(my_db)
+#'   tDesc <- example_employeeAndDate(my_db)
 #'   columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
 #'   # unify keys
 #'   columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'
@@ -520,7 +528,7 @@ topoSortTables <- function(columnJoinPlan, leftTableName,
 #'   #       such a table "row control" or "experimental design."
 #'   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
 #'   RSQLite::initExtension(my_db)
-#'   tDesc <- replyr:::example_employeeAndDate(my_db)
+#'   tDesc <- example_employeeAndDate(my_db)
 #'   # fix order by hand, please see replyr::topoSortTables for
 #'   # how to automate this.
 #'   ord <- match(c('employeeanddate', 'orgtable', 'activity', 'revenue'),

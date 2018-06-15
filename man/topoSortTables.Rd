@@ -29,7 +29,7 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
   #       such a table "row control" or "experimental design."
   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   RSQLite::initExtension(my_db)
-  tDesc <- replyr:::example_employeeAndDate(my_db)
+  tDesc <- example_employeeAndDate(my_db)
   columnJoinPlan <- buildJoinPlan(tDesc, check= FALSE)
   # unify keys
   columnJoinPlan$resultColumn[columnJoinPlan$resultColumn=='id'] <- 'eid'

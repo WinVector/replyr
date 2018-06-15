@@ -32,7 +32,7 @@ if (requireNamespace("RSQLite", quietly = TRUE)) {
   #       such a table "row control" or "experimental design."
   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   RSQLite::initExtension(my_db)
-  tDesc <- replyr:::example_employeeAndDate(my_db)
+  tDesc <- example_employeeAndDate(my_db)
   # fix order by hand, please see replyr::topoSortTables for
   # how to automate this.
   ord <- match(c('employeeanddate', 'orgtable', 'activity', 'revenue'),
