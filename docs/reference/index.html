@@ -21,14 +21,17 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 
 
 <meta property="og:title" content="Function reference" />
+
 
 
 <!-- mathjax -->
@@ -55,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.5</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6</span>
       </span>
     </div>
 
@@ -127,6 +130,7 @@
     <table class="ref-index">
 
     <colgroup>
+      
       <col class="alias" />
       <col class="title" />
     </colgroup>
@@ -139,295 +143,301 @@
         </th>
       </tr>
       <tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="addConstantColumn.html">addConstantColumn()</a></code> </p>
         </td>
         <td><p>Add constant to a table.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="buildJoinPlan.html">buildJoinPlan()</a></code> </p>
         </td>
         <td><p>Build a join plan</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="dplyr_src_to_db_handle.html">dplyr_src_to_db_handle()</a></code> </p>
         </td>
         <td><p>Obsolete with dplyr 0.7.0 and forward</p></td>
       </tr><tr>
-        <!--  -->
+        
+        <td>
+          <p><code><a href="example_employeeAndDate.html">example_employeeAndDate()</a></code> </p>
+        </td>
+        <td><p>build some example tables</p></td>
+      </tr><tr>
+        
         <td>
           <p><code><a href="executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> </p>
         </td>
         <td><p>Execute an ordered sequence of left joins.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="expandColumn.html">expandColumn()</a></code> </p>
         </td>
         <td><p>Expand a column of vectors into one row per value of each vector.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="gapply.html">gapply()</a></code> </p>
         </td>
         <td><p>grouped ordered apply</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
-          <p><code><a href="grapes-land-grapes.html">`%land%`()</a></code> <code><a href="grapes-land-grapes.html">`%->%`()</a></code> <code><a href="grapes-land-grapes.html">`%->_%`()</a></code> <code><a href="grapes-land-grapes.html">`%land_%`()</a></code> </p>
+          <p><code><a href="grapes-land-grapes.html">`%land%`</a></code> <code><a href="grapes-land-grapes.html">`%->%`</a></code> <code><a href="grapes-land-grapes.html">`%->_%`</a></code> <code><a href="grapes-land-grapes.html">`%land_%`</a></code> </p>
         </td>
         <td><p>Land a value to variable from a pipeline.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan()</a></code> </p>
         </td>
         <td><p>check that a join plan is consistent with table descriptions</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="key_inspector_all_cols.html">key_inspector_all_cols()</a></code> </p>
         </td>
         <td><p>Return all columns as guess at preferred primary keys.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="key_inspector_postgresql.html">key_inspector_postgresql()</a></code> </p>
         </td>
         <td><p>Return all primary key columns as guess at preferred primary keys for a PostgreSQL handle.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="key_inspector_sqlite.html">key_inspector_sqlite()</a></code> </p>
         </td>
         <td><p>Return all primary key columns as guess at preferred primary keys for a SQLite handle.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="keysAreUnique.html">keysAreUnique()</a></code> </p>
         </td>
         <td><p>Check uniqueness of rows with respect to keys.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="makeJoinDiagramSpec.html">makeJoinDiagramSpec()</a></code> </p>
         </td>
         <td><p>Build a drawable specification of the join diagram</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr.html">replyr</a></code> </p>
         </td>
         <td><p>replyr: Patches to Use dplyr on Remote Data Sources</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_add_ids.html">replyr_add_ids()</a></code> </p>
         </td>
         <td><p>Add unique ids to rows.  Note: re-arranges rows in many cases.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_apply_f_mapped.html">replyr_apply_f_mapped()</a></code> </p>
         </td>
         <td><p>Apply a function to a re-mapped data frame.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_arrange.html">replyr_arrange()</a></code> </p>
         </td>
         <td><p>arrange by a single column</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_bind_rows.html">replyr_bind_rows()</a></code> </p>
         </td>
         <td><p>Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_check_ranks.html">replyr_check_ranks()</a></code> </p>
         </td>
         <td><p>confirm data has good ranked groups</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_coalesce.html">replyr_coalesce()</a></code> </p>
         </td>
         <td><p>Augment a data frame by adding additional rows.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_colClasses.html">replyr_colClasses()</a></code> </p>
         </td>
         <td><p>Get column classes.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_copy_from.html">replyr_copy_from()</a></code> </p>
         </td>
         <td><p>Bring remote data back as a local data frame tbl.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_copy_to.html">replyr_copy_to()</a></code> </p>
         </td>
         <td><p>Copy data to remote service.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_dim.html">replyr_dim()</a></code> </p>
         </td>
         <td><p>Compute dimensions of a data.frame (work around https://github.com/rstudio/sparklyr/issues/976 ).</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_filter.html">replyr_filter()</a></code> </p>
         </td>
         <td><p>Filter a tbl on a column having values in a given set.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_get_src.html">replyr_get_src()</a></code> </p>
         </td>
         <td><p>Get the "remote data source" where a data.frame like object lives.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_group_by.html">replyr_group_by()</a></code> </p>
         </td>
         <td><p>group_by columns</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_has_table.html">replyr_has_table()</a></code> </p>
         </td>
         <td><p>check for table</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_hasrows.html">replyr_hasrows()</a></code> </p>
         </td>
         <td><p>Check if a table has rows.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_inTest.html">replyr_inTest()</a></code> </p>
         </td>
         <td><p>Product a column noting if another columns values are in a given set.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_is_MySQL_data.html">replyr_is_MySQL_data()</a></code> </p>
         </td>
         <td><p>Test if data is MySQL.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_is_Spark_data.html">replyr_is_Spark_data()</a></code> </p>
         </td>
         <td><p>Test if data is Spark.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_is_local_data.html">replyr_is_local_data()</a></code> </p>
         </td>
         <td><p>Test if data is local.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_list_tables.html">replyr_list_tables()</a></code> </p>
         </td>
         <td><p>list tables</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_mapRestrictCols.html">replyr_mapRestrictCols()</a></code> </p>
         </td>
         <td><p>Map names of columns to known values and drop other columns.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_ncol.html">replyr_ncol()</a></code> </p>
         </td>
         <td><p>Compute number of columns of a data.frame (work around https://github.com/rstudio/sparklyr/issues/976 ).</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_nrow.html">replyr_nrow()</a></code> </p>
         </td>
         <td><p>Compute number of rows of a tbl.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_quantile.html">replyr_quantile()</a></code> </p>
         </td>
         <td><p>Compute quantiles on remote column (NA's filtered out) using binary search.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_quantilec.html">replyr_quantilec()</a></code> </p>
         </td>
         <td><p>Compute quantiles on remote column (NA's filtered out) using cumsum.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_rename.html">replyr_rename()</a></code> </p>
         </td>
         <td><p>Rename a column</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_reverseMap.html">replyr_reverseMap()</a></code> </p>
         </td>
         <td><p>Reverse a name assignment map (which are written NEWNAME=OLDNAME).</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_select.html">replyr_select()</a></code> </p>
         </td>
         <td><p>select columns</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_split.html">replyr_split()</a></code> </p>
         </td>
         <td><p>split a data item by values in a column.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_summary.html">replyr_summary()</a></code> </p>
         </td>
         <td><p>Compute usable summary of columns of tbl.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_testCols.html">replyr_testCols()</a></code> </p>
         </td>
         <td><p>Run test on columns.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_union_all.html">replyr_union_all()</a></code> </p>
         </td>
         <td><p>Union two tables.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="replyr_uniqueValues.html">replyr_uniqueValues()</a></code> </p>
         </td>
         <td><p>Compute number of unique values for each level in a column.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="tableDescription.html">tableDescription()</a></code> </p>
         </td>
         <td><p>Build a nice description of a table.</p></td>
       </tr><tr>
-        <!--  -->
+        
         <td>
           <p><code><a href="topoSortTables.html">topoSortTables()</a></code> </p>
         </td>

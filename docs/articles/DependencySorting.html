@@ -8,8 +8,8 @@
 <title>Join Dependency Sorting • replyr</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Join Dependency Sorting">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Join Dependency Sorting">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.5</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1>Join Dependency Sorting</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2018-05-20</h4>
+            <h4 class="date">2018-06-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/DependencySorting.Rmd"><code>vignettes/DependencySorting.Rmd</code></a></small>
       <div class="hidden name"><code>DependencySorting.Rmd</code></div>
@@ -117,6 +117,11 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"dplyr"</span>))
 <span class="kw">library</span>(<span class="st">"replyr"</span>)</code></pre></div>
 <pre><code>## Loading required package: wrapr</code></pre>
+<pre><code>## 
+## Attaching package: 'wrapr'</code></pre>
+<pre><code>## The following object is masked from 'package:dplyr':
+## 
+##     coalesce</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tDesc &lt;-<span class="st"> </span>tableNames <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">lapply</span>(
     <span class="cf">function</span>(ni) {
@@ -222,13 +227,13 @@
   dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Sun May 20 11:33:05 2018"
+## [1] "start employeeanddate Sat Jun 23 10:47:20 2018"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Sun May 20 11:33:05 2018"
-## [1] "start activity Sun May 20 11:33:05 2018"
+## [1] "done employeeanddate Sat Jun 23 10:47:20 2018"
+## [1] "start activity Sat Jun 23 10:47:20 2018"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -237,8 +242,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Sun May 20 11:33:05 2018"
-## [1] "start orgtable Sun May 20 11:33:05 2018"
+## [1] "done activity Sat Jun 23 10:47:20 2018"
+## [1] "start orgtable Sat Jun 23 10:47:20 2018"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -247,8 +252,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Sun May 20 11:33:06 2018"
-## [1] "start revenue Sun May 20 11:33:06 2018"
+## [1] "done orgtable Sat Jun 23 10:47:20 2018"
+## [1] "start revenue Sat Jun 23 10:47:20 2018"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -256,7 +261,7 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Sun May 20 11:33:06 2018"
+## [1] "done revenue Sat Jun 23 10:47:21 2018"
 ## [1] "join results"
 ## Observations: ??
 ## Variables: 10
