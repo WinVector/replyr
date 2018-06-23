@@ -1,5 +1,5 @@
 
-# replyr 0.9.5 2018-06-15
+# replyr 0.9.6 2018-06-23
 
  * Remove ::: usage.
 
