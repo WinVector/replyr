@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1>Parametric Programming in R</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2018-06-23</h4>
+            <h4 class="date">2018-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/ParametricExample.Rmd"><code>vignettes/ParametricExample.Rmd</code></a></small>
       <div class="hidden name"><code>ParametricExample.Rmd</code></div>
@@ -117,6 +117,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>x_isNA &lt;-<span class="st"> </span><span class="kw">is.na</span>(d<span class="op">$</span>x)</code></pre></div>
 <p>We used the fact that we are looking at the data interactively to note the only column is “<code>x</code>”, and then picked “<code>x_isNA</code>” as our result name. If we want to use <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> the notation remains straightforward:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"dplyr"</span>)
+ <span class="co">#  Warning: package 'dplyr' was built under R version 3.5.1</span>
  <span class="co">#  </span>
  <span class="co">#  Attaching package: 'dplyr'</span>
  <span class="co">#  The following objects are masked from 'package:stats':</span>
@@ -126,7 +127,7 @@
  <span class="co">#  </span>
  <span class="co">#      intersect, setdiff, setequal, union</span>
 <span class="kw">packageVersion</span>(<span class="st">"dplyr"</span>)
- <span class="co">#  [1] '0.7.5'</span>
+ <span class="co">#  [1] '0.7.6'</span>
 
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(d, <span class="dt">x_isNA =</span> <span class="kw">is.na</span>(x))
  <span class="co">#     x x_isNA</span>

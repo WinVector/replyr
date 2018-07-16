@@ -24,7 +24,8 @@
 #' \item Providing support code for common \code{SparklyR} tasks, such as tracking temporary handle IDs.
 #' }
 #'
-#' The other functions (join planner/controller and grouped ordered apply) will be eventually ported to one of these packages.
+#' \code{replyr} is in maintenance mode. Better version of the functionality have been ported to the following packages:
+#' \code{wrapr}, \code{cdata}, \code{rquery}, and \code{seplyr}.
 #'
 #'
 #' To learn more about replyr, please start with the vignette:

@@ -21,8 +21,9 @@ shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`.
 Most of what it does is now done better in one of our newer non-monolithic packages:
 
   * Programming and meta-programming tools: [`wrapr`](https://CRAN.R-project.org/package=wrapr).
-  * Adapting \code{dplyr} to standard evaluation interfaces: [`seplyr`](https://CRAN.R-project.org/package=seplyr).
   * Big data data manipulation: [`rquery`](https://CRAN.R-project.org/package=rquery) and [`cdata`](https://CRAN.R-project.org/package=cdata).
+  * Adapting \code{dplyr} to standard evaluation interfaces: [`seplyr`](https://CRAN.R-project.org/package=seplyr).
+
 
 
 -------------------

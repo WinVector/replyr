@@ -44,7 +44,7 @@ replyr_list_tables <- function(con) {
   dplyr::db_list_tables(cn)
 }
 
-#' check for table
+#' check for a table
 #'
 #' Work around connection v.s. handle issues \url{https://github.com/tidyverse/dplyr/issues/2849}
 #'
@@ -75,7 +75,7 @@ replyr_has_table <- function(con, name) {
 #'
 #'
 #' @param df data.frame style object
-#' @return source (string if data.frame, tlb, or data.table, NULL if unknown, remote source otherwise)
+#' @return source (string if data.frame, tbl, or data.table, NULL if unknown, remote source otherwise)
 #'
 #' @examples
 #'

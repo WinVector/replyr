@@ -14,7 +14,7 @@ tableDescription(tableName, handle, ...,
 
 \item{...}{force later arguments to bind by name.}
 
-\item{keyInspector}{function that determines prefered primary key set for table.}
+\item{keyInspector}{function that determines preferred primary key set for table.}
 }
 \value{
 table describing the data.

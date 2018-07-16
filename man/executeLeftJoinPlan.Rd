@@ -75,6 +75,4 @@ executeLeftJoinPlan(list('meas1'=meas1, 'meas2'=meas2),
 }
 \seealso{
 \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}
-
-TODO: parameterize the implementation provider (right now hard-coded for \code{dplr}, but at least also direct \code{SQL} is a good extension).
 }

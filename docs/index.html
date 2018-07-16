@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">replyr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.6</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7</span>
       </span>
     </div>
 
@@ -107,8 +107,8 @@
 <p><code>replyr</code> is going into maintenance mode. It has been hard to track shifting <code>dplyr</code>/<code>dbplyr</code>/<code>rlang</code> APIs and data structures post <code>dplyr</code> <code>0.5</code>. Most of what it does is now done better in one of our newer non-monolithic packages:</p>
 <ul>
 <li>Programming and meta-programming tools: <a href="https://CRAN.R-project.org/package=wrapr"><code>wrapr</code></a>.</li>
-<li>Adapting  to standard evaluation interfaces: <a href="https://CRAN.R-project.org/package=seplyr"><code>seplyr</code></a>.</li>
 <li>Big data data manipulation: <a href="https://CRAN.R-project.org/package=rquery"><code>rquery</code></a> and <a href="https://CRAN.R-project.org/package=cdata"><code>cdata</code></a>.</li>
+<li>Adapting  to standard evaluation interfaces: <a href="https://CRAN.R-project.org/package=seplyr"><code>seplyr</code></a>.</li>
 </ul>
 <hr>
 <p>This document describes <code>replyr</code>, an <a href="https://cran.r-project.org">R</a> package available from <a href="https://github.com/WinVector/replyr">Github</a> and <a href="https://CRAN.R-project.org/package=replyr">CRAN</a>.</p>
@@ -330,7 +330,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_85805367344802934916_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_76696217005999659813_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.22.0 [:memory:]</span>
  <span class="co">#         x     y z    </span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -392,8 +392,8 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  878891 47.0    1745134 93.3         NA  1216684 65.0</span>
- <span class="co">#  Vcells 1923678 14.7    8388608 64.0      16384  2754609 21.1</span></code></pre></div>
+ <span class="co">#  Ncells  880424 47.1    1747017 93.4         NA  1221912 65.3</span>
+ <span class="co">#  Vcells 1935599 14.8    8388608 64.0      16384  2758970 21.1</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

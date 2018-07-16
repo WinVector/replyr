@@ -14,7 +14,7 @@ gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
 
 \item{gcolumn}{grouping column}
 
-\item{f}{transform function or pipleline}
+\item{f}{transform function or pipeline}
 
 \item{...}{force later values to be bound by name}
 
@@ -41,7 +41,7 @@ transformed frame
 Partitions from by values in grouping column, applies a generic transform
 to each group and then binds the groups back together.  Only advised for a
 moderate number of groups and better if grouping column is an index.
-This is powerfull
+This is powerful
 enough to implement "The Split-Apply-Combine Strategy for Data Analysis"
 https://www.jstatsoft.org/article/view/v040i01
 }

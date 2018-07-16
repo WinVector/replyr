@@ -11,7 +11,7 @@ replyr_union_all(tabA, tabB, ..., useDplyrLocal = TRUE,
 \arguments{
 \item{tabA}{not-NULL table with at least 1 row.}
 
-\item{tabB}{not-NULL table with at least 1 row on same data source as tabA and commmon columns.}
+\item{tabB}{not-NULL table with at least 1 row on same data source as tabA and common columns.}
 
 \item{...}{force later arguments to be bound by name.}
 
@@ -26,7 +26,7 @@ table with all rows of tabA and tabB (union_all).
 }
 \description{
 Spark 2* union_all has issues ( https://github.com/WinVector/replyr/blob/master/issues/UnionIssue.md ),
-and exponsed union_all semantics differ from data-source backend to backend.
+and exposed union_all semantics differ from data-source back-end to back-end.
 This is an attempt to provide a join-based replacement.
 }
 \examples{

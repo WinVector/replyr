@@ -28,7 +28,7 @@ Compute per-column summaries and return as a \code{data.frame}.  Warning: can be
 }
 \details{
 Can be slow compared to \code{dplyr::summarize_all()} (but serves a different purpose).
-Also, for numeric columns includes \code{NaN} in \code{nna} count (as is typcial for \code{R}, e.g.,
+Also, for numeric columns includes \code{NaN} in \code{nna} count (as is typical for \code{R}, e.g.,
 \code{is.na(NaN)}).  And note: \code{replyr_summary()} currently skips "raw" columns.
 }
 \examples{

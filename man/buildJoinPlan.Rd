@@ -11,7 +11,7 @@ buildJoinPlan(tDesc, ..., check = TRUE)
 
 \item{...}{force later arguments to bind by name.}
 
-\item{check}{logical, if TRUE check the join plan for consistnecy.}
+\item{check}{logical, if TRUE check the join plan for consistency.}
 }
 \value{
 detailed column join plan (appropriate for editing)

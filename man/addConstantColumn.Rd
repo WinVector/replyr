@@ -22,10 +22,10 @@ addConstantColumn(d, colName, val, ...,
 table with new column added.
 }
 \description{
-Work around different treatment of character types accross remote
-data soures when adding a
+Work around different treatment of character types across remote
+data sources when adding a
 constant column to a table.  Deals with issues such as Postgresql
-requiring a charcater-cast and MySQL not allowing such.
+requiring a character-cast and MySQL not allowing such.
 }
 \examples{
 

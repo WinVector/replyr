@@ -3,8 +3,8 @@
 `replyr` is going into maintenance mode. It has been hard to track shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`. Most of what it does is now done better in one of our newer non-monolithic packages:
 
 -   Programming and meta-programming tools: [`wrapr`](https://CRAN.R-project.org/package=wrapr).
--   Adapting to standard evaluation interfaces: [`seplyr`](https://CRAN.R-project.org/package=seplyr).
 -   Big data data manipulation: [`rquery`](https://CRAN.R-project.org/package=rquery) and [`cdata`](https://CRAN.R-project.org/package=cdata).
+-   Adapting to standard evaluation interfaces: [`seplyr`](https://CRAN.R-project.org/package=seplyr).
 
 ------------------------------------------------------------------------
 
@@ -262,7 +262,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_46279836579450090721_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_87997407391778680030_0000000001> [?? x 3]
  #  # Database: sqlite 3.22.0 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -328,8 +328,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)
- #  Ncells  809364 43.3    1333190 71.3         NA  1333190 71.3
- #  Vcells 1818971 13.9    8388608 64.0      16384  2862598 21.9
+ #  Ncells  810885 43.4    1334338 71.3         NA  1334338 71.3
+ #  Vcells 1830892 14.0    8388608 64.0      16384  2871696 22.0
 ```
 
 Note

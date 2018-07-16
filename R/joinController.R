@@ -234,7 +234,7 @@ key_inspector_postgresql <- function(handle) {
 #' @param tableName name of table to add to join plan.
 #' @param handle table or table handle to add to join plan (can already be in the plan).
 #' @param ... force later arguments to bind by name.
-#' @param keyInspector function that determines prefered primary key set for table.
+#' @param keyInspector function that determines preferred primary key set for table.
 #' @return table describing the data.
 #'
 #' @examples
@@ -733,7 +733,7 @@ inspectDescrAndJoinPlan <- function(tDesc, columnJoinPlan,
 #'
 #' @param tDesc description of tables from \code{\link{tableDescription}} (and likely altered by user). Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.
 #' @param ... force later arguments to bind by name.
-#' @param check logical, if TRUE check the join plan for consistnecy.
+#' @param check logical, if TRUE check the join plan for consistency.
 #' @return detailed column join plan (appropriate for editing)
 #'
 #' @examples
@@ -866,7 +866,6 @@ strMapToString <- function(m) {
 #' Please see \code{vignette('DependencySorting', package = 'replyr')} and \code{vignette('joinController', package= 'replyr')} for more details.
 #' @seealso \code{\link{tableDescription}}, \code{\link{buildJoinPlan}}, \code{\link{inspectDescrAndJoinPlan}}, \code{\link{makeJoinDiagramSpec}}
 #'
-#' TODO: parameterize the implementation provider (right now hard-coded for \code{dplr}, but at least also direct \code{SQL} is a good extension).
 #'
 #' @param tDesc description of tables, either a \code{data.frame} from \code{\link{tableDescription}}, or a list mapping from names to handles/frames.  Only used to map table names to data.
 #' @param columnJoinPlan columns to join, from \code{\link{buildJoinPlan}} (and likely altered by user).  Note: no column names must intersect with names of the form \code{table_CLEANEDTABNAME_present}.

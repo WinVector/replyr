@@ -10,7 +10,7 @@ replyr_get_src(df)
 \item{df}{data.frame style object}
 }
 \value{
-source (string if data.frame, tlb, or data.table, NULL if unknown, remote source otherwise)
+source (string if data.frame, tbl, or data.table, NULL if unknown, remote source otherwise)
 }
 \description{
 Get the "remote data source" where a data.frame like object lives.

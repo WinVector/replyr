@@ -1,4 +1,8 @@
 
+# replyr 0.9.7 2018-07-16
+
+ * Documentation fixes.
+
 # replyr 0.9.6 2018-06-23
 
  * Remove ::: usage.

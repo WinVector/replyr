@@ -7,12 +7,12 @@
 #' Union two tables.
 #'
 #' Spark 2* union_all has issues ( https://github.com/WinVector/replyr/blob/master/issues/UnionIssue.md ),
-#' and exponsed union_all semantics differ from data-source backend to backend.
+#' and exposed union_all semantics differ from data-source back-end to back-end.
 #' This is an attempt to provide a join-based replacement.
 #'
 #'
 #' @param tabA not-NULL table with at least 1 row.
-#' @param tabB not-NULL table with at least 1 row on same data source as tabA and commmon columns.
+#' @param tabB not-NULL table with at least 1 row on same data source as tabA and common columns.
 #' @param ... force later arguments to be bound by name.
 #' @param useDplyrLocal logical if TRUE use dplyr::bind_rows for local data.
 #' @param useSparkRbind logical if TRUE try to use rbind on Sparklyr data

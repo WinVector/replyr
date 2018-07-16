@@ -2,7 +2,7 @@
 % Please edit documentation in R/serviceName.R
 \name{replyr_has_table}
 \alias{replyr_has_table}
-\title{check for table}
+\title{check for a table}
 \usage{
 replyr_has_table(con, name)
 }
