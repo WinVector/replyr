@@ -1,5 +1,5 @@
 
-# replyr 0.9.7 2018-07-16
+# replyr 0.9.7 2018-07-20
 
  * Documentation fixes.
 
