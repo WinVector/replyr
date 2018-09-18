@@ -4,7 +4,7 @@
 #'
 #' @param df data.frame object to work with
 #' @param idColName name of column to add
-#' @param env environment to evaluate in.
+#' @param env environment to evaluate in (not used).
 #' @param local_short_cut logical, if TRUE use base R on local data.
 #'
 #' @examples
@@ -15,6 +15,7 @@
 replyr_add_ids <- function(df, idColName,
                            env = parent.frame(),
                            local_short_cut = TRUE) {
+  force(env)
   if(local_short_cut) {
     if(replyr_is_local_data(df)) {
       # some source of local frame

@@ -4,14 +4,15 @@
 \alias{replyr_add_ids}
 \title{Add unique ids to rows.  Note: re-arranges rows in many cases.}
 \usage{
-replyr_add_ids(df, idColName, env = parent.frame(), local_short_cut = TRUE)
+replyr_add_ids(df, idColName, env = parent.frame(),
+  local_short_cut = TRUE)
 }
 \arguments{
 \item{df}{data.frame object to work with}
 
 \item{idColName}{name of column to add}
 
-\item{env}{environment to evaluate in.}
+\item{env}{environment to evaluate in (not used).}
 
 \item{local_short_cut}{logical, if TRUE use base R on local data.}
 }

@@ -5,7 +5,8 @@
 \title{Product a column noting if another columns values are in a given set.}
 \usage{
 replyr_inTest(x, cname, values, nname, ...,
-  tempNameGenerator = mk_tmp_name_source("replyr_inTest"), verbose = TRUE)
+  tempNameGenerator = mk_tmp_name_source("replyr_inTest"),
+  verbose = TRUE)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}

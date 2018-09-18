@@ -4,8 +4,8 @@
 \alias{replyr_summary}
 \title{Compute usable summary of columns of tbl.}
 \usage{
-replyr_summary(x, ..., countUniqueNum = FALSE, countUniqueNonNum = FALSE,
-  cols = NULL, compute = TRUE)
+replyr_summary(x, ..., countUniqueNum = FALSE,
+  countUniqueNonNum = FALSE, cols = NULL, compute = TRUE)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}

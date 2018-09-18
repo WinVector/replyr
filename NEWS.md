@@ -1,4 +1,8 @@
 
+# replyr 0.9.8 2018-09-18
+
+ * Force parent.frame.
+ 
 # replyr 0.9.7 2018-07-20
 
  * Documentation fixes.

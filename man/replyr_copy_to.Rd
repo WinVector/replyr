@@ -5,8 +5,8 @@
 \title{Copy data to remote service.}
 \usage{
 replyr_copy_to(dest, df, name = paste(deparse(substitute(df)), collapse =
-  " "), ..., rowNumberColumn = NULL, temporary = FALSE, overwrite = TRUE,
-  maxrow = 1e+06)
+  " "), ..., rowNumberColumn = NULL, temporary = FALSE,
+  overwrite = TRUE, maxrow = 1e+06)
 }
 \arguments{
 \item{dest}{remote data source}

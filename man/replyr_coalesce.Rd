@@ -5,7 +5,8 @@
 \title{Augment a data frame by adding additional rows.}
 \usage{
 replyr_coalesce(data, support, ..., fills = NULL, newRowColumn = NULL,
-  copy = TRUE, tempNameGenerator = mk_tmp_name_source("replyr_coalesce"))
+  copy = TRUE,
+  tempNameGenerator = mk_tmp_name_source("replyr_coalesce"))
 }
 \arguments{
 \item{data}{data.frame data to augment}
