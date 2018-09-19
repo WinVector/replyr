@@ -19,7 +19,15 @@
 ### win-builder 
 
     devtools::build_win()
-
+    * using R Under development (unstable) (2018-09-18 r75325)
+    * using platform: x86_64-w64-mingw32 (64-bit)
+    * using session charset: ISO8859-1
+    * checking for file 'replyr/DESCRIPTION' ... OK
+    * checking extension type ... Package
+    * this is package 'replyr' version '0.9.8'
+    * checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
+    Maintainer: 'John Mount <jmount@win-vector.com>'
+    Status: OK
 
 ## Downstream dependencies
 
