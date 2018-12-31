@@ -1,4 +1,8 @@
 
+# replyr 0.9.9 2018-12-31
+
+ * Work around https://github.com/tidyverse/dplyr/issues/4062 .
+
 # replyr 0.9.8 2018-09-18
 
  * Force parent.frame.
