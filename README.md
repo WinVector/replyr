@@ -262,7 +262,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_53049749881788970782_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_88295855555180273723_0000000001> [?? x 3]
  #  # Database: sqlite 3.22.0 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -312,15 +312,6 @@ Conclusion
 
 `replyr` is package for speeding up reliable data manipulation using `dplyr` (especially on databases and `Spark`). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources.
 
-Dev version
------------
-
-If you want to try the newest version of `replyr` you can use `devtools` to install directly from GitHub with:
-
-``` r
-devtools::install_github('WinVector/replyr')
-```
-
 Clean up
 --------
 
@@ -328,8 +319,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)
- #  Ncells  813188 43.5    1597502 85.4         NA  1136482 60.7
- #  Vcells 1846484 14.1    8388608 64.0      16384  3278877 25.1
+ #  Ncells  842354 45.0    1678524 89.7         NA  1141122 61.0
+ #  Vcells 1937593 14.8    8388608 64.0      16384  3703270 28.3
 ```
 
 Note
