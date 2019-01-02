@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1>let Example</h1>
                         <h4 class="author">Nina Zumel</h4>
             
-            <h4 class="date">2018-09-18</h4>
+            <h4 class="date">2019-01-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/letExample.Rmd"><code>vignettes/letExample.Rmd</code></a></small>
       <div class="hidden name"><code>letExample.Rmd</code></div>
@@ -152,7 +152,7 @@
  <span class="co">#  1 setosa        1.29  1.46    1.64     1.41   1.5      1.59</span>
  <span class="co">#  2 versicolor    3.79  4.26    4.73     4.05   4.35     4.65</span>
  <span class="co">#  3 virginica     5.00  5.55    6.10     5.16   5.55     5.94</span></code></pre></div>
-<p>We can also use <code>let</code> to parameterize other functions that specify their parameters via non-standard evaluation. For example, we could write a <code>ggplot2</code> function to plot the information in <code>sumstat_intervals</code> (either the mean-centered interval or the median-centered one) using <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes_">ggplot2::aes_string</a></code>. Or we could use <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code>.</p>
+<p>We can also use <code>let</code> to parameterize other functions that specify their parameters via non-standard evaluation. For example, we could write a <code>ggplot2</code> function to plot the information in <code>sumstat_intervals</code> (either the mean-centered interval or the median-centered one) using <code><a href="https://ggplot2.tidyverse.org/reference/aes_.html">ggplot2::aes_string</a></code>. Or we could use <code><a href="http://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_distributions =<span class="st"> </span><span class="ot">NULL</span>
 
 <span class="cf">if</span>  (<span class="kw">requireNamespace</span>(<span class="st">"ggplot2"</span>)) {
@@ -175,11 +175,11 @@
     
     <span class="kw">let</span>(<span class="dt">alias=</span>mapping,
         <span class="dt">expr =</span> {
-          <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(dframe, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>xval,<span class="dt">color=</span>xval)) <span class="op">+</span>
-<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_jitter">geom_jitter</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y=</span>yval), <span class="dt">width=</span><span class="fl">0.2</span>, <span class="dt">height=</span><span class="dv">0</span>, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">+</span>
-<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_linerange">geom_crossbar</a></span>(<span class="dt">data=</span>sintervals, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">y=</span>center, <span class="dt">ymin=</span>lower, <span class="dt">ymax=</span>upper)) <span class="op">+</span>
-<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(title) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">plot.title=</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/element">element_text</a></span>(<span class="dt">hjust=</span><span class="fl">0.5</span>)) <span class="op">+</span>
-<span class="st">            </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_brewer">scale_color_brewer</a></span>(<span class="dt">palette=</span><span class="st">"Dark2"</span>)
+          <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(dframe, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x=</span>xval,<span class="dt">color=</span>xval)) <span class="op">+</span>
+<span class="st">            </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">y=</span>yval), <span class="dt">width=</span><span class="fl">0.2</span>, <span class="dt">height=</span><span class="dv">0</span>, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">+</span>
+<span class="st">            </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html">geom_crossbar</a></span>(<span class="dt">data=</span>sintervals, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">y=</span>center, <span class="dt">ymin=</span>lower, <span class="dt">ymax=</span>upper)) <span class="op">+</span>
+<span class="st">            </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(title) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">plot.title=</span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span>(<span class="dt">hjust=</span><span class="fl">0.5</span>)) <span class="op">+</span>
+<span class="st">            </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span>(<span class="dt">palette=</span><span class="st">"Dark2"</span>)
         })
   }
 }

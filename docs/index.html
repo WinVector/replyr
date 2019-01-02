@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">replyr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
       </span>
     </div>
 
@@ -330,7 +330,7 @@ cdata<span class="op">::</span><span class="kw"><a href="http://www.rdocumentati
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">'dplyr'</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>)
 dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_52363987827219070374_0000000001&gt; [?? x 3]</span>
+ <span class="co">#  # Source:   table&lt;replyr_filter_63915751957462836345_0000000001&gt; [?? x 3]</span>
  <span class="co">#  # Database: sqlite 3.22.0 [:memory:]</span>
  <span class="co">#         x     y z    </span>
  <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
@@ -380,20 +380,14 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <a href="#conclusion" class="anchor"></a>Conclusion</h2>
 <p><code>replyr</code> is package for speeding up reliable data manipulation using <code>dplyr</code> (especially on databases and <code>Spark</code>). It is also a good central place to collect patches and fixes needed to work around corner cases and semantic variations between versions of data sources.</p>
 </div>
-<div id="dev-version" class="section level2">
-<h2 class="hasAnchor">
-<a href="#dev-version" class="anchor"></a>Dev version</h2>
-<p>If you want to try the newest version of <code>replyr</code> you can use <code>devtools</code> to install directly from GitHub with:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">'WinVector/replyr'</span>)</code></pre></div>
-</div>
 <div id="clean-up" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clean-up" class="anchor"></a>Clean up</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rm</span>(<span class="dt">list=</span><span class="kw">ls</span>())
 <span class="kw">gc</span>()
  <span class="co">#            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  884856 47.3    1758447   94         NA  1224447 65.4</span>
- <span class="co">#  Vcells 1954080 15.0    8388608   64      16384  2793334 21.4</span></code></pre></div>
+ <span class="co">#  Ncells  915656 49.0    1846498 98.7         NA  1224152 65.4</span>
+ <span class="co">#  Vcells 2070676 15.8    8388608 64.0      16384  3150233 24.1</span></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

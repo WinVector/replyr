@@ -1,5 +1,5 @@
 
-# replyr 0.9.9 2018-12-31
+# replyr 0.9.9 2019-01-02
 
  * Work around https://github.com/tidyverse/dplyr/issues/4062 .
 

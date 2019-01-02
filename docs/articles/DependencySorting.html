@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.8</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.9</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1>Join Dependency Sorting</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2018-09-18</h4>
+            <h4 class="date">2019-01-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr//blob/master/vignettes/DependencySorting.Rmd"><code>vignettes/DependencySorting.Rmd</code></a></small>
       <div class="hidden name"><code>DependencySorting.Rmd</code></div>
@@ -114,9 +114,8 @@
                 <span class="st">'activity'</span>,
                 <span class="st">'orgtable'</span>)</code></pre></div>
 <p>We can now use <code><a href="../reference/tableDescription.html">replyr::tableDescription()</a></code> to get descriptions of these tables <em>including</em> any declared primary key structure.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"dplyr"</span>))</code></pre></div>
-<pre><code>## Warning: package 'dplyr' was built under R version 3.5.1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"replyr"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(<span class="st">"dplyr"</span>))
+<span class="kw">library</span>(<span class="st">"replyr"</span>)</code></pre></div>
 <pre><code>## Loading required package: wrapr</code></pre>
 <pre><code>## 
 ## Attaching package: 'wrapr'</code></pre>
@@ -228,13 +227,13 @@
   dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
 }</code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Tue Sep 18 14:39:16 2018"
+## [1] "start employeeanddate Wed Jan  2 07:47:58 2019"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Tue Sep 18 14:39:16 2018"
-## [1] "start activity Tue Sep 18 14:39:16 2018"
+## [1] "done employeeanddate Wed Jan  2 07:47:58 2019"
+## [1] "start activity Wed Jan  2 07:47:58 2019"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -243,8 +242,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Tue Sep 18 14:39:16 2018"
-## [1] "start orgtable Tue Sep 18 14:39:16 2018"
+## [1] "done activity Wed Jan  2 07:47:58 2019"
+## [1] "start orgtable Wed Jan  2 07:47:58 2019"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -253,8 +252,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Tue Sep 18 14:39:16 2018"
-## [1] "start revenue Tue Sep 18 14:39:16 2018"
+## [1] "done orgtable Wed Jan  2 07:47:59 2019"
+## [1] "start revenue Wed Jan  2 07:47:59 2019"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -262,7 +261,7 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Tue Sep 18 14:39:17 2018"
+## [1] "done revenue Wed Jan  2 07:47:59 2019"
 ## [1] "join results"
 ## Observations: ??
 ## Variables: 10
