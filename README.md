@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-`replyr` is going into maintenance mode. It has been hard to track shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`. Most of what it does is now done better in one of our newer non-monolithic packages:
+`replyr` is going into maintenance mode. It has been hard (and pointless) to track shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`. Most of what it does is now done better in one of our newer non-monolithic packages:
 
 -   Programming and meta-programming tools: [`wrapr`](https://CRAN.R-project.org/package=wrapr).
 -   Big data data manipulation: [`rquery`](https://CRAN.R-project.org/package=rquery) and [`cdata`](https://CRAN.R-project.org/package=cdata).
@@ -205,12 +205,13 @@ RSQLite::initExtension(my_db) # filed as dplyr issue https://github.com/tidyvers
 dRemote <- replyr::replyr_copy_to(my_db,d,'d')
 
 summary(dRemote)
- #      Length Class          Mode
- #  src 2      src_dbi        list
- #  ops 2      op_base_remote list
+ #      Length Class                Mode
+ #  src 2      src_SQLiteConnection list
+ #  ops 2      op_base_remote       list
 glimpse(dRemote)
  #  Observations: ??
  #  Variables: 3
+ #  Database: sqlite 3.22.0 [:memory:]
  #  $ x <dbl> 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2
  #  $ y <dbl> 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA
  #  $ z <chr> NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"
@@ -262,7 +263,7 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_88295855555180273723_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_35112635375253010254_0000000001> [?? x 3]
  #  # Database: sqlite 3.22.0 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
@@ -275,8 +276,7 @@ dRemote %>% replyr::replyr_filter('x', values)
  #   7     2     5 a    
  #   8     2    NA b    
  #   9     2     5 a    
- #  10     2    NA b    
- #  # ... with more rows
+ #  10     2    NA b
 ```
 
 Commentary
@@ -319,8 +319,8 @@ Clean up
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)
- #  Ncells  842354 45.0    1678524 89.7         NA  1141122 61.0
- #  Vcells 1937593 14.8    8388608 64.0      16384  3703270 28.3
+ #  Ncells  889889 47.6    1806640 96.5         NA  1156477 61.8
+ #  Vcells 2578286 19.7    8388608 64.0      16384  4470742 34.2
 ```
 
 Note

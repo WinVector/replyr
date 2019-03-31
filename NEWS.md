@@ -1,4 +1,8 @@
 
+# replyr 1.0.0 2019-03-31
+
+ * Remove ggplot2 dependence to work around ggplot2 "VECTOR_ELT() can only be applied to a 'list', not a 'double'" breakage.
+
 # replyr 0.9.9 2019-01-02
 
  * Work around https://github.com/tidyverse/dplyr/issues/4062 .
