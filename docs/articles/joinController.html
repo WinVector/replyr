@@ -335,8 +335,8 @@
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">columnJoinPlan <span class="op">%.&gt;%</span></a>
 <a class="sourceLine" id="cb32-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>(.) <span class="op">%.&gt;%</span></a>
 <a class="sourceLine" id="cb32-3" data-line-number="3"><span class="st">  </span>DiagrammeR<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DiagrammeR/topics/grViz">grViz</a></span>(.)</a></code></pre></div>
-<div id="htmlwidget-5ada730b0528ab72c4a3" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5ada730b0528ab72c4a3">{"x":{"diagram":"digraph joinplan {\n  graph [ layout = dot, rankdir = LR, overlap = prism, compound = true, nodesep = .5, ranksep = .25]\n  edge [decorate = true, arrowhead = dot]\n  node [style=filled, fillcolor=lightgrey]\n\n\n  node1 [ shape = \"folder\" , label = \"1: meas1\n\\lk: PatientID ( id )\\lk: MeasurementDate ( date )\\lv: meas1_weight ( weight )\\lv: height\\l\"]\n\n  node2 [ shape = \"tab\" , label = \"2: names\n\\li: table_names_present\\lk: PatientID ( id )\\lv: name\\l\"]\n\n  node3 [ shape = \"tab\" , label = \"3: meas2\n\\li: table_meas2_present\\lk: PatientID ( pid )\\lk: MeasurementDate ( date )\\lv: meas2_weight ( weight )\\l\"]\n\n node1 -> node2 [ label=\"PatientID\\l\" ]\n node1 -> node3 [ label=\"PatientID\\lMeasurementDate\\l\" ]\nsubgraph cluster_1 {\nlabel = \"{ MeasurementDate, PatientID }\"\nnode1 ; node3\n}\nsubgraph cluster_2 {\nlabel = \"{ PatientID }\"\nnode2\n}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Once you have a good join plan executing it is a one-line command with <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> (once you have set up a temp name manager as described in “<a href="http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/">Managing intermediate results when using R/sparklyr</a>”):</p>
+<div id="htmlwidget-87b02e9008186bd1f07a" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-87b02e9008186bd1f07a">{"x":{"diagram":"digraph joinplan {\n  graph [ layout = dot, rankdir = LR, overlap = prism, compound = true, nodesep = .5, ranksep = .25]\n  edge [decorate = true, arrowhead = dot]\n  node [style=filled, fillcolor=lightgrey]\n\n\n  node1 [ shape = \"folder\" , label = \"1: meas1\n\\lk: PatientID ( id )\\lk: MeasurementDate ( date )\\lv: meas1_weight ( weight )\\lv: height\\l\"]\n\n  node2 [ shape = \"tab\" , label = \"2: names\n\\li: table_names_present\\lk: PatientID ( id )\\lv: name\\l\"]\n\n  node3 [ shape = \"tab\" , label = \"3: meas2\n\\li: table_meas2_present\\lk: PatientID ( pid )\\lk: MeasurementDate ( date )\\lv: meas2_weight ( weight )\\l\"]\n\n node1 -> node2 [ label=\"PatientID\\l\" ]\n node1 -> node3 [ label=\"PatientID\\lMeasurementDate\\l\" ]\nsubgraph cluster_1 {\nlabel = \"{ MeasurementDate, PatientID }\"\nnode1 ; node3\n}\nsubgraph cluster_2 {\nlabel = \"{ PatientID }\"\nnode2\n}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Once you have a good join plan executing it is a one-line command with <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> (once you have set up a temp name manager as described in “<a href="http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/">Managing intermediate results when using R/sparklyr</a>”):</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co"># manage the temp names as in:</span></a>
 <a class="sourceLine" id="cb33-2" data-line-number="2"><span class="co">#  http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/</span></a>
 <a class="sourceLine" id="cb33-3" data-line-number="3">tempNameGenerator &lt;-<span class="st"> </span><span class="kw">mk_tmp_name_source</span>(<span class="st">"extmps"</span>)</a>
@@ -345,23 +345,23 @@
 <a class="sourceLine" id="cb33-6" data-line-number="6">results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, columnJoinPlan, </a>
 <a class="sourceLine" id="cb33-7" data-line-number="7">                               <span class="dt">verbose=</span> <span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb33-8" data-line-number="8">                               <span class="dt">tempNameGenerator=</span> tempNameGenerator)</a></code></pre></div>
-<pre><code>## [1] "start meas1 Thu Jul  4 08:18:10 2019"
+<pre><code>## [1] "start meas1 Thu Jul  4 09:29:40 2019"
 ## [1] " rename/restrict meas1"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'MeasurementDate' = 'date'"
 ## [1] "   'meas1_weight' = 'weight'"
 ## [1] "   'height' = 'height'"
 ## [1] " res &lt;- meas1"
-## [1] "done meas1 Thu Jul  4 08:18:10 2019"
-## [1] "start names Thu Jul  4 08:18:10 2019"
+## [1] "done meas1 Thu Jul  4 09:29:40 2019"
+## [1] "start names Thu Jul  4 09:29:40 2019"
 ## [1] " rename/restrict names"
 ## [1] "   'table_names_present' = 'table_names_present'"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'name' = 'name'"
 ## [1] " res &lt;- left_join(res, names,"
 ## [1] "                  by = c( 'PatientID' ))"
-## [1] "done names Thu Jul  4 08:18:10 2019"
-## [1] "start meas2 Thu Jul  4 08:18:10 2019"
+## [1] "done names Thu Jul  4 09:29:40 2019"
+## [1] "start meas2 Thu Jul  4 09:29:40 2019"
 ## [1] " rename/restrict meas2"
 ## [1] "   'table_meas2_present' = 'table_meas2_present'"
 ## [1] "   'PatientID' = 'pid'"
@@ -369,7 +369,7 @@
 ## [1] "   'meas2_weight' = 'weight'"
 ## [1] " res &lt;- left_join(res, meas2,"
 ## [1] "                  by = c( 'PatientID', 'MeasurementDate' ))"
-## [1] "done meas2 Thu Jul  4 08:18:10 2019"</code></pre>
+## [1] "done meas2 Thu Jul  4 09:29:40 2019"</code></pre>
 <p><code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> takes both a table description table (<code>tDesc</code>, keyed by <code>tableName</code>) and the join plan (<code>columnJoinPlan</code>, keyed by <code>tableName</code> and <code>sourceColumn</code>).</p>
 <p>The separation of concerns is strong: all details about the intended left-join sequence are taken from the <code>columnJoinPlan</code>, and only the mapping from abstract table names to tables (or table references/handles) is taken from <code>tDesc</code>. This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy. <code>tDesc</code> is a runtime entity (as it binds names to live handles, so can’t be serialized: you must save the code steps to produce it; note only the columns <code>tableName</code> and <code>handle</code> are used so there is no point re-editing the <code>keys</code> column after running <code><a href="../reference/tableDescription.html">tableDescription()</a></code> on new tables) and <code>columnJoinPlan</code> is a durable entity (has only information, not handles).</p>
 <p>Basically you:</p>
