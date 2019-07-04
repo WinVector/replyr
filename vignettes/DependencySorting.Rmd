@@ -114,7 +114,7 @@ if(!is.null(sorted)) {
 
 The new `sorted$columnJoinPlan` can be re-plotted as follows:
 
-```
+```{r diagram, eval=execute_vignette}
 sorted$columnJoinPlan %>%
         makeJoinDiagramSpec(.) %>%
         DiagrammeR::grViz(.)

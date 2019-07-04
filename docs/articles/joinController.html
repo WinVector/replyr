@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -92,13 +92,14 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
+      </header><script src="joinController_files/htmlwidgets-1.3/htmlwidgets.js"></script><script src="joinController_files/viz-0.3/viz.js"></script><link href="joinController_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="joinController_files/grViz-binding-1.0.1/grViz.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Join Controller</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2019-03-31</h4>
+            <h4 class="date">2019-07-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr/blob/master/vignettes/joinController.Rmd"><code>vignettes/joinController.Rmd</code></a></small>
       <div class="hidden name"><code>joinController.Rmd</code></div>
@@ -110,7 +111,7 @@
 <div id="replyr-join-controller" class="section level4">
 <h4 class="hasAnchor">
 <a href="#replyr-join-controller" class="anchor"></a><a href="https://github.com/WinVector/replyr"><code>replyr</code></a> Join Controller</h4>
-<p>This note describes a useful tool we call a “join controller” (and is part of our “<a href="http://www.win-vector.com/blog/tag/r-and-big-data/">R and Big Data</a>” series, please see <a href="http://www.win-vector.com/blog/2017/05/new-series-r-and-big-data-concentrating-on-spark-and-sparklyr/">here</a> for the introduction, and <a href="https://github.com/WinVector/BigDataRStrata2017">here</a> for one our big data courses).</p>
+<p>This note describes a useful tool we call a “join controller” (and is part of our “<a href="http://www.win-vector.com/blog/tag/r-and-big-data/">R and Big Data</a>” series, please see <a href="http://www.win-vector.com/blog/2017/05/new-series-r-and-big-data-concentrating-on-spark-and-sparklyr/">here</a> for the introduction).</p>
 <p>When working on real world predictive modeling tasks in production, the ability to join data and document how you join data is paramount. There are very strong reasons to organize production data in something resembling one of the <a href="https://en.wikipedia.org/wiki/Database_normalization">Codd normal forms</a>. However, for machine learning we need a fully denormalized form (all columns populated into a single to ready to go row, no matter what their provenance, keying, or stride).</p>
 <p>This is not an essential difficulty as in relational data systems moving between these forms can be done by joining, and data stores such as <a href="https://www.postgresql.org">PostgreSQL</a> or <a href="https://spark.apache.org">Apache Spark</a> are designed to provide powerful join capabilities.</p>
 <p>However there are some inessential (in that they can be avoided) but substantial difficulties in managing and documenting long join plans. It is not uncommon to have to join 7 or more tables to get an analysis ready. This at first seems trivial, but once you add in the important tasks of narrowing tables (eliminating columns not used later) and disambiguating column names (ensuring unique names after the join) the documentation and work can become substantial. Specifying the join process directly in <a href="https://www.r-project.org"><code>R</code></a> code leads to hard to manage, hard to inspect, and hard to share spaghetti code (even when using a high-level data abstraction such as <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a>).</p>
@@ -124,21 +125,20 @@
 <p>To supply such a solution the development version of <a href="https://github.com/WinVector/replyr"><code>replyr</code></a> now supplies a item called a “join controller” under the method <code><a href="../reference/executeLeftJoinPlan.html">replyr::executeLeftJoinPlan()</a></code>.</p>
 <p>This is easiest to explain through a concrete example, which is what we will do here.</p>
 <p>First let’s load the needed packages.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load packages</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>))</code></pre></div>
-<pre><code>## Warning: package 'dplyr' was built under R version 3.5.2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/packageDescription">packageVersion</a></span>(<span class="st">"dplyr"</span>)</code></pre></div>
-<pre><code>## [1] '0.8.0.1'</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># load packages</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>))</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/packageDescription">packageVersion</a></span>(<span class="st">"dplyr"</span>)</a></code></pre></div>
+<pre><code>## [1] '0.8.1'</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)</a></code></pre></div>
 <pre><code>## Loading required package: wrapr</code></pre>
 <pre><code>## 
 ## Attaching package: 'wrapr'</code></pre>
 <pre><code>## The following object is masked from 'package:dplyr':
 ## 
 ##     coalesce</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/packageDescription">packageVersion</a></span>(<span class="st">"replyr"</span>)</code></pre></div>
-<pre><code>## [1] '1.0.0'</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">execute_vignette &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/packageDescription">packageVersion</a></span>(<span class="st">"replyr"</span>)</a></code></pre></div>
+<pre><code>## [1] '1.0.1'</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">execute_vignette &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>Now let’s load some notional example data. For our example we have:</p>
 <ul>
 <li>One primary table of measurements (called “<code>meas1</code>”) keyed by <code>id</code> and <code>date</code>.</li>
@@ -146,61 +146,61 @@
 <li>A second table of additional measurements (called “<code>meas2</code>”) That we consider “nice to have.” That is: rows missing from this table should not censor-out <code>meas1</code> rows, and additional rows found here should not be included in the analysis.</li>
 </ul>
 <p>The data is given below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load notional example data</span>
-my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)
-RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db)
-<span class="co"># example data</span>
-<span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,
-               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),
-                          <span class="dt">date=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>),
-                          <span class="dt">weight=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">200</span>, <span class="dv">180</span>, <span class="dv">98</span>, <span class="dv">120</span>),
-                          <span class="dt">height=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">60</span>, <span class="dv">54</span>, <span class="dv">12</span>, <span class="dv">14</span>)),
-               <span class="st">'meas1_train'</span>)
-<span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,
-               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_len</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(letters)),
-                          <span class="dt">name=</span> letters,
-                          <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>),
-               <span class="st">'names_facts'</span>)
-<span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,
-               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">pid=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>,<span class="dv">3</span>),
-                          <span class="dt">date=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>,<span class="dv">2</span>),
-                          <span class="dt">weight=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">105</span>, <span class="dv">110</span>),
-                          <span class="dt">width=</span> <span class="dv">1</span>),
-               <span class="st">'meas2_train'</span>)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># load notional example data</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db)</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co"># example data</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">                          <span class="dt">date=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">                          <span class="dt">weight=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">200</span>, <span class="dv">180</span>, <span class="dv">98</span>, <span class="dv">120</span>),</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">                          <span class="dt">height=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">60</span>, <span class="dv">54</span>, <span class="dv">12</span>, <span class="dv">14</span>)),</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">               <span class="st">'meas1_train'</span>)</a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,</a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_len</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(letters)),</a>
+<a class="sourceLine" id="cb10-13" data-line-number="13">                          <span class="dt">name=</span> letters,</a>
+<a class="sourceLine" id="cb10-14" data-line-number="14">                          <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb10-15" data-line-number="15">               <span class="st">'names_facts'</span>)</a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="kw"><a href="../reference/replyr_copy_to.html">replyr_copy_to</a></span>(my_db,</a>
+<a class="sourceLine" id="cb10-17" data-line-number="17">               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">pid=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>,<span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb10-18" data-line-number="18">                          <span class="dt">date=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>,<span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb10-19" data-line-number="19">                          <span class="dt">weight=</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">105</span>, <span class="dv">110</span>),</a>
+<a class="sourceLine" id="cb10-20" data-line-number="20">                          <span class="dt">width=</span> <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb10-21" data-line-number="21">               <span class="st">'meas2_train'</span>)</a></code></pre></div>
 <p>An important (and very neglected) step in data science tasks is documenting roles of tables, especially their key-structure (which we also call “stride” in the sense it describes how you move from row to row). <code><a href="../reference/tableDescription.html">replyr::tableDescription()</a></code> is a function that builds an initial description of the tables. (Note: <code><a href="../reference/tableDescription.html">replyr::tableDescription()</a></code> is misspelled in the current release version of <code>replyr</code>, we have fixed this in <a href="https://github.com/WinVector/replyr">dev</a>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># map from abstract names to realized names</span>
-trainTables &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">data_frame</a></span>(<span class="dt">tableName =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'meas1'</span>, 
-                                        <span class="st">'names'</span>, 
-                                        <span class="st">'meas2'</span>),
-                          <span class="dt">concreteName =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'meas1_train'</span>, 
-                                           <span class="st">'names_facts'</span>, 
-                                           <span class="st">'meas2_train'</span>))</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># map from abstract names to realized names</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">trainTables &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">data_frame</a></span>(<span class="dt">tableName =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'meas1'</span>, </a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">                                        <span class="st">'names'</span>, </a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">                                        <span class="st">'meas2'</span>),</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">                          <span class="dt">concreteName =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'meas1_train'</span>, </a>
+<a class="sourceLine" id="cb11-6" data-line-number="6">                                           <span class="st">'names_facts'</span>, </a>
+<a class="sourceLine" id="cb11-7" data-line-number="7">                                           <span class="st">'meas2_train'</span>))</a></code></pre></div>
 <pre><code>## Warning: `data_frame()` is deprecated, use `tibble()`.
 ## This warning is displayed once per session.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get table references from source by concrete names</span>
-trainTables<span class="op">$</span>handle &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(trainTables<span class="op">$</span>concreteName,
-                             <span class="cf">function</span>(ni) {
-                               <span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni)
-                             })
-<span class="co"># convert to full description table</span>
-tDesc &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>(
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_len</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(trainTables)),
-         <span class="cf">function</span>(ri) {
-           ni &lt;-<span class="st"> </span>trainTables<span class="op">$</span>tableName[[ri]]
-           ti &lt;-<span class="st"> </span>trainTables<span class="op">$</span>handle[[ri]]
-           <span class="kw"><a href="../reference/tableDescription.html">tableDescription</a></span>(ni, ti)
-         }
-  )
-)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># get table references from source by concrete names</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">trainTables<span class="op">$</span>handle &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(trainTables<span class="op">$</span>concreteName,</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">                             <span class="cf">function</span>(ni) {</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">                               <span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni)</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">                             })</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="co"># convert to full description table</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">tDesc &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>(</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq_len</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(trainTables)),</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">         <span class="cf">function</span>(ri) {</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">           ni &lt;-<span class="st"> </span>trainTables<span class="op">$</span>tableName[[ri]]</a>
+<a class="sourceLine" id="cb13-11" data-line-number="11">           ti &lt;-<span class="st"> </span>trainTables<span class="op">$</span>handle[[ri]]</a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">           <span class="kw"><a href="../reference/tableDescription.html">tableDescription</a></span>(ni, ti)</a>
+<a class="sourceLine" id="cb13-13" data-line-number="13">         }</a>
+<a class="sourceLine" id="cb13-14" data-line-number="14">  )</a>
+<a class="sourceLine" id="cb13-15" data-line-number="15">)</a></code></pre></div>
 <p><code>tDesc</code> is essentially a slightly enriched version of the data handle concordance described in “<a href="http://www.win-vector.com/blog/2017/05/managing-spark-data-handles-in-r/">Managing Spark data handles in R</a>.” We can take a quick look at the stored simplified <a href="http://www.win-vector.com/blog/2017/05/summarizing-big-data-in-r/">summaries</a>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceClass, handle, isEmpty))</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceClass, handle, isEmpty))</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 4
-##   tableName sourceClass      handle                     isEmpty
-##   &lt;chr&gt;     &lt;chr&gt;            &lt;list&gt;                     &lt;lgl&gt;  
-## 1 meas1     SQLiteConnection &lt;S3: tbl_SQLiteConnection&gt; FALSE  
-## 2 names     SQLiteConnection &lt;S3: tbl_SQLiteConnection&gt; FALSE  
-## 3 meas2     SQLiteConnection &lt;S3: tbl_SQLiteConnection&gt; FALSE</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>columns)</code></pre></div>
+##   tableName sourceClass      handle     isEmpty
+##   &lt;chr&gt;     &lt;chr&gt;            &lt;list&gt;     &lt;lgl&gt;  
+## 1 meas1     SQLiteConnection &lt;tbl_SQLC&gt; FALSE  
+## 2 names     SQLiteConnection &lt;tbl_SQLC&gt; FALSE  
+## 3 meas2     SQLiteConnection &lt;tbl_SQLC&gt; FALSE</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>columns)</a></code></pre></div>
 <pre><code>## [[1]]
 ## [1] "id"     "date"   "weight" "height"
 ## 
@@ -209,7 +209,7 @@ tDesc &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidy
 ## 
 ## [[3]]
 ## [1] "pid"    "date"   "weight" "width"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>colClass)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>colClass)</a></code></pre></div>
 <pre><code>## [[1]]
 ##        id      date    weight    height 
 ## "numeric" "numeric" "numeric" "numeric" 
@@ -221,9 +221,9 @@ tDesc &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidy
 ## [[3]]
 ##       pid      date    weight     width 
 ## "numeric" "numeric" "numeric" "numeric"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># add names for printing</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(tDesc<span class="op">$</span>keys) &lt;-<span class="st"> </span>tDesc<span class="op">$</span>tableName
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>keys)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co"># add names for printing</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(tDesc<span class="op">$</span>keys) &lt;-<span class="st"> </span>tDesc<span class="op">$</span>tableName</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>keys)</a></code></pre></div>
 <pre><code>## $meas1
 ##       id     date   weight   height 
 ##     "id"   "date" "weight" "height" 
@@ -254,19 +254,19 @@ tDesc &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidy
 </ul>
 <p>The <code>tableName</code> is “abstract” in that it is only used to discuss tables (i.e., it is only ever used as row identifier in this table). The data is actually found through the handle. This is critical in processes where we may need to run the same set of joins twice on different sets of tables (such as building a machine learning model, and then later applying the model to new data).</p>
 <p>The intent is to build a detailed join plan (describing order, column selection, and column re-naming) from the <code>tDesc</code> table. We can try this with the supplied function <code><a href="../reference/buildJoinPlan.html">buildJoinPlan()</a></code>, which in this case tells us our table descriptions are not quite ready to specify a join plan:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/conditions">tryCatch</a></span>(
-  <span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc),
-  <span class="dt">error =</span> <span class="cf">function</span>(e) {e}
-)</code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/conditions">tryCatch</a></span>(</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">  <span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc),</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3">  <span class="dt">error =</span> <span class="cf">function</span>(e) {e}</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4">)</a></code></pre></div>
 <pre><code>## &lt;simpleError in buildJoinPlan(tDesc): replyr::buildJoinPlan produced plan issue: key col(s) ( name ) not contained in result cols of previous table(s) for table: names&gt;</code></pre>
 <p>In the above the <code>keys</code> column is wrong in that it claims every column of each table is a table key. The join plan builder noticed this is unsupportable in that when it comes time to join the “<code>names</code>” table not all of the columns that are claimed to be “<code>names</code>” keys are already known from previous tables. That is: the “<code>names$name</code>” column is present in the earlier tables, and so can not be joined on. We can’t check everything, but the join controller tries to “front load” or encounter as many configuration inconsistencies early- before any expensive steps have been started.</p>
 <p>The intent is: the user should edit the “<code>tDesc</code>” keys column and share it with partners for criticism. In our case we declare the primary of the measurement tables to be <code>PatientID</code> and <code>MeasurementDate</code>, and the primary key of the names table to be <code>PatientID</code>. Notice we do this by specifying named lists or vectors mapping desired key names to names actually used in the tables.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># declare keys (and give them consistent names)</span>
-tDesc<span class="op">$</span>keys[[<span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)
-tDesc<span class="op">$</span>keys[[<span class="dv">2</span>]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>)
-tDesc<span class="op">$</span>keys[[<span class="dv">3</span>]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">PatientID=</span> <span class="st">'pid'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>keys)</code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co"># declare keys (and give them consistent names)</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">tDesc<span class="op">$</span>keys[[<span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">tDesc<span class="op">$</span>keys[[<span class="dv">2</span>]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">PatientID=</span> <span class="st">'id'</span>)</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">tDesc<span class="op">$</span>keys[[<span class="dv">3</span>]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">PatientID=</span> <span class="st">'pid'</span>, <span class="dt">MeasurementDate=</span> <span class="st">'date'</span>)</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc<span class="op">$</span>keys)</a></code></pre></div>
 <pre><code>## $meas1
 ##       PatientID MeasurementDate 
 ##            "id"          "date" 
@@ -280,16 +280,16 @@ tDesc<span class="op">$</span>keys[[<span class="dv">3</span>]] &lt;-<span class
 ##           "pid"          "date"</code></pre>
 <p>The above key mapping could then be circulated to partners for comments and help. Notice since this is not <code>R</code> code we can easily share it with non-<code>R</code> users for comment and corrections.</p>
 <p>It is worth confirming the keying as as expected (else some rows can reproduce in bad ways during joining). This is a potentially expensive operation, but it can be done as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/keysAreUnique.html">keysAreUnique</a></span>(tDesc)</code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw"><a href="../reference/keysAreUnique.html">keysAreUnique</a></span>(tDesc)</a></code></pre></div>
 <pre><code>## meas1 names meas2 
 ##  TRUE  TRUE  TRUE</code></pre>
 <p>Once we are satisfied with our description of tables we can build a join plan. The join plan is an ordered sequence of left-joins.</p>
 <p>In practice, when preparing data for predictive analytics or machine learning there is often a primary table that has exactly the set of rows you want to work over (especially when encountering production <a href="https://en.wikipedia.org/wiki/Star_schema">star-schemas</a>. By starting joins from this table we can perform most of our transformations using only left-joins. To keep things simple we have only supplied a join controller for this case. This is obviously not the only join pattern needed; but it is the common one.</p>
 <p>A join plan can now be built from our table descriptions:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># build the column join plan</span>
-columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co"># build the column join plan</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc)</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ##    tableName sourceColumn resultColumn    isKey want 
 ##    &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;           &lt;lgl&gt; &lt;lgl&gt;
@@ -308,15 +308,15 @@ columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../refere
 <p>Only columns named in the join plan with a value of <code>TRUE</code> in the <code>want</code> column are kept in the join (columns marked <code>isKey</code> must also have <code>want</code> set to TRUE). This is very useful as systems of record often have very wide tables (with hundreds of columns) of which we only want a few columns for analysis.</p>
 <p>For example we could decide to exclude the <code>width</code> column by either dropping the row or setting the row’s <code>want</code> column to <code>FALSE</code>.</p>
 <p>Since we have edited the join plan it is a good idea to both look at it and also run it through the <code><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan()</a></code> to look for potential inconsistencies.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># decide we don't want the width column</span>
-columnJoinPlan<span class="op">$</span>want[columnJoinPlan<span class="op">$</span>resultColumn<span class="op">==</span><span class="st">'width'</span>] &lt;-<span class="st"> </span><span class="ot">FALSE</span>
-<span class="co"># double check our plan</span>
-<span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(<span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, columnJoinPlan))) {
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/stop">stop</a></span>(<span class="st">"bad join plan"</span>)
-}
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co"># decide we don't want the width column</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">columnJoinPlan<span class="op">$</span>want[columnJoinPlan<span class="op">$</span>resultColumn<span class="op">==</span><span class="st">'width'</span>] &lt;-<span class="st"> </span><span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="co"># double check our plan</span></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(<span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, columnJoinPlan))) {</a>
+<a class="sourceLine" id="cb30-5" data-line-number="5">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/stop">stop</a></span>(<span class="st">"bad join plan"</span>)</a>
+<a class="sourceLine" id="cb30-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb30-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb30-9" data-line-number="9"><span class="st">        </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, sourceColumn, resultColumn, isKey, want))</a></code></pre></div>
 <pre><code>## # A tibble: 10 x 5
 ##    tableName sourceColumn resultColumn    isKey want 
 ##    &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;           &lt;lgl&gt; &lt;lgl&gt;
@@ -332,35 +332,36 @@ columnJoinPlan<span class="op">$</span>want[columnJoinPlan<span class="op">$</sp
 ## 10 meas2     width        width           FALSE FALSE</code></pre>
 <p>The join plan is the neglected (and often missing) piece of documentation key to non-trivial data science projects. We strongly suggest putting it under source control, and circulating it to project partners for comment.</p>
 <p>As a diagram the key structure of can be produced as follows:</p>
-<pre><code>   columnJoinPlan %.&gt;%
-        makeJoinDiagramSpec(.) %.&gt;%
-        DiagrammeR::grViz(.)</code></pre>
-<p>Once you have a good join plan executing it is a one-line command with <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> (once you have set up a temp name manager as described in “<a href="http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/">Managing intermediate results when using R/sparklyr</a>”):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># manage the temp names as in:</span>
-<span class="co">#  http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/</span>
-tempNameGenerator &lt;-<span class="st"> </span><span class="kw">mk_tmp_name_source</span>(<span class="st">"extmps"</span>)
-
-<span class="co"># execute the left joins</span>
-results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, columnJoinPlan, 
-                               <span class="dt">verbose=</span> <span class="ot">TRUE</span>,
-                               <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
-<pre><code>## [1] "start meas1 Sun Mar 31 10:23:43 2019"
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">columnJoinPlan <span class="op">%.&gt;%</span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>(.) <span class="op">%.&gt;%</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="st">  </span>DiagrammeR<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DiagrammeR/topics/grViz">grViz</a></span>(.)</a></code></pre></div>
+<div id="htmlwidget-5ada730b0528ab72c4a3" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5ada730b0528ab72c4a3">{"x":{"diagram":"digraph joinplan {\n  graph [ layout = dot, rankdir = LR, overlap = prism, compound = true, nodesep = .5, ranksep = .25]\n  edge [decorate = true, arrowhead = dot]\n  node [style=filled, fillcolor=lightgrey]\n\n\n  node1 [ shape = \"folder\" , label = \"1: meas1\n\\lk: PatientID ( id )\\lk: MeasurementDate ( date )\\lv: meas1_weight ( weight )\\lv: height\\l\"]\n\n  node2 [ shape = \"tab\" , label = \"2: names\n\\li: table_names_present\\lk: PatientID ( id )\\lv: name\\l\"]\n\n  node3 [ shape = \"tab\" , label = \"3: meas2\n\\li: table_meas2_present\\lk: PatientID ( pid )\\lk: MeasurementDate ( date )\\lv: meas2_weight ( weight )\\l\"]\n\n node1 -> node2 [ label=\"PatientID\\l\" ]\n node1 -> node3 [ label=\"PatientID\\lMeasurementDate\\l\" ]\nsubgraph cluster_1 {\nlabel = \"{ MeasurementDate, PatientID }\"\nnode1 ; node3\n}\nsubgraph cluster_2 {\nlabel = \"{ PatientID }\"\nnode2\n}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Once you have a good join plan executing it is a one-line command with <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> (once you have set up a temp name manager as described in “<a href="http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/">Managing intermediate results when using R/sparklyr</a>”):</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co"># manage the temp names as in:</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2"><span class="co">#  http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/</span></a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">tempNameGenerator &lt;-<span class="st"> </span><span class="kw">mk_tmp_name_source</span>(<span class="st">"extmps"</span>)</a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="co"># execute the left joins</span></a>
+<a class="sourceLine" id="cb33-6" data-line-number="6">results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, columnJoinPlan, </a>
+<a class="sourceLine" id="cb33-7" data-line-number="7">                               <span class="dt">verbose=</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb33-8" data-line-number="8">                               <span class="dt">tempNameGenerator=</span> tempNameGenerator)</a></code></pre></div>
+<pre><code>## [1] "start meas1 Thu Jul  4 08:18:10 2019"
 ## [1] " rename/restrict meas1"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'MeasurementDate' = 'date'"
 ## [1] "   'meas1_weight' = 'weight'"
 ## [1] "   'height' = 'height'"
 ## [1] " res &lt;- meas1"
-## [1] "done meas1 Sun Mar 31 10:23:43 2019"
-## [1] "start names Sun Mar 31 10:23:43 2019"
+## [1] "done meas1 Thu Jul  4 08:18:10 2019"
+## [1] "start names Thu Jul  4 08:18:10 2019"
 ## [1] " rename/restrict names"
 ## [1] "   'table_names_present' = 'table_names_present'"
 ## [1] "   'PatientID' = 'id'"
 ## [1] "   'name' = 'name'"
 ## [1] " res &lt;- left_join(res, names,"
 ## [1] "                  by = c( 'PatientID' ))"
-## [1] "done names Sun Mar 31 10:23:43 2019"
-## [1] "start meas2 Sun Mar 31 10:23:43 2019"
+## [1] "done names Thu Jul  4 08:18:10 2019"
+## [1] "start meas2 Thu Jul  4 08:18:10 2019"
 ## [1] " rename/restrict meas2"
 ## [1] "   'table_meas2_present' = 'table_meas2_present'"
 ## [1] "   'PatientID' = 'pid'"
@@ -368,7 +369,7 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 ## [1] "   'meas2_weight' = 'weight'"
 ## [1] " res &lt;- left_join(res, meas2,"
 ## [1] "                  by = c( 'PatientID', 'MeasurementDate' ))"
-## [1] "done meas2 Sun Mar 31 10:23:43 2019"</code></pre>
+## [1] "done meas2 Thu Jul  4 08:18:10 2019"</code></pre>
 <p><code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> takes both a table description table (<code>tDesc</code>, keyed by <code>tableName</code>) and the join plan (<code>columnJoinPlan</code>, keyed by <code>tableName</code> and <code>sourceColumn</code>).</p>
 <p>The separation of concerns is strong: all details about the intended left-join sequence are taken from the <code>columnJoinPlan</code>, and only the mapping from abstract table names to tables (or table references/handles) is taken from <code>tDesc</code>. This is deliberate design and makes running the same join plan on two different sets of tables (say once for model construction, and later for model application) very easy. <code>tDesc</code> is a runtime entity (as it binds names to live handles, so can’t be serialized: you must save the code steps to produce it; note only the columns <code>tableName</code> and <code>handle</code> are used so there is no point re-editing the <code>keys</code> column after running <code><a href="../reference/tableDescription.html">tableDescription()</a></code> on new tables) and <code>columnJoinPlan</code> is a durable entity (has only information, not handles).</p>
 <p>Basically you:</p>
@@ -379,7 +380,7 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 <li>Re-build new <code>tDesc</code> compatible with the saved <code>columnJoinPlan</code> later when you need to work with tables (note only the columns <code>tableName</code> and <code>handle</code> are used during join execution, so you only need to create those).</li>
 </ul>
 <p>As always: the proof is in the pudding. We should look at results:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(results)</code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(results)</a></code></pre></div>
 <pre><code>## Observations: ??
 ## Variables: 8
 ## Database: sqlite 3.22.0 [:memory:]
@@ -395,29 +396,29 @@ results &lt;-<span class="st"> </span><span class="kw"><a href="../reference/exe
 <p>Also notice the join plan is very specific: every decision (such as what order to operate and how to disambiguate column names) is already explicitly set in the plan. For more on order of operations in left join plans please see “<code><a href="../articles/DependencySorting.html">vignette('DependencySorting', package = 'replyr')</a></code>”.</p>
 <p>The executor is then allowed to simply move through the tables left-joining in the order the table names first appear in the plan.</p>
 <p>The <code>columnJoinPlan</code> is meant to be re-usable. In particular we can imaging running it to build training data, possibly re-running it to build test/validation data, and re-running it many times to build data we apply the model to. To facilitate this <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> is generous in what it accepts as a <code>tDesc</code>. All it needs from the <code>tDesc</code> argument is a way to map abstract names (<code>tableName</code>) to concrete data realizations (either <code>data.frame</code>s or <code>dplyr</code> data handles). So by design <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> accepts either a <code>data.frame</code> (and only looks at the <code>tableName</code> and <code>handle</code> columns) or a map. So the following calls to <code><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan()</a></code> also work:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># hand build table with parallel tableName and handle columns</span>
-tTab &lt;-<span class="st"> </span>trainTables <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, handle)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tTab)</code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># hand build table with parallel tableName and handle columns</span></a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">tTab &lt;-<span class="st"> </span>trainTables <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb37-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tableName, handle)</a>
+<a class="sourceLine" id="cb37-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tTab)</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 2
-##   tableName handle                    
-##   &lt;chr&gt;     &lt;list&gt;                    
-## 1 meas1     &lt;S3: tbl_SQLiteConnection&gt;
-## 2 names     &lt;S3: tbl_SQLiteConnection&gt;
-## 3 meas2     &lt;S3: tbl_SQLiteConnection&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tTab, columnJoinPlan, 
-                         <span class="dt">verbose=</span> <span class="ot">FALSE</span>,
-                         <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># map of abstract table names to handles</span>
-tMap =<span class="st"> </span>trainTables<span class="op">$</span>handle
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(tMap) &lt;-<span class="st"> </span>trainTables<span class="op">$</span>tableName
-r &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tMap, columnJoinPlan, 
-                         <span class="dt">verbose=</span> <span class="ot">FALSE</span>,
-                         <span class="dt">tempNameGenerator=</span> tempNameGenerator)</code></pre></div>
+##   tableName handle    
+##   &lt;chr&gt;     &lt;list&gt;    
+## 1 meas1     &lt;tbl_SQLC&gt;
+## 2 names     &lt;tbl_SQLC&gt;
+## 3 meas2     &lt;tbl_SQLC&gt;</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">r &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tTab, columnJoinPlan, </a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">                         <span class="dt">verbose=</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb39-3" data-line-number="3">                         <span class="dt">tempNameGenerator=</span> tempNameGenerator)</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># map of abstract table names to handles</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">tMap =<span class="st"> </span>trainTables<span class="op">$</span>handle</a>
+<a class="sourceLine" id="cb40-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(tMap) &lt;-<span class="st"> </span>trainTables<span class="op">$</span>tableName</a>
+<a class="sourceLine" id="cb40-4" data-line-number="4">r &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tMap, columnJoinPlan, </a>
+<a class="sourceLine" id="cb40-5" data-line-number="5">                         <span class="dt">verbose=</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb40-6" data-line-number="6">                         <span class="dt">tempNameGenerator=</span> tempNameGenerator)</a></code></pre></div>
 <p>The above facilities are not intended to re-run the original training data, but to make it very easy to re-apply the <code>columnJoinPlan</code> to new tables (i.e., to support testing/validation and support later model application on future data). Notice in neither case do we use the concrete names of the tables, we map abstract (notional) names to handles.</p>
 <p>Having to “join a bunch of tables to get the data into simple rows” is a common step in data science. Therefore you do not want this to be a difficult and undocumented task. By using a join controller you essentially make the documentation the executable specification for the task.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># cleanup</span>
-DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># cleanup</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</a></code></pre></div>
 </div>
   </div>
 

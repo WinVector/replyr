@@ -107,7 +107,7 @@ replyr_group_by <- function(.data, colnames) {
   }
   # convert char vector into spliceable vector
   groupingSyms <- rlang::syms(as.character(colnames))
-  dplyr::group_by(ungroup(.data), !!!groupingSyms)
+  dplyr::group_by(dplyr::ungroup(.data), !!!groupingSyms)
 }
 
 

@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
       <h1>summary</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2019-03-31</h4>
+            <h4 class="date">2019-07-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr/blob/master/vignettes/summary.Rmd"><code>vignettes/summary.Rmd</code></a></small>
       <div class="hidden name"><code>summary.Rmd</code></div>
@@ -109,48 +109,48 @@
     
 <p><code>replyr_summary</code> example.</p>
 <p><code>replyr_summary</code> works on various data sources, counts <code>NA</code>, and returns a <code>data.frame</code> (instead of text).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="ot">NA</span>,<span class="st">'b'</span>), <span class="dt">y=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="ot">NA</span>), <span class="dt">stringsAsFactors=</span> <span class="ot">FALSE</span>)
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(d)
- <span class="co">#        x                   y    </span>
- <span class="co">#   Length:2           Min.   :1  </span>
- <span class="co">#   Class :character   1st Qu.:1  </span>
- <span class="co">#   Mode  :character   Median :1  </span>
- <span class="co">#                      Mean   :1  </span>
- <span class="co">#                      3rd Qu.:1  </span>
- <span class="co">#                      Max.   :1  </span>
- <span class="co">#                      NA's   :1</span>
-
-replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(d)
- <span class="co">#    column index     class nrows nna nunique min max mean sd lexmin lexmax</span>
- <span class="co">#  1      x     1 character     2   1      NA  NA  NA   NA NA      b      b</span>
- <span class="co">#  2      y     2   numeric     2   1      NA   1   1    1 NA   &lt;NA&gt;   &lt;NA&gt;</span>
-
-execute_vignette &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
-<span class="cf">if</span>(execute_vignette) {
-  my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)
-  RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db)
-  dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d)
-  
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(dbData)
-  
-  replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dbData)
-  
-  <span class="co"># glimpse works more like str or head</span>
-  dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dbData)
-}
- <span class="co">#  Observations: ??</span>
- <span class="co">#  Variables: 2</span>
- <span class="co">#  Database: sqlite 3.22.0 [:memory:]</span>
- <span class="co">#  $ x &lt;chr&gt; NA, "b"</span>
- <span class="co">#  $ y &lt;dbl&gt; 1, NA</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(<span class="dt">list=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>())
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/gc">gc</a></span>()
- <span class="co">#            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  884245 47.3    1741382   93         NA  1255234 67.1</span>
- <span class="co">#  Vcells 1845277 14.1    8388608   64      16384  2974547 22.7</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="ot">NA</span>,<span class="st">'b'</span>), <span class="dt">y=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="ot">NA</span>), <span class="dt">stringsAsFactors=</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(d)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"> <span class="co">#        x                   y    </span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"> <span class="co">#   Length:2           Min.   :1  </span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"> <span class="co">#   Class :character   1st Qu.:1  </span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"> <span class="co">#   Mode  :character   Median :1  </span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"> <span class="co">#                      Mean   :1  </span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"> <span class="co">#                      3rd Qu.:1  </span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"> <span class="co">#                      Max.   :1  </span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"> <span class="co">#                      NA's   :1</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(d)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"> <span class="co">#    column index     class nrows nna nunique min max mean sd lexmin lexmax</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"> <span class="co">#  1      x     1 character     2   1      NA  NA  NA   NA NA      b      b</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"> <span class="co">#  2      y     2   numeric     2   1      NA   1   1    1 NA   &lt;NA&gt;   &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">execute_vignette &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">"RSQLite"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="cf">if</span>(execute_vignette) {</a>
+<a class="sourceLine" id="cb1-21" data-line-number="21">  my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)</a>
+<a class="sourceLine" id="cb1-22" data-line-number="22">  RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db)</a>
+<a class="sourceLine" id="cb1-23" data-line-number="23">  dbData &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(my_db, d)</a>
+<a class="sourceLine" id="cb1-24" data-line-number="24">  </a>
+<a class="sourceLine" id="cb1-25" data-line-number="25">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(dbData)</a>
+<a class="sourceLine" id="cb1-26" data-line-number="26">  </a>
+<a class="sourceLine" id="cb1-27" data-line-number="27">  replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dbData)</a>
+<a class="sourceLine" id="cb1-28" data-line-number="28">  </a>
+<a class="sourceLine" id="cb1-29" data-line-number="29">  <span class="co"># glimpse works more like str or head</span></a>
+<a class="sourceLine" id="cb1-30" data-line-number="30">  dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dbData)</a>
+<a class="sourceLine" id="cb1-31" data-line-number="31">}</a>
+<a class="sourceLine" id="cb1-32" data-line-number="32"> <span class="co">#  Observations: ??</span></a>
+<a class="sourceLine" id="cb1-33" data-line-number="33"> <span class="co">#  Variables: 2</span></a>
+<a class="sourceLine" id="cb1-34" data-line-number="34"> <span class="co">#  Database: sqlite 3.22.0 [:memory:]</span></a>
+<a class="sourceLine" id="cb1-35" data-line-number="35"> <span class="co">#  $ x &lt;chr&gt; NA, "b"</span></a>
+<a class="sourceLine" id="cb1-36" data-line-number="36"> <span class="co">#  $ y &lt;dbl&gt; 1, NA</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(<span class="dt">list=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>())</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/gc">gc</a></span>()</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"> <span class="co">#            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"> <span class="co">#  Ncells  905375 48.4    1794454 95.9         NA  1263602 67.5</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"> <span class="co">#  Vcells 1631381 12.5    8388608 64.0      16384  2300501 17.6</span></a></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

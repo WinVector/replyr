@@ -1,4 +1,8 @@
 
+# replyr 1.0.1 2019-07-04
+
+ * Activate diagrams in vignettes.
+
 # replyr 1.0.0 2019-03-31
 
  * Remove ggplot2 dependence to work around ggplot2 "VECTOR_ELT() can only be applied to a 'list', not a 'double'" breakage.

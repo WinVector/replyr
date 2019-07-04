@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -92,13 +92,14 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
+      </header><script src="DependencySorting_files/htmlwidgets-1.3/htmlwidgets.js"></script><script src="DependencySorting_files/viz-0.3/viz.js"></script><link href="DependencySorting_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="DependencySorting_files/grViz-binding-1.0.1/grViz.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Join Dependency Sorting</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2019-03-31</h4>
+            <h4 class="date">2019-07-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr/blob/master/vignettes/DependencySorting.Rmd"><code>vignettes/DependencySorting.Rmd</code></a></small>
       <div class="hidden name"><code>DependencySorting.Rmd</code></div>
@@ -110,40 +111,39 @@
 <p>Let’s discuss the task of left joining many tables from a data warehouse using <a href="https://www.r-project.org"><code>R</code></a> and a system called “a join controller” (last discussed <a href="http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/">here</a>).</p>
 <p>One of the great advantages to specifying complicated sequences of operations in data (rather than in code) is: it is often easier to transform and extend data. Explicit rich data beats vague convention and complicated code.</p>
 <p>For example suppose we have a <code>dplyr</code> <code>RSQLite</code> database handle in the variable <code>my_db</code> and we are using the following names for our tables in this database (keep in mind <code>replyr</code> allows different abstract and concrete table names, for this example we will assume they are the same):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tableNames &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'employeeanddate'</span>,
-                <span class="st">'revenue'</span>,
-                <span class="st">'activity'</span>,
-                <span class="st">'orgtable'</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">tableNames &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'employeeanddate'</span>,</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">                <span class="st">'revenue'</span>,</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">                <span class="st">'activity'</span>,</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">                <span class="st">'orgtable'</span>)</a></code></pre></div>
 <p>We can now use <code><a href="../reference/tableDescription.html">replyr::tableDescription()</a></code> to get descriptions of these tables <em>including</em> any declared primary key structure.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>))</code></pre></div>
-<pre><code>## Warning: package 'dplyr' was built under R version 3.5.2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>))</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)</a></code></pre></div>
 <pre><code>## Loading required package: wrapr</code></pre>
 <pre><code>## 
 ## Attaching package: 'wrapr'</code></pre>
 <pre><code>## The following object is masked from 'package:dplyr':
 ## 
 ##     coalesce</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tDesc &lt;-<span class="st"> </span>tableNames <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(
-    <span class="cf">function</span>(ni) {
-      replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/tableDescription">tableDescription</a></span>(ni,
-                               dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni),
-                               <span class="dt">keyInspector=</span> key_inspector_sqlite)
-    }) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>()
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'handle'</span>, <span class="st">'keys'</span>, <span class="st">'columns'</span>), ])</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">tDesc &lt;-<span class="st"> </span>tableNames <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">    <span class="cf">function</span>(ni) {</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">      replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/tableDescription">tableDescription</a></span>(ni,</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">                               dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni),</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">                               <span class="dt">keyInspector=</span> key_inspector_sqlite)</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">    }) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>()</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'handle'</span>, <span class="st">'keys'</span>, <span class="st">'columns'</span>), ])</a></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
-##   tableName       handle                     keys      columns  
-##   &lt;chr&gt;           &lt;list&gt;                     &lt;list&gt;    &lt;list&gt;   
-## 1 employeeanddate &lt;S3: tbl_SQLiteConnection&gt; &lt;chr [0]&gt; &lt;chr [2]&gt;
-## 2 revenue         &lt;S3: tbl_SQLiteConnection&gt; &lt;chr [2]&gt; &lt;chr [3]&gt;
-## 3 activity        &lt;S3: tbl_SQLiteConnection&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;
-## 4 orgtable        &lt;S3: tbl_SQLiteConnection&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;</code></pre>
+##   tableName       handle     keys      columns  
+##   &lt;chr&gt;           &lt;list&gt;     &lt;list&gt;    &lt;list&gt;   
+## 1 employeeanddate &lt;tbl_SQLC&gt; &lt;chr [0]&gt; &lt;chr [2]&gt;
+## 2 revenue         &lt;tbl_SQLC&gt; &lt;chr [2]&gt; &lt;chr [3]&gt;
+## 3 activity        &lt;tbl_SQLC&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;
+## 4 orgtable        &lt;tbl_SQLC&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;</code></pre>
 <p>This is more legible if we turn it into a column join plan.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc, <span class="dt">check=</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc, <span class="dt">check=</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</a></code></pre></div>
 <pre><code>## # A tibble: 13 x 4
 ##    tableName       sourceColumn resultColumn      isKey
 ##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;             &lt;lgl&gt;
@@ -167,8 +167,8 @@
 <li>Find an ordering of the rest of the tables that makes the left join executable or realizable (more on this later).</li>
 </ul>
 <p>First let’s patch up the key structure. This could be done by exporting the <code>columnJoinPlan</code> as a spreadsheet and editing it, but for our example we will just alter it in place.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">columnJoinPlan<span class="op">$</span>resultColumn[columnJoinPlan<span class="op">$</span>sourceColumn<span class="op">==</span><span class="st">'id'</span>] &lt;-<span class="st"> 'eid'</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">columnJoinPlan<span class="op">$</span>resultColumn[columnJoinPlan<span class="op">$</span>sourceColumn<span class="op">==</span><span class="st">'id'</span>] &lt;-<span class="st"> 'eid'</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</a></code></pre></div>
 <pre><code>## # A tibble: 13 x 4
 ##    tableName       sourceColumn resultColumn      isKey
 ##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;             &lt;lgl&gt;
@@ -188,7 +188,7 @@
 <p>Now we can worry about left join order.</p>
 <p>The most important choice in a left join plan is which table is left-most. If all the other tables are addressed by primary keys (i.e., there is not more than one row matching any row of the left-table) then the left-most table completely determines the set of rows in the left join result, no matter how many tables we are joining in. The order the rest of the tables are joined becomes irrelevant assuming it is an order we can execute.</p>
 <p>What prevents a proposed left join order from being executable is trying to join in a table that has a key that we do not yet have values for. Let’s show this as part of our example. Suppose we know that we want the table “<code>employeeanddate</code>” to be the left-most table in our left join sequence (and again, this is the one important choice). We can see our current left join plan (<code>columnJoinPlan</code>) is not executable in the order it is currently specifying:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"issues:"</span>, <span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, columnJoinPlan)))</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"issues:"</span>, <span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, columnJoinPlan)))</a></code></pre></div>
 <pre><code>## [1] "issues: key col(s) ( dept ) not contained in result cols of previous table(s) for table: revenue"</code></pre>
 <p>This message is saying: when it comes time to join in the “<code>revenue</code>” table rows do not yet have values for the “<code>dept</code>” key column (so we can’t do the join in that order).</p>
 <p>The table to table conditions are well-defined if a few invariants and conventions are maintained in the <code>tDesc</code> table descriptions:</p>
@@ -199,43 +199,44 @@
 <li>The left-most table is treated as special in that it is “joinable” no matter what key constraints it does or does not declare and no other table can be joined before it.</li>
 </ul>
 <p>Since not all orders are valid left join plans the task is to find a re-ordering (if there is one) that is a valid left join plan. The requirement that each table’s keys have known values before we join gives us order relations on the tables (we know which tables must be joined before others). Finding an ordering that obeys all the relations is called “topological sorting” We can compute the join path dependencies <em>and</em> re-order the join plan to be realizable as follows (assuming the <code>igraph</code> package is available do perform the topological sorting and plot the directed relations).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sorted &lt;-<span class="st"> </span><span class="ot">NULL</span>
-<span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span>
-<span class="cf">if</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">'igraph'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {
-  sorted &lt;-<span class="st"> </span><span class="kw"><a href="../reference/topoSortTables.html">topoSortTables</a></span>(columnJoinPlan, <span class="st">'employeeanddate'</span>)
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sorted<span class="op">$</span>dependencyGraph)
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(sorted<span class="op">$</span>tableOrder)
-}</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">sorted &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="cf">if</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">'igraph'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">  sorted &lt;-<span class="st"> </span><span class="kw"><a href="../reference/topoSortTables.html">topoSortTables</a></span>(columnJoinPlan, <span class="st">'employeeanddate'</span>)</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">  <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sorted<span class="op">$</span>dependencyGraph)</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(sorted<span class="op">$</span>tableOrder)</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">}</a></code></pre></div>
 <p><img src="DependencySorting_files/figure-html/sort-1.png" width="700"></p>
 <pre><code>## [1] "employeeanddate" "activity"        "orgtable"        "revenue"</code></pre>
 <p>In the above graph a table can only be joined after all of the tables pointing to it have been joined. See that this captures that the “<code>revenue</code>” table must be joined after the “<code>orgtable</code>” (as “<code>orgtable</code>” is our mapping from employees to departments). We could work on the legibility of the above graph using <code>igraph</code> controls, but I feel that it is just as well to move on to the detailed <code>DiagrammeR</code> based left join diagrams.</p>
 <p>And (again assuming we have the <code>igraph</code> package), we have a new <code>sorted$columnJoinPlan</code> that passes checks:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(sorted)) {
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"issues:"</span>, <span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, 
-                                                 sorted<span class="op">$</span>columnJoinPlan)))
-}</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(sorted)) {</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"issues:"</span>, <span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, </a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">                                                 sorted<span class="op">$</span>columnJoinPlan)))</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">}</a></code></pre></div>
 <pre><code>## [1] "issues: "</code></pre>
 <p>The new <code>sorted$columnJoinPlan</code> can be re-plotted as follows:</p>
-<pre><code>sorted$columnJoinPlan %&gt;%
-        makeJoinDiagramSpec(.) %&gt;%
-        DiagrammeR::grViz(.)</code></pre>
-<p>And the new <code>sorted$columnJoinPlan</code> is ready to be executed:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(sorted)) {
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"join plan execution log"</span>)
-  res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, 
-                             sorted<span class="op">$</span>columnJoinPlan,
-                             <span class="dt">verbose =</span> <span class="ot">TRUE</span>)
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"join results"</span>)
-  dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)
-}</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">sorted<span class="op">$</span>columnJoinPlan <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">        </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>(.) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">        </span>DiagrammeR<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DiagrammeR/topics/grViz">grViz</a></span>(.)</a></code></pre></div>
+<div id="htmlwidget-9751cfe0801cff38a6ff" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9751cfe0801cff38a6ff">{"x":{"diagram":"digraph joinplan {\n  graph [ layout = dot, rankdir = LR, overlap = prism, compound = true, nodesep = .5, ranksep = .25]\n  edge [decorate = true, arrowhead = dot]\n  node [style=filled, fillcolor=lightgrey]\n\n\n  node1 [ shape = \"folder\" , label = \"1: employeeanddate\n\\lv: eid ( id )\\lv: date\\l\"]\n\n  node2 [ shape = \"tab\" , label = \"2: activity\n\\li: table_activity_present\\lk: eid\\lk: date\\lv: hours\\lv: activity_location ( location )\\l\"]\n\n  node3 [ shape = \"tab\" , label = \"3: orgtable\n\\li: table_orgtable_present\\lk: eid\\lk: date\\lv: dept\\lv: orgtable_location ( location )\\l\"]\n\n  node4 [ shape = \"tab\" , label = \"4: revenue\n\\li: table_revenue_present\\lk: date\\lk: dept\\lv: rev\\l\"]\n\n node1 -> node2 [ label=\"eid\\ldate\\l\" ]\n node1 -> node3 [ label=\"eid\\ldate\\l\" ]\n node1 -> node4 [ label=\"date\\l\" ]\n node3 -> node4 [ label=\"dept\\l\" ]\nsubgraph cluster_1 {\nlabel = \"{  }\"\nnode1\n}\nsubgraph cluster_2 {\nlabel = \"{ date, eid }\"\nnode2 ; node3\n}\nsubgraph cluster_3 {\nlabel = \"{ date, dept }\"\nnode4\n}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>And the new <code>sorted$columnJoinPlan</code> is ready to be executed:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(sorted)) {</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"join plan execution log"</span>)</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">  res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, </a>
+<a class="sourceLine" id="cb19-4" data-line-number="4">                             sorted<span class="op">$</span>columnJoinPlan,</a>
+<a class="sourceLine" id="cb19-5" data-line-number="5">                             <span class="dt">verbose =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb19-6" data-line-number="6">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"join results"</span>)</a>
+<a class="sourceLine" id="cb19-7" data-line-number="7">  dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)</a>
+<a class="sourceLine" id="cb19-8" data-line-number="8">}</a></code></pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Sun Mar 31 10:23:35 2019"
+## [1] "start employeeanddate Thu Jul  4 08:18:02 2019"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Sun Mar 31 10:23:35 2019"
-## [1] "start activity Sun Mar 31 10:23:35 2019"
+## [1] "done employeeanddate Thu Jul  4 08:18:02 2019"
+## [1] "start activity Thu Jul  4 08:18:02 2019"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -244,8 +245,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Sun Mar 31 10:23:35 2019"
-## [1] "start orgtable Sun Mar 31 10:23:35 2019"
+## [1] "done activity Thu Jul  4 08:18:02 2019"
+## [1] "start orgtable Thu Jul  4 08:18:02 2019"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -254,8 +255,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Sun Mar 31 10:23:35 2019"
-## [1] "start revenue Sun Mar 31 10:23:35 2019"
+## [1] "done orgtable Thu Jul  4 08:18:02 2019"
+## [1] "start revenue Thu Jul  4 08:18:02 2019"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -263,7 +264,7 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Sun Mar 31 10:23:35 2019"
+## [1] "done revenue Thu Jul  4 08:18:02 2019"
 ## [1] "join results"
 ## Observations: ??
 ## Variables: 10
@@ -289,7 +290,7 @@
 <code>replyr::makeJoinDiagramSpec() %&gt;% DiagrammeR::grViz(.)</code> can then produce and capture a detailed diagram of the final join plan.</li>
 <li>Finally <code><a href="../reference/executeLeftJoinPlan.html">replyr::executeLeftJoinPlan()</a></code> can execute the join plan with diagnostics.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</a></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -118,9 +118,7 @@
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>It comes as a bit of a shock for <a href="https://cran.r-project.org">R</a> <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> users when they switch from using a <code>tbl</code> implementation based on R in-memory <code>data.frame</code>s to one based on a remote database or service. A lot of the power and convenience of the <code>dplyr</code> notation is hard to maintain with these more restricted data service providers. Things that work locally can’t always be used remotely at scale. It is emphatically not yet the case that one can practice with <code>dplyr</code> in one modality and hope to move to another back-end without significant debugging and work-arounds. The <a href="https://github.com/WinVector/replyr"><code>replyr</code></a> package attempts to provide practical data manipulation affordances to make code perform similarly on local or remote (big) data.</p>
 <p>Note: <code>replyr</code> is meant only for “tame data frames” that is data frames with non-duplicate column names that are also valid <em>simple</em> (without quotes) <code>R</code> variables names and columns that are <code>R</code> simple vector types (numbers, strings, and such).</p>
-<div class="figure">
-<img src="https://github.com/WinVector/replyr/raw/master/tools/replyrs.png">
-</div>
+<p><img src="https://github.com/WinVector/replyr/raw/master/tools/replyrs.png"></p>
 <p><code>replyr</code> supplies methods to get a grip on working with remote <code>tbl</code> sources (<code>SQL</code> databases, <code>Spark</code>) through <code>dplyr</code>. The idea is to add convenience functions to make such tasks more like working with an in-memory <code>data.frame</code>. Results still do depend on which <code>dplyr</code> service you use, but with <code>replyr</code> you have fairly uniform access to some useful functions. The rule of thumb is: try <code>dplyr</code> first, and if that does not work check if <code>replyr</code> has researched a work-around.</p>
 <p><code>replyr</code> uniformly uses standard or parametric interfaces (names of variables as strings) in favor of name capture so that you can easily program <em>over</em> <code>replyr</code>.</p>
 <p>Primary <code>replyr</code> services include:</p>
@@ -141,35 +139,35 @@
 </h2>
 <p><code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> allows execution of arbitrary code with substituted variable names (note this is subtly different than binding values for names as with <code><a href="https://www.rdocumentation.org/packages/base/topics/substitute">base::substitute</a></code> or <code><a href="https://www.rdocumentation.org/packages/base/topics/with">base::with</a></code>). This allows the user to write arbitrary <code>dplyr</code> code in the case of <a href="http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/">“parametric variable names”</a> (that is when variable names are not known at coding time, but will become available later at run time as values in other variables) without directly using the <code>dplyr</code> “underbar forms” (and the direct use of <code><a href="https://www.rdocumentation.org/packages/lazyeval/topics/interp">lazyeval::interp</a></code>, <code>.dots=stats::setNames</code>, or <code>rlang</code>/<code>tidyeval</code>).</p>
 <p>Example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">'dplyr'</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># nice parametric function we write</span>
-ComputeRatioOfColumns &lt;-<span class="st"> </span><span class="cf">function</span>(d,
-                                  NumeratorColumnName,
-                                  DenominatorColumnName,
-                                  ResultColumnName) {
-  wrapr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(
-    <span class="dt">alias=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">NumeratorColumn=</span>NumeratorColumnName,
-               <span class="dt">DenominatorColumn=</span>DenominatorColumnName,
-               <span class="dt">ResultColumn=</span>ResultColumnName),
-    <span class="dt">expr=</span>{
-      <span class="co"># (pretend) large block of code written with concrete column names.</span>
-      <span class="co"># due to the let wrapper in this function it will behave as if it was</span>
-      <span class="co"># using the specified paremetric column names.</span>
-      d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">ResultColumn =</span> NumeratorColumn<span class="op">/</span>DenominatorColumn)
-    })
-}
-
-<span class="co"># example data</span>
-d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">a=</span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">b=</span><span class="dv">3</span><span class="op">:</span><span class="dv">7</span>)
-
-<span class="co"># example application</span>
-d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<span class="st">'a'</span>,<span class="st">'b'</span>,<span class="st">'c'</span>)
- <span class="co">#    a b         c</span>
- <span class="co">#  1 1 3 0.3333333</span>
- <span class="co">#  2 2 4 0.5000000</span>
- <span class="co">#  3 3 5 0.6000000</span>
- <span class="co">#  4 4 6 0.6666667</span>
- <span class="co">#  5 5 7 0.7142857</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">'dplyr'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># nice parametric function we write</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">ComputeRatioOfColumns &lt;-<span class="st"> </span><span class="cf">function</span>(d,</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">                                  NumeratorColumnName,</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">                                  DenominatorColumnName,</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">                                  ResultColumnName) {</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  wrapr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="dt">alias=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">NumeratorColumn=</span>NumeratorColumnName,</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">               <span class="dt">DenominatorColumn=</span>DenominatorColumnName,</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">               <span class="dt">ResultColumn=</span>ResultColumnName),</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">    <span class="dt">expr=</span>{</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">      <span class="co"># (pretend) large block of code written with concrete column names.</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">      <span class="co"># due to the let wrapper in this function it will behave as if it was</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">      <span class="co"># using the specified paremetric column names.</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">      d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">ResultColumn =</span> NumeratorColumn<span class="op">/</span>DenominatorColumn)</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">    })</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">}</a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co"># example data</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">a=</span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">b=</span><span class="dv">3</span><span class="op">:</span><span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co"># example application</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22">d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ComputeRatioOfColumns</span>(<span class="st">'a'</span>,<span class="st">'b'</span>,<span class="st">'c'</span>)</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"> <span class="co">#    a b         c</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"> <span class="co">#  1 1 3 0.3333333</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"> <span class="co">#  2 2 4 0.5000000</span></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26"> <span class="co">#  3 3 5 0.6000000</span></a>
+<a class="sourceLine" id="cb2-27" data-line-number="27"> <span class="co">#  4 4 6 0.6666667</span></a>
+<a class="sourceLine" id="cb2-28" data-line-number="28"> <span class="co">#  5 5 7 0.7142857</span></a></code></pre></div>
 <p><code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> makes construction of abstract functions over <code>dplyr</code> controlled data much easier. It is designed for the case where the “<code>expr</code>” block is large sequence of statements and pipelines.</p>
 </div>
 <div id="replyrreplyr_apply_f_mapped" class="section level2">
@@ -179,33 +177,33 @@ d <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">Comput
 <p><code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> was only the secondary proposal in the original <a href="http://www.win-vector.com/blog/2016/12/parametric-variable-names-and-dplyr/">2016 “Parametric variable names” article</a>. What we really wanted was a stack of view so the data pretended to have names that matched the code (i.e., re-mapping the data, not the code).</p>
 <p>With a bit of thought we can achieve this if we associate the data re-mapping with a function environment instead of with the data. So a re-mapping is active as long as a given controlling function is in control. In our case that function is <code><a href="reference/replyr_apply_f_mapped.html">replyr::replyr_apply_f_mapped()</a></code> and works as follows:</p>
 <p>Suppose the operation we wish to use is a rank-reducing function that has been supplied as function from somewhere else that we do not have control of (such as a package). The function could be simple such as the following, but we are going to assume we want to use it without alteration (including the without the small alteration of introducing <code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let()</a></code>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># an external function with hard-coded column names</span>
-DecreaseRankColumnByOne &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
-  d<span class="op">$</span>RankColumn &lt;-<span class="st"> </span>d<span class="op">$</span>RankColumn <span class="op">-</span><span class="st"> </span><span class="dv">1</span>
-  d
-}</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># an external function with hard-coded column names</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">DecreaseRankColumnByOne &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  d<span class="op">$</span>RankColumn &lt;-<span class="st"> </span>d<span class="op">$</span>RankColumn <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  d</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">}</a></code></pre></div>
 <p>To apply this function to <code>d</code> (which doesn’t have the expected column names!) we use <code><a href="reference/replyr_apply_f_mapped.html">replyr::replyr_apply_f_mapped()</a></code> to create a new parametrized adapter as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># our data</span>
-d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Sepal_Length =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">5.8</span>,<span class="fl">5.7</span>),
-                <span class="dt">Sepal_Width =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">4.0</span>,<span class="fl">4.4</span>),
-                <span class="dt">Species =</span> <span class="st">'setosa'</span>,
-                <span class="dt">rank =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>))
-
-<span class="co"># a wrapper to introduce parameters</span>
-DecreaseRankColumnByOneNamed &lt;-<span class="st"> </span><span class="cf">function</span>(d, ColName) {
-  replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_apply_f_mapped">replyr_apply_f_mapped</a></span>(d, 
-                                <span class="dt">f =</span> DecreaseRankColumnByOne, 
-                                <span class="dt">nmap =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">RankColumn =</span> ColName),
-                                <span class="dt">restrictMapIn =</span> <span class="ot">FALSE</span>, 
-                                <span class="dt">restrictMapOut =</span> <span class="ot">FALSE</span>)
-}
-
-<span class="co"># use</span>
-dF &lt;-<span class="st"> </span><span class="kw">DecreaseRankColumnByOneNamed</span>(d, <span class="st">'rank'</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(dF)
- <span class="co">#    Sepal_Length Sepal_Width Species rank</span>
- <span class="co">#  1          5.8         4.0  setosa    0</span>
- <span class="co">#  2          5.7         4.4  setosa    1</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># our data</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Sepal_Length =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">5.8</span>,<span class="fl">5.7</span>),</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">                <span class="dt">Sepal_Width =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">4.0</span>,<span class="fl">4.4</span>),</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">                <span class="dt">Species =</span> <span class="st">'setosa'</span>,</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">                <span class="dt">rank =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co"># a wrapper to introduce parameters</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">DecreaseRankColumnByOneNamed &lt;-<span class="st"> </span><span class="cf">function</span>(d, ColName) {</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">  replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_apply_f_mapped">replyr_apply_f_mapped</a></span>(d, </a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">                                <span class="dt">f =</span> DecreaseRankColumnByOne, </a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">                                <span class="dt">nmap =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">RankColumn =</span> ColName),</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">                                <span class="dt">restrictMapIn =</span> <span class="ot">FALSE</span>, </a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">                                <span class="dt">restrictMapOut =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">}</a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co"># use</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">dF &lt;-<span class="st"> </span><span class="kw">DecreaseRankColumnByOneNamed</span>(d, <span class="st">'rank'</span>)</a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(dF)</a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"> <span class="co">#    Sepal_Length Sepal_Width Species rank</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"> <span class="co">#  1          5.8         4.0  setosa    0</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"> <span class="co">#  2          5.7         4.4  setosa    1</span></a></code></pre></div>
 <p><code><a href="reference/replyr_apply_f_mapped.html">replyr::replyr_apply_f_mapped()</a></code> renames the columns to the names expected by <code>DecreaseRankColumnByOne</code> (the mapping specified in <code>nmap</code>), applies <code>DecreaseRankColumnByOne</code>, and then inverts the mapping before returning the value.</p>
 </div>
 <div id="replyrreplyr_split" class="section level2">
@@ -213,36 +211,36 @@ dF &lt;-<span class="st"> </span><span class="kw">DecreaseRankColumnByOneNamed</
 <a href="#replyrreplyr_split" class="anchor"></a><code><a href="reference/replyr_split.html">replyr::replyr_split</a></code>
 </h2>
 <p><code><a href="reference/replyr_split.html">replyr::replyr_split</a></code> and <code><a href="reference/replyr_bind_rows.html">replyr::replyr_bind_rows</a></code> work over many remote data types including <code>Spark</code>. This allows code like the following:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>))
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)
-sc &lt;-<span class="st"> </span>sparklyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sparklyr/topics/spark-connections">spark_connect</a></span>(<span class="dt">version=</span><span class="st">'2.0.2'</span>, 
-                              <span class="dt">master =</span> <span class="st">"local"</span>)
-                              
-diris &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(sc, iris, <span class="st">'diris'</span>)
-
-f2 &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="dv">2</span>)
-
-diris <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="reference/replyr_split.html">replyr_split</a></span>(<span class="st">'Species'</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(f2) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="reference/replyr_bind_rows.html">replyr_bind_rows</a></span>()
-
-## Source:   query [6 x 5]
-## Database: spark connection master=local[4] app=sparklyr local=TRUE
-## 
-## # A tibble: 6 x 5
-##      Species Sepal_Length Sepal_Width Petal_Length Petal_Width
-##        &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
-## 1 versicolor          5.0         2.0          3.5         1.0
-## 2 versicolor          4.9         2.4          3.3         1.0
-## 3     setosa          4.3         3.0          1.1         0.1
-## 4     setosa          4.4         2.9          1.4         0.2
-## 5  virginica          4.9         2.5          4.5         1.7
-## 6  virginica          5.6         2.8          4.9         2.0
-
-sparklyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sparklyr/topics/spark-connections">spark_disconnect</a></span>(sc)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>))</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">sc &lt;-<span class="st"> </span>sparklyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sparklyr/topics/spark-connections">spark_connect</a></span>(<span class="dt">version=</span><span class="st">'2.0.2'</span>, </a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">                              <span class="dt">master =</span> <span class="st">"local"</span>)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">                              </a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">diris &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/copy_to.html">copy_to</a></span>(sc, iris, <span class="st">'diris'</span>)</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">f2 &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(Sepal_Length, Sepal_Width, Petal_Length, Petal_Width) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">diris <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="st">  </span><span class="kw"><a href="reference/replyr_split.html">replyr_split</a></span>(<span class="st">'Species'</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(f2) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="reference/replyr_bind_rows.html">replyr_bind_rows</a></span>()</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">## Source:   query [6 x 5]</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">## Database: spark connection master=local[4] app=sparklyr local=TRUE</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">## </span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">## # A tibble: 6 x 5</span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">##      Species Sepal_Length Sepal_Width Petal_Length Petal_Width</span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">##        &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">## 1 versicolor          5.0         2.0          3.5         1.0</span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">## 2 versicolor          4.9         2.4          3.3         1.0</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">## 3     setosa          4.3         3.0          1.1         0.1</span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">## 4     setosa          4.4         2.9          1.4         0.2</span></a>
+<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">## 5  virginica          4.9         2.5          4.5         1.7</span></a>
+<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">## 6  virginica          5.6         2.8          4.9         2.0</span></a>
+<a class="sourceLine" id="cb5-29" data-line-number="29"></a>
+<a class="sourceLine" id="cb5-30" data-line-number="30">sparklyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/sparklyr/topics/spark-connections">spark_disconnect</a></span>(sc)</a></code></pre></div>
 </div>
 <div id="replyrgapply" class="section level2">
 <h2 class="hasAnchor">
@@ -250,18 +248,18 @@ sparklyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 </h2>
 <p><code><a href="reference/gapply.html">replyr::gapply</a></code> is a “grouped ordered apply” data operation. Many calculations can be written in terms of this primitive, including per-group rank calculation (assuming your data services supports window functions), per-group summaries, and per-group selections. It is meant to be a specialization of <a href="https://www.jstatsoft.org/article/view/v040i01">“The Split-Apply-Combine”</a> strategy with all three steps wrapped into a single operator.</p>
 <p>Example:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">'dplyr'</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">group=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>),
-                <span class="dt">order=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">1</span>,.<span class="dv">2</span>,.<span class="dv">3</span>,.<span class="dv">4</span>,.<span class="dv">5</span>))
-rank_in_group &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">constcol=</span><span class="dv">1</span>) <span class="op">%&gt;%</span>
-<span class="st">          </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">rank=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cumsum">cumsum</a></span>(constcol)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>constcol)
-d <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/gapply">gapply</a></span>(<span class="st">'group'</span>, rank_in_group, <span class="dt">ocolumn=</span><span class="st">'order'</span>, <span class="dt">decreasing=</span><span class="ot">TRUE</span>)
- <span class="co">#    group order rank</span>
- <span class="co">#  1     1   0.2    1</span>
- <span class="co">#  2     1   0.1    2</span>
- <span class="co">#  3     2   0.5    1</span>
- <span class="co">#  4     2   0.4    2</span>
- <span class="co">#  5     2   0.3    3</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">'dplyr'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">group=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">                <span class="dt">order=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(.<span class="dv">1</span>,.<span class="dv">2</span>,.<span class="dv">3</span>,.<span class="dv">4</span>,.<span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">rank_in_group &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">constcol=</span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">          </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">rank=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cumsum">cumsum</a></span>(constcol)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>constcol)</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">d <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/gapply">gapply</a></span>(<span class="st">'group'</span>, rank_in_group, <span class="dt">ocolumn=</span><span class="st">'order'</span>, <span class="dt">decreasing=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"> <span class="co">#    group order rank</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"> <span class="co">#  1     1   0.2    1</span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"> <span class="co">#  2     1   0.1    2</span></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"> <span class="co">#  3     2   0.5    1</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"> <span class="co">#  4     2   0.4    2</span></a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"> <span class="co">#  5     2   0.3    3</span></a></code></pre></div>
 <p>The user supplies a function or pipeline that is meant to be applied per-group and the <code><a href="reference/gapply.html">replyr::gapply</a></code> wrapper orchestrates the calculation. In this example <code>rank_in_group</code> was assumed to know the column names in our data, so we directly used them instead of abstracting through <code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code>. <code><a href="reference/gapply.html">replyr::gapply</a></code> defaults to using <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">dplyr::group_by</a></code> as its splitting or partitioning control, but can also perform actual splits using ‘split’ (‘base::split’) or ‘extract’ (sequential extraction). Semantics are slightly different between cases given how <code>dplyr</code> treats grouping columns, the issue is illustrated in the difference between the definitions of <code>sumgroupS</code> and <code>sumgroupG</code> in <a href="https://github.com/WinVector/replyr/blob/master/checks/gapply.md">this example</a>).</p>
 </div>
 <div id="replyrreplyr_" class="section level2">
@@ -270,39 +268,39 @@ d <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">
 </h2>
 <p>The <code>replyr::replyr_*</code> functions are all convenience functions supplying common functionality (such as <code><a href="reference/replyr_nrow.html">replyr::replyr_nrow</a></code>) that works across many data services providers. These are prefixed (instead of being <code>S3</code> or <code>S4</code> methods) so they do not interfere with common methods. Many of these functions can expensive (which is why <code>dplyr</code> does not provide them as a default), or are patching around corner cases (which is why these functions appear to duplicate <code>base::</code> and <code>dplyr::</code> capabilities). The issues <code>replyr::replyr_*</code> claim to patch around have all been filed as issues on the appropriate <code>R</code> packages and are documented <a href="https://github.com/WinVector/replyr/tree/master/issues">here</a> (to confirm they are not phantoms).</p>
 <p>Example: <code><a href="reference/replyr_summary.html">replyr::replyr_summary</a></code> working on a database service (when <code><a href="https://www.rdocumentation.org/packages/base/topics/summary">base::summary</a></code> does not).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="dv">5</span>),
-                <span class="dt">y=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),
-                <span class="dt">z=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="ot">NA</span>,<span class="st">'a'</span>,<span class="st">'b'</span>),
-                <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)
-RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db) <span class="co"># filed as dplyr issue https://github.com/tidyverse/dplyr/issues/3150</span>
-dRemote &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_copy_to">replyr_copy_to</a></span>(my_db,d,<span class="st">'d'</span>)
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(dRemote)
- <span class="co">#      Length Class                Mode</span>
- <span class="co">#  src 2      src_SQLiteConnection list</span>
- <span class="co">#  ops 2      op_base_remote       list</span>
-<span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dRemote)
- <span class="co">#  Observations: ??</span>
- <span class="co">#  Variables: 3</span>
- <span class="co">#  Database: sqlite 3.22.0 [:memory:]</span>
- <span class="co">#  $ x &lt;dbl&gt; 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2</span>
- <span class="co">#  $ y &lt;dbl&gt; 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA</span>
- <span class="co">#  $ z &lt;chr&gt; NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"</span>
-
-replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dRemote)
- <span class="co">#    column index     class nrows nna nunique min max     mean       sd lexmin lexmax</span>
- <span class="co">#  1      x     1   numeric    15   0      NA   1   2 1.666667 0.487950   &lt;NA&gt;   &lt;NA&gt;</span>
- <span class="co">#  2      y     2   numeric    15   5      NA   3   5 4.000000 1.054093   &lt;NA&gt;   &lt;NA&gt;</span>
- <span class="co">#  3      z     3 character    15   5      NA  NA  NA       NA       NA      a      b</span>
-cdata<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/cdata/topics/qlook">qlook</a></span>(my_db, <span class="st">'d'</span>)
- <span class="co">#  table `d` SQLiteConnection </span>
- <span class="co">#   nrow: 15 </span>
- <span class="co">#   </span><span class="al">NOTE</span><span class="co">: "obs" below is count of sample, not number of rows of data.</span>
- <span class="co">#  'data.frame':   10 obs. of  3 variables:</span>
- <span class="co">#   $ x: num  1 2 2 1 2 2 1 2 2 1</span>
- <span class="co">#   $ y: num  3 5 NA 3 5 NA 3 5 NA 3</span>
- <span class="co">#   $ z: chr  NA "a" "b" NA ...</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">                <span class="dt">y=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>,<span class="dv">5</span>,<span class="ot">NA</span>),</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">                <span class="dt">z=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="ot">NA</span>,<span class="st">'a'</span>,<span class="st">'b'</span>),</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">                <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">my_db &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbConnect">dbConnect</a></span>(RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/SQLite">SQLite</a></span>(), <span class="st">":memory:"</span>)</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">RSQLite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/RSQLite/topics/initExtension">initExtension</a></span>(my_db) <span class="co"># filed as dplyr issue https://github.com/tidyverse/dplyr/issues/3150</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">dRemote &lt;-<span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_copy_to">replyr_copy_to</a></span>(my_db,d,<span class="st">'d'</span>)</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(dRemote)</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"> <span class="co">#      Length Class                Mode</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"> <span class="co">#  src 2      src_SQLiteConnection list</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"> <span class="co">#  ops 2      op_base_remote       list</span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(dRemote)</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"> <span class="co">#  Observations: ??</span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"> <span class="co">#  Variables: 3</span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"> <span class="co">#  Database: sqlite 3.22.0 [:memory:]</span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"> <span class="co">#  $ x &lt;dbl&gt; 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2</span></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"> <span class="co">#  $ y &lt;dbl&gt; 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA</span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19"> <span class="co">#  $ z &lt;chr&gt; NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"</span></a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb8-21" data-line-number="21">replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_summary">replyr_summary</a></span>(dRemote)</a>
+<a class="sourceLine" id="cb8-22" data-line-number="22"> <span class="co">#    column index     class nrows nna nunique min max     mean       sd lexmin lexmax</span></a>
+<a class="sourceLine" id="cb8-23" data-line-number="23"> <span class="co">#  1      x     1   numeric    15   0      NA   1   2 1.666667 0.487950   &lt;NA&gt;   &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb8-24" data-line-number="24"> <span class="co">#  2      y     2   numeric    15   5      NA   3   5 4.000000 1.054093   &lt;NA&gt;   &lt;NA&gt;</span></a>
+<a class="sourceLine" id="cb8-25" data-line-number="25"> <span class="co">#  3      z     3 character    15   5      NA  NA  NA       NA       NA      a      b</span></a>
+<a class="sourceLine" id="cb8-26" data-line-number="26">cdata<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/cdata/topics/qlook">qlook</a></span>(my_db, <span class="st">'d'</span>)</a>
+<a class="sourceLine" id="cb8-27" data-line-number="27"> <span class="co">#  table `d` SQLiteConnection </span></a>
+<a class="sourceLine" id="cb8-28" data-line-number="28"> <span class="co">#   nrow: 15 </span></a>
+<a class="sourceLine" id="cb8-29" data-line-number="29"> <span class="co">#   </span><span class="al">NOTE</span><span class="co">: "obs" below is count of sample, not number of rows of data.</span></a>
+<a class="sourceLine" id="cb8-30" data-line-number="30"> <span class="co">#  'data.frame':   10 obs. of  3 variables:</span></a>
+<a class="sourceLine" id="cb8-31" data-line-number="31"> <span class="co">#   $ x: num  1 2 2 1 2 2 1 2 2 1</span></a>
+<a class="sourceLine" id="cb8-32" data-line-number="32"> <span class="co">#   $ y: num  3 5 NA 3 5 NA 3 5 NA 3</span></a>
+<a class="sourceLine" id="cb8-33" data-line-number="33"> <span class="co">#   $ z: chr  NA "a" "b" NA ...</span></a></code></pre></div>
 <p>Data types, capabilities, and row-orders all vary a lot as we switch remote data services. But the point of <code>replyr</code> is to provide at least some convenient version of typical functions such as: <code>summary</code>, <code>nrow</code>, unique values, and filter rows by values in a set.</p>
 </div>
 <div id="replyr-data-services" class="section level2">
@@ -329,23 +327,23 @@ cdata<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 <li><code><a href="reference/replyr_inTest.html">replyr::replyr_inTest</a></code></li>
 </ul>
 <p>These are designed to subset data based on a columns values being in a given set. These allow selection of rows by testing membership in a set (very useful for partitioning data). Example below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">'dplyr'</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>)
-dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)
- <span class="co">#  # Source:   table&lt;replyr_filter_48848024387484565102_0000000001&gt; [?? x 3]</span>
- <span class="co">#  # Database: sqlite 3.22.0 [:memory:]</span>
- <span class="co">#         x     y z    </span>
- <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
- <span class="co">#   1     2     5 a    </span>
- <span class="co">#   2     2    NA b    </span>
- <span class="co">#   3     2     5 a    </span>
- <span class="co">#   4     2    NA b    </span>
- <span class="co">#   5     2     5 a    </span>
- <span class="co">#   6     2    NA b    </span>
- <span class="co">#   7     2     5 a    </span>
- <span class="co">#   8     2    NA b    </span>
- <span class="co">#   9     2     5 a    </span>
- <span class="co">#  10     2    NA b</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">'dplyr'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">values &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"> <span class="co">#  # Source:   table&lt;replyr_filter_22032310406483120707_0000000001&gt; [?? x 3]</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"> <span class="co">#  # Database: sqlite 3.22.0 [:memory:]</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"> <span class="co">#         x     y z    </span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"> <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"> <span class="co">#   1     2     5 a    </span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"> <span class="co">#   2     2    NA b    </span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"> <span class="co">#   3     2     5 a    </span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"> <span class="co">#   4     2    NA b    </span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"> <span class="co">#   5     2     5 a    </span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"> <span class="co">#   6     2    NA b    </span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"> <span class="co">#   7     2     5 a    </span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"> <span class="co">#   8     2    NA b    </span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"> <span class="co">#   9     2     5 a    </span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"> <span class="co">#  10     2    NA b</span></a></code></pre></div>
 </div>
 <div id="commentary" class="section level2">
 <h2 class="hasAnchor">
@@ -384,11 +382,11 @@ dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class
 <div id="clean-up" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clean-up" class="anchor"></a>Clean up</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(<span class="dt">list=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>())
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/gc">gc</a></span>()
- <span class="co">#            used (Mb) gc trigger  (Mb) limit (Mb) max used (Mb)</span>
- <span class="co">#  Ncells  976329 52.2    2011861 107.5         NA  1240471 66.3</span>
- <span class="co">#  Vcells 2705197 20.7    8388608  64.0      16384  4514697 34.5</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(<span class="dt">list=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>())</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/gc">gc</a></span>()</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"> <span class="co">#            used (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"> <span class="co">#  Ncells 1039809 55.6    2130164 113.8         NA  1900317 101.5</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"> <span class="co">#  Vcells 1895375 14.5    8388608  64.0      16384  2648802  20.3</span></a></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">

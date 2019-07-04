@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
       <h1>Parametric Programming in R</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2019-03-31</h4>
+            <h4 class="date">2019-07-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr/blob/master/vignettes/ParametricExample.Rmd"><code>vignettes/ParametricExample.Rmd</code></a></small>
       <div class="hidden name"><code>ParametricExample.Rmd</code></div>
@@ -109,38 +109,37 @@
     
 <p>Consider the problem of “parametric programming.” That is: simply writing correct code before knowing some details, such as the names of the columns your procedure will have to be applied to in the future.</p>
 <p>Suppose, for example, your task was to and build a new advisory column that tells you which values in a column of a <code>data.frame</code> are missing or <code>NA</code>. We will illustrate this in <a href="https://cran.r-project.org">R</a> using the example data given below:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>))
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(d)
- <span class="co">#     x</span>
- <span class="co">#  1  1</span>
- <span class="co">#  2 NA</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>))</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(d)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"> <span class="co">#     x</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"> <span class="co">#  1  1</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"> <span class="co">#  2 NA</span></a></code></pre></div>
 <p>Performing an ad hoc analysis is trivial in <code>R</code>: we would just directly write:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>x_isNA &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(d<span class="op">$</span>x)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">d<span class="op">$</span>x_isNA &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(d<span class="op">$</span>x)</a></code></pre></div>
 <p>We used the fact that we are looking at the data interactively to note the only column is “<code>x</code>”, and then picked “<code>x_isNA</code>” as our result name. If we want to use <a href="https://CRAN.R-project.org/package=dplyr"><code>dplyr</code></a> the notation remains straightforward:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>)
- <span class="co">#  Warning: package 'dplyr' was built under R version 3.5.2</span>
- <span class="co">#  </span>
- <span class="co">#  Attaching package: 'dplyr'</span>
- <span class="co">#  The following objects are masked from 'package:stats':</span>
- <span class="co">#  </span>
- <span class="co">#      filter, lag</span>
- <span class="co">#  The following objects are masked from 'package:base':</span>
- <span class="co">#  </span>
- <span class="co">#      intersect, setdiff, setequal, union</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/packageDescription">packageVersion</a></span>(<span class="st">"dplyr"</span>)
- <span class="co">#  [1] '0.8.0.1'</span>
-
-<span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(d, <span class="dt">x_isNA =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(x))
- <span class="co">#     x x_isNA</span>
- <span class="co">#  1  1  FALSE</span>
- <span class="co">#  2 NA   TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"> <span class="co">#  </span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"> <span class="co">#  Attaching package: 'dplyr'</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"> <span class="co">#  The following objects are masked from 'package:stats':</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"> <span class="co">#  </span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"> <span class="co">#      filter, lag</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"> <span class="co">#  The following objects are masked from 'package:base':</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"> <span class="co">#  </span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"> <span class="co">#      intersect, setdiff, setequal, union</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/packageDescription">packageVersion</a></span>(<span class="st">"dplyr"</span>)</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"> <span class="co">#  [1] '0.8.1'</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(d, <span class="dt">x_isNA =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(x))</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"> <span class="co">#     x x_isNA</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"> <span class="co">#  1  1  FALSE</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"> <span class="co">#  2 NA   TRUE</span></a></code></pre></div>
 <p>Now suppose, as is common in actual data science and data wrangling work, we are not the ones picking the column names. Instead suppose we are trying to produce reusable code to perform this task again and again on many data sets. In that case we would then expect the column names to be given to us as values inside other variables (i.e., as parameters).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cname &lt;-<span class="st"> "x"</span>                            <span class="co"># column we are examining</span>
-rname &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(cname, <span class="st">"isNA"</span>, <span class="dt">sep=</span> <span class="st">'_'</span>) <span class="co"># where to land results</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(rname)
- <span class="co">#  [1] "x_isNA"</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">cname &lt;-<span class="st"> "x"</span>                            <span class="co"># column we are examining</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">rname &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(cname, <span class="st">"isNA"</span>, <span class="dt">sep=</span> <span class="st">'_'</span>) <span class="co"># where to land results</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(rname)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"> <span class="co">#  [1] "x_isNA"</span></a></code></pre></div>
 <p>And writing the matching code is again trivial:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[[rname]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(d[[cname]])</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">d[[rname]] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(d[[cname]])</a></code></pre></div>
 <p>We are now programming at a slightly higher level, or automating tasks. We don’t need to type in new code each time a new data set with a different column name comes in. It is now easy to write a <code>for-loop</code> or <code>lapply</code> over a list of columns to analyze many columns in a single data set. It is an absolute travesty when something that is purely virtual (such as formulas and data) can not be automated over. So the slightly clunkier “<code>[[]]</code>” notation (which can be automated) is a necessary complement to the more convenient “<code>$</code>” notation (which is too specific to be easily automated over).</p>
 <p>Using <code>dplyr</code> directly (when you know all the names) is deliberately straightforward, but programming over <code>dplyr</code> (as of May 12, 2017, prior to <code>dplyr</code> <code>0.6*</code> and the conversion to <a href="https://CRAN.R-project.org/package=rlang"><code>rlang</code>/<code>tidyeval</code></a> interfaces) can become a challenge.</p>
 <div id="standard-practice" class="section level2">
@@ -164,14 +163,14 @@ rname &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocum
 <a href="#our-advice" class="anchor"></a>Our advice</h2>
 <p>Our advice is to give <a href="https://github.com/WinVector/replyr"><code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code></a> a try. <code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> takes a name mapping list (called “<code>alias</code>”) and a code-block (called “<code>expr</code>”). The code-block is re-written so that names in <code>expr</code> appearing on the left hand sides of the <code>alias</code> map are replaced with names appearing on the right hand side of the <code>alias</code> map.</p>
 <p>The code looks like this:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># wrapr::let solution</span>
-wrapr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">cname =</span> cname, <span class="dt">rname =</span> rname),
-            <span class="dt">expr  =</span> {
-              <span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(d, <span class="dt">rname =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(cname))
-            })
- <span class="co">#     x x_isNA</span>
- <span class="co">#  1  1  FALSE</span>
- <span class="co">#  2 NA   TRUE</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># wrapr::let solution</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">wrapr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">let</a></span>(<span class="dt">alias =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">cname =</span> cname, <span class="dt">rname =</span> rname),</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">            <span class="dt">expr  =</span> {</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">              <span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(d, <span class="dt">rname =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(cname))</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">            })</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"> <span class="co">#     x x_isNA</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"> <span class="co">#  1  1  FALSE</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"> <span class="co">#  2 NA   TRUE</span></a></code></pre></div>
 <p>Notice we are able to use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> instead of needing to invoke <code><a href="https://dplyr.tidyverse.org/reference/se-deprecated.html">dplyr::mutate_</a></code>. The expression block can be arbitrarily long and contain deep pipelines. We now have a useful separation of concerns, the mapping code is a wrapper completely outside of the user pipeline (the two are no longer commingled). For complicated tasks the ratio of <code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> boilerplate to actual useful work goes down quickly.</p>
 <p>The alias map is deliberately only allowed to be a string to string map (no environments, <code>as.name</code>, <code>formula</code>, expressions, or values) so <code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> <em>itself</em> is easy to use in automation or program over. I’ll repeat that for emphasis: externally <code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> is completely controllable through standard (or parametric) evaluation interfaces. Also notice the code we wrote is never directly mentions “<code>x</code>” or “<code>x_isNA</code>” as it pulls these names out of its execution environment.</p>
 <p>All of these solutions have consequences and corner cases. Our (biased) opinion is: we dislike <code><a href="https://www.rdocumentation.org/packages/wrapr/topics/let">wrapr::let</a></code> the least.</p>

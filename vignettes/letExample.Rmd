@@ -40,7 +40,7 @@ function without the use of `lazyeval` or `rlang`/`tidyeval`.
 
 ```{r sumstat_intervals}
 sumstat_intervals = function(dframe, colname, groupcolname = NULL) {
-  mapping = list(COLNAME  =colname,
+  mapping = list(COLNAME = colname,
                  GROUPCOLNAME = groupcolname)
   let(alias = mapping,
       {
