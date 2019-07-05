@@ -10,7 +10,12 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-execute_vignette <- requireNamespace("RSQLite", quietly = TRUE)
+execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
+  requireNamespace("igraph", quietly = TRUE) &&
+  requireNamespace("DiagrammeR", quietly = TRUE) &&
+  requireNamespace("webshot", quietly = TRUE)
+my_db <- NULL
+exDesc <- NULL
 if(execute_vignette) {
   my_db <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
   RSQLite::initExtension(my_db)
@@ -91,7 +96,7 @@ The table to table conditions are well-defined if a few invariants and conventio
 
 Since not all orders are valid left join plans the task is to find a re-ordering (if there is one) that is a valid left join plan.  The requirement that each table's keys have known values before we join gives us order relations on the tables (we know which tables must be joined before others).  Finding an ordering that obeys all the relations is called "topological sorting" We can compute the join path dependencies *and* re-order the join plan to be realizable as follows (assuming the `igraph` package is available do perform the topological sorting and plot the directed relations).
 
-```{r sort, eval=execute_vignette}
+```{r sort, eval=execute_vignette, error=TRUE}
 sorted <- NULL
 # requireNamespace checks just for strict warning hygiene in vignette
 if(requireNamespace('igraph', quietly = TRUE)) {
