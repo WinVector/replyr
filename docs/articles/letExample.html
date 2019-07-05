@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
       <h1>let Example</h1>
                         <h4 class="author">Nina Zumel</h4>
             
-            <h4 class="date">2019-07-04</h4>
+            <h4 class="date">2019-07-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr/blob/master/vignettes/letExample.Rmd"><code>vignettes/letExample.Rmd</code></a></small>
       <div class="hidden name"><code>letExample.Rmd</code></div>
@@ -108,6 +108,7 @@
     
     
 <p>An example of using <code>let</code> to wrap <code>dplyr</code> expressions as functions.</p>
+<p>Note: <code>let</code> has been moved to the <a href="https://github.com/WinVector/wrapr"><code>wrapr</code> package</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)</a></code></pre></div>
 <p>The desired task: write a function that takes a data frame with a specified numerical column and an optional grouping column, and returns a data frame with one row per group containing:</p>

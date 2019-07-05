@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@
       <h1>Parametric Programming in R</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2019-07-04</h4>
+            <h4 class="date">2019-07-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr/blob/master/vignettes/ParametricExample.Rmd"><code>vignettes/ParametricExample.Rmd</code></a></small>
       <div class="hidden name"><code>ParametricExample.Rmd</code></div>
@@ -107,6 +107,7 @@
 
     
     
+<p>Note: <code>let</code> has been moved to the <a href="https://github.com/WinVector/wrapr"><code>wrapr</code> package</a>.</p>
 <p>Consider the problem of “parametric programming.” That is: simply writing correct code before knowing some details, such as the names of the columns your procedure will have to be applied to in the future.</p>
 <p>Suppose, for example, your task was to and build a new advisory column that tells you which values in a column of a <code>data.frame</code> are missing or <code>NA</code>. We will illustrate this in <a href="https://cran.r-project.org">R</a> using the example data given below:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="ot">NA</span>))</a>
