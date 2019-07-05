@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 options(width =100)
 ```
 
+Note: `let` has been moved to the [`wrapr` package](https://github.com/WinVector/wrapr).
+
 Consider the problem of "parametric programming."  That is: simply writing correct
 code before knowing some details, such as the names of the columns your
 procedure will have to be applied to in the future.

@@ -3,6 +3,9 @@
 # Win-Vector LLC currently distributes this code without intellectual property indemnification, warranty, claim of fitness of purpose, or any other guarantee under a GPL3 license.
 
 #' @importFrom dplyr collect
+#' @importFrom dbplyr db_copy_to
+#' @importFrom DBI dbConnect
+#' @importFrom rlang sym
 NULL
 
 

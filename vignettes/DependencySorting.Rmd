@@ -13,7 +13,7 @@ vignette: >
 execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
   requireNamespace("igraph", quietly = TRUE) &&
   requireNamespace("DiagrammeR", quietly = TRUE) &&
-  requireNamespace("webshot", quietly = TRUE)
+  requireNamespace("webshot", quietly = TRUE) 
 my_db <- NULL
 exDesc <- NULL
 if(execute_vignette) {
@@ -24,6 +24,9 @@ if(execute_vignette) {
 ```
 
 Let's discuss the task of left joining many tables from a data warehouse using [`R`](https://www.r-project.org) and a system called "a join controller" (last discussed [here](http://www.win-vector.com/blog/2017/06/use-a-join-controller-to-document-your-work/)).
+
+This system has largely been replaced by the [`rquery` equivalent](https://github.com/WinVector/rquery/blob/master/extras/DependencySorting.md).
+
 
 One of the great advantages to specifying complicated sequences of operations in data (rather than in code) is: it is often easier to transform and extend data.  Explicit rich data beats vague convention and complicated code.
 

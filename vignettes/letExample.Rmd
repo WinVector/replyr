@@ -20,6 +20,8 @@ options(width =100)
 
 An example of using `let` to wrap `dplyr` expressions as functions.
 
+Note: `let` has been moved to the [`wrapr` package](https://github.com/WinVector/wrapr).
+
 ```{r setup, warning=FALSE, message=FALSE}
 library("dplyr")
 library("replyr")
