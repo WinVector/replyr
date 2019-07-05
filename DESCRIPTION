@@ -34,6 +34,8 @@ Suggests: testthat,
     sparklyr,
     igraph,
     DiagrammeR,
+    DiagrammeRsvg,
+    htmlwidgets,
     webshot,
     RSQLite
 VignetteBuilder: knitr
