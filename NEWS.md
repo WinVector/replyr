@@ -1,4 +1,8 @@
 
+# replyr 1.0.2 2019-07-05
+
+ * Try to fix vingette dependency issue.
+
 # replyr 1.0.1 2019-07-04
 
  * Activate diagrams in vignettes.
