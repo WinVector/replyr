@@ -1,7 +1,7 @@
 Package: replyr
 Type: Package
 Title: Patches to Use 'dplyr' on Remote Data Sources
-Version: 1.0.2
+Version: 1.0.3
 Date: 2019-07-05
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
