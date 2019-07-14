@@ -1,7 +1,7 @@
 
-# replyr 1.0.3 2019-07-06
+# replyr 1.0.3 2019-07-13
 
- * Try to fix vingette dependency issue.
+ * Try to fix vingette rendering issue.
 
 # replyr 1.0.2 2019-07-05
 
