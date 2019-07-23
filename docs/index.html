@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -330,7 +330,7 @@
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">'dplyr'</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">values &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">dRemote <span class="op">%&gt;%</span><span class="st"> </span>replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/replyr_filter">replyr_filter</a></span>(<span class="st">'x'</span>, values)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"> <span class="co">#  # Source:   table&lt;replyr_filter_84291021125716138374_0000000001&gt; [?? x 3]</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"> <span class="co">#  # Source:   table&lt;replyr_filter_84988561662523952720_0000000001&gt; [?? x 3]</span></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4"> <span class="co">#  # Database: sqlite 3.22.0 [:memory:]</span></a>
 <a class="sourceLine" id="cb10-5" data-line-number="5"> <span class="co">#         x     y z    </span></a>
 <a class="sourceLine" id="cb10-6" data-line-number="6"> <span class="co">#     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;</span></a>
@@ -385,8 +385,8 @@
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(<span class="dt">list=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>())</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/gc">gc</a></span>()</a>
 <a class="sourceLine" id="cb11-3" data-line-number="3"> <span class="co">#            used (Mb) gc trigger  (Mb) limit (Mb) max used (Mb)</span></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"> <span class="co">#  Ncells 1039822 55.6    2132504 113.9         NA  1823852 97.5</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5"> <span class="co">#  Vcells 1895393 14.5    8388608  64.0      16384  2429342 18.6</span></a></code></pre></div>
+<a class="sourceLine" id="cb11-4" data-line-number="4"> <span class="co">#  Ncells 1039821 55.6    2132640 113.9         NA  1822687 97.4</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"> <span class="co">#  Vcells 1895401 14.5    8388608  64.0      16384  2428861 18.6</span></a></code></pre></div>
 </div>
 <div id="note" class="section level2">
 <h2 class="hasAnchor">
@@ -411,7 +411,9 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>
+<li>
+<a href="https://www.r-project.org/Licenses/GPL-2">GPL-2</a> | <a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a>
+</li>
 </ul>
 </div>
 <div class="developers">

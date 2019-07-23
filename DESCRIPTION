@@ -1,8 +1,8 @@
 Package: replyr
 Type: Package
 Title: Patches to Use 'dplyr' on Remote Data Sources
-Version: 1.0.3
-Date: 2019-07-13
+Version: 1.0.4
+Date: 2019-07-23
 Authors@R: c(
     person("John", "Mount", email = "jmount@win-vector.com", role = c("aut", "cre")),
     person("Nina", "Zumel", email = "nzumel@win-vector.com", role = c("aut")),
@@ -18,7 +18,7 @@ Description: Patches to use 'dplyr' on remote data sources ('SQL' databases,
    is going into maintenance mode.  Most of the 'replyr' functions are already 
    done better by one of the non-monolithic replacement packages: 'wrapr', 'seplyr', 'rquery',
    or 'cdata'.
-License: GPL-3
+License: GPL-2 | GPL-3
 LazyData: TRUE
 Depends:
   R (>= 3.4.0),

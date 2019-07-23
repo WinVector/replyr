@@ -1,4 +1,8 @@
 
+# replyr 1.0.4 2019-07-23
+
+ * Adjust license.
+ 
 # replyr 1.0.3 2019-07-13
 
  * Try to fix vingette rendering issue.
