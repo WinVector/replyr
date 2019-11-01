@@ -44,8 +44,7 @@ library("replyr")
 packageVersion("replyr")
 execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
   requireNamespace("igraph", quietly = TRUE) &&
-  requireNamespace("DiagrammeR", quietly = TRUE) &&
-  requireNamespace("webshot", quietly = TRUE)
+  requireNamespace("DiagrammeR", quietly = TRUE)
 ```
 
 Now let's load some notional example data.  For our example we have:
@@ -201,12 +200,13 @@ The join plan is the neglected (and often missing) piece of documentation key to
 
 As a diagram the key structure of can be produced as follows:
 
-```{r diagram, eval=execute_vignette, error=TRUE}
+```{r diagram, eval=FALSE, error=TRUE}
 columnJoinPlan %.>%
   makeJoinDiagramSpec(.) %.>%
   DiagrammeR::grViz(.)
 ```
 
+![](joinController1.png)
 
 Once you have a good join plan executing it is a one-line command with `executeLeftJoinPlan()` (once you have set up a temp name manager as described in "[Managing intermediate results when using R/sparklyr](http://www.win-vector.com/blog/2017/06/managing-intermediate-results-when-using-rsparklyr/)"):
 

@@ -12,8 +12,7 @@ vignette: >
 ```{r setup, include=FALSE}
 execute_vignette <- requireNamespace("RSQLite", quietly = TRUE) &&
   requireNamespace("igraph", quietly = TRUE) &&
-  requireNamespace("DiagrammeR", quietly = TRUE) &&
-  requireNamespace("webshot", quietly = TRUE) 
+  requireNamespace("DiagrammeR", quietly = TRUE)
 my_db <- NULL
 exDesc <- NULL
 if(execute_vignette) {
@@ -104,10 +103,18 @@ sorted <- NULL
 # requireNamespace checks just for strict warning hygiene in vignette
 if(requireNamespace('igraph', quietly = TRUE)) {
   sorted <- topoSortTables(columnJoinPlan, 'employeeanddate')
+}
+```
+
+
+```{r sortplt, eval=FALSE, error=TRUE}
+if(!is.null(sorted)) {
   plot(sorted$dependencyGraph)
   print(sorted$tableOrder)
 }
 ```
+
+![](DependencySorting_ig.png)
 
 In the above graph a table can only be joined after all of the tables pointing to it have been joined. See that this captures that the "`revenue`" table must be joined after the "`orgtable`" (as "`orgtable`" is our mapping from employees to departments).   We could work on the legibility of the above graph using `igraph` controls, but I feel that it is just as well to move on to the detailed `DiagrammeR` based left join diagrams.
 
@@ -122,13 +129,13 @@ if(!is.null(sorted)) {
 
 The new `sorted$columnJoinPlan` can be re-plotted as follows:
 
-```{r diagram, eval=execute_vignette, error=TRUE}
+```{r diagram, eval=FALSE, error=TRUE}
 sorted$columnJoinPlan %>%
         makeJoinDiagramSpec(.) %>%
         DiagrammeR::grViz(.)
 ```
 
-
+![](DependencySorting_d.png)
 
 And the new `sorted$columnJoinPlan` is ready to be executed:
 

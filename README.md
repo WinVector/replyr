@@ -298,7 +298,7 @@ summary(dRemote)
 glimpse(dRemote)
  #  Observations: ??
  #  Variables: 3
- #  Database: sqlite 3.22.0 [:memory:]
+ #  Database: sqlite 3.29.0 [:memory:]
  #  $ x <dbl> 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2
  #  $ y <dbl> 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA
  #  $ z <chr> NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"
@@ -355,8 +355,8 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_55094816429194322430_0000000001> [?? x 3]
- #  # Database: sqlite 3.22.0 [:memory:]
+ #  # Source:   table<replyr_filter_52388446252917961169_0000000001> [?? x 3]
+ #  # Database: sqlite 3.29.0 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
  #   1     2     5 a    
@@ -447,8 +447,8 @@ and semantic variations between versions of data sources.
 rm(list=ls())
 gc()
  #            used (Mb) gc trigger  (Mb) limit (Mb) max used (Mb)
- #  Ncells  951822 50.9    1922980 102.7         NA  1430461 76.4
- #  Vcells 1764369 13.5    8388608  64.0      16384  2515972 19.2
+ #  Ncells  917633 49.1    1873358 100.1         NA  1175762 62.8
+ #  Vcells 1711206 13.1    8388608  64.0      16384  2295143 17.6
 ```
 
 ## Note

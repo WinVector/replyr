@@ -1,4 +1,8 @@
 
+# replyr 1.0.5 2019-11-01
+
+ * Work on vignette render size.
+
 # replyr 1.0.4 2019-07-24
 
  * Adjust license.

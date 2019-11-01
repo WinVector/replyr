@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute quantiles on remote column (NA's filtered out) using cumsum. — replyr_quantilec • replyr</title>
+<title>Page not found (404) • replyr</title>
 
 
 <!-- jquery -->
@@ -29,15 +29,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="Compute quantiles on remote column (NA's filtered out) using cumsum. — replyr_quantilec" />
-<meta property="og:description" content="NA's filtered out and does not break ties the same as stats::quantile." />
-<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="Page not found (404)" />
 
 
 
@@ -56,7 +54,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -68,7 +66,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">replyr</a>
+        <a class="navbar-link" href="index.html">replyr</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
       </span>
     </div>
@@ -76,16 +74,16 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
+  <a href="index.html">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
-  <a href="../articles/replyr.html">Get started</a>
+  <a href="articles/replyr.html">Get started</a>
 </li>
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -95,27 +93,27 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/DependencySorting.html">Join Dependency Sorting</a>
+      <a href="articles/DependencySorting.html">Join Dependency Sorting</a>
     </li>
     <li>
-      <a href="../articles/ParametricExample.html">Parametric Programming in R</a>
+      <a href="articles/ParametricExample.html">Parametric Programming in R</a>
     </li>
     <li>
-      <a href="../articles/coalesce.html">coalesce</a>
+      <a href="articles/coalesce.html">coalesce</a>
     </li>
     <li>
-      <a href="../articles/joinController.html">Join Controller</a>
+      <a href="articles/joinController.html">Join Controller</a>
     </li>
     <li>
-      <a href="../articles/letExample.html">let Example</a>
+      <a href="articles/letExample.html">let Example</a>
     </li>
     <li>
-      <a href="../articles/summary.html">summary</a>
+      <a href="articles/summary.html">summary</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="../news/index.html">Changelog</a>
+  <a href="news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -133,62 +131,17 @@
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-    <h1>Compute quantiles on remote column (NA's filtered out) using cumsum.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/WinVector/replyr/blob/master/R/quantile.R'><code>R/quantile.R</code></a></small>
-    <div class="hidden name"><code>replyr_quantilec.Rd</code></div>
+      <h1>Page not found (404)</h1>
     </div>
 
-    <div class="ref-description">
-    <p>NA's filtered out and does not break ties the same as stats::quantile.</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>replyr_quantilec</span>(<span class='no'>x</span>, <span class='no'>cname</span>, <span class='kw'>probs</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>0.25</span>), <span class='no'>...</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>mk_tmp_name_source</span>(<span class='st'>"replyr_quantilec"</span>))</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>tbl or item that can be coerced into such.</p></td>
-    </tr>
-    <tr>
-      <th>cname</th>
-      <td><p>column name to compute over (not 'n' or 'csum')</p></td>
-    </tr>
-    <tr>
-      <th>probs</th>
-      <td><p>numeric vector of probabilities with values in [0,1].</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>force later arguments to bind by name.</p></td>
-    </tr>
-    <tr>
-      <th>tempNameGenerator</th>
-      <td><p>temp name generator produced by wrapr::mk_tmp_name_source, used to record dplyr::compute() effects.</p></td>
-    </tr>
-    </table>
-
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>xvals</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/rev.html'>rev</a></span>(<span class='fl'>1</span>:<span class='fl'>1000</span>))
-<span class='fu'>replyr_quantilec</span>(<span class='no'>d</span>,<span class='st'>'xvals'</span>)</div><div class='output co'>#&gt;    0 0.25  0.5 0.75    1 
-#&gt;    1  250  500  750 1000 </div><div class='input'>
-</div></pre>
-  </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+Content not found. Please use links in the navbar.
 
   </div>
+
 </div>
+
 
 
       <footer>

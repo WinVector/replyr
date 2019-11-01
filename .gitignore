@@ -14,3 +14,5 @@ revdep
 spark-warehouse
 logs
 CRAN-RELEASE
+doc
+Meta
