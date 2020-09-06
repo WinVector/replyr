@@ -6,18 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Join Dependency Sorting • replyr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Join Dependency Sorting">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="replyr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -92,14 +93,14 @@
 <!--/.navbar -->
 
       
-      </header><script src="DependencySorting_files/htmlwidgets-1.3/htmlwidgets.js"></script><script src="DependencySorting_files/viz-0.3/viz.js"></script><link href="DependencySorting_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
-<script src="DependencySorting_files/grViz-binding-1.0.1/grViz.js"></script><div class="row">
+
+      </header><script src="DependencySorting_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Join Dependency Sorting</h1>
+      <h1 data-toc-skip>Join Dependency Sorting</h1>
                         <h4 class="author">John Mount</h4>
             
-            <h4 class="date">2019-07-23</h4>
+            <h4 class="date">2020-09-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/WinVector/replyr/blob/master/vignettes/DependencySorting.Rmd"><code>vignettes/DependencySorting.Rmd</code></a></small>
       <div class="hidden name"><code>DependencySorting.Rmd</code></div>
@@ -112,29 +113,32 @@
 <p>This system has largely been replaced by the <a href="https://github.com/WinVector/rquery/blob/master/extras/DependencySorting.md"><code>rquery</code> equivalent</a>.</p>
 <p>One of the great advantages to specifying complicated sequences of operations in data (rather than in code) is: it is often easier to transform and extend data. Explicit rich data beats vague convention and complicated code.</p>
 <p>For example suppose we have a <code>dplyr</code> <code>RSQLite</code> database handle in the variable <code>my_db</code> and we are using the following names for our tables in this database (keep in mind <code>replyr</code> allows different abstract and concrete table names, for this example we will assume they are the same):</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">tableNames &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'employeeanddate'</span>,</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">                <span class="st">'revenue'</span>,</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">                <span class="st">'activity'</span>,</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">                <span class="st">'orgtable'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="kw">tableNames</span> <span class="op">&lt;-</span> <span class="fu"><a href="#base/c.html">c</a></span>(<span class="st">'employeeanddate'</span>,
+                <span class="st">'revenue'</span>,
+                <span class="st">'activity'</span>,
+                <span class="st">'orgtable'</span>)</pre></div>
 <p>We can now use <code><a href="../reference/tableDescription.html">replyr::tableDescription()</a></code> to get descriptions of these tables <em>including</em> any declared primary key structure.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressPackageStartupMessages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"dplyr"</span>))</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"replyr"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="fu"><a href="#base/message.html">suppressPackageStartupMessages</a></span>(<span class="fu"><a href="#base/library.html">library</a></span>(<span class="st"><a href="https://dplyr.tidyverse.org">"dplyr"</a></span>))
+<span class="fu"><a href="#base/library.html">library</a></span>(<span class="st"><a href="https://github.com/WinVector/replyr/">"replyr"</a></span>)</pre></div>
 <pre><code>## Loading required package: wrapr</code></pre>
 <pre><code>## 
 ## Attaching package: 'wrapr'</code></pre>
 <pre><code>## The following object is masked from 'package:dplyr':
 ## 
 ##     coalesce</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">tDesc &lt;-<span class="st"> </span>tableNames <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">    <span class="cf">function</span>(ni) {</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">      replyr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/replyr/topics/tableDescription">tableDescription</a></span>(ni,</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">                               dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(my_db, ni),</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">                               <span class="dt">keyInspector=</span> key_inspector_sqlite)</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">    }) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>()</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(tDesc[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'handle'</span>, <span class="st">'keys'</span>, <span class="st">'columns'</span>), ])</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit">
+<span class="kw">tDesc</span> <span class="op">&lt;-</span> <span class="kw">tableNames</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="#base/lapply.html">lapply</a></span>(
+    <span class="fu">function</span>(<span class="kw">ni</span>) {
+      <span class="kw">replyr</span>::<span class="fu"><a href="../reference/tableDescription.html">tableDescription</a></span>(<span class="kw">ni</span>,
+                               <span class="kw">dplyr</span>::<span class="fu"><a href="https://dplyr.tidyverse.org/reference/tbl.html">tbl</a></span>(<span class="kw">my_db</span>, <span class="kw">ni</span>),
+                               keyInspector= <span class="kw">key_inspector_sqlite</span>)
+    }) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>()
+
+<span class="fu"><a href="#base/print.html">print</a></span>(<span class="kw">tDesc</span>[, <span class="fu"><a href="#base/c.html">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'handle'</span>, <span class="st">'keys'</span>, <span class="st">'columns'</span>), ])</pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   tableName       handle     keys      columns  
 ##   &lt;chr&gt;           &lt;list&gt;     &lt;list&gt;    &lt;list&gt;   
@@ -143,8 +147,9 @@
 ## 3 activity        &lt;tbl_SQLC&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;
 ## 4 orgtable        &lt;tbl_SQLC&gt; &lt;chr [2]&gt; &lt;chr [4]&gt;</code></pre>
 <p>This is more legible if we turn it into a column join plan.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">columnJoinPlan &lt;-<span class="st"> </span><span class="kw"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(tDesc, <span class="dt">check=</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="kw">columnJoinPlan</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/buildJoinPlan.html">buildJoinPlan</a></span>(<span class="kw">tDesc</span>, check= <span class="fl">FALSE</span>)
+<span class="fu"><a href="#base/print.html">print</a></span>(<span class="kw">columnJoinPlan</span>[, <span class="fu"><a href="#base/c.html">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</pre></div>
 <pre><code>## # A tibble: 13 x 4
 ##    tableName       sourceColumn resultColumn      isKey
 ##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;             &lt;lgl&gt;
@@ -168,8 +173,9 @@
 <li>Find an ordering of the rest of the tables that makes the left join executable or realizable (more on this later).</li>
 </ul>
 <p>First let’s patch up the key structure. This could be done by exporting the <code>columnJoinPlan</code> as a spreadsheet and editing it, but for our example we will just alter it in place.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">columnJoinPlan<span class="op">$</span>resultColumn[columnJoinPlan<span class="op">$</span>sourceColumn<span class="op">==</span><span class="st">'id'</span>] &lt;-<span class="st"> 'eid'</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(columnJoinPlan[, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit">
+<span class="kw">columnJoinPlan</span><span class="op">$</span><span class="kw">resultColumn</span>[<span class="kw">columnJoinPlan</span><span class="op">$</span><span class="kw">sourceColumn</span><span class="op">==</span><span class="st">'id'</span>] <span class="op">&lt;-</span> <span class="st">'eid'</span>
+<span class="fu"><a href="#base/print.html">print</a></span>(<span class="kw">columnJoinPlan</span>[, <span class="fu"><a href="#base/c.html">c</a></span>(<span class="st">'tableName'</span>, <span class="st">'sourceColumn'</span>, <span class="st">'resultColumn'</span>, <span class="st">'isKey'</span>)])</pre></div>
 <pre><code>## # A tibble: 13 x 4
 ##    tableName       sourceColumn resultColumn      isKey
 ##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;             &lt;lgl&gt;
@@ -189,7 +195,8 @@
 <p>Now we can worry about left join order.</p>
 <p>The most important choice in a left join plan is which table is left-most. If all the other tables are addressed by primary keys (i.e., there is not more than one row matching any row of the left-table) then the left-most table completely determines the set of rows in the left join result, no matter how many tables we are joining in. The order the rest of the tables are joined becomes irrelevant assuming it is an order we can execute.</p>
 <p>What prevents a proposed left join order from being executable is trying to join in a table that has a key that we do not yet have values for. Let’s show this as part of our example. Suppose we know that we want the table “<code>employeeanddate</code>” to be the left-most table in our left join sequence (and again, this is the one important choice). We can see our current left join plan (<code>columnJoinPlan</code>) is not executable in the order it is currently specifying:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"issues:"</span>, <span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, columnJoinPlan)))</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit">
+<span class="fu"><a href="#base/print.html">print</a></span>(<span class="fu"><a href="#base/paste.html">paste</a></span>(<span class="st">"issues:"</span>, <span class="fu"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(<span class="kw">tDesc</span>, <span class="kw">columnJoinPlan</span>)))</pre></div>
 <pre><code>## [1] "issues: key col(s) ( dept ) not contained in result cols of previous table(s) for table: revenue"</code></pre>
 <p>This message is saying: when it comes time to join in the “<code>revenue</code>” table rows do not yet have values for the “<code>dept</code>” key column (so we can’t do the join in that order).</p>
 <p>The table to table conditions are well-defined if a few invariants and conventions are maintained in the <code>tDesc</code> table descriptions:</p>
@@ -200,44 +207,50 @@
 <li>The left-most table is treated as special in that it is “joinable” no matter what key constraints it does or does not declare and no other table can be joined before it.</li>
 </ul>
 <p>Since not all orders are valid left join plans the task is to find a re-ordering (if there is one) that is a valid left join plan. The requirement that each table’s keys have known values before we join gives us order relations on the tables (we know which tables must be joined before others). Finding an ordering that obeys all the relations is called “topological sorting” We can compute the join path dependencies <em>and</em> re-order the join plan to be realizable as follows (assuming the <code>igraph</code> package is available do perform the topological sorting and plot the directed relations).</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">sorted &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span></a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="cf">if</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ns-load">requireNamespace</a></span>(<span class="st">'igraph'</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)) {</a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">  sorted &lt;-<span class="st"> </span><span class="kw"><a href="../reference/topoSortTables.html">topoSortTables</a></span>(columnJoinPlan, <span class="st">'employeeanddate'</span>)</a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">  <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sorted<span class="op">$</span>dependencyGraph)</a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(sorted<span class="op">$</span>tableOrder)</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7">}</a></code></pre></div>
-<p><img src="DependencySorting_files/figure-html/sort-1.png" width="700"></p>
-<pre><code>## [1] "employeeanddate" "activity"        "orgtable"        "revenue"</code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit">
+<span class="kw">sorted</span> <span class="op">&lt;-</span> <span class="kw">NULL</span>
+<span class="co"># requireNamespace checks just for strict warning hygiene in vignette</span>
+<span class="co">if</span>(<span class="fu"><a href="#base/ns-load.html">requireNamespace</a></span>(<span class="st">'igraph'</span>, quietly = <span class="fl">TRUE</span>)) {
+  <span class="kw">sorted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/topoSortTables.html">topoSortTables</a></span>(<span class="kw">columnJoinPlan</span>, <span class="st">'employeeanddate'</span>)
+}</pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit">
+<span class="co">if</span>(<span class="op">!</span><span class="fu"><a href="#base/NULL.html">is.null</a></span>(<span class="kw">sorted</span>)) {
+  <span class="fu"><a href="#graphics/plot.default.html">plot</a></span>(<span class="kw">sorted</span><span class="op">$</span><span class="kw">dependencyGraph</span>)
+  <span class="fu"><a href="#base/print.html">print</a></span>(<span class="kw">sorted</span><span class="op">$</span><span class="kw">tableOrder</span>)
+}</pre></div>
+<p><img src="DependencySorting_ig.png"></p>
 <p>In the above graph a table can only be joined after all of the tables pointing to it have been joined. See that this captures that the “<code>revenue</code>” table must be joined after the “<code>orgtable</code>” (as “<code>orgtable</code>” is our mapping from employees to departments). We could work on the legibility of the above graph using <code>igraph</code> controls, but I feel that it is just as well to move on to the detailed <code>DiagrammeR</code> based left join diagrams.</p>
 <p>And (again assuming we have the <code>igraph</code> package), we have a new <code>sorted$columnJoinPlan</code> that passes checks:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(sorted)) {</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"issues:"</span>, <span class="kw"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(tDesc, </a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">                                                 sorted<span class="op">$</span>columnJoinPlan)))</a>
-<a class="sourceLine" id="cb16-4" data-line-number="4">}</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit">
+<span class="co">if</span>(<span class="op">!</span><span class="fu"><a href="#base/NULL.html">is.null</a></span>(<span class="kw">sorted</span>)) {
+  <span class="fu"><a href="#base/print.html">print</a></span>(<span class="fu"><a href="#base/paste.html">paste</a></span>(<span class="st">"issues:"</span>, <span class="fu"><a href="../reference/inspectDescrAndJoinPlan.html">inspectDescrAndJoinPlan</a></span>(<span class="kw">tDesc</span>, 
+                                                 <span class="kw">sorted</span><span class="op">$</span><span class="kw">columnJoinPlan</span>)))
+}</pre></div>
 <pre><code>## [1] "issues: "</code></pre>
 <p>The new <code>sorted$columnJoinPlan</code> can be re-plotted as follows:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">sorted<span class="op">$</span>columnJoinPlan <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">        </span><span class="kw"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>(.) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">        </span>DiagrammeR<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DiagrammeR/topics/grViz">grViz</a></span>(.)</a></code></pre></div>
-<div id="htmlwidget-3cccdead42eaf34a25a7" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3cccdead42eaf34a25a7">{"x":{"diagram":"digraph joinplan {\n  graph [ layout = dot, rankdir = LR, overlap = prism, compound = true, nodesep = .5, ranksep = .25]\n  edge [decorate = true, arrowhead = dot]\n  node [style=filled, fillcolor=lightgrey]\n\n\n  node1 [ shape = \"folder\" , label = \"1: employeeanddate\n\\lv: eid ( id )\\lv: date\\l\"]\n\n  node2 [ shape = \"tab\" , label = \"2: activity\n\\li: table_activity_present\\lk: eid\\lk: date\\lv: hours\\lv: activity_location ( location )\\l\"]\n\n  node3 [ shape = \"tab\" , label = \"3: orgtable\n\\li: table_orgtable_present\\lk: eid\\lk: date\\lv: dept\\lv: orgtable_location ( location )\\l\"]\n\n  node4 [ shape = \"tab\" , label = \"4: revenue\n\\li: table_revenue_present\\lk: date\\lk: dept\\lv: rev\\l\"]\n\n node1 -> node2 [ label=\"eid\\ldate\\l\" ]\n node1 -> node3 [ label=\"eid\\ldate\\l\" ]\n node1 -> node4 [ label=\"date\\l\" ]\n node3 -> node4 [ label=\"dept\\l\" ]\nsubgraph cluster_1 {\nlabel = \"{  }\"\nnode1\n}\nsubgraph cluster_2 {\nlabel = \"{ date, eid }\"\nnode2 ; node3\n}\nsubgraph cluster_3 {\nlabel = \"{ date, dept }\"\nnode4\n}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>And the new <code>sorted$columnJoinPlan</code> is ready to be executed:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(sorted)) {</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"join plan execution log"</span>)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">  res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(tDesc, </a>
-<a class="sourceLine" id="cb19-4" data-line-number="4">                             sorted<span class="op">$</span>columnJoinPlan,</a>
-<a class="sourceLine" id="cb19-5" data-line-number="5">                             <span class="dt">verbose =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb19-6" data-line-number="6">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"join results"</span>)</a>
-<a class="sourceLine" id="cb19-7" data-line-number="7">  dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(res)</a>
-<a class="sourceLine" id="cb19-8" data-line-number="8">}</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit">
+<span class="kw">sorted</span><span class="op">$</span><span class="kw">columnJoinPlan</span> <span class="op">%&gt;%</span>
+        <span class="fu"><a href="../reference/makeJoinDiagramSpec.html">makeJoinDiagramSpec</a></span>(<span class="kw">.</span>) <span class="op">%&gt;%</span>
+        <span class="kw">DiagrammeR</span>::<span class="fu"><a href="#DiagrammeR/grViz.html">grViz</a></span>(<span class="kw">.</span>)</pre></div>
+<p><img src="DependencySorting_d.png"></p>
+<p>And the new <code>sorted$columnJoinPlan</code> is ready to be executed:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit">
+<span class="co">if</span>(<span class="op">!</span><span class="fu"><a href="#base/NULL.html">is.null</a></span>(<span class="kw">sorted</span>)) {
+  <span class="fu"><a href="#base/print.html">print</a></span>(<span class="st">"join plan execution log"</span>)
+  <span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/executeLeftJoinPlan.html">executeLeftJoinPlan</a></span>(<span class="kw">tDesc</span>, 
+                             <span class="kw">sorted</span><span class="op">$</span><span class="kw">columnJoinPlan</span>,
+                             verbose = <span class="fl">TRUE</span>)
+  <span class="fu"><a href="#base/print.html">print</a></span>(<span class="st">"join results"</span>)
+  <span class="kw">dplyr</span>::<span class="fu"><a href="https://tibble.tidyverse.org/reference/glimpse.html">glimpse</a></span>(<span class="kw">res</span>)
+}</pre></div>
 <pre><code>## [1] "join plan execution log"
-## [1] "start employeeanddate Tue Jul 23 16:29:01 2019"
+## [1] "start employeeanddate Sun Sep  6 14:10:13 2020"
 ## [1] " rename/restrict employeeanddate"
 ## [1] "   'eid' = 'id'"
 ## [1] "   'date' = 'date'"
 ## [1] " res &lt;- employeeanddate"
-## [1] "done employeeanddate Tue Jul 23 16:29:01 2019"
-## [1] "start activity Tue Jul 23 16:29:01 2019"
+## [1] "done employeeanddate Sun Sep  6 14:10:13 2020"
+## [1] "start activity Sun Sep  6 14:10:13 2020"
 ## [1] " rename/restrict activity"
 ## [1] "   'table_activity_present' = 'table_activity_present'"
 ## [1] "   'eid' = 'eid'"
@@ -246,8 +259,8 @@
 ## [1] "   'activity_location' = 'location'"
 ## [1] " res &lt;- left_join(res, activity,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done activity Tue Jul 23 16:29:01 2019"
-## [1] "start orgtable Tue Jul 23 16:29:01 2019"
+## [1] "done activity Sun Sep  6 14:10:13 2020"
+## [1] "start orgtable Sun Sep  6 14:10:13 2020"
 ## [1] " rename/restrict orgtable"
 ## [1] "   'table_orgtable_present' = 'table_orgtable_present'"
 ## [1] "   'eid' = 'eid'"
@@ -256,8 +269,8 @@
 ## [1] "   'orgtable_location' = 'location'"
 ## [1] " res &lt;- left_join(res, orgtable,"
 ## [1] "                  by = c( 'eid', 'date' ))"
-## [1] "done orgtable Tue Jul 23 16:29:01 2019"
-## [1] "start revenue Tue Jul 23 16:29:01 2019"
+## [1] "done orgtable Sun Sep  6 14:10:13 2020"
+## [1] "start revenue Sun Sep  6 14:10:13 2020"
 ## [1] " rename/restrict revenue"
 ## [1] "   'table_revenue_present' = 'table_revenue_present'"
 ## [1] "   'date' = 'date'"
@@ -265,11 +278,11 @@
 ## [1] "   'rev' = 'rev'"
 ## [1] " res &lt;- left_join(res, revenue,"
 ## [1] "                  by = c( 'date', 'dept' ))"
-## [1] "done revenue Tue Jul 23 16:29:01 2019"
+## [1] "done revenue Sun Sep  6 14:10:13 2020"
 ## [1] "join results"
-## Observations: ??
-## Variables: 10
-## Database: sqlite 3.22.0 [:memory:]
+## Rows: ??
+## Columns: 10
+## Database: sqlite 3.30.1 [:memory:]
 ## $ eid                    &lt;chr&gt; "i4", "i4"
 ## $ date                   &lt;int&gt; 20140501, 20140601
 ## $ table_activity_present &lt;dbl&gt; 1, 1
@@ -291,13 +304,16 @@
 <code>replyr::makeJoinDiagramSpec() %&gt;% DiagrammeR::grViz(.)</code> can then produce and capture a detailed diagram of the final join plan.</li>
 <li>Finally <code><a href="../reference/executeLeftJoinPlan.html">replyr::executeLeftJoinPlan()</a></code> can execute the join plan with diagnostics.</li>
 </ul>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">DBI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/DBI/topics/dbDisconnect">dbDisconnect</a></span>(my_db)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit">
+<span class="kw">DBI</span>::<span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html">dbDisconnect</a></span>(<span class="kw">my_db</span>)</pre></div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+
       </div>
 
 </div>
+
 
 
       <footer><div class="copyright">
@@ -305,12 +321,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

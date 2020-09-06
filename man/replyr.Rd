@@ -3,7 +3,6 @@
 \docType{package}
 \name{replyr}
 \alias{replyr}
-\alias{replyr-package}
 \title{replyr: Patches to Use dplyr on Remote Data Sources}
 \description{
 Methods to reliably use \code{dplyr} on remote data sources in \code{R} (\code{SQL} databases,
@@ -20,6 +19,7 @@ Most of what it does is now done better in one of the newer non-monolithic packa
 \item Big data data manipulation: \code{rquery} \url{https://CRAN.R-project.org/package=rquery} and \code{cdata} \url{https://CRAN.R-project.org/package=cdata}.
 }
 
+
 \code{replyr} helps with the following:
 
 \itemize{
@@ -32,6 +32,7 @@ Most of what it does is now done better in one of the newer non-monolithic packa
 
 \code{replyr} is in maintenance mode. Better version of the functionality have been ported to the following packages:
 \code{wrapr}, \code{cdata}, \code{rquery}, and \code{seplyr}.
+
 
 To learn more about replyr, please start with the vignette:
 \code{vignette('replyr','replyr')}

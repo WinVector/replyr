@@ -4,10 +4,20 @@
 \alias{gapply}
 \title{grouped ordered apply}
 \usage{
-gapply(df, gcolumn, f, ..., ocolumn = NULL, decreasing = FALSE,
-  partitionMethod = "split", bindrows = TRUE, maxgroups = 100,
-  eagerCompute = FALSE, restoreGroup = FALSE,
-  tempNameGenerator = mk_tmp_name_source("replyr_gapply"))
+gapply(
+  df,
+  gcolumn,
+  f,
+  ...,
+  ocolumn = NULL,
+  decreasing = FALSE,
+  partitionMethod = "split",
+  bindrows = TRUE,
+  maxgroups = 100,
+  eagerCompute = FALSE,
+  restoreGroup = FALSE,
+  tempNameGenerator = mk_tmp_name_source("replyr_gapply")
+)
 }
 \arguments{
 \item{df}{remote dplyr data item}

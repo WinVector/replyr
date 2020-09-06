@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -38,7 +42,6 @@
 <meta property="og:title" content="Augment a data frame by adding additional rows. — replyr_coalesce" />
 <meta property="og:description" content="Note: do not count on order of resulting data.  Also only added rows
 are altered by the fill instructions." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -56,7 +59,7 @@ are altered by the fill instructions." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -146,9 +149,15 @@ are altered by the fill instructions." />
 are altered by the fill instructions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>replyr_coalesce</span>(<span class='no'>data</span>, <span class='no'>support</span>, <span class='no'>...</span>, <span class='kw'>fills</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>newRowColumn</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>copy</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>tempNameGenerator</span> <span class='kw'>=</span> <span class='fu'>mk_tmp_name_source</span>(<span class='st'>"replyr_coalesce"</span>))</pre>
+    <pre class="usage"><span class='fu'>replyr_coalesce</span>(
+  <span class='kw'>data</span>,
+  <span class='kw'>support</span>,
+  <span class='kw'>...</span>,
+  fills = <span class='kw'>NULL</span>,
+  newRowColumn = <span class='kw'>NULL</span>,
+  copy = <span class='fl'>TRUE</span>,
+  tempNameGenerator = <span class='fu'>mk_tmp_name_source</span>(<span class='st'>"replyr_coalesce"</span>)
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -191,15 +200,16 @@ are altered by the fill instructions.</p>
     <pre class="examples"><div class='input'>
 
 <span class='co'># single column key example</span>
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>year</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2005</span>,<span class='fl'>2007</span>,<span class='fl'>2010</span>),
-                   <span class='kw'>count</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>6</span>,<span class='fl'>1</span>,<span class='fl'>NA</span>),
-                   <span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='st'>'b'</span>,<span class='st'>'c'</span>),
-                   <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>support</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>year</span><span class='kw'>=</span><span class='fl'>2005</span>:<span class='fl'>2010</span>)
-<span class='no'>filled</span> <span class='kw'>&lt;-</span> <span class='fu'>replyr_coalesce</span>(<span class='no'>data</span>, <span class='no'>support</span>,
-                          <span class='kw'>fills</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>count</span><span class='kw'>=</span><span class='fl'>0</span>))
-<span class='no'>filled</span> <span class='kw'>&lt;-</span> <span class='no'>filled</span>[<span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(<span class='no'>filled</span>$<span class='no'>year</span>), ]
-<span class='no'>filled</span></div><div class='output co'>#&gt;   year count name
+<span class='kw'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='#base/data.frame.html'>data.frame</a></span>(year = <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='fl'>2005</span>,<span class='fl'>2007</span>,<span class='fl'>2010</span>),
+                   count = <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='fl'>6</span>,<span class='fl'>1</span>,<span class='fl'>NA</span>),
+                   name = <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='st'>'b'</span>,<span class='st'>'c'</span>),
+                   stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='kw'>support</span> <span class='op'>&lt;-</span> <span class='fu'><a href='#base/data.frame.html'>data.frame</a></span>(year=<span class='fl'>2005</span><span class='op'>:</span><span class='fl'>2010</span>)
+<span class='kw'>filled</span> <span class='op'>&lt;-</span> <span class='fu'>replyr_coalesce</span>(<span class='kw'>data</span>, <span class='kw'>support</span>,
+                          fills=<span class='fu'><a href='#base/list.html'>list</a></span>(count=<span class='fl'>0</span>))
+<span class='kw'>filled</span> <span class='op'>&lt;-</span> <span class='kw'>filled</span>[<span class='fu'><a href='#base/order.html'>order</a></span>(<span class='kw'>filled</span><span class='op'>$</span><span class='kw'>year</span>), ]
+<span class='kw'>filled</span>
+</div><div class='output co'>#&gt;   year count name
 #&gt; 1 2005     6    a
 #&gt; 4 2006     0 &lt;NA&gt;
 #&gt; 2 2007     1    b
@@ -207,17 +217,18 @@ are altered by the fill instructions.</p>
 #&gt; 6 2009     0 &lt;NA&gt;
 #&gt; 3 2010    NA    c</div><div class='input'>
 <span class='co'># complex key example</span>
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>year</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2005</span>,<span class='fl'>2007</span>,<span class='fl'>2010</span>),
-                   <span class='kw'>count</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>6</span>,<span class='fl'>1</span>,<span class='fl'>NA</span>),
-                   <span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='st'>'b'</span>,<span class='st'>'c'</span>),
-                   <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>support</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span>(<span class='kw'>year</span><span class='kw'>=</span><span class='fl'>2005</span>:<span class='fl'>2010</span>,
-                   <span class='kw'>name</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='st'>'b'</span>,<span class='st'>'c'</span>,<span class='st'>'d'</span>),
-                   <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='no'>filled</span> <span class='kw'>&lt;-</span> <span class='fu'>replyr_coalesce</span>(<span class='no'>data</span>, <span class='no'>support</span>,
-                          <span class='kw'>fills</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>count</span><span class='kw'>=</span><span class='fl'>0</span>))
-<span class='no'>filled</span> <span class='kw'>&lt;-</span> <span class='no'>filled</span>[<span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span>(<span class='no'>filled</span>$<span class='no'>year</span>, <span class='no'>filled</span>$<span class='no'>name</span>), ]
-<span class='no'>filled</span></div><div class='output co'>#&gt;    year count name
+<span class='kw'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='#base/data.frame.html'>data.frame</a></span>(year = <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='fl'>2005</span>,<span class='fl'>2007</span>,<span class='fl'>2010</span>),
+                   count = <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='fl'>6</span>,<span class='fl'>1</span>,<span class='fl'>NA</span>),
+                   name = <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='st'>'b'</span>,<span class='st'>'c'</span>),
+                   stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='kw'>support</span> <span class='op'>&lt;-</span> <span class='fu'><a href='#base/expand.grid.html'>expand.grid</a></span>(year=<span class='fl'>2005</span><span class='op'>:</span><span class='fl'>2010</span>,
+                   name= <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='st'>'b'</span>,<span class='st'>'c'</span>,<span class='st'>'d'</span>),
+                   stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='kw'>filled</span> <span class='op'>&lt;-</span> <span class='fu'>replyr_coalesce</span>(<span class='kw'>data</span>, <span class='kw'>support</span>,
+                          fills=<span class='fu'><a href='#base/list.html'>list</a></span>(count=<span class='fl'>0</span>))
+<span class='kw'>filled</span> <span class='op'>&lt;-</span> <span class='kw'>filled</span>[<span class='fu'><a href='#base/order.html'>order</a></span>(<span class='kw'>filled</span><span class='op'>$</span><span class='kw'>year</span>, <span class='kw'>filled</span><span class='op'>$</span><span class='kw'>name</span>), ]
+<span class='kw'>filled</span>
+</div><div class='output co'>#&gt;    year count name
 #&gt; 1  2005     6    a
 #&gt; 9  2005     0    b
 #&gt; 14 2005     0    c
@@ -244,14 +255,10 @@ are altered by the fill instructions.</p>
 #&gt; 24 2010     0    d</div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -262,7 +269,7 @@ are altered by the fill instructions.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

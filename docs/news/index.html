@@ -8,21 +8,29 @@
 
 <title>Changelog • replyr</title>
 
+
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,7 +38,9 @@
 
 
 
+
 <meta property="og:title" content="Changelog" />
+
 
 
 
@@ -44,9 +54,10 @@
 <![endif]-->
 
 
+
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -60,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">replyr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
       </span>
     </div>
 
@@ -68,7 +79,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -109,7 +120,6 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://www.win-vector.com/">Sponsor: Win-Vector LLC</a>
@@ -121,107 +131,116 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
+      <h1 data-toc-skip>Changelog <small></small></h1>
       <small>Source: <a href='https://github.com/WinVector/replyr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="replyr-1-0-4-2019-07-23" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-1-0-4-2019-07-23" class="anchor"></a>replyr 1.0.4 2019-07-23<small> Unreleased </small>
+    <div id="replyr-105-2019-11-01" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.5">
+<a href="#replyr-105-2019-11-01" class="anchor"></a>replyr 1.0.5 2019-11-01<small> 2019-11-01 </small>
+</h1>
+<ul>
+<li>Work on vignette render size.</li>
+</ul>
+</div>
+    <div id="replyr-104-2019-07-24" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.4">
+<a href="#replyr-104-2019-07-24" class="anchor"></a>replyr 1.0.4 2019-07-24<small> 2019-07-24 </small>
 </h1>
 <ul>
 <li>Adjust license.</li>
 </ul>
 </div>
-    <div id="replyr-1-0-3-2019-07-13" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-1-0-3-2019-07-13" class="anchor"></a>replyr 1.0.3 2019-07-13<small> 2019-07-14 </small>
+    <div id="replyr-103-2019-07-13" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.3">
+<a href="#replyr-103-2019-07-13" class="anchor"></a>replyr 1.0.3 2019-07-13<small> 2019-07-14 </small>
 </h1>
 <ul>
 <li>Try to fix vingette rendering issue.</li>
 </ul>
 </div>
-    <div id="replyr-1-0-2-2019-07-05" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-1-0-2-2019-07-05" class="anchor"></a>replyr 1.0.2 2019-07-05<small> 2019-07-05 </small>
+    <div id="replyr-102-2019-07-05" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.2">
+<a href="#replyr-102-2019-07-05" class="anchor"></a>replyr 1.0.2 2019-07-05<small> 2019-07-05 </small>
 </h1>
 <ul>
 <li>Try to fix vingette dependency issue.</li>
 </ul>
 </div>
-    <div id="replyr-1-0-1-2019-07-04" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-1-0-1-2019-07-04" class="anchor"></a>replyr 1.0.1 2019-07-04<small> 2019-07-04 </small>
+    <div id="replyr-101-2019-07-04" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.1">
+<a href="#replyr-101-2019-07-04" class="anchor"></a>replyr 1.0.1 2019-07-04<small> 2019-07-04 </small>
 </h1>
 <ul>
 <li>Activate diagrams in vignettes.</li>
 </ul>
 </div>
-    <div id="replyr-1-0-0-2019-03-31" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-1-0-0-2019-03-31" class="anchor"></a>replyr 1.0.0 2019-03-31<small> 2019-03-31 </small>
+    <div id="replyr-100-2019-03-31" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.0">
+<a href="#replyr-100-2019-03-31" class="anchor"></a>replyr 1.0.0 2019-03-31<small> 2019-03-31 </small>
 </h1>
 <ul>
 <li>Remove ggplot2 dependence to work around ggplot2 “VECTOR_ELT() can only be applied to a ‘list’, not a ‘double’” breakage.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-9-2019-01-02" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-9-2019-01-02" class="anchor"></a>replyr 0.9.9 2019-01-02<small> 2019-01-02 </small>
+    <div id="replyr-099-2019-01-02" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.9">
+<a href="#replyr-099-2019-01-02" class="anchor"></a>replyr 0.9.9 2019-01-02<small> 2019-01-02 </small>
 </h1>
 <ul>
 <li>Work around <a href="https://github.com/tidyverse/dplyr/issues/4062" class="uri">https://github.com/tidyverse/dplyr/issues/4062</a> .</li>
 </ul>
 </div>
-    <div id="replyr-0-9-8-2018-09-18" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-8-2018-09-18" class="anchor"></a>replyr 0.9.8 2018-09-18<small> 2018-09-19 </small>
+    <div id="replyr-098-2018-09-18" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.8">
+<a href="#replyr-098-2018-09-18" class="anchor"></a>replyr 0.9.8 2018-09-18<small> 2018-09-19 </small>
 </h1>
 <ul>
 <li>Force parent.frame.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-7-2018-07-20" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-7-2018-07-20" class="anchor"></a>replyr 0.9.7 2018-07-20<small> 2018-07-20 </small>
+    <div id="replyr-097-2018-07-20" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.7">
+<a href="#replyr-097-2018-07-20" class="anchor"></a>replyr 0.9.7 2018-07-20<small> 2018-07-20 </small>
 </h1>
 <ul>
 <li>Documentation fixes.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-6-2018-06-23" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-6-2018-06-23" class="anchor"></a>replyr 0.9.6 2018-06-23<small> 2018-06-23 </small>
+    <div id="replyr-096-2018-06-23" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.6">
+<a href="#replyr-096-2018-06-23" class="anchor"></a>replyr 0.9.6 2018-06-23<small> 2018-06-23 </small>
 </h1>
 <ul>
 <li>Remove ::: usage.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-5-2018-05-20" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-5-2018-05-20" class="anchor"></a>replyr 0.9.5 2018-05-20<small> 2018-05-20 </small>
+    <div id="replyr-095-2018-05-20" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.5">
+<a href="#replyr-095-2018-05-20" class="anchor"></a>replyr 0.9.5 2018-05-20<small> 2018-05-20 </small>
 </h1>
 <ul>
 <li>Remove diagram rendering in vingettes.</li>
 <li>Get rid of eval() calls.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-4-2018-04-12" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-4-2018-04-12" class="anchor"></a>replyr 0.9.4 2018-04-12<small> 2018-04-12 </small>
+    <div id="replyr-094-2018-04-12" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.4">
+<a href="#replyr-094-2018-04-12" class="anchor"></a>replyr 0.9.4 2018-04-12<small> 2018-04-12 </small>
 </h1>
 <ul>
 <li>Try to avoid the API breakage dplyr 0.7.5 is sending out.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-3-2018-04-03" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-3-2018-04-03" class="anchor"></a>replyr 0.9.3 2018-04-03<small> 2018-04-03 </small>
+    <div id="replyr-093-2018-04-03" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.3">
+<a href="#replyr-093-2018-04-03" class="anchor"></a>replyr 0.9.3 2018-04-03<small> 2018-04-03 </small>
 </h1>
 <ul>
 <li>Demote replyr to maintenance mode.</li>
@@ -232,9 +251,9 @@
 <li>Stop re-exports.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-2-2018-03-11" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-2-2018-03-11" class="anchor"></a>replyr 0.9.2 2018-03-11<small> 2018-03-12 </small>
+    <div id="replyr-092-2018-03-11" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.2">
+<a href="#replyr-092-2018-03-11" class="anchor"></a>replyr 0.9.2 2018-03-11<small> 2018-03-12 </small>
 </h1>
 <ul>
 <li>Move to wrapr 1.2.0</li>
@@ -243,9 +262,9 @@
 <li>Reduce dependencies.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-1-2018-01-20" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-1-2018-01-20" class="anchor"></a>replyr 0.9.1 2018-01-20<small> 2018-01-20 </small>
+    <div id="replyr-091-2018-01-20" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.1">
+<a href="#replyr-091-2018-01-20" class="anchor"></a>replyr 0.9.1 2018-01-20<small> 2018-01-20 </small>
 </h1>
 <ul>
 <li>Minor documentation fixes.</li>
@@ -254,17 +273,17 @@
 <li>Remove query bind rows.</li>
 </ul>
 </div>
-    <div id="replyr-0-9-0-2017-11-11" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-9-0-2017-11-11" class="anchor"></a>replyr 0.9.0 2017-11-11<small> 2017-11-12 </small>
+    <div id="replyr-090-2017-11-11" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.0">
+<a href="#replyr-090-2017-11-11" class="anchor"></a>replyr 0.9.0 2017-11-11<small> 2017-11-12 </small>
 </h1>
 <ul>
 <li>Re-base on cdata 0.5.0</li>
 </ul>
 </div>
-    <div id="replyr-0-8-3-2017-11-10" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-8-3-2017-11-10" class="anchor"></a>replyr 0.8.3 2017-11-10<small> Unreleased </small>
+    <div id="replyr-083-2017-11-10" class="section level1">
+<h1 class="page-header" data-toc-text="0.8.3">
+<a href="#replyr-083-2017-11-10" class="anchor"></a>replyr 0.8.3 2017-11-10<small> Unreleased </small>
 </h1>
 <ul>
 <li>Fix some corner cases in replyr_summary() and replyr_nrow().</li>
@@ -276,9 +295,9 @@
 <li>Remove deprecated older pivot/un-pivot code.</li>
 </ul>
 </div>
-    <div id="replyr-0-8-2-2017-10-29" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-8-2-2017-10-29" class="anchor"></a>replyr 0.8.2 2017-10-29<small> 2017-10-29 </small>
+    <div id="replyr-082-2017-10-29" class="section level1">
+<h1 class="page-header" data-toc-text="0.8.2">
+<a href="#replyr-082-2017-10-29" class="anchor"></a>replyr 0.8.2 2017-10-29<small> 2017-10-29 </small>
 </h1>
 <ul>
 <li>More checks on pivot/un-pivot.</li>
@@ -287,18 +306,18 @@
 <li>Fix db quoting.</li>
 </ul>
 </div>
-    <div id="replyr-0-8-0-2017-10-21" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-8-0-2017-10-21" class="anchor"></a>replyr 0.8.0 2017-10-21<small> Unreleased </small>
+    <div id="replyr-080-2017-10-21" class="section level1">
+<h1 class="page-header" data-toc-text="0.8.0">
+<a href="#replyr-080-2017-10-21" class="anchor"></a>replyr 0.8.0 2017-10-21<small> Unreleased </small>
 </h1>
 <ul>
 <li>Bulk SQL row/column ops.</li>
 <li>Bump up dependencies.</li>
 </ul>
 </div>
-    <div id="replyr-0-5-4-2017-10-19" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-5-4-2017-10-19" class="anchor"></a>replyr 0.5.4 2017-10-19<small> 2017-10-19 </small>
+    <div id="replyr-054-2017-10-19" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.4">
+<a href="#replyr-054-2017-10-19" class="anchor"></a>replyr 0.5.4 2017-10-19<small> 2017-10-19 </small>
 </h1>
 <ul>
 <li>Work around ncol() issue.</li>
@@ -306,9 +325,9 @@
 <li>Temp name generator work in lower case.</li>
 </ul>
 </div>
-    <div id="replyr-0-5-3-2017-08-28" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-5-3-2017-08-28" class="anchor"></a>replyr 0.5.3 2017-08-28<small> 2017-08-29 </small>
+    <div id="replyr-053-2017-08-28" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.3">
+<a href="#replyr-053-2017-08-28" class="anchor"></a>replyr 0.5.3 2017-08-28<small> 2017-08-29 </small>
 </h1>
 <ul>
 <li>Fix column selector in replyr_summarize().</li>
@@ -317,33 +336,33 @@
 <li>Fix compatability with next version of DiagrammeR</li>
 </ul>
 </div>
-    <div id="replyr-0-5-2-2017-07-31" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-5-2-2017-07-31" class="anchor"></a>replyr 0.5.2 2017-07-31<small> 2017-08-01 </small>
+    <div id="replyr-052-2017-07-31" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.2">
+<a href="#replyr-052-2017-07-31" class="anchor"></a>replyr 0.5.2 2017-07-31<small> 2017-08-01 </small>
 </h1>
 <ul>
 <li>More forgiving mapping fn.</li>
 </ul>
 </div>
-    <div id="replyr-0-5-1-2017-07-12" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-5-1-2017-07-12" class="anchor"></a>replyr 0.5.1 2017-07-12<small> Unreleased </small>
+    <div id="replyr-051-2017-07-12" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.1">
+<a href="#replyr-051-2017-07-12" class="anchor"></a>replyr 0.5.1 2017-07-12<small> Unreleased </small>
 </h1>
 <ul>
 <li>Allow non-strict names in some cases.</li>
 </ul>
 </div>
-    <div id="replyr-0-5-0-2017-07-08" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-5-0-2017-07-08" class="anchor"></a>replyr 0.5.0 2017-07-08<small> Unreleased </small>
+    <div id="replyr-050-2017-07-08" class="section level1">
+<h1 class="page-header" data-toc-text="0.5.0">
+<a href="#replyr-050-2017-07-08" class="anchor"></a>replyr 0.5.0 2017-07-08<small> Unreleased </small>
 </h1>
 <ul>
 <li>Start switch over to dot block pipe.</li>
 </ul>
 </div>
-    <div id="replyr-0-4-2-2017-07-05" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-4-2-2017-07-05" class="anchor"></a>replyr 0.4.2 2017-07-05<small> 2017-07-06 </small>
+    <div id="replyr-042-2017-07-05" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.2">
+<a href="#replyr-042-2017-07-05" class="anchor"></a>replyr 0.4.2 2017-07-05<small> 2017-07-06 </small>
 </h1>
 <ul>
 <li>fix spelling of tableDescription()</li>
@@ -351,9 +370,9 @@
 <li>prepare for sparklyr rbind().</li>
 </ul>
 </div>
-    <div id="replyr-0-4-0-2017-06-12" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-4-0-2017-06-12" class="anchor"></a>replyr 0.4.0 2017-06-12<small> 2017-06-12 </small>
+    <div id="replyr-040-2017-06-12" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.0">
+<a href="#replyr-040-2017-06-12" class="anchor"></a>replyr 0.4.0 2017-06-12<small> 2017-06-12 </small>
 </h1>
 <ul>
 <li>Introduce executeLeftJoinPlan join controller.</li>
@@ -365,18 +384,18 @@
 <li>prepare for dplyr 0.6.0/0.7.0</li>
 </ul>
 </div>
-    <div id="replyr-0-3-01-2017-05-13" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-3-01-2017-05-13" class="anchor"></a>replyr 0.3.01 2017-05-13<small> 2017-05-14 </small>
+    <div id="replyr-0301-2017-05-13" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.01">
+<a href="#replyr-0301-2017-05-13" class="anchor"></a>replyr 0.3.01 2017-05-13<small> 2017-05-14 </small>
 </h1>
 <ul>
 <li>much better tracking of temp-handle names.</li>
 <li>more tests/checks.</li>
 </ul>
 </div>
-    <div id="replyr-0-2-6-2017-05-08" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-2-6-2017-05-08" class="anchor"></a>replyr 0.2.6 2017-05-08<small> Unreleased </small>
+    <div id="replyr-026-2017-05-08" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.6">
+<a href="#replyr-026-2017-05-08" class="anchor"></a>replyr 0.2.6 2017-05-08<small> Unreleased </small>
 </h1>
 <ul>
 <li>use dplyr::ungroup a few places.</li>
@@ -384,18 +403,18 @@
 <li>deal with logical and list columns in summary.</li>
 </ul>
 </div>
-    <div id="replyr-0-2-5-2017-04-14" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-2-5-2017-04-14" class="anchor"></a>replyr 0.2.5 2017-04-14<small> 2017-04-14 </small>
+    <div id="replyr-025-2017-04-14" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.5">
+<a href="#replyr-025-2017-04-14" class="anchor"></a>replyr 0.2.5 2017-04-14<small> 2017-04-14 </small>
 </h1>
 <ul>
 <li>Remove all use of dplyr underbar/underscore forms to future proof as these are already deprecated in dev ( <a href="https://github.com/hadley/dplyr/blob/master/R/manip.r" class="uri">https://github.com/hadley/dplyr/blob/master/R/manip.r</a> 33d0b1ecaa22644e0d78345b13d5f8aca5d949b ).</li>
 <li>re-introduce moving values between rows and columns.</li>
 </ul>
 </div>
-    <div id="replyr-0-2-4-2017-03-13" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-2-4-2017-03-13" class="anchor"></a>replyr 0.2.4 2017-03-13<small> 2017-03-14 </small>
+    <div id="replyr-024-2017-03-13" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.4">
+<a href="#replyr-024-2017-03-13" class="anchor"></a>replyr 0.2.4 2017-03-13<small> 2017-03-14 </small>
 </h1>
 <ul>
 <li>Respond to “CRAN packages maintained by you” request (images in root dir).</li>
@@ -403,9 +422,9 @@
 <li>Fix sd on SQLite issue.</li>
 </ul>
 </div>
-    <div id="replyr-0-2-3-2017-02-20" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-2-3-2017-02-20" class="anchor"></a>replyr 0.2.3 2017-02-20<small> 2017-02-21 </small>
+    <div id="replyr-023-2017-02-20" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.3">
+<a href="#replyr-023-2017-02-20" class="anchor"></a>replyr 0.2.3 2017-02-20<small> 2017-02-21 </small>
 </h1>
 <ul>
 <li>Move “let()” to wrapr <a href="https://github.com/WinVector/wrapr" class="uri">https://github.com/WinVector/wrapr</a> .</li>
@@ -415,17 +434,17 @@
 <li>replyr_bind_rows reorder and intersect column names.</li>
 </ul>
 </div>
-    <div id="replyr-0-2-2-2017-02-04" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-2-2-2017-02-04" class="anchor"></a>replyr 0.2.2 2017-02-04<small> Unreleased </small>
+    <div id="replyr-022-2017-02-04" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.2">
+<a href="#replyr-022-2017-02-04" class="anchor"></a>replyr 0.2.2 2017-02-04<small> Unreleased </small>
 </h1>
 <ul>
 <li>Add Debug* functions.</li>
 </ul>
 </div>
-    <div id="replyr-0-2-1-2017-01-21" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-2-1-2017-01-21" class="anchor"></a>replyr 0.2.1 2017-01-21<small> 2017-01-21 </small>
+    <div id="replyr-021-2017-01-21" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.1">
+<a href="#replyr-021-2017-01-21" class="anchor"></a>replyr 0.2.1 2017-01-21<small> 2017-01-21 </small>
 </h1>
 <ul>
 <li>Excise direct use of lazyeval.</li>
@@ -433,17 +452,17 @@
 <li>Change default gapply to split.</li>
 </ul>
 </div>
-    <div id="replyr-0-2-0-2016-12-14" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-2-0-2016-12-14" class="anchor"></a>replyr 0.2.0 2016-12-14<small> 2016-12-22 </small>
+    <div id="replyr-020-2016-12-14" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#replyr-020-2016-12-14" class="anchor"></a>replyr 0.2.0 2016-12-14<small> 2016-12-22 </small>
 </h1>
 <ul>
 <li>Don’t wrap let-return, instead eval it (removes need for one set of parenthesis).</li>
 </ul>
 </div>
-    <div id="replyr-0-1-11-2016-12-14" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-1-11-2016-12-14" class="anchor"></a>replyr 0.1.11 2016-12-14<small> Unreleased </small>
+    <div id="replyr-0111-2016-12-14" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.11">
+<a href="#replyr-0111-2016-12-14" class="anchor"></a>replyr 0.1.11 2016-12-14<small> Unreleased </small>
 </h1>
 <ul>
 <li>Fix column permutation bug in replyr_summary.</li>
@@ -451,9 +470,9 @@
 <li>Add cumulative sum based quantile, likely to be replaced by general index control.</li>
 </ul>
 </div>
-    <div id="replyr-0-1-10-2016-12-08" class="section level1">
-<h1 class="page-header">
-<a href="#replyr-0-1-10-2016-12-08" class="anchor"></a>replyr 0.1.10 2016-12-08<small> Unreleased </small>
+    <div id="replyr-0110-2016-12-08" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.10">
+<a href="#replyr-0110-2016-12-08" class="anchor"></a>replyr 0.1.10 2016-12-08<small> Unreleased </small>
 </h1>
 <ul>
 <li>First CRAN submission.</li>
@@ -461,50 +480,14 @@
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#replyr-1-0-4-2019-07-23">1.0.4</a></li>
-        <li><a href="#replyr-1-0-3-2019-07-13">1.0.3</a></li>
-        <li><a href="#replyr-1-0-2-2019-07-05">1.0.2</a></li>
-        <li><a href="#replyr-1-0-1-2019-07-04">1.0.1</a></li>
-        <li><a href="#replyr-1-0-0-2019-03-31">1.0.0</a></li>
-        <li><a href="#replyr-0-9-9-2019-01-02">0.9.9</a></li>
-        <li><a href="#replyr-0-9-8-2018-09-18">0.9.8</a></li>
-        <li><a href="#replyr-0-9-7-2018-07-20">0.9.7</a></li>
-        <li><a href="#replyr-0-9-6-2018-06-23">0.9.6</a></li>
-        <li><a href="#replyr-0-9-5-2018-05-20">0.9.5</a></li>
-        <li><a href="#replyr-0-9-4-2018-04-12">0.9.4</a></li>
-        <li><a href="#replyr-0-9-3-2018-04-03">0.9.3</a></li>
-        <li><a href="#replyr-0-9-2-2018-03-11">0.9.2</a></li>
-        <li><a href="#replyr-0-9-1-2018-01-20">0.9.1</a></li>
-        <li><a href="#replyr-0-9-0-2017-11-11">0.9.0</a></li>
-        <li><a href="#replyr-0-8-3-2017-11-10">0.8.3</a></li>
-        <li><a href="#replyr-0-8-2-2017-10-29">0.8.2</a></li>
-        <li><a href="#replyr-0-8-0-2017-10-21">0.8.0</a></li>
-        <li><a href="#replyr-0-5-4-2017-10-19">0.5.4</a></li>
-        <li><a href="#replyr-0-5-3-2017-08-28">0.5.3</a></li>
-        <li><a href="#replyr-0-5-2-2017-07-31">0.5.2</a></li>
-        <li><a href="#replyr-0-5-1-2017-07-12">0.5.1</a></li>
-        <li><a href="#replyr-0-5-0-2017-07-08">0.5.0</a></li>
-        <li><a href="#replyr-0-4-2-2017-07-05">0.4.2</a></li>
-        <li><a href="#replyr-0-4-0-2017-06-12">0.4.0</a></li>
-        <li><a href="#replyr-0-3-01-2017-05-13">0.3.01</a></li>
-        <li><a href="#replyr-0-2-6-2017-05-08">0.2.6</a></li>
-        <li><a href="#replyr-0-2-5-2017-04-14">0.2.5</a></li>
-        <li><a href="#replyr-0-2-4-2017-03-13">0.2.4</a></li>
-        <li><a href="#replyr-0-2-3-2017-02-20">0.2.3</a></li>
-        <li><a href="#replyr-0-2-2-2017-02-04">0.2.2</a></li>
-        <li><a href="#replyr-0-2-1-2017-01-21">0.2.1</a></li>
-        <li><a href="#replyr-0-2-0-2016-12-14">0.2.0</a></li>
-        <li><a href="#replyr-0-1-11-2016-12-14">0.1.11</a></li>
-        <li><a href="#replyr-0-1-10-2016-12-08">0.1.10</a></li>
-      </ul>
-    </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -512,13 +495,16 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

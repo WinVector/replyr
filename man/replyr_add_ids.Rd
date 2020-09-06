@@ -4,8 +4,7 @@
 \alias{replyr_add_ids}
 \title{Add unique ids to rows.  Note: re-arranges rows in many cases.}
 \usage{
-replyr_add_ids(df, idColName, env = parent.frame(),
-  local_short_cut = TRUE)
+replyr_add_ids(df, idColName, env = parent.frame(), local_short_cut = TRUE)
 }
 \arguments{
 \item{df}{data.frame object to work with}

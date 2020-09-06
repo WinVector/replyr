@@ -4,8 +4,13 @@
 \alias{replyr_quantilec}
 \title{Compute quantiles on remote column (NA's filtered out) using cumsum.}
 \usage{
-replyr_quantilec(x, cname, probs = seq(0, 1, 0.25), ...,
-  tempNameGenerator = mk_tmp_name_source("replyr_quantilec"))
+replyr_quantilec(
+  x,
+  cname,
+  probs = seq(0, 1, 0.25),
+  ...,
+  tempNameGenerator = mk_tmp_name_source("replyr_quantilec")
+)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}

@@ -4,9 +4,15 @@
 \alias{expandColumn}
 \title{Expand a column of vectors into one row per value of each vector.}
 \usage{
-expandColumn(data, colName, ..., rowidSource = NULL, rowidDest = NULL,
+expandColumn(
+  data,
+  colName,
+  ...,
+  rowidSource = NULL,
+  rowidDest = NULL,
   idxDest = NULL,
-  tempNameGenerator = mk_tmp_name_source("replyr_expandColumn"))
+  tempNameGenerator = mk_tmp_name_source("replyr_expandColumn")
+)
 }
 \arguments{
 \item{data}{data.frame to work with.}

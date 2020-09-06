@@ -4,8 +4,13 @@
 \alias{replyr_quantile}
 \title{Compute quantiles on remote column (NA's filtered out) using binary search.}
 \usage{
-replyr_quantile(x, cname, probs = seq(0, 1, 0.25), ...,
-  tempNameGenerator = mk_tmp_name_source("replyr_quantile"))
+replyr_quantile(
+  x,
+  cname,
+  probs = seq(0, 1, 0.25),
+  ...,
+  tempNameGenerator = mk_tmp_name_source("replyr_quantile")
+)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}

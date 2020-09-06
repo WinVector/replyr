@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Compute usable summary of columns of tbl. — replyr_summary" />
 <meta property="og:description" content="Compute per-column summaries and return as a data.frame.  Warning: can be an expensive operation." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -55,7 +58,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -144,8 +147,14 @@
     <p>Compute per-column summaries and return as a <code>data.frame</code>.  Warning: can be an expensive operation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>replyr_summary</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='kw'>countUniqueNum</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>countUniqueNonNum</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>compute</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>replyr_summary</span>(
+  <span class='kw'>x</span>,
+  <span class='kw'>...</span>,
+  countUniqueNum = <span class='fl'>FALSE</span>,
+  countUniqueNonNum = <span class='fl'>FALSE</span>,
+  cols = <span class='kw'>NULL</span>,
+  compute = <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,43 +192,45 @@
 
     <p>Can be slow compared to <code><a href='https://dplyr.tidyverse.org/reference/summarise_all.html'>dplyr::summarize_all()</a></code> (but serves a different purpose).
 Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (as is typical for <code>R</code>, e.g.,
-<code><a href='https://rdrr.io/r/base/NA.html'>is.na(NaN)</a></code>).  And note: <code>replyr_summary()</code> currently skips "raw" columns.</p>
+<code><a href='#base/NA.html'>is.na(NaN)</a></code>).  And note: <code>replyr_summary()</code> currently skips "raw" columns.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/rquery/man/rsummary.html'>rsummary</a></code></p></div>
+    <div class='dont-index'><p><code><a href='#rquery/rsummary.html'>rsummary</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>p</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>NA</span>),
-                <span class='kw'>r</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>)),
-                <span class='kw'>s</span><span class='kw'>=</span> <span class='fl'>NA</span>,
-                <span class='kw'>t</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/raw.html'>as.raw</a></span>(<span class='fl'>3</span>:<span class='fl'>5</span>),
-                <span class='kw'>w</span><span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>3</span>,
-                <span class='kw'>x</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>,<span class='fl'>2</span>,<span class='fl'>3</span>),
-                <span class='kw'>y</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>NA</span>)),
-                <span class='kw'>z</span><span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='fl'>NA</span>,<span class='st'>'z'</span>),
-                <span class='kw'>stringsAsFactors</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
+<span class='kw'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='#base/data.frame.html'>data.frame</a></span>(p= <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='fl'>TRUE</span>, <span class='fl'>FALSE</span>, <span class='fl'>NA</span>),
+                r= <span class='fu'><a href='#base/AsIs.html'>I</a></span>(<span class='fu'><a href='#base/list.html'>list</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>)),
+                s= <span class='fl'>NA</span>,
+                t= <span class='fu'><a href='#base/raw.html'>as.raw</a></span>(<span class='fl'>3</span><span class='op'>:</span><span class='fl'>5</span>),
+                w= <span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span>,
+                x= <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='fl'>NA</span>,<span class='fl'>2</span>,<span class='fl'>3</span>),
+                y= <span class='fu'><a href='#base/factor.html'>factor</a></span>(<span class='fu'><a href='#base/c.html'>c</a></span>(<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>NA</span>)),
+                z= <span class='fu'><a href='#base/c.html'>c</a></span>(<span class='st'>'a'</span>,<span class='fl'>NA</span>,<span class='st'>'z'</span>),
+                stringsAsFactors=<span class='fl'>FALSE</span>)
 <span class='co'># sc &lt;- sparklyr::spark_connect(version='2.2.0',</span>
 <span class='co'>#                                  master = "local")</span>
 <span class='co'># dS &lt;- replyr_copy_to(sc, dplyr::select(d, -r, -t), 'dS',</span>
 <span class='co'>#                      temporary=TRUE, overwrite=TRUE)</span>
 <span class='co'># replyr_summary(dS)</span>
 <span class='co'># sparklyr::spark_disconnect(sc)</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span>(<span class='st'>"RSQLite"</span>, <span class='kw'>quietly</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)) {
-  <span class='no'>my_db</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbConnect.html'>dbConnect</a></span>(<span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/RSQLite/man/SQLite.html'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
-  <span class='kw pkg'>RSQLite</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/RSQLite/man/initExtension.html'>initExtension</a></span>(<span class='no'>my_db</span>)
-  <span class='no'>dM</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='no'>my_db</span>, <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>d</span>, -<span class='no'>r</span>, -<span class='no'>t</span>), <span class='st'>'dM'</span>,
-                       <span class='kw'>temporary</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>overwrite</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>replyr_summary</span>(<span class='no'>dM</span>))
-  <span class='kw pkg'>DBI</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/DBI/man/dbDisconnect.html'>dbDisconnect</a></span>(<span class='no'>my_db</span>)
-}</div><div class='output co'>#&gt;   column index     class nrows nna nunique min max mean        sd lexmin lexmax
+<span class='co'>if</span> (<span class='fu'><a href='#base/ns-load.html'>requireNamespace</a></span>(<span class='st'>"RSQLite"</span>, quietly = <span class='fl'>TRUE</span>)) {
+  <span class='kw'>my_db</span> <span class='op'>&lt;-</span> <span class='kw'>DBI</span>::<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbConnect.html'>dbConnect</a></span>(<span class='kw'>RSQLite</span>::<span class='fu'><a href='https://rsqlite.r-dbi.org/reference/SQLite.html'>SQLite</a></span>(), <span class='st'>":memory:"</span>)
+  <span class='kw'>RSQLite</span>::<span class='fu'><a href='https://rsqlite.r-dbi.org/reference/initExtension.html'>initExtension</a></span>(<span class='kw'>my_db</span>)
+  <span class='kw'>dM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='replyr_copy_to.html'>replyr_copy_to</a></span>(<span class='kw'>my_db</span>, <span class='kw'>dplyr</span>::<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='kw'>d</span>, <span class='op'>-</span><span class='kw'>r</span>, <span class='op'>-</span><span class='kw'>t</span>), <span class='st'>'dM'</span>,
+                       temporary=<span class='fl'>TRUE</span>, overwrite=<span class='fl'>TRUE</span>)
+  <span class='fu'><a href='#base/print.html'>print</a></span>(<span class='fu'>replyr_summary</span>(<span class='kw'>dM</span>))
+  <span class='kw'>DBI</span>::<span class='fu'><a href='https://dbi.r-dbi.org/reference/dbDisconnect.html'>dbDisconnect</a></span>(<span class='kw'>my_db</span>)
+}
+</div><div class='output co'>#&gt;   column index     class nrows nna nunique min max mean        sd lexmin lexmax
 #&gt; 1      p     1   integer     3   1      NA   0   1  0.5 0.7071068   &lt;NA&gt;   &lt;NA&gt;
 #&gt; 2      s     2   integer     3   3      NA  NA  NA   NA        NA   &lt;NA&gt;   &lt;NA&gt;
 #&gt; 3      w     3   integer     3   0      NA   1   3  2.0 1.0000000   &lt;NA&gt;   &lt;NA&gt;
 #&gt; 4      x     4   numeric     3   1      NA   2   3  2.5 0.7071068   &lt;NA&gt;   &lt;NA&gt;
 #&gt; 5      y     5 character     3   1      NA  NA  NA   NA        NA      3      5
-#&gt; 6      z     6 character     3   1      NA  NA  NA   NA        NA      a      z</div><div class='input'><span class='no'>d</span>$<span class='no'>q</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>)
-<span class='fu'>replyr_summary</span>(<span class='no'>d</span>)</div><div class='output co'>#&gt;   column index     class nrows nna nunique min  max mean        sd lexmin
+#&gt; 6      z     6 character     3   1      NA  NA  NA   NA        NA      a      z</div><div class='input'><span class='kw'>d</span><span class='op'>$</span><span class='kw'>q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='#base/list.html'>list</a></span>(<span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>)
+<span class='fu'>replyr_summary</span>(<span class='kw'>d</span>)
+</div><div class='output co'>#&gt;   column index     class nrows nna nunique min  max mean        sd lexmin
 #&gt; 1      p     1   logical     3   1      NA   0    1  0.5 0.7071068   &lt;NA&gt;
 #&gt; 2      r     2      AsIs     3  NA      NA  NA   NA   NA        NA   &lt;NA&gt;
 #&gt; 3      s     3   logical     3   3      NA Inf -Inf  NaN        NA   &lt;NA&gt;
@@ -241,16 +252,10 @@ Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (a
 #&gt; 9   &lt;NA&gt;</div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -261,7 +266,7 @@ Also, for numeric columns includes <code>NaN</code> in <code>nna</code> count (a
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
 </div>
 
       </footer>

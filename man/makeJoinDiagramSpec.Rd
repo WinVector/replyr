@@ -4,8 +4,7 @@
 \alias{makeJoinDiagramSpec}
 \title{Build a drawable specification of the join diagram}
 \usage{
-makeJoinDiagramSpec(columnJoinPlan, ..., groupByKeys = TRUE,
-  graphOpts = NULL)
+makeJoinDiagramSpec(columnJoinPlan, ..., groupByKeys = TRUE, graphOpts = NULL)
 }
 \arguments{
 \item{columnJoinPlan}{join plan}

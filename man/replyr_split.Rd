@@ -4,8 +4,16 @@
 \alias{replyr_split}
 \title{split a data item by values in a column.}
 \usage{
-replyr_split(df, gcolumn, ..., ocolumn = NULL, decreasing = FALSE,
-  partitionMethod = "extract", maxgroups = 100, eagerCompute = FALSE)
+replyr_split(
+  df,
+  gcolumn,
+  ...,
+  ocolumn = NULL,
+  decreasing = FALSE,
+  partitionMethod = "extract",
+  maxgroups = 100,
+  eagerCompute = FALSE
+)
 }
 \arguments{
 \item{df}{remote dplyr data item}

@@ -4,8 +4,7 @@
 \alias{tableDescription}
 \title{Build a nice description of a table.}
 \usage{
-tableDescription(tableName, handle, ...,
-  keyInspector = key_inspector_all_cols)
+tableDescription(tableName, handle, ..., keyInspector = key_inspector_all_cols)
 }
 \arguments{
 \item{tableName}{name of table to add to join plan.}

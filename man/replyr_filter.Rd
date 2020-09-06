@@ -4,8 +4,14 @@
 \alias{replyr_filter}
 \title{Filter a tbl on a column having values in a given set.}
 \usage{
-replyr_filter(x, cname, values, ..., verbose = TRUE,
-  tempNameGenerator = mk_tmp_name_source("replyr_filter"))
+replyr_filter(
+  x,
+  cname,
+  values,
+  ...,
+  verbose = TRUE,
+  tempNameGenerator = mk_tmp_name_source("replyr_filter")
+)
 }
 \arguments{
 \item{x}{tbl or item that can be coerced into such.}

@@ -4,9 +4,15 @@
 \alias{replyr_check_ranks}
 \title{confirm data has good ranked groups}
 \usage{
-replyr_check_ranks(x, GroupColumnName, ValueColumnName, RankColumnName,
-  ..., decreasing = FALSE,
-  tempNameGenerator = mk_tmp_name_source("replyr_check_ranks"))
+replyr_check_ranks(
+  x,
+  GroupColumnName,
+  ValueColumnName,
+  RankColumnName,
+  ...,
+  decreasing = FALSE,
+  tempNameGenerator = mk_tmp_name_source("replyr_check_ranks")
+)
 }
 \arguments{
 \item{x}{data item to work with}

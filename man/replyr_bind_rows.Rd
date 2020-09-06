@@ -4,9 +4,14 @@
 \alias{replyr_bind_rows}
 \title{Bind a list of items by rows (can't use dplyr::bind_rows or dplyr::combine on remote sources).  Columns are intersected.}
 \usage{
-replyr_bind_rows(lst, ..., useDplyrLocal = TRUE, useSparkRbind = TRUE,
+replyr_bind_rows(
+  lst,
+  ...,
+  useDplyrLocal = TRUE,
+  useSparkRbind = TRUE,
   useUnionALL = TRUE,
-  tempNameGenerator = mk_tmp_name_source("replyr_bind_rows"))
+  tempNameGenerator = mk_tmp_name_source("replyr_bind_rows")
+)
 }
 \arguments{
 \item{lst}{list of items to combine, must be all in same dplyr data service}

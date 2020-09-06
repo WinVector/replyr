@@ -4,8 +4,13 @@
 \alias{addConstantColumn}
 \title{Add constant to a table.}
 \usage{
-addConstantColumn(d, colName, val, ...,
-  tempNameGenerator = mk_tmp_name_source("replyr_addConstantColumn"))
+addConstantColumn(
+  d,
+  colName,
+  val,
+  ...,
+  tempNameGenerator = mk_tmp_name_source("replyr_addConstantColumn")
+)
 }
 \arguments{
 \item{d}{data.frame like object to add column to.}

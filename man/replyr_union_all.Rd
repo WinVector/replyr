@@ -4,9 +4,14 @@
 \alias{replyr_union_all}
 \title{Union two tables.}
 \usage{
-replyr_union_all(tabA, tabB, ..., useDplyrLocal = TRUE,
+replyr_union_all(
+  tabA,
+  tabB,
+  ...,
+  useDplyrLocal = TRUE,
   useSparkRbind = TRUE,
-  tempNameGenerator = mk_tmp_name_source("replyr_union_all"))
+  tempNameGenerator = mk_tmp_name_source("replyr_union_all")
+)
 }
 \arguments{
 \item{tabA}{not-NULL table with at least 1 row.}

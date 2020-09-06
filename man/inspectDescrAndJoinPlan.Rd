@@ -4,8 +4,7 @@
 \alias{inspectDescrAndJoinPlan}
 \title{check that a join plan is consistent with table descriptions}
 \usage{
-inspectDescrAndJoinPlan(tDesc, columnJoinPlan, ...,
-  checkColClasses = FALSE)
+inspectDescrAndJoinPlan(tDesc, columnJoinPlan, ..., checkColClasses = FALSE)
 }
 \arguments{
 \item{tDesc}{description of tables, from \code{\link{tableDescription}} (and likely altered by user).}
