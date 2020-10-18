@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-`replyr` is post-maintinance, we are no longer bug-fixing or updating
+`replyr` is post-maintenance, we are no longer bug-fixing or updating
 this package. It has been pointless to track shifting
 `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`.
 Most of what it does is now done better in one of our newer
@@ -360,7 +360,7 @@ dRemote %>% replyr::replyr_filter('x', values)
  #  Please use `tibble::as_tibble()` instead.
  #  This warning is displayed once every 8 hours.
  #  Call `lifecycle::last_warnings()` to see where this warning was generated.
- #  # Source:   table<replyr_filter_25732182634980139577_0000000001> [?? x 3]
+ #  # Source:   table<replyr_filter_70965071119671872805_0000000001> [?? x 3]
  #  # Database: sqlite 3.33.0 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
