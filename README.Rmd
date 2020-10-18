@@ -16,7 +16,7 @@ options(width =100)
 ```
 
 
-`replyr` is going into maintenance mode.  It has been hard (and pointless) to track
+`replyr` is post-maintinance, we are no longer bug-fixing or updating this package.  It has been pointless to track
 shifting `dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`.
 Most of what it does is now done better in one of our newer non-monolithic packages:
 

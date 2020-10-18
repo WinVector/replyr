@@ -1,10 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-`replyr` is going into maintenance mode. It has been hard (and
-pointless) to track shifting `dplyr`/`dbplyr`/`rlang` APIs and data
-structures post `dplyr` `0.5`. Most of what it does is now done better
-in one of our newer non-monolithic packages:
+`replyr` is post-maintinance, we are no longer bug-fixing or updating
+this package. It has been pointless to track shifting
+`dplyr`/`dbplyr`/`rlang` APIs and data structures post `dplyr` `0.5`.
+Most of what it does is now done better in one of our newer
+non-monolithic packages:
 
   - Programming and meta-programming tools:
     [`wrapr`](https://CRAN.R-project.org/package=wrapr).
@@ -296,9 +297,9 @@ summary(dRemote)
  #  src 2      src_SQLiteConnection list
  #  ops 2      op_base_remote       list
 glimpse(dRemote)
- #  Observations: ??
- #  Variables: 3
- #  Database: sqlite 3.29.0 [:memory:]
+ #  Rows: ??
+ #  Columns: 3
+ #  Database: sqlite 3.33.0 [:memory:]
  #  $ x <dbl> 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2
  #  $ y <dbl> 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA, 3, 5, NA
  #  $ z <chr> NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b", NA, "a", "b"
@@ -355,8 +356,12 @@ library('dplyr')
 ``` r
 values <- c(2)
 dRemote %>% replyr::replyr_filter('x', values)
- #  # Source:   table<replyr_filter_52388446252917961169_0000000001> [?? x 3]
- #  # Database: sqlite 3.29.0 [:memory:]
+ #  Warning: `as.tbl()` is deprecated as of dplyr 1.0.0.
+ #  Please use `tibble::as_tibble()` instead.
+ #  This warning is displayed once every 8 hours.
+ #  Call `lifecycle::last_warnings()` to see where this warning was generated.
+ #  # Source:   table<replyr_filter_25732182634980139577_0000000001> [?? x 3]
+ #  # Database: sqlite 3.33.0 [:memory:]
  #         x     y z    
  #     <dbl> <dbl> <chr>
  #   1     2     5 a    
@@ -446,9 +451,9 @@ and semantic variations between versions of data sources.
 ``` r
 rm(list=ls())
 gc()
- #            used (Mb) gc trigger  (Mb) limit (Mb) max used (Mb)
- #  Ncells  917633 49.1    1873358 100.1         NA  1175762 62.8
- #  Vcells 1711206 13.1    8388608  64.0      16384  2295143 17.6
+ #            used (Mb) gc trigger (Mb) limit (Mb) max used (Mb)
+ #  Ncells 1026656 54.9    2076977  111         NA  1383707 73.9
+ #  Vcells 1925172 14.7    8388608   64      49152  2686998 20.6
 ```
 
 ## Note
